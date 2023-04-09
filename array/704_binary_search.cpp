@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 
 /// Given an array of integers "nums" which is sorted in ascending order, and an integer "target",
