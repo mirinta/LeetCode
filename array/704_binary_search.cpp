@@ -14,11 +14,9 @@ public:
     {
         int low = 0;
         int high = nums.size() - 1;
-
         while (low <= high) {
             const auto mid = low + (high - low) / 2;
             const auto& val = nums[mid];
-
             if (target == val)
                 return mid;
 
@@ -28,7 +26,6 @@ public:
                 high = mid - 1;
             }
         }
-
         return -1;
     }
 };
