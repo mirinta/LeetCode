@@ -1,0 +1,20 @@
+BasedOnStyle: Google
+IndentWidth: 4
+ 
+Language: Cpp
+AccessModifierOffset: -4
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction:   true
+  AfterCaseLabel:  true
+  AfterClass:      true
+  AfterStruct:     true
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ColumnLimit: 100
+DerivePointerAlignment: false
+IndentCaseLabels: false
+SortIncludes: false
+SpacesBeforeTrailingComments: 1
+Standard: Cpp11
