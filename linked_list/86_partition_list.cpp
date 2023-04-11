@@ -19,24 +19,26 @@ struct ListNode
 class Solution
 {
 public:
-    ListNode* partition(ListNode* head, int x)
+    // add top-level const to "head"
+    ListNode* partition(ListNode* const head, int x)
     {
-        auto* vhead_le = new ListNode;
-        auto* vhead_ge = new ListNode;
-        auto* iter_le = vhead_le;
-        auto* iter_ge = vhead_ge;
-        while (head) {
-            if (head->val < x) {
-                iter_le->next = head;
-                iter_le = iter_le->next;
+        auto* leVHead = new ListNode; // leVHead -> { nodes < x }
+        auto* geVHead = new ListNode; // geVHead -> { nodes >= x }
+
+        auto* iterLe = leVHead;
+        auto* iterGe = geVHead;
+        for (auto* iter = head; iter; iter = iter->next) {
+            if (iter->val < x) {
+                iterLe->next = iter;
+                iterLe = iterLe->next;
             } else {
-                iter_ge->next = head;
-                iter_ge = iter_ge->next;
+                iterGe->next = iter;
+                iterGe = iterGe->next;
             }
-            head = head->next;
         }
-        iter_ge->next = nullptr;
-        iter_le->next = vhead_ge->next;
-        return vhead_le->next;
+        // concate: leVHead -> {nodes < x} -> {nodes >= x} -> nullptr
+        iterLe->next = geVHead->next;
+        iterGe->next = nullptr;
+        return leVHead->next;
     }
 };
