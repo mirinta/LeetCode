@@ -22,11 +22,10 @@ public:
     // add top-level const to "head"
     ListNode* partition(ListNode* const head, int x)
     {
-        auto* leVHead = new ListNode; // leVHead -> { nodes < x }
-        auto* geVHead = new ListNode; // geVHead -> { nodes >= x }
-
-        auto* iterLe = leVHead;
-        auto* iterGe = geVHead;
+        ListNode leVHead{};
+        ListNode geVHead{};
+        auto* iterLe = &leVHead;
+        auto* iterGe = &geVHead;
         for (auto* iter = head; iter; iter = iter->next) {
             if (iter->val < x) {
                 iterLe->next = iter;
@@ -36,9 +35,8 @@ public:
                 iterGe = iterGe->next;
             }
         }
-        // concate: leVHead -> {nodes < x} -> {nodes >= x} -> nullptr
-        iterLe->next = geVHead->next;
+        iterLe->next = geVHead.next;
         iterGe->next = nullptr;
-        return leVHead->next;
+        return leVHead.next;
     }
 };

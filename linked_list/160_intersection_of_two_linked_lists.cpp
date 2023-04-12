@@ -25,28 +25,26 @@ class Solution
 public:
     ListNode* getIntersectionNode(ListNode* const headA, ListNode* const headB)
     {
-        if (!headA || !headB)
-            return nullptr;
+        // version 1: hash map
+        // std::unordered_map<ListNode*, int> map;
+        // for(auto* iterA = headA; iterA; iterA = iterA->next) {
+        //     map[iterA] = iterA->val;
+        // }
+        // for (auto* iterB = headB; iterB; iterB = iterB->next) {
+        //     if (map.find(iterB) != map.end())
+        //         return iterB;
 
-        auto* iter_a = headA;
-        auto* iter_b = headB;
-        while (iter_a != iter_b) {
-            iter_a = iter_a ? iter_a->next : headB;
-            iter_b = iter_b ? iter_b->next : headA;
+        //     map[iterB] = iterB->val;
+        // }
+        // return nullptr;
+        // ------------------------------
+        // version 2:
+        auto* iterA = headA;
+        auto* iterB = headB;
+        while (iterA != iterB) {
+            iterA = iterA ? iterA->next : headB;
+            iterB = iterB ? iterB->next : headA;
         }
-        return iter_a;
-        // using hash map:
-        //    if (!headA || !headB)
-        //        return nullptr;
-        //
-        //    std::unordered_map<ListNode*, int> map;
-        //    for (auto* i = headA; i; i = i->next) {
-        //        map[i] = i->val;
-        //    }
-        //    for (auto* j = headB; j; j = j->next) {
-        //        if (map.find(j) != map.end())
-        //            return j;
-        //    }
-        //    return nullptr;
+        return iterA;
     }
 };

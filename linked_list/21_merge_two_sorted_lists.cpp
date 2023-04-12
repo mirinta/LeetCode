@@ -24,30 +24,30 @@ class Solution
 public:
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2)
     {
-        // version 1, new node:
-        // auto* resultVHead = new ListNode;
+        // version 1:
+        // ListNode vHead{-1, nullptr};
         // auto* iter1 = list1;
         // auto* iter2 = list2;
-        // auto* iterR = resultVHead;
+        // auto* merge = &vHead;
         // while (iter1 && iter2) {
         //     if (iter1->val < iter2->val) {
-        //         iterR->next = iter1;
+        //         merge->next = iter1;
         //         iter1 = iter1->next;
         //     } else {
-        //         iterR->next = iter2;
+        //         merge->next = iter2;
         //         iter2 = iter2->next;
         //     }
-        //     iterR = iterR->next;
+        //     merge = merge->next;
         // }
         // if (iter1 && !iter2) {
-        //     iterR->next = iter1;
+        //     merge->next = iter1;
         // }
         // if (!iter1 && iter2) {
-        //     iterR->next = iter2;
+        //     merge->next = iter2;
         // }
-        // return resultVHead->next;
+        // return vHead.next;
         // ------------------------------
-        // version 2, recursion (the original list1 is changed):
+        // version 2: recursion
         if (!list1)
             return list2;
 

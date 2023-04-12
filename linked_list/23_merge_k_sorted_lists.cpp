@@ -25,7 +25,7 @@ class Solution
 public:
     ListNode* mergeKLists(std::vector<ListNode*>& lists)
     {
-        auto* resultVHead = new ListNode;
+        ListNode resultVHead{};
         auto greater = [](ListNode* n1, ListNode* n2) { return n1->val > n2->val; };
         std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(greater)> queue(greater);
         for (auto* const head : lists) {
@@ -33,16 +33,16 @@ public:
                 queue.push(head);
             }
         }
-        auto* iter = resultVHead;
+        auto* iter = &resultVHead;
         while (!queue.empty()) {
             auto* node = queue.top();
-            queue.pop();
             iter->next = node;
-            if (node->next) {
+            queue.pop();
+            if (node && node->next) {
                 queue.push(node->next);
             }
             iter = iter->next;
         }
-        return resultVHead->next;
+        return resultVHead.next;
     }
 };

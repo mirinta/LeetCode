@@ -20,16 +20,32 @@ class Solution
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n)
     {
-        auto* resultVHead = new ListNode{-1, head};
-        auto* iterA = resultVHead;
-        for (int i = 0; i < n; ++i) {
-            iterA = iterA->next;
+        // get the (n+1)th node from the end, say it is x.
+        // then x->next = x->next->next, problem solved.
+        ListNode resultVHead{-1, head};
+        auto* prevNode = getKthNodeFromEnd(&resultVHead, n + 1);
+        prevNode->next = prevNode->next->next;
+        return resultVHead.next;
+    }
+
+private:
+    ListNode* getKthNodeFromEnd(ListNode* head, int k)
+    {
+        // Suppose length of the list is N,
+        // then index of the kth node from end is N-k.
+        // Let iter1 move from 0 to k-1, i.e. move k nodes from start.
+        // For iter1, there are (N-1)-(k-1)+1=N-k+1 nodes to move to the end.
+        // Put iter2 at 0 and move with iter1 at the same time,
+        // when iter1 reaches the end, iter2 is at index (N-k+1)-1=N-k.
+        auto* iter1 = head;
+        for (int i = 0; i < k; ++i) {
+            iter1 = iter1->next; // according to the constraints, 1<=k<=N
         }
-        auto* iterB = resultVHead;
-        for (; iterA->next; iterA = iterA->next) {
-            iterB = iterB->next;
+        auto* iter2 = head;
+        while (iter1) {
+            iter1 = iter1->next;
+            iter2 = iter2->next;
         }
-        iterB->next = iterB->next->next;
-        return resultVHead->next;
+        return iter2;
     }
 };

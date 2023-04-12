@@ -30,7 +30,7 @@ public:
         // }
         // return map[map.size() / 2];
         // ------------------------------
-        // version 2: double pointers
+        // version 2:
         auto* slow = head;
         auto* fast = head;
         while (fast && fast->next) {
