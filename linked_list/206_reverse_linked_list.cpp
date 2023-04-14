@@ -19,19 +19,29 @@ class Solution
 public:
     ListNode* reverseList(ListNode* head)
     {
-        // version 1: recursion
+        // version 1: iteration
+        ListNode* prev = nullptr;
+        auto* iter = head;
+        while (iter) {
+            auto* next = iter->next;
+            iter->next = prev;
+            prev = iter;
+            iter = next;
+        }
+        return prev;
+        // version 2: recursion
         // 1. N0 -> reverseList(N1 -> ... -> Nm)
         // 2. N0 -> (N1 <- ... <- Nm), Nm is the head of the reversed sub-list
         // 3. Set N0->next->next = N0 and N0->next = nullptr;
-        if (!head || !head->next)
-            return head;
+        // if (!head || !head->next)
+        //     return head;
 
-        auto* newHead = reverseList(head->next);
-        head->next->next = head;
-        head->next = nullptr;
-        return newHead;
+        // auto* newHead = reverseList(head->next);
+        // head->next->next = head;
+        // head->next = nullptr;
+        // return newHead;
         // ------------------------------
-        // version 2: stack
+        // version 3: stack
         // std::stack<ListNode*> stack;
         // auto* iter = head;
         // while (iter) {

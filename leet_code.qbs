@@ -13,4 +13,7 @@ CppApplication {
         qbs.install: true
         qbs.installDir: "bin"
     }
+
+    // cpp.includePaths: ["D:/dependencies/Visual Leak Detector/include"]
+    // cpp.dynamicLibraries: ["D:/dependencies/Visual Leak Detector/lib/Win64/vld.lib"]
 }
