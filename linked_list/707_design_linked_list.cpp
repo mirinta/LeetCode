@@ -58,7 +58,7 @@ private:
         std::unique_ptr<Node> next;
     };
     Node _vHead{};
-    size_t _size{0};
+    int _size{0};
 };
 
 /**

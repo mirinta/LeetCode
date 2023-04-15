@@ -49,6 +49,7 @@ public:
     //     }
     //
     // private:
+    //     ListNode* _successor = nullptr;
     //     ListNode* reverseFirstKNodes(ListNode* head, int k)
     //     {
     //         if (k == 1) {
@@ -60,6 +61,4 @@ public:
     //         head->next = _successor;
     //         return newHead;
     //     }
-    //
-    //     ListNode* _successor = nullptr;
 };
