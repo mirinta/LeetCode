@@ -16,14 +16,23 @@
 class Solution
 {
 public:
-    int removeElement(std::vector<int>& nums, int val)
+    void moveZeroes(std::vector<int>& nums)
     {
-        size_t keep = 0;
-        for (size_t search = 0; search < nums.size(); ++search) {
-            if (nums[search] != val) {
-                nums[keep++] = nums[search];
+        const auto size = nums.size();
+        if (size <= 1)
+            return;
+
+        // similar to leet code 27:
+        // move all non-zero elements to the front of the array
+        size_t nonZeroCount = 0;
+        for (size_t i = 0; i < size; ++i) {
+            if (nums[i] != 0) {
+                nums[nonZeroCount++] = nums[i];
             }
         }
-        return keep;
+        // set all remaining elements to 0
+        for (; nonZeroCount < size; ++nonZeroCount) {
+            nums[nonZeroCount] = 0;
+        }
     }
 };

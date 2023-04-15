@@ -12,6 +12,9 @@ public:
     /// time complexity: O(n), space complexity: O(1)
     int search(const std::vector<int>& nums, int target)
     {
+        if (nums.empty())
+            return -1;
+
         int low = 0;
         int high = nums.size() - 1;
         while (low <= high) {
