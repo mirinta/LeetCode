@@ -20,12 +20,18 @@ class Solution
 public:
     int removeElement(std::vector<int>& nums, int val)
     {
-        size_t keep = 0;
-        for (size_t search = 0; search < nums.size(); ++search) {
-            if (nums[search] != val) {
-                nums[keep++] = nums[search];
+        // two pointers:
+        // - keep: store elements that are not equal to "val"
+        // - scan: scan all elements
+        if (nums.empty())
+            return 0;
+
+        int keep = 0;
+        for (size_t scan = 0; scan < nums.size(); ++scan) {
+            if (nums[scan] != val) {
+                nums[keep++] = nums[scan];
             }
         }
-        return keep; // warning: narrowing conversion from size_t to int
+        return keep;
     }
 };
