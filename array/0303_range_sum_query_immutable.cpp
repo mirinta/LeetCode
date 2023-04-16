@@ -29,7 +29,7 @@ public:
     int sumRange(int left, int right) { return _preSums[right + 1] - _preSums[left]; }
 
 private:
-    // [0, nums[0,0], nums[0,1], ..., nums[0, N-1]]
+    // [0, sumRange[0,0], sumRange[0,1], ..., sumRange[0, N-1]]
     std::vector<int> _preSums;
 };
 
