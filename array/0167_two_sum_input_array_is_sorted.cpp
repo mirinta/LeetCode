@@ -10,13 +10,13 @@
  *
  * The tests are generated such that there is exactly one solution.
  *
- * !"numbers" is sorted in non-decreasing order.
+ * ! "numbers" is sorted in non-decreasing order.
  *
- * !"index1" and "index2" are 1-indexed.
+ * ! "index1" and "index2" are 1-indexed.
  *
- * !You may not use the same element twice.
+ * ! You may not use the same element twice.
  *
- * !Your solution must use only constant extra place.
+ * ! Your solution must use only constant extra place.
  */
 
 class Solution
