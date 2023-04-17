@@ -23,9 +23,7 @@ public:
         size_t forward = 0;
         size_t backward = size - 1;
         while (forward < backward) {
-            const auto temp = s[forward];
-            s[forward++] = s[backward];
-            s[backward--] = temp;
+            std::swap(s[forward++], s[backward--]);
         }
     }
 };
