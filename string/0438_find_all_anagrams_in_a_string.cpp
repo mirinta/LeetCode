@@ -1,4 +1,5 @@
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 /**
@@ -20,5 +21,37 @@
 class Solution
 {
 public:
-    std::vector<int> findAnagrams(const std::string& s, const std::string& p) {}
+    // similar to leet code 567
+    std::vector<int> findAnagrams(const std::string& s, const std::string& p)
+    {
+        if (s.empty() || p.empty() || p.size() > s.size())
+            return {};
+
+        std::vector<int> result;
+        // to check a substring is valid
+        std::unordered_map<char, int> freq;
+        for (const auto& c : p) {
+            freq[c]++;
+        }
+        size_t counter = 0; // valid if counter = freq.size()
+        // sliding window, characters in range [left, right)
+        int left = 0;
+        int right = 0;
+        while (right < s.size()) {
+            while (right - left < p.size()) {
+                const auto& charRight = s[right++];
+                if (freq.count(charRight) && --freq[charRight] == 0) {
+                    counter++;
+                }
+            }
+            if (counter == freq.size()) {
+                result.push_back(left);
+            }
+            const auto& charLeft = s[left++];
+            if (freq.count(charLeft) && freq[charLeft]++ == 0) {
+                counter--;
+            }
+        }
+        return result;
+    }
 };

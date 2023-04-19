@@ -48,18 +48,18 @@ public:
         for (const auto& c : t) {
             freq[c]++;
         }
-        int counter = freq.size(); // nubmer of unique characters of t
+        size_t counter = 0; // number of unique characters of t
         // sliding window, characters in range [left, right)
         int left = 0;
         int right = 0;
         while (right < s.size()) {
             // expand the window to find a feasible solution
             const auto& charRight = s[right++];
-            if (--freq[charRight] == 0) {
-                counter--;
+            if (freq.count(charRight) && --freq[charRight] == 0) {
+                counter++;
             }
-            // counter = 0 means a feasible solution is found
-            while (counter == 0) {
+            // a feasible solution is found
+            while (counter == freq.size()) {
                 // update the optimal solution
                 if (right - left < minLength) {
                     minStart = left;
@@ -67,8 +67,8 @@ public:
                 }
                 // shrink the window to find a better solution
                 const auto& charLeft = s[left++];
-                if (++freq[charLeft] > 0) {
-                    counter++;
+                if (freq.count(charLeft) && freq[charLeft]++ == 0) {
+                    counter--;
                 }
             }
         }
