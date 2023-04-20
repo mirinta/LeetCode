@@ -2,5 +2,10 @@
 
 Premium problems:
 
-- 370 (array)
-- 1094 (array)
+- No.370 (array)
+- No.1094 (array)
+
+TODO:
+
+- No.28 (string matching), KMP/Rabin-Karp?
+- No.528 (array)
