@@ -51,9 +51,3 @@ public:
         return false;
     }
 };
-
-int main()
-{
-    Solution{}.checkInclusion("trinitrophenylmethylnitramine",
-                              "dinitrophenylhydrazinetrinitrophenylmethylnitramine");
-}
