@@ -1,3 +1,6 @@
+#include <unordered_map>
+#include <vector>
+
 /**
  * Implement the "RandomizedSet" class:
  *
@@ -19,14 +22,37 @@
 
 class RandomizedSet
 {
+private:
+    std::vector<int> _nums;
+    std::unordered_map<int, size_t> _valToIndex;
+
 public:
-    RandomizedSet() {}
+    RandomizedSet() = default;
 
-    bool insert(int val) {}
+    bool insert(int val)
+    {
+        if (_valToIndex.count(val))
+            return false;
 
-    bool remove(int val) {}
+        _valToIndex[val] = _nums.size();
+        _nums.push_back(val);
+        return true;
+    }
 
-    int getRandom() {}
+    bool remove(int val)
+    {
+        if (!_valToIndex.count(val))
+            return false;
+
+        const auto idx = _valToIndex[val];
+        _valToIndex[_nums.back()] = idx;
+        std::swap(_nums[idx], _nums.back());
+        _nums.pop_back();
+        _valToIndex.erase(val);
+        return true;
+    }
+
+    int getRandom() { return _nums[std::rand() % _nums.size()]; }
 };
 
 /**
