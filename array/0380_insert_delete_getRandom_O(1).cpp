@@ -22,6 +22,8 @@
 
 class RandomizedSet
 {
+    // std::vector: access O(1), insertion/removal at the end O(1)
+    // std::unordered_map: access O(1), insertion/removal O(1)
 private:
     std::vector<int> _nums;
     std::unordered_map<int, size_t> _valToIndex;
