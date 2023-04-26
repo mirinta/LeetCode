@@ -41,7 +41,7 @@ private:
 
         int left = maxDepth(node->left);
         int right = maxDepth(node->right);
-        // diameter = max depth of left sub-tree + max depth of right sub-tree
+        // diameter = max depth of left subtree + max depth of right sub-tree
         result = std::max(result, left + right);
         return 1 + std::max(left, right);
     }
