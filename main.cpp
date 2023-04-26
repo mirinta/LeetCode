@@ -1,5 +1,6 @@
 #include <iostream>
-
+#include <memory>
+#include <vector>
 struct ListNode
 {
     int val;
@@ -52,15 +53,53 @@ void printListBackward(ListNode* head)
     std::cout << head->val << "->";
 }
 
+struct TreeNode
+{
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int val, TreeNode* left, TreeNode* right) : val(val), left(left), right(right) {}
+    TreeNode(int val) : TreeNode(val, nullptr, nullptr) {}
+    TreeNode() : TreeNode(0) {}
+};
+
+void traverse(TreeNode* node, std::vector<int>& preorder, std::vector<int>& inorder,
+              std::vector<int>& postorder)
+{
+    if (!node)
+        return;
+
+    preorder.push_back(node->val);
+    traverse(node->left, preorder, inorder, postorder);
+    inorder.push_back(node->val);
+    traverse(node->right, preorder, inorder, postorder);
+    postorder.push_back(node->val);
+}
+
 int main()
 {
-    ListNode n5{5};
-    ListNode n4{n5.val - 1, &n5};
-    ListNode n3{n4.val - 1, &n4};
-    ListNode n2{n3.val - 1, &n3};
-    ListNode n1{n2.val - 1, &n2};
-    ListNode n0{n1.val - 1, &n1};
+    TreeNode n1(1);
+    TreeNode n2(2);
+    TreeNode n3(3);
+    TreeNode n4(4);
+    TreeNode n5(5);
+    TreeNode n6(6);
+    TreeNode n7(7);
+    TreeNode n8(8);
+    TreeNode n9(9);
 
-    printListForward(&n0);
-    printListBackward(&n0);
+    n1.left = &n2;
+    n1.right = &n3;
+    n2.left = &n5;
+    n2.right = &n4;
+    n3.left = &n8;
+    n3.right = &n9;
+    n4.left = &n6;
+    n4.right = &n7;
+
+    std::vector<int> preorder;
+    std::vector<int> inorder;
+    std::vector<int> postorder;
+    traverse(&n1, preorder, inorder, postorder);
+    std::cout << '\n';
 }
