@@ -14,7 +14,7 @@
  *
  * https://mp.weixin.qq.com/s/Yq49ZBEW3DJx6nXk1fMusw
  *
- * ! This problem is the same 1081.
+ * ! This problem is the same as 1081.
  */
 
 class Solution
