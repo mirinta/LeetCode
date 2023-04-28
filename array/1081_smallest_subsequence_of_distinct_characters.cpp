@@ -7,7 +7,7 @@
  * Given a string "s", return the lexicographically smallest subsequence of "s" that contains all
  * the distinct characters of "s" exactly once.
  *
- * ! This problem is teh same as 316.
+ * ! This problem is the same as 316.
  */
 
 class Solution
