@@ -1,3 +1,4 @@
+#include <random>
 #include <vector>
 
 /**
@@ -16,6 +17,9 @@ public:
         if (nums.empty())
             return -1;
 
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(nums.begin(), nums.end(), g);
         int low = 0;
         int high = nums.size() - 1;
         // k is 1-indexed
