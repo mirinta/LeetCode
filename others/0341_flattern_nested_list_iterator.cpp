@@ -66,7 +66,7 @@ public:
     }
 
 private:
-    std::list<NestedInteger> list;
+    std::list<NestedInteger> list; // constant time removal, more effective than vector
 };
 
 /**
