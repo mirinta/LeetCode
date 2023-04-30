@@ -27,18 +27,24 @@
 class Solution
 {
 public:
-    int openLock(const std::vector<std::string>& deadends, const std::string target)
+    int openLock(const std::vector<std::string>& deadends, const std::string& target)
     {
-        const std::unordered_set<std::string> prohibitions(deadends.cbegin(), deadends.cend());
+        // record all deadends
+        std::unordered_set<std::string> prohibitions;
+        for (const auto& s : deadends) {
+            prohibitions.insert(s);
+        }
+        // record if a candidate is already checked
         std::unordered_set<std::string> checked;
         checked.insert("0000");
+        // BFS
         std::queue<std::string> queue;
         queue.push("0000");
         int result = 0;
         while (!queue.empty()) {
             const auto size = queue.size();
             for (size_t i = 0; i < size; ++i) {
-                const auto& s = queue.front();
+                const auto s = queue.front();
                 queue.pop();
                 if (prohibitions.count(s))
                     continue;
@@ -85,5 +91,3 @@ private:
         return result;
     }
 };
-
-int main() { Solution{}.openLock({"0201", "0101", "0102", "1212", "2002"}, "0202"); }
