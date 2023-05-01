@@ -20,5 +20,28 @@ struct TreeNode
 class Solution
 {
 public:
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {}
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
+    {
+        if (!p || !q)
+            return nullptr;
+
+        return find(root, p->val, q->val);
+    }
+
+private:
+    TreeNode* find(TreeNode* node, int val1, int val2)
+    {
+        if (!node)
+            return nullptr;
+
+        if (node->val == val1 || node->val == val2)
+            return node;
+
+        auto* left = find(node->left, val1, val2);
+        auto* right = find(node->right, val1, val2);
+        if (left && right)
+            return node;
+
+        return left ? left : right;
+    }
 };
