@@ -1,3 +1,4 @@
+#include <queue>
 #include <vector>
 
 /**
@@ -34,19 +35,42 @@ class Solution
 public:
     bool canFinish(int numCourses, const std::vector<std::vector<int>>& prerequisites)
     {
-        // build a graph
+        // build graph
         std::vector<std::vector<int>> graph(numCourses, std::vector<int>{});
         for (const auto& p : prerequisites) {
             graph[p[1]].push_back(p[0]);
         }
-        // DFS
-        std::vector<bool> visited(numCourses, false);
-        std::vector<bool> inPath(numCourses, false);
-        bool isCyclic = false;
-        for (size_t s = 0; s < graph.size(); ++s) {
-            traverse(graph, s, visited, inPath, isCyclic);
+        // version 1: DFS
+        // std::vector<bool> visited(numCourses, false);
+        // std::vector<bool> inPath(numCourses, false);
+        // bool isCyclic = false;
+        // for (size_t s = 0; s < graph.size(); ++s) {
+        //     traverse(graph, s, visited, inPath, isCyclic);
+        // }
+        // return !isCyclic;
+        // version 2: BFS
+        std::vector<int> indegrees(numCourses, 0);
+        for (const auto& p : prerequisites) {
+            indegrees[p[0]]++; // bi -> ai
         }
-        return !isCyclic;
+        std::queue<int> queue;
+        for (size_t i = 0; i < indegrees.size(); ++i) {
+            if (indegrees[i] == 0) {
+                queue.push(i);
+            }
+        }
+        int count = 0;
+        while (!queue.empty()) {
+            const auto s = queue.front();
+            queue.pop();
+            count++;
+            for (const auto& i : graph[s]) {
+                if (--indegrees[i] == 0) {
+                    queue.push(i);
+                }
+            }
+        }
+        return count == numCourses;
     }
 
 private:
@@ -68,3 +92,5 @@ private:
         inPath[source] = false;
     }
 };
+
+int main() { Solution{}.canFinish(2, {{0, 1}}); }

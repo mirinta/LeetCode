@@ -1,3 +1,4 @@
+#include <queue>
 #include <vector>
 
 /**
@@ -28,19 +29,46 @@ public:
         for (const auto& p : prerequisites) {
             graph[p[1]].push_back(p[0]); // bi -> [ai, ...]
         }
-        // DFS
-        visited.resize(numCourses, false);
-        inPath.resize(numCourses, false);
-        result.clear();
-        hasCycle = false;
-        for (size_t i = 0; i < graph.size(); ++i) {
-            traverse(graph, i);
+        // version 1: DFS
+        // visited.resize(numCourses, false);
+        // inPath.resize(numCourses, false);
+        // result.clear();
+        // hasCycle = false;
+        // for (size_t i = 0; i < graph.size(); ++i) {
+        //     traverse(graph, i);
+        // }
+        // if (hasCycle)
+        //     return {};
+
+        // std::reverse(result.begin(), result.end());
+        // return result;
+        // version 2: BFS
+        std::vector<int> indegrees(numCourses, 0);
+        for (const auto& p : prerequisites) {
+            indegrees[p[0]]++;
         }
-        if (hasCycle)
+        std::queue<int> queue;
+        for (size_t i = 0; i < indegrees.size(); ++i) {
+            if (indegrees[i] == 0) {
+                queue.push(i);
+            }
+        }
+        std::vector<int> result;
+        int count = 0;
+        while (!queue.empty()) {
+            const auto s = queue.front();
+            queue.pop();
+            result.push_back(s);
+            count++;
+            for (const auto& i : graph[s]) {
+                if (--indegrees[i] == 0) {
+                    queue.push(i);
+                }
+            }
+        }
+        if (count != numCourses)
             return {};
 
-        // reverse postorder traversal
-        std::reverse(result.begin(), result.end());
         return result;
     }
 
