@@ -12,5 +12,5 @@ TODO:
 - [ ] No.1650 (binary tree)
 - [ ] No.1676 (binary tree)
 - [x] No.0323 (graph), using Union-Find
-- [ ] No.1135 (graph), try Prim algorithm
+- [x] No.1135 (graph), try Prim algorithm
 - [ ] No.1584 (graph), try Prim algorithm
