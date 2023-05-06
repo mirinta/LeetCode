@@ -1,17 +1,16 @@
 # leet_code
 
-Premium problems:
-
-- No.370 (array)
-- No.1094 (array)
-- No.1644 (binary tree)
-- No.1650 (binary tree)
-- No.1676 (binary tree)
-- No.323 (graph)
-
 TODO:
 
-- No.28 (string matching), KMP/Rabin-Karp?
-- No.1089 (array)
-- No.124 (binary tree)
-- No.297 (binary tree), try other methods
+- [ ] No.0028 (string), KMP/Rabin-Karp?
+- [ ] No.0370 (array)
+- [ ] No.1094 (array)
+- [ ] No.1089 (array)
+- [ ] No.0124 (binary tree)
+- [ ] No.0297 (binary tree), try other methods
+- [ ] No.1644 (binary tree)
+- [ ] No.1650 (binary tree)
+- [ ] No.1676 (binary tree)
+- [x] No.0323 (graph), using Union-Find
+- [ ] No.1135 (graph), try Prim algorithm
+- [ ] No.1584 (graph), try Prim algorithm
