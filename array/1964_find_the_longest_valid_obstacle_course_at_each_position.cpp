@@ -37,7 +37,7 @@ public:
     // - nums[3] = 6, find j = 2, arr = [1, 5, 6, X, X, X], subsequence length = 3;
     // - nums[4] = 4, find j = 1, arr = [1, 4, 6, X, X, X], subsequence length = 2;
     // - nums[5] = 2, find j = 1, arr = [1, 2, 6, X, X, X], subsequence length = 2;
-    // - put all sebsequence length above in a vector and return, [1, 1, 2, 3, 2, 2]
+    // - put all subsequence length above in a vector and return, [1, 1, 2, 3, 2, 2]
     std::vector<int> longestObstacleCourseAtEachPosition(std::vector<int>& obstacles)
     {
         if (obstacles.empty())
