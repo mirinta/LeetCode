@@ -37,11 +37,10 @@ private:
 
         std::vector<int> distTo(graph.size(), INT_MAX);
         distTo[source] = 0;
-        auto comp = [&distTo](int v1, int v2) { return distTo[v1] > distTo[v2]; };
-        std::priority_queue<int, std::vector<int>, decltype(comp)> minHeap(comp);
-        minHeap.push(source);
+        std::priority_queue<std::pair<int, int>> minHeap; // <-1 * weight, node id>
+        minHeap.push({0, source});
         while (!minHeap.empty()) {
-            const auto v = minHeap.top();
+            const auto v = minHeap.top().second;
             minHeap.pop();
             for (const auto& edge : graph[v]) {
                 // p = edge.from, q = edge.to, w = edge.weight
@@ -50,7 +49,7 @@ private:
                 const auto dist = distTo[edge.from] + edge.weight;
                 if (distTo[edge.to] > dist) {
                     distTo[edge.to] = dist;
-                    minHeap.push(edge.to);
+                    minHeap.push({-dist, edge.to});
                 }
             }
         }
