@@ -14,3 +14,5 @@ TODO:
 - [x] No.0323 (graph), using Union-Find
 - [x] No.1135 (graph), try Prim algorithm
 - [ ] No.1584 (graph), try Prim algorithm
+- [ ] No.0146 (LRU Cache), try STL
+- [x] No.0460 (LFU Cache), time limit exceeded
