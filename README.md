@@ -16,3 +16,6 @@ TODO:
 - [ ] No.1584 (graph), try Prim algorithm
 - [ ] No.0146 (LRU Cache), try STL
 - [x] No.0460 (LFU Cache), time limit exceeded
+- [ ] No.1143 (LCS)
+- [ ] No.1035 (LCS, DP)
+- [ ] No.0518 (DP)
