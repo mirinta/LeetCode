@@ -52,10 +52,3 @@ public:
         return 0;
     }
 };
-
-int main()
-{
-    std::vector<std::vector<int>> edges = {{1, 4}, {2, 4}, {0, 4}, {0, 3}, {0, 2}, {2, 3}};
-    std::vector<double> probs = {0.37, 0.17, 0.93, 0.23, 0.39, 0.04};
-    Solution{}.maxProbability(5, edges, probs, 3, 4);
-}
