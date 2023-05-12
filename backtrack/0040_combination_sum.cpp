@@ -18,7 +18,7 @@ public:
         if (candidates.empty())
             return {};
 
-        std::sort(candidates.begin(), candidates.end()); // arrange repeated values togeter
+        std::sort(candidates.begin(), candidates.end()); // arrange repeated values together
         std::vector<int> combination;
         backtrack(combination, candidates, 0, target);
         return result;
