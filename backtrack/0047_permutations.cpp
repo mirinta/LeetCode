@@ -14,7 +14,7 @@ public:
         if (nums.empty())
             return {};
 
-        std::sort(nums.begin(), nums.end()); // arrange repeated values togeter
+        std::sort(nums.begin(), nums.end()); // arrange repeated values together
         std::vector<int> permutation;
         std::vector<bool> visited(nums.size(), false);
         backtrack(permutation, visited, nums);
