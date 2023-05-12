@@ -21,7 +21,7 @@ struct ListNode
 class Solution
 {
 public:
-    // version 1:
+    // approach 1:
     ListNode* reverseBetween(ListNode* head, int left, int right)
     {
         ListNode resultVHead{-1, head};
@@ -38,7 +38,7 @@ public:
         }
         return resultVHead.next;
     }
-    // version 2:
+    // approach 2:
     //     ListNode* reverseBetween(ListNode* head, int left, int right)
     //     {
     //         if (left == 1)

@@ -40,7 +40,7 @@ public:
         for (const auto& p : prerequisites) {
             graph[p[1]].push_back(p[0]);
         }
-        // version 1: DFS
+        // approach 1: DFS
         // std::vector<bool> visited(numCourses, false);
         // std::vector<bool> inPath(numCourses, false);
         // bool isCyclic = false;
@@ -48,7 +48,7 @@ public:
         //     traverse(graph, s, visited, inPath, isCyclic);
         // }
         // return !isCyclic;
-        // version 2: BFS
+        // approach 2: BFS
         std::vector<int> indegrees(numCourses, 0);
         for (const auto& p : prerequisites) {
             indegrees[p[0]]++; // bi -> ai

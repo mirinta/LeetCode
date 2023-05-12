@@ -19,7 +19,7 @@ class Solution
 public:
     bool hasCycle(ListNode* head)
     {
-        // version 1: hash map
+        // approach 1: hash map
         // std::unordered_map<ListNode*, int> map;
         // auto* iter = head;
         // while (iter) {
@@ -31,7 +31,7 @@ public:
         // }
         // return false;
         // ------------------------------
-        // version 2:
+        // approach 2:
         auto* fast = head;
         auto* slow = head;
         while (fast && fast->next) {

@@ -25,7 +25,7 @@ public:
         if (s.empty())
             return 0;
 
-        // version 1:
+        // approach 1:
         // std::unordered_map<char, int> freq;
         // int maxLength = 0;
         // int left = 0;
@@ -44,7 +44,7 @@ public:
         //     }
         // }
         // ------------------------------
-        // version2:
+        // approach 2:
         std::unordered_map<char, size_t> map; // record the last location of a character
         int maxLength = 0;
         for (size_t left = 0, right = 0; right < s.size(); ++right) {

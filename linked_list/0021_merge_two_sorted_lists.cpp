@@ -24,7 +24,7 @@ class Solution
 public:
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2)
     {
-        // version 1:
+        // approach 1:
         // ListNode vHead{-1, nullptr};
         // auto* iter1 = list1;
         // auto* iter2 = list2;
@@ -47,7 +47,7 @@ public:
         // }
         // return vHead.next;
         // ------------------------------
-        // version 2: recursion
+        // approach 2: recursion
         if (!list1)
             return list2;
 

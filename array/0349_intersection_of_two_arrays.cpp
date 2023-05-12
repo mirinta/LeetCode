@@ -16,14 +16,14 @@ public:
             return {};
 
         std::vector<int> result;
-        // version 1: hash set
+        // approach 1: hash set
         std::unordered_set<int> set(nums1.begin(), nums1.end());
         for (const auto& i : nums2) {
             if (set.erase(i)) {
                 result.push_back(i);
             }
         }
-        // version 2: hash map
+        // approach 2: hash map
         // std::unordered_map<int, int> map;
         // for (const auto& i : nums1) {
         //     map[i] = 1;

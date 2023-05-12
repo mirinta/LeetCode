@@ -59,7 +59,7 @@ private:
 class Solution
 {
 public:
-    // version 1: Minimum Spanning Tree, Kruskal's algorithm
+    // approach 1: Minimum Spanning Tree, Kruskal's algorithm
     // - sort the edges in ascending order, initialize an empty tree T;
     // - for each edge E, skip E if adding it to T causes a cycle, otherwise add it to T;
     // - stop the loop if T has N - 1 edges, where N is the number of nodes.
@@ -78,7 +78,7 @@ public:
     //     }
     //     return uf.count() == 1 ? result : -1;
     // }
-    // version 2: MST, Prim's algorithm
+    // approach 2: MST, Prim's algorithm
     int minimumCost(int n, std::vector<std::vector<int>>& connections)
     {
         if (connections.empty())

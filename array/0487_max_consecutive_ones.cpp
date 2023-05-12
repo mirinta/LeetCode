@@ -16,7 +16,7 @@
 class Solution
 {
 public:
-    // version 1: FIFO queue
+    // approach 1: FIFO queue
     // int findMaxConsecutiveOnes(std::vector<int>& nums)
     // {
     //     if (nums.empty())
@@ -40,7 +40,7 @@ public:
     //     }
     //     return result;
     // }
-    // version 2: sliding window
+    // approach 2: sliding window
     int findMaxConsecutiveOnes(std::vector<int>& nums)
     {
         if (nums.empty())

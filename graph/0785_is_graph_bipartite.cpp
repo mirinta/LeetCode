@@ -31,9 +31,9 @@ public:
         visited = std::vector<int>(graph.size(), false);
         color = std::vector<bool>(graph.size(), false);
         for (size_t v = 0; v < graph.size(); ++v) {
-            // version 1: dfs
+            // approach 1: dfs
             dfs(graph, v);
-            // version 2: bfs
+            // approach 2: bfs
             // bfs(graph, v);
         }
         return result;

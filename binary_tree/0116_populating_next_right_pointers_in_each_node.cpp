@@ -42,7 +42,7 @@ public:
 class Solution
 {
 public:
-    // version 1: BFS
+    // approach 1: BFS
     // Node* connect(Node* root)
     // {
     //     if (!root)
@@ -68,7 +68,7 @@ public:
     //     }
     //     return root;
     // }
-    // version 2: "trinary" tree
+    // approach 2: "trinary" tree
     Node* connect(Node* root)
     {
         if (!root)

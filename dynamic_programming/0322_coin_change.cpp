@@ -13,7 +13,7 @@
 class Solution
 {
 public:
-    // version 1: brute force
+    // approach 1: brute force
     // int coinChange(std::vector<int>& coins, int amount) {
     //     if (amount == 0)
     //         return 0;
@@ -32,7 +32,7 @@ public:
     //     return result == INT_MAX ? -1 : result;
     // }
     // ------------------------------
-    // version 2: DP, top-down, store subproblem results
+    // approach 2: DP, top-down, store subproblem results
     // - table[i] = coinChange(coins, i)
     // - INT_MAX is a flag representing the subproblem is not solved
     // int coinChange(std::vector<int>& coins, int amount) {
@@ -40,7 +40,7 @@ public:
     //     return dp(table, coins, amount);
     // }
     // ------------------------------
-    // version 3: DP, bottom-up
+    // approach 3: DP, bottom-up
     int coinChange(std::vector<int>& coins, int amount)
     {
         const int initVal = amount + 1;

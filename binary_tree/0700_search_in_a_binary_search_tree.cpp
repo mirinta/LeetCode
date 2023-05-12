@@ -25,7 +25,7 @@ public:
     // root->left->val < root->val < root->right->val
     TreeNode* searchBST(TreeNode* root, int val)
     {
-        // version 1: recursion
+        // approach 1: recursion
         // if (!root)
         //     return nullptr;
 
@@ -33,7 +33,7 @@ public:
         //     return root;
 
         // return root->val > val ? searchBST(root->left, val) : searchBST(root->right, val);
-        // version 2: traverse
+        // approach 2: traverse
         if (!root)
             return nullptr;
 

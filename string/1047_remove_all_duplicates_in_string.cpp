@@ -20,7 +20,7 @@ public:
 
         std::string result;
         for (const auto& c : s) {
-            if (result.back() != c) {
+            if (result.empty() || result.back() != c) {
                 result.push_back(c);
             } else {
                 result.pop_back();

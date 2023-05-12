@@ -34,7 +34,7 @@ private:
     }
 
 public:
-    // version 2: recursion
+    // approach 2: recursion
     // bool isSymmetric(TreeNode* root)
     // {
     //     if (!root)
@@ -42,7 +42,7 @@ public:
 
     //     return compare(root->left, root->right);
     // }
-    // version 1: level order traversal
+    // approach 1: level order traversal
     bool isSymmetric(TreeNode* root)
     {
         if (!root)

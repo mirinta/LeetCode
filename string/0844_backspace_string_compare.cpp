@@ -13,7 +13,7 @@ class Solution
 public:
     bool backspaceCompare(const std::string& s, const std::string& t)
     {
-        // version 1: two stacks:
+        // approach 1: two stacks:
         std::stack<char> stackS;
         process(stackS, s);
         std::stack<char> stackT;
@@ -26,7 +26,7 @@ public:
                 return false;
         }
         return true;
-        // version 2: two pointers
+        // approach 2: two pointers
         // const char backspace = '#';
         // int idxS = s.size() - 1;
         // int countS = 0;

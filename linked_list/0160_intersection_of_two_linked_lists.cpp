@@ -25,7 +25,7 @@ class Solution
 public:
     ListNode* getIntersectionNode(ListNode* const headA, ListNode* const headB)
     {
-        // version 1: hash map
+        // approach 1: hash map
         // std::unordered_map<ListNode*, int> map;
         // for(auto* iterA = headA; iterA; iterA = iterA->next) {
         //     map[iterA] = iterA->val;
@@ -38,7 +38,7 @@ public:
         // }
         // return nullptr;
         // ------------------------------
-        // version 2:
+        // approach 2:
         auto* iterA = headA;
         auto* iterB = headB;
         while (iterA != iterB) {

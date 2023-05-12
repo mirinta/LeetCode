@@ -27,7 +27,7 @@ struct TreeNode
 
 class Solution
 {
-    // version 1:
+    // approach 1:
     // public:
     //     bool isValidBST(TreeNode* root) {
     //         if (!root)
@@ -50,7 +50,7 @@ class Solution
 
     //         return traverse(node->left, minNode, node) && traverse(node->right, node, maxNode);
     //     }
-    // version 2: if it is a valid BST, the inorder traversal is in ascending order.
+    // approach 2: if it is a valid BST, the inorder traversal is in ascending order.
 public:
     bool isValidBST(TreeNode* root)
     {

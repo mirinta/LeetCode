@@ -35,7 +35,7 @@ public:
         return result;
     }
 
-    // version 2: encoding
+    // approach 2: encoding
     // public:
     //     vector<vector<string>> groupAnagrams(vector<string>& strs) {
     //         if (strs.empty())

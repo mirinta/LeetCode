@@ -12,7 +12,7 @@ class Solution
 public:
     void moveZeroes(std::vector<int>& nums)
     {
-        // version 1:
+        // approach 1:
         // const auto size = nums.size();
         // if (size <= 1)
         //     return;
@@ -29,7 +29,7 @@ public:
         // for (; nonZeroCount < size; ++nonZeroCount) {
         //     nums[nonZeroCount] = 0;
         // }
-        // version 2:
+        // approach 2:
         if (nums.size() <= 1)
             return;
 

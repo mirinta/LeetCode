@@ -21,12 +21,12 @@ public:
         if (!root)
             return {};
 
-        // version 2: recursion
+        // approach 2: recursion
         std::vector<int> result;
         traverse(result, 0, root);
         return result;
 
-        // version 1: BFS, level order traversal
+        // approach 1: BFS, level order traversal
         // std::vector<int> result;
         // std::queue<TreeNode*> queue;
         // queue.push(root);

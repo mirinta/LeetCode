@@ -15,14 +15,14 @@ class Solution
 public:
     int fib(int n)
     {
-        // version 1: naive recursion
+        // approach 1: naive recursion
         // there are a lot of duplicate calculations during the recursion,
         // e.g., f(n) = f(n-1) + f(n-2), f(n-1) = f(n-2) + f(n-3), f(n-2) is calculated twice
         // if (n == 0 || n == 1)
         //     return n;
         // return fib(n - 1) + fib(n - 2);
         // ------------------------------
-        // version 2: dynamic programming
+        // approach 2: dynamic programming
         // to calculate f(n), we need f(n-1), f(n-2), ..., f(1), f(0)
         // we can store these intermediate results in a container
         // if (n < 2)
@@ -35,7 +35,7 @@ public:
         // }
         // return table[n];
         // ------------------------------
-        // version 3: optimization
+        // approach 3: optimization
         // in fact, we only need two intermediate results, f(n-1) and f(n-2)
         if (n < 2)
             return n;

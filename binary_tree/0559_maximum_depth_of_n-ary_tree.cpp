@@ -38,14 +38,14 @@ public:
         if (!root)
             return 0;
 
-        // version 2: recursion
+        // approach 2: recursion
         int depth = 0;
         for (auto* node : root->children) {
             depth = std::max(depth, maxDepth(node));
         }
         return depth + 1;
 
-        // version 1: level order traversal
+        // approach 1: level order traversal
         // std::queue<Node*> queue;
         // queue.push(root);
         // int maxDepth = 0;

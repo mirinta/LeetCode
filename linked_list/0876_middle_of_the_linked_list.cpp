@@ -22,7 +22,7 @@ class Solution
 public:
     ListNode* middleNode(ListNode* head)
     {
-        // version 1: hash map
+        // approach 1: hash map
         // std::unordered_map<int, ListNode*> map;
         // auto* iter = head;
         // for (int i = 0; iter; iter = iter->next, ++i) {
@@ -30,7 +30,7 @@ public:
         // }
         // return map[map.size() / 2];
         // ------------------------------
-        // version 2:
+        // approach 2:
         auto* slow = head;
         auto* fast = head;
         while (fast && fast->next) {

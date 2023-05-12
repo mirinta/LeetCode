@@ -29,7 +29,7 @@ public:
         for (const auto& p : prerequisites) {
             graph[p[1]].push_back(p[0]); // bi -> [ai, ...]
         }
-        // version 1: DFS
+        // approach 1: DFS
         // visited.resize(numCourses, false);
         // inPath.resize(numCourses, false);
         // result.clear();
@@ -42,7 +42,7 @@ public:
 
         // std::reverse(result.begin(), result.end());
         // return result;
-        // version 2: BFS
+        // approach 2: BFS
         std::vector<int> indegrees(numCourses, 0);
         for (const auto& p : prerequisites) {
             indegrees[p[0]]++;

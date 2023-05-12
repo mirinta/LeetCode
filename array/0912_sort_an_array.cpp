@@ -10,7 +10,7 @@
 
 class Solution
 {
-    // version 1: quick sort
+    // approach 1: quick sort
 public:
     std::vector<int> sortArray(const std::vector<int>& nums)
     {
@@ -85,7 +85,7 @@ private:
         quickSort3Way(nums, gt + 1, high);
     }
     // ------------------------------
-    // version 2: merge sort
+    // approach 2: merge sort
     // public:
     //     std::vector<int> sortArray(const std::vector<int>& nums)
     //     {

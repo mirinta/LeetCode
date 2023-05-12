@@ -19,7 +19,7 @@ public:
         if (arr.size() < 2)
             return false;
 
-        // version 1: hash set
+        // approach 1: hash set
         // std::unordered_set<int> set;
         // for (const auto& i : arr) {
         //     if (set.count(2 * i))
@@ -30,7 +30,7 @@ public:
 
         //     set.insert(i);
         // }
-        // version 2: traverse
+        // approach 2: traverse
         for (size_t i = 0; i < arr.size() - 1; ++i) {
             for (size_t j = 0; j < arr.size(); ++j) {
                 if (i != j && arr[i] == arr[j] * 2)

@@ -20,7 +20,7 @@ struct ListNode
 class Solution
 {
 public:
-    // version 1: stack
+    // approach 1: stack
     // bool isPalindrome(ListNode* head)
     // {
     //     if (!head)
@@ -39,7 +39,7 @@ public:
     //     return true;
     // }
     // ------------------------------
-    // version 2: recursion
+    // approach 2: recursion
     //     bool isPalindrome(ListNode* head)
     //     {
     //         if (!head)
@@ -61,7 +61,7 @@ public:
     //         return result;
     //     }
     // ------------------------------
-    // version 3: iteration
+    // approach 3: iteration
     bool isPalindrome(ListNode* head)
     {
         // step 1: find the middle node

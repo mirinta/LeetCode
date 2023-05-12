@@ -14,7 +14,7 @@
 class Solution
 {
 public:
-    // version 1: DP, time O(n)
+    // approach 1: DP, time O(n)
     // dp[i] = lengthOfLIS of nums[i]
     // find the values < nums[i] and update dp table
     // int lengthOfLIS(std::vector<int>& nums) {
@@ -35,7 +35,7 @@ public:
     //     }
     //     return result;
     // }
-    // version 2: binary search, time O(nlogn)
+    // approach 2: binary search, time O(nlogn)
     int lengthOfLIS(std::vector<int>& nums)
     {
         if (nums.empty())

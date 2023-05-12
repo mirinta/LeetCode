@@ -20,7 +20,7 @@ class Solution
 public:
     ListNode* detectCycle(ListNode* const head)
     {
-        // version 1: hash map
+        // approach 1: hash map
         // std::unordered_map<ListNode*, int> map;
         // for (auto* iter = head; iter; iter = iter->next) {
         //     if (map.find(iter) != map.end())
@@ -30,7 +30,7 @@ public:
         // }
         // return nullptr;
         // ------------------------------
-        // version 2:
+        // approach 2:
         // Let iterA and iterB move from "head" at the same time,
         // speed of iterA = 2x speed of iterB.
         // Suppose the start point is O,

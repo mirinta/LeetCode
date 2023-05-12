@@ -22,7 +22,7 @@ class Solution
 public:
     ListNode* swapPairs(ListNode* head)
     {
-        // version 1: iteration
+        // approach 1: iteration
         // - from: ... -> before -> (iter -> after) -> TAIL...
         // - to: ... -> before -> (after -> iter) -> TAIL...
         // - boundary: swap two adjacent nodes, i.e., iter and iter->next are not nullptr
@@ -39,7 +39,7 @@ public:
         }
         return vHead.next;
         // ------------------------------
-        // version 2: recursion
+        // approach 2: recursion
         // from: ... -> Ni -> N(i+1) -> swapPairs(N(i+2)->TAIL...)
         // to: ... -> N(i+1) -> Ni -> swapPairs(N(i+2)->TAIL...)
         // if (!head || !head->next)
