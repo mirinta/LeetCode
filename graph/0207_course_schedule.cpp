@@ -92,5 +92,3 @@ private:
         inPath[source] = false;
     }
 };
-
-int main() { Solution{}.canFinish(2, {{0, 1}}); }
