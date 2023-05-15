@@ -16,9 +16,10 @@ TODO:
 - [ ] No.1584 (graph), try Prim algorithm
 - [ ] No.0146 (LRU Cache), try STL
 - [x] No.0460 (LFU Cache), time limit exceeded
-- [ ] No.1143 (LCS)
+- [x] No.1143 (LCS)
 - [ ] No.1035 (LCS, DP)
 - [ ] No.0518 (DP)
-- [ ] No.2140 (DP)
-- [ ] No.2466 (DP)
-- [ ] No.1799
+- [x] No.2140 (DP, iterate in reverse order)
+- [x] No.2466 (DP)
+- [x] No.1799 (DP with bitwise mask)
+

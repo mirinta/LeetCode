@@ -15,7 +15,7 @@ class Solution
 {
 public:
     // approach 1: DP, time O(n)
-    // dp[i] = lengthOfLIS of nums[i]
+    // dp[i] = lengthOfLIS that ends with nums[i]
     // find the values < nums[i] and update dp table
     // int lengthOfLIS(std::vector<int>& nums) {
     //     if (nums.empty())

@@ -18,7 +18,7 @@ class Solution
 public:
     int longestCommonSubsequence(std::string text1, std::string text2)
     {
-        // dp[i][j] = longestCommonSubsequence(tesx1[0: i), text2[0: j))
+        // dp[i][j] = longestCommonSubsequence(text1[0: i), text2[0: j))
         const auto m = text1.size();
         const auto n = text2.size();
         std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
