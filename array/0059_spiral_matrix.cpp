@@ -8,7 +8,7 @@
 class Solution
 {
 public:
-    // similar to leet code 54
+    // similar to LC 54
     std::vector<std::vector<int>> generateMatrix(int n)
     {
         if (n <= 0)

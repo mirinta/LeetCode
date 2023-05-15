@@ -21,7 +21,7 @@
 class Solution
 {
 public:
-    // similar to leet code 567
+    // similar to LC 567
     std::vector<int> findAnagrams(const std::string& s, const std::string& p)
     {
         if (s.empty() || p.empty() || p.size() > s.size())

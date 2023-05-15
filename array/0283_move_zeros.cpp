@@ -17,7 +17,7 @@ public:
         // if (size <= 1)
         //     return;
 
-        // similar to leet code 27:
+        // similar to LC 27:
         // move all non-zero elements to the front of the array
         // size_t nonZeroCount = 0;
         // for (size_t i = 0; i < size; ++i) {

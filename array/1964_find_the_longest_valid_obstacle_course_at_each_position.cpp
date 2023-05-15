@@ -24,7 +24,7 @@
 class Solution
 {
 public:
-    // similar to No.300, this problem is to find the longest non-decreasing subsequence
+    // similar to LC 300, this problem is to find the longest non-decreasing subsequence
     // initialize a non-decreasing array with the same size, arr = [X, ..., X], where X = INT_MAX
     // for each nums[i]
     // - find the first position j in arr s.t. arr[j] > nums[i]
