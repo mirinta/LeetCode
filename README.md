@@ -17,7 +17,7 @@ TODO:
 - [ ] No.0146 (LRU Cache), try STL
 - [x] No.0460 (LFU Cache), time limit exceeded
 - [x] No.1143 (LCS)
-- [ ] No.1035 (LCS, DP)
+- [x] No.1035 (LCS, DP)
 - [ ] No.0518 (DP)
 - [x] No.2140 (DP, iterate in reverse order)
 - [x] No.2466 (DP)
