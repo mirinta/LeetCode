@@ -28,6 +28,7 @@ TODO:
 | ------------- | ------------ |
 |[53. Maximum Subarray](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0053_maximum_subarray.cpp)|`DP`, `Kadane's Algorithm`|
 |[72. Edit Distance](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0072_edit_distance.cpp)|`DP`|
+|[115. Distinct Subsequences](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0115_distinct_subsequences.cpp)|`DP`|
 |[265. Paint House II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0265_paint_house.cpp)|`DP`|
 |[300. Longest Increasing Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0300_longest_increasing_subsequence.cpp)|`Binary Search`, `DP`, `LIS`|
 |[354. Russian Doll Envelopes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0354_russian_doll_envelopes.cpp)|`Binary Search`, `LIS`|
@@ -35,5 +36,5 @@ TODO:
 |[712. Minimum ASCII Delete Sum for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0712_minimum_ascii_delete_sum_for_two_strings.cpp)|`DP`, `LCS`|
 |[1035. Uncrossed Lines](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1035_uncrossed_lines.cpp)|`DP`, `LCS`|
 |[1143. Longest Common Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1143_longest_common_subsequence.cpp)|`DP`, `LCS`|
-|[1799. Maximize Score After N Operations](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1799_maximize_score_after_n_operations.cpp)|`DP`, `Bitmask`|
+|[1799. Maximize Score After N Operations](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1799_maximize_score_after_n_operations.cpp)|`Bitmask`, `DP`|
 |[1964. Find the Longest Valid Obstacle Course at Each Position](https://github.com/mirinta/leet_code/blob/master/array/1964_find_the_longest_valid_obstacle_course_at_each_position.cpp)|`Binary Search`, `LIS`|
