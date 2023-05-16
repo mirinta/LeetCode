@@ -43,3 +43,4 @@ TODO:
 |[1799. Maximize Score After N Operations](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1799_maximize_score_after_n_operations.cpp)|`Bitmask`, `DP`|
 |[1964. Find the Longest Valid Obstacle Course at Each Position](https://github.com/mirinta/leet_code/blob/master/array/1964_find_the_longest_valid_obstacle_course_at_each_position.cpp)|`Binary Search`, `LIS`|
 |[2140. Solving Questions With Brainpower](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/2140_solving_questions_with_brainpower.cpp)|`DP`|
+|[2466. Count Ways To Build Good Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/2466_count_ways_to_build_good_strings.cpp)|`DP`|
