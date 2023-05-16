@@ -36,6 +36,7 @@ TODO:
 |[322. Coin Change](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0322_coin_change.cpp)|`DP`|
 |[354. Russian Doll Envelopes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0354_russian_doll_envelopes.cpp)|`Binary Search`, `LIS`|
 |[509. Fibonacci Number](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0509_fibonacci_number.cpp)|`DP`|
+|[516. Longest Palindromic Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0516_longest_palindromic_subsequence.cpp)|`DP`, `LPS`|
 |[583. Delete Operation for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0583_delete_operations_for_two_strings.cpp)|`DP`, `LCS`|
 |[712. Minimum ASCII Delete Sum for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0712_minimum_ascii_delete_sum_for_two_strings.cpp)|`DP`, `LCS`|
 |[931. Minimum Falling Path Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0931_minimum_falling_path_sum.cpp)|`DP`|
