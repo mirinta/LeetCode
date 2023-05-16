@@ -21,7 +21,7 @@ TODO:
 - [ ] No.0518 (DP)
 - [x] No.2140 (DP, iterate in reverse order)
 - [x] No.2466 (DP)
-- [x] No.1799 (DP with bitwise mask)
+- [x] No.1799 (DP with bitmask)
 - [ ] No.0265 (DP), try better solution
 
 |     Title     |     Tags     |
@@ -33,4 +33,5 @@ TODO:
 |[712. Minimum ASCII Delete Sum for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0712_minimum_ascii_delete_sum_for_two_strings.cpp)|`DP`, `LCS`|
 |[1035. Uncrossed Lines](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1035_uncrossed_lines.cpp)|`DP`, `LCS`|
 |[1143. Longest Common Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1143_longest_common_subsequence.cpp)|`DP`, `LCS`|
+|[1799. Maximize Score After N Operations](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1799_maximize_score_after_n_operations.cpp)|`DP`, `Bitmask`|
 |[1964. Find the Longest Valid Obstacle Course at Each Position](https://github.com/mirinta/leet_code/blob/master/array/1964_find_the_longest_valid_obstacle_course_at_each_position.cpp)|`Binary Search`, `LIS`|
