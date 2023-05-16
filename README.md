@@ -37,6 +37,7 @@ TODO:
 |[509. Fibonacci Number](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0509_fibonacci_number.cpp)|`DP`|
 |[583. Delete Operation for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0583_delete_operations_for_two_strings.cpp)|`DP`, `LCS`|
 |[712. Minimum ASCII Delete Sum for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0712_minimum_ascii_delete_sum_for_two_strings.cpp)|`DP`, `LCS`|
+|[931. Minimum Falling Path Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0931_minimum_falling_path_sum.cpp)|`DP`|
 |[1035. Uncrossed Lines](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1035_uncrossed_lines.cpp)|`DP`, `LCS`|
 |[1143. Longest Common Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1143_longest_common_subsequence.cpp)|`DP`, `LCS`|
 |[1799. Maximize Score After N Operations](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1799_maximize_score_after_n_operations.cpp)|`Bitmask`, `DP`|
