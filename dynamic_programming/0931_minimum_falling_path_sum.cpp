@@ -32,9 +32,6 @@ public:
         // same.
         for (int i = 1; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (i == 0)
-                    continue;
-
                 auto val = matrix[i - 1][j];
                 if (j - 1 >= 0) {
                     val = std::min(val, matrix[i - 1][j - 1]);
