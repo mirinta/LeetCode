@@ -46,5 +46,6 @@ public:
             }
         }
         return dp[0][n - 1];
+        // approach 2: return s.size() - longestPalindromeSubseq(s), see LC 516
     }
 };
