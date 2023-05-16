@@ -24,8 +24,8 @@ TODO:
 - [x] No.1799 (DP with bitmask)
 - [ ] No.0265 (DP), try better solution
 
-|     Title     |     Tags     |
-| ------------- | ------------ |
+|          Problems          |          Tags          |
+| -------------------------- | ---------------------- |
 |[53. Maximum Subarray](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0053_maximum_subarray.cpp)|`DP`, `Kadane's Algorithm`|
 |[72. Edit Distance](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0072_edit_distance.cpp)|`DP`|
 |[115. Distinct Subsequences](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0115_distinct_subsequences.cpp)|`DP`|
