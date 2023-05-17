@@ -47,11 +47,12 @@ public:
                 } else {
                     // here, we can either pick or not pick the ith coin
                     // - if the ith coin is picked, then the coin range is expanded to [0:i),
+                    //   because each coin can be used multiple times
                     //   our goal is to make up the remaining amount r = j - denomination of the ith
                     //   coin, we have dp[i][r] ways to achieve the goal
                     // - otherwise, the coin list is still [0:i-1), and the goal is still j,
                     //   we have d[i-1][j] ways to achieve the goal
-                    // in summary, for the ith coin, we have d[i-1][j]+dp[i][r] to make up j
+                    // in summary, for the ith coin, we have d[i-1][j] + dp[i][r] ways to make up j
                     dp[i][j] = dp[i - 1][j] + dp[i][j - coins[i - 1]];
                 }
             }
