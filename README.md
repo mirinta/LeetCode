@@ -36,6 +36,7 @@ TODO:
 |[322. Coin Change](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0322_coin_change.cpp)|`DP`|
 |[354. Russian Doll Envelopes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0354_russian_doll_envelopes.cpp)|`Binary Search`, `LIS`|
 |[416. Partition Equal Subset Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0416_partition_equal_subset_sum.cpp)|`DP`, `Knapsack`|
+|[494. Target Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0494_target_sum.cpp)|`DP`, `Knapsack`|
 |[509. Fibonacci Number](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0509_fibonacci_number.cpp)|`DP`|
 |[516. Longest Palindromic Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0516_longest_palindromic_subsequence.cpp)|`DP`, `LPS`|
 |[518. Coin Change II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0518_coin_change.cpp)|`DP`, `Knapsack`|
