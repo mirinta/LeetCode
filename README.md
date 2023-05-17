@@ -27,6 +27,7 @@ TODO:
 |          Problems           |         Tags            |
 | :-------------------------- | :---------------------- |
 |[53. Maximum Subarray](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0053_maximum_subarray.cpp)|`DP`, `Kadane's Algorithm`|
+|[64. Minimum Path Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0064_minimum_path_sum.cpp)|`DP`|
 |[72. Edit Distance](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0072_edit_distance.cpp)|`DP`|
 |[115. Distinct Subsequences](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0115_distinct_subsequences.cpp)|`DP`|
 |[139. Word Break](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0139_word_breaks.cpp)|`DP`|
