@@ -32,6 +32,7 @@ TODO:
 |[115. Distinct Subsequences](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0115_distinct_subsequences.cpp)|`DP`|
 |[139. Word Break](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0139_word_breaks.cpp)|`DP`|
 |[140. Word Break II](https://github.com/mirinta/leet_code/blob/master/backtrack/0140_word_break.cpp)|`Backtracking`|
+|[174. Dungeon Game](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0174_dungeon_game.cpp)|`DP`|
 |[265. Paint House II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0265_paint_house.cpp)|`DP`|
 |[300. Longest Increasing Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0300_longest_increasing_subsequence.cpp)|`Binary Search`, `DP`, `LIS`|
 |[322. Coin Change](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0322_coin_change.cpp)|`DP`|
