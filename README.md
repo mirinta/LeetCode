@@ -18,7 +18,7 @@ TODO:
 - [x] No.0460 (LFU Cache), time limit exceeded
 - [x] No.1143 (LCS)
 - [x] No.1035 (LCS, DP)
-- [ ] No.0518 (DP)
+- [x] No.0518 (DP), turn into a Knapsack problem
 - [x] No.2140 (DP, iterate in reverse order)
 - [x] No.2466 (DP)
 - [x] No.1799 (DP with bitmask)
@@ -42,6 +42,7 @@ TODO:
 |[416. Partition Equal Subset Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0416_partition_equal_subset_sum.cpp)|`DP`, `Knapsack`|
 |[494. Target Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0494_target_sum.cpp)|`DP`, `Knapsack`|
 |[509. Fibonacci Number](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0509_fibonacci_number.cpp)|`DP`|
+|[514. Freedom Trail](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0514_freedom_trail.cpp)|`DP`|
 |[516. Longest Palindromic Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0516_longest_palindromic_subsequence.cpp)|`DP`, `LPS`|
 |[518. Coin Change II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0518_coin_change.cpp)|`DP`, `Knapsack`|
 |[583. Delete Operation for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0583_delete_operations_for_two_strings.cpp)|`DP`, `LCS`|
