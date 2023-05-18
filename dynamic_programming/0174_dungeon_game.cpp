@@ -27,16 +27,43 @@ class Solution
 public:
     int calculateMinimumHP(std::vector<std::vector<int>>& dungeon)
     {
+        // approach 1: DP (iterative)
         const auto m = dungeon.size();
         const auto n = dungeon[0].size();
-        Matrix memo(m, std::vector<int>(n, -1)); // -1 means not calculated
-        return dp(memo, 0, 0, dungeon);
+        // dp[i][j] = min initial HP moving from point(i,j) to point(n-1,n-1)
+        // since the knight can only move rightward or downward,
+        // d[i][j] is dependent on dp[i+1][j] and dp[i][j+1]
+        std::vector<std::vector<int>> dp(m, std::vector<int>(n, 0));
+        // base cases:
+        // - dp[m-1][n-1], at the bottom-right
+        // - for any i != m-1, dp[i][n-1], points in the last column
+        // - for any j != n-1, dp[m-1][j], points in the last row
+        dp[m - 1][n - 1] = std::max(1 - dungeon[m - 1][n - 1], 1);
+        for (int i = m - 2; i >= 0; --i) {
+            dp[i][n - 1] = std::max(dp[i + 1][n - 1] - dungeon[i][n - 1], 1);
+        }
+        for (int j = n - 2; j >= 0; --j) {
+            dp[m - 1][j] = std::max(dp[m - 1][j + 1] - dungeon[m - 1][j], 1);
+        }
+        for (int i = m - 2; i >= 0; --i) {
+            for (int j = n - 2; j >= 0; --j) {
+                dp[i][j] = std::max(std::min(dp[i + 1][j], dp[i][j + 1]) - dungeon[i][j], 1);
+            }
+        }
+        return dp[0][0];
     }
 
 private:
-    using Matrix = std::vector<std::vector<int>>;
-    // dp(i, j) = min initial HP moving from point(i, j) to point(n - 1, n - 1)
-    int dp(Matrix& memo, int i, int j, const Matrix& dungeon)
+    // approach 2: DP (recursion + memo)
+    int calculateMinimumHP_v2(const std::vector<std::vector<int>>& dungeon)
+    {
+        const auto m = dungeon.size();
+        const auto n = dungeon[0].size();
+        std::vector<std::vector<int>> memo(m, std::vector<int>(n, -1)); // -1 means not calculated
+        return dp(memo, 0, 0, dungeon);
+    }
+    int dp(std::vector<std::vector<int>>& memo, int i, int j,
+           const std::vector<std::vector<int>>& dungeon)
     {
         const auto m = dungeon.size();
         const auto n = dungeon[0].size();
@@ -44,14 +71,14 @@ private:
             return INT_MAX;
 
         if (i == m - 1 && j == n - 1)
-            return dungeon[i][j] >= 0 ? 1 : -dungeon[i][j] + 1;
+            return std::max(1 - dungeon[i][j], 1);
 
         if (memo[i][j] != -1)
             return memo[i][j];
 
         const auto hp =
             std::min(dp(memo, i + 1, j, dungeon), dp(memo, i, j + 1, dungeon)) - dungeon[i][j];
-        memo[i][j] = hp > 0 ? hp : 1;
+        memo[i][j] = std::max(hp, 1);
         return memo[i][j];
     }
 };
