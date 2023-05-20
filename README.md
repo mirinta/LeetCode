@@ -35,6 +35,7 @@ TODO:
 |[70. Climbing Stairs](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0070_climbing_stairs.cpp)|`DP`|
 |[72. Edit Distance](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0072_edit_distance.cpp)|`DP`|
 |[115. Distinct Subsequences](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0115_distinct_subsequences.cpp)|`DP`|
+|[120. Triangle](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0120_triangle.cpp)|`DP`|
 |[139. Word Break](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0139_word_breaks.cpp)|`DP`|
 |[140. Word Break II](https://github.com/mirinta/leet_code/blob/master/backtrack/0140_word_break.cpp)|`Backtracking`|
 |[174. Dungeon Game](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0174_dungeon_game.cpp)|`DP`|
