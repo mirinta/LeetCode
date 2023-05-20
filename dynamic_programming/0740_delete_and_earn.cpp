@@ -24,7 +24,7 @@ public:
         // construct an array: arr[i] = min points we earn if we delete i
         // index:  0  1  2  3  4
         // value:  0  0  4  9  4
-        // if we pick index i, then index of i+1 and i-1 can't be pickd
+        // if we pick index i, then index of i+1 and i-1 can't be picked
         // this is similar to the House Robber Problem, see LC 198
         std::unordered_map<int, int> map; // map[i] = nums[i] * number of nums[i]
         int maxNum = INT_MIN;
