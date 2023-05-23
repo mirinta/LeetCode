@@ -26,7 +26,7 @@ public:
         for (const auto& val : nums) {
             m_minHeap.push(val);
         }
-        while (!m_minHeap.empty() && m_minHeap.size() > m_k) {
+        while (m_minHeap.size() > m_k) {
             m_minHeap.pop();
         }
     }
