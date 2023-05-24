@@ -44,6 +44,7 @@ TODO:
 |[221. Maximal Square](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0221_maximal_square.cpp)|`DP`|
 |[256. Paint House](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0256_paint_house.cpp)|`DP`|
 |[265. Paint House II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0265_paint_house.cpp)|`DP`|
+|[279. Perfect Squares](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0279_perfect_squares.cpp)|`DP`, `Knapsack`|
 |[300. Longest Increasing Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0300_longest_increasing_subsequence.cpp)|`Binary Search`, `DP`, `LIS`|
 |[322. Coin Change](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0322_coin_change.cpp)|`DP`|
 |[354. Russian Doll Envelopes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0354_russian_doll_envelopes.cpp)|`Binary Search`, `LIS`|
