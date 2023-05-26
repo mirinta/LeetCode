@@ -51,6 +51,7 @@ TODO:
 |[354. Russian Doll Envelopes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0354_russian_doll_envelopes.cpp)|`Binary Search`, `LIS`|
 |[377. Combination Sum IV](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0377_combinatinon_sum.cpp)|`DP`, `Knapsack`|
 |[416. Partition Equal Subset Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0416_partition_equal_subset_sum.cpp)|`DP`, `Knapsack`|
+|[474. Ones and Zeroes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0474_ones_and_zeros.cpp)|`DP`, `Knapsack`|
 |[494. Target Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0494_target_sum.cpp)|`DP`, `Knapsack`|
 |[509. Fibonacci Number](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0509_fibonacci_number.cpp)|`DP`|
 |[514. Freedom Trail](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0514_freedom_trail.cpp)|`DP`|
