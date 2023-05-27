@@ -65,6 +65,8 @@ TODO:
 |[931. Minimum Falling Path Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0931_minimum_falling_path_sum.cpp)|`DP`|
 |[1035. Uncrossed Lines](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1035_uncrossed_lines.cpp)|`DP`, `LCS`|
 |[1137. N-th Tribonacci Number](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1137_nth_tribonacci_number.cpp)|`DP`|
+|[1140. Stone Game II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1140_stone_game.cpp)|`DP`, `Zero-Sum Game`|
+|[1406. Stone Game III](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1406_stone_game.cpp)|`DP`, `Zero-Sum Game`|
 |[1143. Longest Common Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1143_longest_common_subsequence.cpp)|`DP`, `LCS`|
 |[1312. Minimum Insertion Steps to Make a String Palindrome](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1312_minimum_insertion_steps_to_make_a_string_palindrome.cpp)|`DP`, `LPS`|
 |[1799. Maximize Score After N Operations](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1799_maximize_score_after_n_operations.cpp)|`Bitmask`, `DP`|
