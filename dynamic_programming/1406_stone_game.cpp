@@ -27,12 +27,38 @@ class Solution
 public:
     std::string stoneGameIII(const std::vector<int>& stoneValue)
     {
-        return stoneGameIII_v1(stoneValue);
+        const auto n = stoneValue.size();
+        if (n == 0)
+            return {};
+
+        // approach 2: iterative DP
+        std::vector<int> suffixSum(n + 1, 0);
+        for (int i = n - 1; i >= 0; --i) {
+            suffixSum[i] = suffixSum[i + 1] + stoneValue[i];
+        }
+        // dp[i] = the max score the player can get when the game starts with stones[i:n)
+        std::vector<int> dp(n + 1, INT_MIN); // stoneValue[i] may be negative
+        dp[n] = 0;                           // no stone to take
+        for (int i = n - 1; i >= 0; --i) {
+            int score = 0;
+            for (int choice = 1; choice <= 3; ++choice) {
+                if (i + choice - 1 >= n)
+                    break;
+
+                score += stoneValue[i + choice - 1];
+                dp[i] = std::max(dp[i], score + suffixSum[i + choice] - dp[i + choice]);
+            }
+        }
+        const int diff = 2 * dp[0] - suffixSum[0];
+        if (diff == 0)
+            return "Tie";
+
+        return diff > 0 ? "Alice" : "Bob";
     }
 
 private:
     // approach 1: similar to LC 1140
-    // - LC 1140 computes the highest value that Alice can take, i.e., Alice's best strategy
+    // - In LC 1140, we computes the highest value that Alice can take
     // - Since both players are optimal, Alice's best strategy is established based on Bob's best
     // strategy
     // - Because this is a zero-sum game, we know that max_score_alice + max_score_bob = total_score
