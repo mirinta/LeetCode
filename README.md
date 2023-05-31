@@ -52,6 +52,7 @@ TODO:
 |[322. Coin Change](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0322_coin_change.cpp)|`DP`|
 |[337. House Robber III](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0337_house_robber.cpp)|`DP`, `House Robber`|
 |[354. Russian Doll Envelopes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0354_russian_doll_envelopes.cpp)|`Binary Search`, `LIS`|
+|[376. Wiggle Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0376_wiggle_subsequence.cpp)|`DP`, `Basic I`|
 |[377. Combination Sum IV](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0377_combinatinon_sum.cpp)|`DP`, `Knapsack`|
 |[416. Partition Equal Subset Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0416_partition_equal_subset_sum.cpp)|`DP`, `Knapsack`|
 |[474. Ones and Zeroes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0474_ones_and_zeros.cpp)|`DP`, `Knapsack`|
