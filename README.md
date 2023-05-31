@@ -36,6 +36,7 @@ TODO:
 |[64. Minimum Path Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0064_minimum_path_sum.cpp)|`DP`|
 |[70. Climbing Stairs](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0070_climbing_stairs.cpp)|`DP`|
 |[72. Edit Distance](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0072_edit_distance.cpp)|`DP`|
+|[91. Decode Ways](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0091_decode_ways.cpp)|`DP`|
 |[115. Distinct Subsequences](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0115_distinct_subsequences.cpp)|`DP`|
 |[120. Triangle](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0120_triangle.cpp)|`DP`|
 |[139. Word Break](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0139_word_breaks.cpp)|`DP`|
