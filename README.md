@@ -45,8 +45,8 @@ TODO:
 |[198. House Robber](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0198_house_robber.cpp)|`DP`, `House Robber`|
 |[213. House Robber II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0213_house_robber.cpp)|`DP`, `House Robber`|
 |[221. Maximal Square](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0221_maximal_square.cpp)|`DP`|
-|[256. Paint House](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0256_paint_house.cpp)|`DP`|
-|[265. Paint House II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0265_paint_house.cpp)|`DP`|
+|[256. Paint House](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0256_paint_house.cpp)|`DP`, `Basic I`|
+|[265. Paint House II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0265_paint_house.cpp)|`DP`, `Basic I`|
 |[279. Perfect Squares](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0279_perfect_squares.cpp)|`DP`, `Knapsack`|
 |[300. Longest Increasing Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0300_longest_increasing_subsequence.cpp)|`Binary Search`, `DP`, `LIS`|
 |[322. Coin Change](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0322_coin_change.cpp)|`DP`|
@@ -70,6 +70,7 @@ TODO:
 |[1035. Uncrossed Lines](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1035_uncrossed_lines.cpp)|`DP`, `LCS`|
 |[1137. N-th Tribonacci Number](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1137_nth_tribonacci_number.cpp)|`DP`|
 |[1140. Stone Game II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1140_stone_game.cpp)|`DP`, `Zero-Sum Game`|
+|[1289. Minimum Falling Path Sum II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1289_minimum_falling_path_sum.cpp)|`DP`, `Basic I`|
 |[1406. Stone Game III](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1406_stone_game.cpp)|`DP`, `Zero-Sum Game`|
 |[1143. Longest Common Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1143_longest_common_subsequence.cpp)|`DP`, `LCS`|
 |[1312. Minimum Insertion Steps to Make a String Palindrome](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1312_minimum_insertion_steps_to_make_a_string_palindrome.cpp)|`DP`, `LPS`|
