@@ -42,8 +42,8 @@ TODO:
 |[139. Word Break](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0139_word_breaks.cpp)|`DP`|
 |[140. Word Break II](https://github.com/mirinta/leet_code/blob/master/backtrack/0140_word_break.cpp)|`Backtracking`|
 |[174. Dungeon Game](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0174_dungeon_game.cpp)|`DP`|
-|[198. House Robber](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0198_house_robber.cpp)|`DP`, `House Robber`|
-|[213. House Robber II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0213_house_robber.cpp)|`DP`, `House Robber`|
+|[198. House Robber](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0198_house_robber.cpp)|`DP`, `Basic I`|
+|[213. House Robber II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0213_house_robber.cpp)|`DP`, `Basic I`|
 |[221. Maximal Square](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0221_maximal_square.cpp)|`DP`|
 |[256. Paint House](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0256_paint_house.cpp)|`DP`, `Basic I`|
 |[265. Paint House II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0265_paint_house.cpp)|`DP`, `Basic I`|
@@ -51,7 +51,7 @@ TODO:
 |[279. Perfect Squares](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0279_perfect_squares.cpp)|`DP`, `Knapsack`|
 |[300. Longest Increasing Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0300_longest_increasing_subsequence.cpp)|`Binary Search`, `DP`, `LIS`|
 |[322. Coin Change](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0322_coin_change.cpp)|`DP`|
-|[337. House Robber III](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0337_house_robber.cpp)|`DP`, `House Robber`|
+|[337. House Robber III](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0337_house_robber.cpp)|`DP`, `Binary Tree`|
 |[354. Russian Doll Envelopes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0354_russian_doll_envelopes.cpp)|`Binary Search`, `LIS`|
 |[376. Wiggle Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0376_wiggle_subsequence.cpp)|`DP`, `Basic I`|
 |[377. Combination Sum IV](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0377_combinatinon_sum.cpp)|`DP`, `Knapsack`|
