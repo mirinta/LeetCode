@@ -24,30 +24,45 @@ class Solution
 public:
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2)
     {
-        // approach 1:
-        // ListNode vHead{-1, nullptr};
-        // auto* iter1 = list1;
-        // auto* iter2 = list2;
-        // auto* merge = &vHead;
-        // while (iter1 && iter2) {
-        //     if (iter1->val < iter2->val) {
-        //         merge->next = iter1;
-        //         iter1 = iter1->next;
-        //     } else {
-        //         merge->next = iter2;
-        //         iter2 = iter2->next;
-        //     }
-        //     merge = merge->next;
-        // }
-        // if (iter1 && !iter2) {
-        //     merge->next = iter1;
-        // }
-        // if (!iter1 && iter2) {
-        //     merge->next = iter2;
-        // }
-        // return vHead.next;
-        // ------------------------------
-        // approach 2: recursion
+        if (!list1)
+            return list2;
+
+        if (!list2)
+            return list1;
+
+        ListNode vHead(-1);
+        auto* current = &vHead;
+        auto* p1 = list1;
+        auto* p2 = list2;
+        while (p1 || p2) {
+            if (!p1) {
+                current->next = p2;
+                current = current->next;
+                p2 = p2->next;
+                continue;
+            }
+            if (!p2) {
+                current->next = p1;
+                current = current->next;
+                p1 = p1->next;
+                continue;
+            }
+            if (p1->val < p2->val) {
+                current->next = p1;
+                p1 = p1->next;
+            } else {
+                current->next = p2;
+                p2 = p2->next;
+            }
+            current = current->next;
+        }
+        return vHead.next;
+    }
+
+private:
+    ListNode* approach2(ListNode* list1, ListNode* list2)
+    {
+        // recursion, the original inputs are changed:
         if (!list1)
             return list2;
 
