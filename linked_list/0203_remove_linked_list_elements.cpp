@@ -20,16 +20,39 @@ class Solution
 public:
     ListNode* removeElements(ListNode* head, int val)
     {
-        ListNode resultVHead{-1, head};
-        auto* keep = &resultVHead;
-        for (auto* iter = head; iter; iter = iter->next) {
-            if (iter->val == val)
+        // return removeElements_v2(head, val);
+        return removeElements_v1(head, val);
+    }
+
+private:
+    ListNode* removeElements_v1(ListNode* head, int val)
+    {
+        if (!head)
+            return nullptr;
+
+        auto* node = removeElements(head->next, val);
+        if (head->val == val)
+            return node;
+
+        head->next = node;
+        return head;
+    }
+
+    ListNode* removeElements_v2(ListNode* head, int val)
+    {
+        if (!head)
+            return nullptr;
+
+        ListNode virtualHead(-1);
+        auto* current = &virtualHead;
+        for (auto* i = head; i; i = i->next) {
+            if (i->val == val)
                 continue;
 
-            keep->next = iter;
-            keep = keep->next;
+            current->next = i;
+            current = current->next;
         }
-        keep->next = nullptr;
-        return resultVHead.next;
+        current->next = nullptr; // this is important
+        return virtualHead.next;
     }
 };
