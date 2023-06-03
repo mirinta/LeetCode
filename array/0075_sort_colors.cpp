@@ -17,7 +17,7 @@
 class Solution
 {
 public:
-    void sortColors(vector<int>& nums)
+    void sortColors(std::vector<int>& nums)
     {
         if (nums.size() <= 1)
             return;
