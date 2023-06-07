@@ -66,6 +66,7 @@ TODO:
 |[712. Minimum ASCII Delete Sum for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0712_minimum_ascii_delete_sum_for_two_strings.cpp)|`DP`, `LCS`|
 |[740. Delete and Earn](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0740_delete_and_earn.cpp)|`DP`, `House Robber`|
 |[746. Min Cost Climbing Stairs](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0746_min_cost_climbing_stairs.cpp)|`DP`|
+|[790. Domino and Tromino Tiling](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0790_domino_and_tromino_tiling.cpp)|`DP`|
 |[931. Minimum Falling Path Sum](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0931_minimum_falling_path_sum.cpp)|`DP`|
 |[983. Minimum Cost For Tickets](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0931_minimum_falling_path_sum.cpp)|`DP`|
 |[1027. Longest Arithmetic Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1027_longest_arithmetic_subsequence.cpp)|`DP`, `Subsequence`|
