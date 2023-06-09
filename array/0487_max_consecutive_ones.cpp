@@ -13,36 +13,39 @@
  * efficiently?
  */
 
-class Solution
-{
+class Solution {
 public:
-    // approach 1: FIFO queue
-    // int findMaxConsecutiveOnes(std::vector<int>& nums)
-    // {
-    //     if (nums.empty())
-    //         return 0;
+    int findMaxConsecutiveOnes(const std::vector<int>& nums) {
+        return approach2(nums);
+    }
 
-    //     int result = 0;
-    //     int countZero = 0;
-    //     std::queue<int> queue;
-    //     for (const auto& val : nums) {
-    //         queue.push(val);
-    //         if (val == 0) {
-    //             countZero++;
-    //         }
-    //         while (!queue.empty() && countZero > 1) {
-    //             if (queue.front() == 0) {
-    //                 countZero--;
-    //             }
-    //             queue.pop();
-    //         }
-    //         result = std::max<int>(result, queue.size());
-    //     }
-    //     return result;
-    // }
-    // approach 2: sliding window
-    int findMaxConsecutiveOnes(std::vector<int>& nums)
-    {
+private:
+    // approach 1: queue, time O(n), space O(1)
+    int approach1(const std::vector<int>& nums) {
+        if (nums.empty())
+            return 0;
+
+        int result = 0;
+        int countZero = 0;
+        std::queue<int> queue;
+        for (const auto& val : nums) {
+            queue.push(val);
+            if (val == 0) {
+                countZero++;
+            }
+            while (!queue.empty() && countZero > 1) {
+                if (queue.front() == 0) {
+                    countZero--;
+                }
+                queue.pop();
+            }
+            result = std::max<int>(result, queue.size());
+        }
+        return result;
+    }
+
+    // approach 2: sliding window, time O(n), space O(1)
+    int approach2(const std::vector<int>& nums) {
         if (nums.empty())
             return 0;
 
@@ -61,6 +64,31 @@ public:
                 }
             }
             result = std::max(result, right - left);
+        }
+        return result;
+    }
+
+    // approach 3: DP, time O(n), space O(n)
+    int approach3(const std::vector<int>& nums) {
+        if (nums.empty())
+            return 0;
+
+        // dp[i][0] = max number of consecutive 1's that ends with the ith coint and there's no flipped coin
+        // dp[i][1] = max number of consecutive 1's that ends with the ith coint and there exists a flipped coin
+        const auto n = nums.size();
+        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(2, 0));
+        for (int i = 1; i <= n; ++i) {
+            if (nums[i - 1] == 1) {
+                dp[i][0] = dp[i - 1][0] + 1;
+                dp[i][1] = dp[i - 1][1] + 1;
+            } else {
+                dp[i][0] = 0;
+                dp[i][1] = dp[i - 1][0] + 1;
+            }
+        }
+        int result = INT_MIN;
+        for (const auto& sub : dp) {
+            result = std::max({result, sub[0], sub[1]});
         }
         return result;
     }
