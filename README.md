@@ -49,7 +49,7 @@ TODO:
 |[265. Paint House II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0265_paint_house.cpp)|`DP`, `Basic I`|
 |[276. Paint Fence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0276_paint_fence.cpp)|`DP`, `Basic I`|
 |[279. Perfect Squares](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0279_perfect_squares.cpp)|`DP`, `Knapsack`|
-|[300. Longest Increasing Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0300_longest_increasing_subsequence.cpp)|`Binary Search`, `DP`, `LIS`|
+|[300. Longest Increasing Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0300_longest_increasing_subsequence.cpp)|`Binary Search`, `DP`, `LIS`, `Basic II`|
 |[322. Coin Change](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0322_coin_change.cpp)|`DP`|
 |[337. House Robber III](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0337_house_robber.cpp)|`DP`, `Binary Tree`|
 |[354. Russian Doll Envelopes](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0354_russian_doll_envelopes.cpp)|`Binary Search`, `LIS`|
@@ -64,6 +64,7 @@ TODO:
 |[516. Longest Palindromic Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0516_longest_palindromic_subsequence.cpp)|`DP`, `LPS`|
 |[518. Coin Change II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0518_coin_change.cpp)|`DP`, `Knapsack`|
 |[583. Delete Operation for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0583_delete_operations_for_two_strings.cpp)|`DP`, `LCS`|
+|[673. Number of Longest Increasing Subsequence](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0673_number_of_longest_increasing_subsequence.cpp)|`DP`, `LIS`, `Basic II`|
 |[712. Minimum ASCII Delete Sum for Two Strings](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0712_minimum_ascii_delete_sum_for_two_strings.cpp)|`DP`, `LCS`|
 |[740. Delete and Earn](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0740_delete_and_earn.cpp)|`DP`, `House Robber`|
 |[746. Min Cost Climbing Stairs](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/0746_min_cost_climbing_stairs.cpp)|`DP`|
