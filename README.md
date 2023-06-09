@@ -74,6 +74,7 @@ TODO:
 |[1035. Uncrossed Lines](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1035_uncrossed_lines.cpp)|`DP`, `LCS`|
 |[1137. N-th Tribonacci Number](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1137_nth_tribonacci_number.cpp)|`DP`|
 |[1140. Stone Game II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1140_stone_game.cpp)|`DP`, `Zero-Sum Game`|
+|[1186. Maximum Subarray Sum with One Deletion](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1186_maximum_subarray_sum_with_one_deletion.cpp)|`DP`, `Basic I`|
 |[1230. Toss Strange Coins](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1230_toss_strange_coins.cpp)|`DP`, `Basic I`|
 |[1289. Minimum Falling Path Sum II](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1289_minimum_falling_path_sum.cpp)|`DP`, `Basic I`|
 |[1406. Stone Game III](https://github.com/mirinta/leet_code/blob/master/dynamic_programming/1406_stone_game.cpp)|`DP`, `Zero-Sum Game`|
