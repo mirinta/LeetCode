@@ -35,6 +35,5 @@ class Solution
             }
         } // the loop is terminated when mid = right = left - 1
         return false;
-        return false;
     }
 };
