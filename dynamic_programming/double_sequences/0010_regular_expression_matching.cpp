@@ -63,11 +63,11 @@ public:
                     // case 1, * matches zero preceding element
                     // s: S S S S [?]
                     // p: P P [X *] => P P
-                    bool case1 = dp[i][j - 2]; // not dp[i-1][j-2]
+                    const bool case1 = dp[i][j - 2]; // not dp[i-1][j-2]
                     // case 2, * matches at least one preceding element
                     // s: S S S S [?], ? can be any character if X = '.', otherwise it must be X
                     // p: P P [X *]
-                    bool case2 = dp[i - 1][j] && (s[i - 1] == p[j - 2] || p[j - 2] == '.');
+                    const bool case2 = dp[i - 1][j] && (s[i - 1] == p[j - 2] || p[j - 2] == '.');
                     dp[i][j] = case1 || case2;
                 }
             }
