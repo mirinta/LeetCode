@@ -13,15 +13,15 @@
  * efficiently?
  */
 
-class Solution {
+class Solution
+{
 public:
-    int findMaxConsecutiveOnes(const std::vector<int>& nums) {
-        return approach2(nums);
-    }
+    int findMaxConsecutiveOnes(const std::vector<int>& nums) { return approach2(nums); }
 
 private:
     // approach 1: queue, time O(n), space O(1)
-    int approach1(const std::vector<int>& nums) {
+    int approach1(const std::vector<int>& nums)
+    {
         if (nums.empty())
             return 0;
 
@@ -45,7 +45,8 @@ private:
     }
 
     // approach 2: sliding window, time O(n), space O(1)
-    int approach2(const std::vector<int>& nums) {
+    int approach2(const std::vector<int>& nums)
+    {
         if (nums.empty())
             return 0;
 
@@ -69,12 +70,14 @@ private:
     }
 
     // approach 3: DP, time O(n), space O(n)
-    int approach3(const std::vector<int>& nums) {
+    int approach3(const std::vector<int>& nums)
+    {
         if (nums.empty())
             return 0;
 
-        // dp[i][0] = max number of consecutive 1's that ends with the ith coint and there's no flipped coin
-        // dp[i][1] = max number of consecutive 1's that ends with the ith coint and there exists a flipped coin
+        // dp[i][0] = max number of consecutive 1's that ends with the ith coin and there's no
+        // flipped coin dp[i][1] = max number of consecutive 1's that ends with the ith coin and
+        // there exists a flipped coin
         const auto n = nums.size();
         std::vector<std::vector<int>> dp(n + 1, std::vector<int>(2, 0));
         for (int i = 1; i <= n; ++i) {
