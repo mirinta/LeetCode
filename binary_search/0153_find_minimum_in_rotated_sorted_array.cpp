@@ -27,32 +27,32 @@ class Solution
 public:
     int findMin(const std::vector<int>& nums)
     {
-        const auto n = nums.size();
-        if (n <= 1)
-            return n == 1 ? nums[0] : -1;
-
-        // NOTE: all elements are unique
+        // at least one element, and all elements are unique
+        // [LEFT...][...RIGHT]
+        // if LEFT < RIGHT, nums is not rotated (i.e., rotation times % n = 0)
         int left = 0;
-        int right = n - 1;
-        // the array is not rotated if nums[end] > nums[start]
-        if (nums[right] > nums[left])
+        int right = nums.size() - 1;
+        if (nums[left] < nums[right])
             return nums[left];
-        // the rotated array can be split into two parts:
-        // | 3 4 5 | 1 2 |
-        // the minimum element is in the right part
-        // therefore, we need to find the right part,
-        // and shrink it until there's only one element in it
+
+        // the minimum is at the beginning of the right part,
+        // so we need to find the right part,
+        // and shrink its size until there's only one element in it
         while (left < right) {
             int mid = left + (right - left) / 2;
-            if (nums[mid] > nums[right]) {
-                // nums[left:mid] are in the left part, skip them
-                left = mid + 1;
+            if (nums[mid] < nums[right]) {
+                // mid is in the right part
+                // [LEFT...][TARGET...M...RIGHT]
+                //           | wanted |
+                right = mid; // not mid-1, because we don't know whether nums[mid] is the target
             } else {
-                // nums[mid] is in the right part, shrink its size
-                right = mid;
+                // mid is in the left part, nums[mid] is definitely not the target
+                // we don't need the left part, so skip nums[left:mid]
+                // [LEFT...M M+1...][TARGET...RIGHT]
+                //           |       wanted       |
+                left = mid + 1;
             }
         }
-        // the loop is terminated when left = right
         return nums[left];
     }
 };
