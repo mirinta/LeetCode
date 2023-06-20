@@ -1,4 +1,4 @@
-# leet_code
+# LeetCode
 
 TODO:
 
