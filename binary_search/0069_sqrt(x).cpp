@@ -6,27 +6,26 @@
  * You must not use any built-in exponent function or operator.
  */
 
-class Solution
-{
+class Solution {
 public:
-    int mySqrt(int x)
-    {
-        if (x == 0 || x == 1)
-            return x;
+    bool isPerfectSquare(int num) {
+        if (num < 2)
+            return true; // the constraint tells us 1 <= num <= INT_MAX
 
-        int left = 1;
-        int right = x / 2 + 1;
+        long long left = 2;
+        long long right = num / 2; 
         while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (mid == x / mid)
-                return mid;
+            long long mid = left + (right - left) / 2;
+            const long long product = mid * mid;
+            if (product == num)
+                return true;
 
-            if (mid > x / mid) {
+            if (product > num) {
                 right = mid - 1;
             } else {
                 left = mid + 1;
             }
-        } // the loop terminated when left = right + 1
-        return right;
+        } // the loop is terminated when mid = right = left - 1
+        return false;
     }
 };
