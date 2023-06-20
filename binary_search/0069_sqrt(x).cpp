@@ -8,7 +8,8 @@
  * ! 1 <= num <= 2^31 - 1
  */
 
-class Solution {
+class Solution 
+{
 public:
     bool isPerfectSquare(int num) {
         if (num < 2)
