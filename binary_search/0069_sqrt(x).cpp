@@ -4,6 +4,8 @@
  * integer. The returned integer should be non-negative as well.
  *
  * You must not use any built-in exponent function or operator.
+ * 
+ * ! 1 <= num <= 2^31 - 1
  */
 
 class Solution {
