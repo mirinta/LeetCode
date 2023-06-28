@@ -10,44 +10,46 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : m_parent(n, 0), m_count(n)
+    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
     {
-        for (size_t i = 0; i < n; ++i) {
-            m_parent[i] = i;
+        for (int i = 0; i < n; ++i) {
+            _root[i] = i;
+            _rank[i] = 1;
         }
     }
 
-    int count() const { return m_count; }
+    int count() const { return _count; }
 
-    bool isConnected(int p, int q) const
+    int find(int x)
     {
-        const auto rootP = find(p);
-        const auto rootQ = find(q);
-        return rootP == rootQ;
+        if (x != _root[x]) {
+            _root[x] = find(_root[x]);
+        }
+        return _root[x];
     }
 
     void connect(int p, int q)
     {
-        const auto rootP = find(p);
-        const auto rootQ = find(q);
+        const int rootP = find(p);
+        const int rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        m_parent[rootP] = rootQ;
-        m_count--;
-    }
-
-    int find(int x) const
-    {
-        if (m_parent[x] != x) {
-            m_parent[x] = find(m_parent[x]);
+        if (_rank[rootP] > _rank[rootQ]) {
+            _root[rootQ] = rootP;
+        } else if (_rank[rootP] < _rank[rootQ]) {
+            _root[rootP] = rootQ;
+        } else {
+            _root[rootQ] = rootP;
+            _rank[rootP] += 1;
         }
-        return m_parent[x];
+        _count -= 1;
     }
 
 private:
-    mutable std::vector<int> m_parent;
-    int m_count;
+    std::vector<int> _root;
+    std::vector<int> _rank;
+    int _count;
 };
 
 class Solution
@@ -57,7 +59,9 @@ public:
     {
         UnionFind uf(n);
         for (const auto& edge : edges) {
-            uf.connect(edge[0], edge[1]);
+            const int& p = edge[0];
+            const int& q = edge[1];
+            uf.connect(p, q);
         }
         return uf.count();
     }
