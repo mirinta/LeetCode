@@ -22,49 +22,54 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : _count(n), _parent(n, 0)
+    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
     {
         for (int i = 0; i < n; ++i) {
-            _parent[i] = i;
+            _root[i] = i;
+            _rank[i] = 1;
         }
     }
 
     int count() const { return _count; }
 
-    bool connect(int p, int q)
+    int find(int x)
+    {
+        if (_root[x] != x) {
+            _root[x] = find(_root[x]);
+        }
+        return _root[x];
+    }
+
+    void connect(int p, int q)
     {
         const int rootP = find(p);
         const int rootQ = find(q);
         if (rootP == rootQ)
-            return false;
+            return;
 
-        _parent[rootQ] = rootP;
-        _count--;
-        return true;
-    };
-
-    int find(int x)
-    {
-        if (_parent[x] != x) {
-            _parent[x] = find(_parent[x]);
+        if (_rank[rootP] > _rank[rootQ]) {
+            _root[rootQ] = rootP;
+        } else if (_rank[rootP] < _rank[rootQ]) {
+            _root[rootP] = rootQ;
+        } else {
+            _root[rootQ] = rootP;
+            _rank[rootP] += 1;
         }
-        return _parent[x];
+        _count -= 1;
     }
 
 private:
+    std::vector<int> _root;
+    std::vector<int> _rank;
     int _count;
-    std::vector<int> _parent;
 };
 
 class Solution
 {
 public:
-    int findCircleNum(const std::vector<std::vector<int>>& isConnected)
+    int findCircleNum(std::vector<std::vector<int>>& isConnected)
     {
-        const auto n = isConnected.size();
-        if (n <= 1)
-            return n <= 0 ? 0 : 1;
-
+        const int n = isConnected.size();
         UnionFind uf(n);
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
