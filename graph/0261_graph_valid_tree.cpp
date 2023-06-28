@@ -17,44 +17,48 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : m_parent(n, 0), m_count(n)
+    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
     {
-        for (size_t i = 0; i < n; ++i) {
-            m_parent[i] = i;
+        for (int i = 0; i < n; ++i) {
+            _root[i] = i;
+            _rank[i] = 1;
         }
     }
 
-    int count() const { return m_count; }
+    int count() const { return _count; }
 
-    int isConnected(int p, int q) const
+    int find(int x)
     {
-        const auto rootP = find(p);
-        const auto rootQ = find(q);
-        return rootP == rootQ;
+        if (x != _root[x]) {
+            _root[x] = find(_root[x]);
+        }
+        return _root[x];
     }
+
+    bool isConnected(int p, int q) { return find(p) == find(q); }
 
     void connect(int p, int q)
     {
-        const auto rootP = find(p);
-        const auto rootQ = find(q);
+        const int rootP = find(p);
+        const int rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        m_parent[rootQ] = rootP;
-        m_count--;
-    }
-
-    int find(int x) const
-    {
-        if (m_parent[x] != x) {
-            m_parent[x] = find(m_parent[x]);
+        if (_rank[rootP] > _rank[rootQ]) {
+            _root[rootQ] = rootP;
+        } else if (_rank[rootP] < _rank[rootQ]) {
+            _root[rootP] = rootQ;
+        } else {
+            _root[rootQ] = rootP;
+            _rank[rootP] += 1;
         }
-        return m_parent[x];
+        _count -= 1;
     }
 
 private:
-    mutable std::vector<int> m_parent;
-    int m_count;
+    std::vector<int> _root;
+    std::vector<int> _rank;
+    int _count;
 };
 
 class Solution
@@ -63,19 +67,17 @@ public:
     bool validTree(int n, std::vector<std::vector<int>>& edges)
     {
         // a valid tree:
-        // - there's no cycle in it, and
-        // - all nodes are connected
+        // - no cycle
+        // - all nodes are connected, i.e., uf.count() = 1
         UnionFind uf(n);
         for (const auto& edge : edges) {
-            const auto p = edge[0];
-            const auto q = edge[1];
-            // if we connect p and q which are already connected,
-            // it will make a cycle in the graph
+            const int& p = edge[0];
+            const int& q = edge[1];
             if (uf.isConnected(p, q))
                 return false;
 
             uf.connect(p, q);
         }
-        return uf.count() == 1; // check all nodes are connected
+        return uf.count() == 1;
     }
 };
