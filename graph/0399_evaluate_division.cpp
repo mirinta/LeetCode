@@ -30,51 +30,54 @@ public:
                                      std::vector<double>& values,
                                      std::vector<std::vector<std::string>>& queries)
     {
-        Graph graph;
-        for (size_t i = 0; i < equations.size(); ++i) {
-            const auto& dividend = equations[i][0];
-            const auto& divisor = equations[i][1];
+        BiGraph graph;
+        for (int i = 0; i < equations.size(); ++i) {
+            const auto& numerator = equations[i][0];
+            const auto& denominator = equations[i][1];
             const auto& quotient = values[i];
-            graph[dividend].push_back({divisor, quotient});
-            graph[divisor].push_back({dividend, 1 / quotient});
+            graph[numerator][denominator] = quotient;
+            graph[denominator][numerator] = 1 / quotient;
         }
         std::vector<double> result;
+        std::unordered_set<std::string> visited;
         for (const auto& query : queries) {
-            const auto& dividend = query[0];
-            const auto& divisor = query[1];
-            if (!graph.count(dividend) || !graph.count(divisor)) {
+            const auto& numerator = query[0];
+            const auto& denominator = query[1];
+            if (!graph.count(numerator) || !graph.count(denominator)) {
                 result.push_back(-1);
                 continue;
             }
-            if (dividend == divisor) {
+            if (numerator == denominator) {
                 result.push_back(1);
                 continue;
             }
-            std::unordered_set<std::string> visited;
-            result.push_back(compute(visited, 1, dividend, divisor, graph));
+            visited.clear();
+            result.push_back(backtrack(visited, 1, numerator, denominator, graph));
         }
         return result;
     }
 
 private:
-    using Graph = std::unordered_map<std::string, std::vector<std::pair<std::string, double>>>;
-    double compute(std::unordered_set<std::string>& visited, double product, const std::string& s,
-                   const std::string& t, const Graph& graph)
+    // graph[i][j] = result of i/j
+    using BiGraph = std::unordered_map<std::string, std::unordered_map<std::string, double>>;
+
+    double backtrack(std::unordered_set<std::string>& visited, double product,
+                     const std::string& current, const std::string& target, const BiGraph& graph)
     {
-        if (s == t)
+        if (current == target)
             return product;
 
-        visited.insert(s);
         double result = -1;
-        for (const auto& [adj, val] : graph.at(s)) {
+        visited.insert(current);
+        for (const auto& [adj, val] : graph.at(current)) {
             if (visited.count(adj))
                 continue;
 
-            result = compute(visited, product * val, adj, t, graph);
+            result = backtrack(visited, product * val, adj, target, graph);
             if (result != -1)
                 break;
         }
-        visited.erase(s);
+        visited.erase(current);
         return result;
     }
 };
