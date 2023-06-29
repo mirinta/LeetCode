@@ -23,32 +23,30 @@
 class Solution
 {
 public:
-    std::vector<std::vector<int>> allPathsSourceTarget(const std::vector<std::vector<int>>& graph)
+    std::vector<std::vector<int>> allPathsSourceTarget(std::vector<std::vector<int>>& graph)
     {
-        if (graph.empty())
-            return {};
-
+        // since the graph is a DAG, we don't need a "visited" array
         result.clear();
         std::vector<int> path;
-        traverse(graph, 0, path); // the target node is "n - 1"
+        backtrack(path, 0, graph.size() - 1, graph);
         return result;
     }
 
 private:
     std::vector<std::vector<int>> result;
 
-    void traverse(const std::vector<std::vector<int>>& graph, int source, std::vector<int>& path)
+    void backtrack(std::vector<int>& path, int source, int destination,
+                   const std::vector<std::vector<int>>& graph)
     {
-        // reach the target
-        if (source == graph.size() - 1) {
+        if (source == destination) {
             result.push_back(path);
-            result.back().push_back(source);
+            result.back().push_back(destination);
             return;
         }
         path.push_back(source);
-        for (const auto& i : graph[source]) {
-            traverse(graph, i, path);
+        for (const auto& adjacent : graph[source]) {
+            backtrack(path, adjacent, destination, graph);
         }
-        path.pop_back(); // process finished, pop current node
+        path.pop_back();
     }
 };
