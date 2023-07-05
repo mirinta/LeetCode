@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <queue>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 /**
@@ -21,117 +23,114 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : m_parent(n, 0), m_count(n)
+    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
     {
-        for (size_t i = 0; i < n; ++i) {
-            m_parent[i] = i;
+        for (int i = 0; i < n; ++i) {
+            _root[i] = i;
+            _rank[i] = 1;
         }
     }
 
-    int count() const { return m_count; }
+    int count() const { return _count; }
 
-    int find(int x) const
+    int find(int x)
     {
-        if (m_parent[x] != x) {
-            m_parent[x] = find(m_parent[x]);
+        if (x != _root[x]) {
+            _root[x] = find(_root[x]);
         }
-        return m_parent[x];
+        return _root[x];
     }
 
-    bool connect(int p, int q)
+    bool isConnected(int p, int q) { return find(p) == find(q); }
+
+    void connect(int p, int q)
     {
-        const auto rootP = find(p);
-        const auto rootQ = find(q);
+        const int rootP = find(p);
+        const int rootQ = find(q);
         if (rootP == rootQ)
-            // already connected, if still do so, it will make a cycle
-            return false;
+            return;
 
-        m_parent[rootQ] = rootP;
-        m_count--;
-        return true;
+        if (_rank[rootP] > _rank[rootQ]) {
+            _root[rootQ] = rootP;
+        } else if (_rank[rootP] < _rank[rootQ]) {
+            _root[rootP] = rootQ;
+        } else {
+            _root[rootQ] = rootP;
+            _rank[rootP] += 1;
+        }
+        _count -= 1;
     }
 
 private:
-    mutable std::vector<int> m_parent;
-    int m_count;
+    std::vector<int> _root;
+    std::vector<int> _rank;
+    int _count;
 };
 
 class Solution
 {
 public:
-    // approach 1: Minimum Spanning Tree, Kruskal's algorithm
-    // - sort the edges in ascending order, initialize an empty tree T;
-    // - for each edge E, skip E if adding it to T causes a cycle, otherwise add it to T;
-    // - stop the loop if T has N - 1 edges, where N is the number of nodes.
-    // int minimumCost(int n, vector<vector<int>>& connections) {
-    //     UnionFind uf(n);
-    //     int result = 0;
-    //     using Edge = std::vector<int>;
-    //     std::sort(connections.begin(), connections.end(),
-    //               [](const Edge& edge1, const Edge& edge2) { return edge1[2] < edge2[2]; });
-    //     for (const auto& edge : connections) {
-    //         // x_i and y_i are 1-indexed
-    //         if (!uf.connect(edge[0] - 1, edge[1] - 1))
-    //             continue;
-
-    //         result += edge[2];
-    //     }
-    //     return uf.count() == 1 ? result : -1;
-    // }
-    // approach 2: MST, Prim's algorithm
     int minimumCost(int n, std::vector<std::vector<int>>& connections)
     {
-        if (connections.empty())
-            return -1;
-
-        // build graph and other initializations
-        graph = std::vector<std::vector<Edge>>(n, std::vector<Edge>{});
-        for (const auto& edge : connections) {
-            const auto from = edge[0] - 1; // 1-indexed
-            const auto to = edge[1] - 1;   // 1-indexed
-            const auto weight = edge[2];
-            graph[from].push_back({from, to, weight});
-            graph[to].push_back({to, from, weight});
-        }
-        visited = std::vector<bool>(n, false);
-        result = 0;
-        // start with node 0
-        cut(0);
-        while (!minHeap.empty()) {
-            const auto edge = minHeap.top();
-            minHeap.pop();
-            const auto to = edge[1];
-            if (visited[to])
-                continue;
-
-            result += edge[2];
-            cut(to);
-        }
-        // check if all nodes are visited
-        for (const auto& flag : visited) {
-            if (!flag)
-                return -1;
-        }
-        return result;
+        return approach1(n, connections);
     }
 
 private:
-    using Edge = std::vector<int>;        // [from, to, weight]
-    std::vector<std::vector<Edge>> graph; // indirected graph
-    int result = 0;
-    std::vector<bool> visited;
-    static constexpr auto comp = [](const Edge& e1, const Edge& e2) -> bool {
-        return e1[2] > e2[2];
-    };
-    std::priority_queue<Edge, std::vector<Edge>, decltype(comp)> minHeap{comp};
-
-    void cut(int from)
+    int approach2(int n, std::vector<std::vector<int>>& connections)
     {
-        visited[from] = true;
-        for (const auto& edge : graph[from]) {
-            if (!visited[edge[1]]) {
-                minHeap.push(edge);
+        // MST, Prim's algorithm
+        std::unordered_map<int, std::vector<std::pair<int, int>>> graph;
+        for (const auto& connection : connections) {
+            graph[connection[0]].push_back({connection[2], connection[1]});
+            graph[connection[1]].push_back({connection[2], connection[0]});
+        }
+        auto comp = [](const auto& p1, const auto& p2) -> bool { return p1.first > p2.first; };
+        // cities are 1-indexed
+        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, decltype(comp)>
+            pq(comp);
+        for (const auto& pair : graph[1]) {
+            pq.push(pair);
+        }
+        std::unordered_set<int> visited;
+        visited.insert(1);
+        int result = 0;
+        int edges = 0; // at the end, edges should be n-1
+        while (!pq.empty()) {
+            const auto [cost, v] = pq.top();
+            pq.pop();
+            if (visited.count(v))
+                continue;
+
+            visited.insert(v);
+            result += cost;
+            edges++;
+            for (const auto& pair : graph[v]) {
+                if (visited.count(pair.second))
+                    continue;
+
+                pq.push(pair);
             }
         }
+        return edges == n - 1 ? result : -1;
+    }
+
+    int approach1(int n, std::vector<std::vector<int>>& connections)
+    {
+        // MST, Kruskal's algorithm
+        std::sort(connections.begin(), connections.end(),
+                  [](const auto& c1, const auto& c2) { return c1[2] < c2[2]; });
+        UnionFind uf(n);
+        int result = 0;
+        for (const auto& connection : connections) {
+            const int from = connection[0] - 1;
+            const int to = connection[1] - 1;
+            const int cost = connection[2];
+            if (uf.isConnected(from, to))
+                continue;
+
+            uf.connect(from, to);
+            result += cost;
+        }
+        return uf.count() == 1 ? result : -1;
     }
 };
