@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <queue>
+#include <unordered_set>
 #include <vector>
 
 /**
@@ -17,68 +19,113 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : m_parent(n, 0), m_count(n)
+    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
     {
-        for (size_t i = 0; i < n; ++i) {
-            m_parent[i] = i;
+        for (int i = 0; i < n; ++i) {
+            _root[i] = i;
+            _rank[i] = 1;
         }
     }
 
-    int count() const { return m_count; }
+    int count() const { return _count; }
 
-    bool connect(int p, int q)
+    int find(int x)
     {
-        const auto rootP = find(p);
-        const auto rootQ = find(q);
+        if (x != _root[x]) {
+            _root[x] = find(_root[x]);
+        }
+        return _root[x];
+    }
+
+    bool isConnected(int p, int q) { return find(p) == find(q); }
+
+    void connect(int p, int q)
+    {
+        const int rootP = find(p);
+        const int rootQ = find(q);
         if (rootP == rootQ)
-            return false;
+            return;
 
-        m_parent[rootQ] = rootP;
-        m_count--;
-        return true;
-    }
-
-    int find(int x) const
-    {
-        if (x != m_parent[x]) {
-            m_parent[x] = find(m_parent[x]);
+        if (_rank[rootP] > _rank[rootQ]) {
+            _root[rootQ] = rootP;
+        } else if (_rank[rootP] < _rank[rootQ]) {
+            _root[rootP] = rootQ;
+        } else {
+            _root[rootQ] = rootP;
+            _rank[rootP] += 1;
         }
-        return m_parent[x];
+        _count -= 1;
     }
 
 private:
-    mutable std::vector<int> m_parent;
-    int m_count;
+    std::vector<int> _root;
+    std::vector<int> _rank;
+    int _count;
 };
 
 class Solution
 {
 public:
-    int minCostConnectPoints(const std::vector<std::vector<int>>& points)
+    int minCostConnectPoints(std::vector<std::vector<int>>& points) { return approach1(points); }
+
+private:
+    int manhattanDistance(const std::vector<int>& p1, const std::vector<int>& p2)
     {
-        // build edges
-        using Edge = std::vector<int>; // node1, node2, cost
-        std::vector<Edge> edges;
-        for (int i = 0; i < points.size(); ++i) {
-            for (int j = i + 1; j < points.size(); ++j) {
-                const auto& point1 = points[i];
-                const auto& point2 = points[j];
-                const auto cost = std::abs(point1[0] - point2[0]) + std::abs(point1[1] - point2[1]);
-                edges.push_back({i, j, cost});
-            }
+        return std::abs(p1[0] - p2[0]) + std::abs(p1[1] - p2[1]);
+    }
+
+    int approach2(std::vector<std::vector<int>>& points)
+    {
+        // MST, Prim's algorithm
+        auto comp = [](const auto& p1, const auto& p2) -> bool { return p1.first > p2.first; };
+        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, decltype(comp)>
+            pq(comp);
+        std::unordered_set<int> visited;
+        visited.insert(0);
+        for (int i = 1; i < points.size(); ++i) {
+            pq.push({manhattanDistance(points[0], points[i]), i});
         }
-        // sort edges
-        std::sort(edges.begin(), edges.end(),
-                  [](const Edge& e1, const Edge& e2) { return e1[2] < e2[2]; });
-        // MST: Kruskal algorithm
-        UnionFind uf(points.size()); // not edges.size()
         int result = 0;
-        for (const auto& edge : edges) {
-            if (!uf.connect(edge[0], edge[1]))
+        while (!pq.empty()) {
+            const auto [dist, v] = pq.top();
+            pq.pop();
+            if (visited.count(v))
                 continue;
 
-            result += edge[2];
+            result += dist;
+            visited.insert(v);
+            for (int i = 0; i < points.size(); ++i) {
+                if (visited.count(i))
+                    continue;
+
+                pq.push({manhattanDistance(points[v], points[i]), i});
+            }
         }
-        return uf.count() == 1 ? result : 0;
+        return result;
+    }
+
+    int approach1(std::vector<std::vector<int>>& points)
+    {
+        // MST, Kruskal's algorithm
+        std::vector<std::vector<int>> edges;
+        for (int i = 0; i < points.size(); ++i) {
+            for (int j = i + 1; j < points.size(); ++j) {
+                edges.push_back({manhattanDistance(points[i], points[j]), i, j});
+            }
+        }
+        std::sort(edges.begin(), edges.end(),
+                  [](const auto& v1, const auto& v2) { return v1[0] < v2[0]; });
+        UnionFind uf(points.size());
+        int result = 0;
+        for (const auto& edge : edges) {
+            const auto& cost = edge[0];
+            const auto& i = edge[1];
+            const auto& j = edge[2];
+            if (!uf.isConnected(i, j)) {
+                result += cost;
+                uf.connect(i, j);
+            }
+        }
+        return result;
     }
 };
