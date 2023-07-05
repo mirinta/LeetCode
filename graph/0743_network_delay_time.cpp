@@ -1,5 +1,6 @@
 #include <climits>
 #include <queue>
+#include <unordered_map>
 #include <vector>
 
 /**
@@ -20,60 +21,33 @@
 
 class Solution
 {
-private:
-    struct DirectedEdge
-    {
-        int from;
-        int to;
-        int weight; // non-negative
-        explicit DirectedEdge(int from, int to, int weight) : from(from), to(to), weight(weight) {}
-    };
-
-    using Graph = std::vector<std::vector<DirectedEdge>>;
-    std::vector<int> dijkstra(Graph& graph, int source)
-    {
-        if (graph.empty() || source < 0 || source >= graph.size())
-            return {};
-
-        std::vector<int> distTo(graph.size(), INT_MAX);
-        distTo[source] = 0;
-        std::priority_queue<std::pair<int, int>> minHeap; // <-1 * weight, node id>
-        minHeap.push({0, source});
-        while (!minHeap.empty()) {
-            const auto v = minHeap.top().second;
-            minHeap.pop();
-            for (const auto& edge : graph[v]) {
-                // p = edge.from, q = edge.to, w = edge.weight
-                // if distTo[q] > distTo[p] + w,
-                // it means source->...->p->q is shorter than source->...->q
-                const auto dist = distTo[edge.from] + edge.weight;
-                if (distTo[edge.to] > dist) {
-                    distTo[edge.to] = dist;
-                    minHeap.push({-dist, edge.to});
-                }
-            }
-        }
-        return distTo;
-    }
-
 public:
     int networkDelayTime(std::vector<std::vector<int>>& times, int n, int k)
     {
-        // build digraph
-        Graph graph(n, std::vector<DirectedEdge>{});
-        for (const auto& t : times) {
-            // t = [from, to, weight], from and to are 1-indexed
-            graph[t[0] - 1].push_back(DirectedEdge{t[0] - 1, t[1] - 1, t[2]});
+        // shortest path, Dijkstra's algorithm
+        // #NOTICE# nodes are 1-indexed
+        std::unordered_map<int, std::vector<std::pair<int, int>>> graph;
+        for (const auto& time : times) {
+            graph[time[0] - 1].emplace_back(time[2], time[1] - 1);
         }
-        // find shortest path using Dijkstra's algorithm
-        const auto distTo = dijkstra(graph, k - 1); // k is 1-indexed
-        int result = INT_MIN;
-        for (const auto& d : distTo) {
-            if (d == INT_MAX) // node is unreachable
-                return -1;
-
-            result = std::max(result, d);
+        const int source = k - 1;
+        auto comp = [](const auto& p1, const auto& p2) -> bool { return p1.first > p2.first; };
+        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, decltype(comp)>
+            pq(comp);
+        pq.emplace(0, source);
+        std::vector<int> distTo(n, INT_MAX); // distTo[i] = distance between source and i
+        distTo[source] = 0;
+        while (!pq.empty()) {
+            const auto [dist, v] = pq.top();
+            pq.pop();
+            for (const auto& [weight, w] : graph[v]) {
+                if (distTo[w] > weight + distTo[v]) {
+                    distTo[w] = weight + distTo[v];
+                    pq.emplace(distTo[w], w);
+                }
+            }
         }
-        return result;
+        const int maxTime = *std::max_element(distTo.begin(), distTo.end());
+        return maxTime == INT_MAX ? -1 : maxTime;
     }
 };
