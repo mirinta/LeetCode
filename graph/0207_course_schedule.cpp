@@ -1,4 +1,5 @@
 #include <queue>
+#include <unordered_map>
 #include <vector>
 
 /**
@@ -33,62 +34,69 @@
 class Solution
 {
 public:
-    bool canFinish(int numCourses, const std::vector<std::vector<int>>& prerequisites)
+    bool canFinish(int numCourses, std::vector<std::vector<int>>& prerequisites)
     {
-        // build graph
-        std::vector<std::vector<int>> graph(numCourses, std::vector<int>{});
+        return approach2(numCourses, prerequisites);
+    }
+
+private:
+    bool approach2(int n, std::vector<std::vector<int>>& prerequisites)
+    {
+        // Kahn's algorithm (topological sorting )
+        std::vector<std::vector<int>> graph(n, std::vector<int>());
+        std::vector<int> indgrees(n, 0);
         for (const auto& p : prerequisites) {
             graph[p[1]].push_back(p[0]);
-        }
-        // approach 1: DFS
-        // std::vector<bool> visited(numCourses, false);
-        // std::vector<bool> inPath(numCourses, false);
-        // bool isCyclic = false;
-        // for (size_t s = 0; s < graph.size(); ++s) {
-        //     traverse(graph, s, visited, inPath, isCyclic);
-        // }
-        // return !isCyclic;
-        // approach 2: BFS
-        std::vector<int> indegrees(numCourses, 0);
-        for (const auto& p : prerequisites) {
-            indegrees[p[0]]++; // bi -> ai
+            indgrees[p[0]]++;
         }
         std::queue<int> queue;
-        for (size_t i = 0; i < indegrees.size(); ++i) {
-            if (indegrees[i] == 0) {
+        for (int i = 0; i < n; ++i) {
+            if (indgrees[i] == 0) {
                 queue.push(i);
             }
         }
         int count = 0;
         while (!queue.empty()) {
-            const auto s = queue.front();
+            const int v = queue.front();
             queue.pop();
             count++;
-            for (const auto& i : graph[s]) {
-                if (--indegrees[i] == 0) {
-                    queue.push(i);
+            for (const auto& adj : graph[v]) {
+                if (--indgrees[adj] == 0) {
+                    queue.push(adj);
                 }
             }
         }
-        return count == numCourses;
+        return count == n;
     }
 
-private:
-    void traverse(const std::vector<std::vector<int>>& graph, int source,
-                  std::vector<bool>& visited, std::vector<bool>& inPath, bool& isCyclic)
-    {
-        if (inPath[source]) {
-            isCyclic = true;
-            return;
-        }
-        if (visited[source])
-            return;
+    enum Color { White, Gray, Black };
 
-        visited[source] = true;
-        inPath[source] = true;
-        for (const auto& i : graph[source]) {
-            traverse(graph, i, visited, inPath, isCyclic);
+    bool approach1(int n, std::vector<std::vector<int>>& prerequisites)
+    {
+        // cycle detection: DFS with colors
+        std::vector<std::vector<int>> graph(n, std::vector<int>());
+        for (const auto& p : prerequisites) {
+            graph[p[1]].push_back(p[0]);
         }
-        inPath[source] = false;
+        std::vector<Color> colors(n, White);
+        for (int i = 0; i < n; ++i) {
+            if (colors[i] == White && hasCycle(colors, i, graph))
+                return false;
+        }
+        return true;
+    }
+
+    bool hasCycle(std::vector<Color>& colors, int start, const std::vector<std::vector<int>>& graph)
+    {
+        colors[start] = Gray;
+        for (const auto& next : graph[start]) {
+            if (colors[next] == Gray)
+                return true;
+
+            if (colors[next] == White && hasCycle(colors, next, graph))
+                return true;
+        }
+        colors[start] = Black;
+        return false;
     }
 };

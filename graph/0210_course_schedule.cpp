@@ -22,77 +22,75 @@
 class Solution
 {
 public:
-    std::vector<int> findOrder(int numCourses, const std::vector<std::vector<int>>& prerequisites)
+    std::vector<int> findOrder(int numCourses, std::vector<std::vector<int>>& prerequisites)
     {
-        // build graph
-        std::vector<std::vector<int>> graph(numCourses, std::vector<int>{});
-        for (const auto& p : prerequisites) {
-            graph[p[1]].push_back(p[0]); // bi -> [ai, ...]
-        }
-        // approach 1: DFS
-        // visited.resize(numCourses, false);
-        // inPath.resize(numCourses, false);
-        // result.clear();
-        // hasCycle = false;
-        // for (size_t i = 0; i < graph.size(); ++i) {
-        //     traverse(graph, i);
-        // }
-        // if (hasCycle)
-        //     return {};
+        return approach1(numCourses, prerequisites);
+    }
 
-        // std::reverse(result.begin(), result.end());
-        // return result;
-        // approach 2: BFS
+private:
+    std::vector<int> approach2(int numCourses, std::vector<std::vector<int>>& prerequisites)
+    {
+        // topological sorting, Kahn's algorithm
+        std::vector<std::vector<int>> graph(numCourses, std::vector<int>());
         std::vector<int> indegrees(numCourses, 0);
         for (const auto& p : prerequisites) {
+            graph[p[1]].push_back(p[0]);
             indegrees[p[0]]++;
         }
         std::queue<int> queue;
-        for (size_t i = 0; i < indegrees.size(); ++i) {
+        for (int i = 0; i < numCourses; ++i) {
             if (indegrees[i] == 0) {
                 queue.push(i);
             }
         }
         std::vector<int> result;
-        int count = 0;
         while (!queue.empty()) {
-            const auto s = queue.front();
+            const int v = queue.front();
             queue.pop();
-            result.push_back(s);
-            count++;
-            for (const auto& i : graph[s]) {
-                if (--indegrees[i] == 0) {
-                    queue.push(i);
+            result.push_back(v);
+            for (const auto& adj : graph[v]) {
+                if (--indegrees[adj] == 0) {
+                    queue.push(adj);
                 }
             }
         }
-        if (count != numCourses)
+        if (result.size() != numCourses)
             return {};
 
         return result;
     }
 
-private:
-    std::vector<bool> visited;
-    std::vector<bool> inPath;
-    std::vector<int> result;
-    bool hasCycle = false;
+    enum Color { White, Gray, Black };
 
-    void traverse(const std::vector<std::vector<int>>& graph, int source)
+    std::vector<int> approach1(int numCourses, std::vector<std::vector<int>>& prerequisites)
     {
-        if (inPath[source]) {
-            hasCycle = true;
-            return;
+        std::vector<std::vector<int>> graph(numCourses, std::vector<int>());
+        for (const auto& p : prerequisites) {
+            graph[p[1]].push_back(p[0]);
         }
-        if (visited[source])
-            return;
+        std::vector<Color> colors(numCourses, White);
+        std::vector<int> result;
+        for (int i = 0; i < numCourses; ++i) {
+            if (colors[i] == White && hasCycle(colors, result, i, graph))
+                return {};
+        }
+        std::reverse(result.begin(), result.end());
+        return result;
+    }
 
-        visited[source] = true;
-        inPath[source] = true;
-        for (const auto& i : graph[source]) {
-            traverse(graph, i);
+    bool hasCycle(std::vector<Color>& colors, std::vector<int>& result, int start,
+                  const std::vector<std::vector<int>>& graph)
+    {
+        colors[start] = Gray;
+        for (const auto& next : graph[start]) {
+            if (colors[next] == Gray)
+                return true;
+
+            if (colors[next] == White && hasCycle(colors, result, next, graph))
+                return true;
         }
-        inPath[source] = false;
-        result.push_back(source);
+        colors[start] = Black;
+        result.push_back(start);
+        return false;
     }
 };
