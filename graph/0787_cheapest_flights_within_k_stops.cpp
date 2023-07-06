@@ -1,3 +1,4 @@
+#include <array>
 #include <queue>
 #include <unordered_map>
 #include <vector>
@@ -82,8 +83,9 @@ private:
         for (const auto& flight : flights) {
             graph[flight[0]].push_back({flight[1], flight[2]}); // from:[<to,price>,...]
         }
-        using Triple = std::tuple<int, int, int>; // <cost, steps, vertex>
-        std::priority_queue<Triple, std::vector<Triple>, std::greater<Triple>> pq;
+        using Triple = std::array<int, 3>; // <cost, steps, vertex>
+        auto comp = [](const auto& t1, const auto& t2) -> bool { return t1[0] > t2[0]; };
+        std::priority_queue<Triple, std::vector<Triple>, decltype(comp)> pq(comp);
         pq.push({0, 0, src});
         std::vector<int> stepsTo(n, INT_MAX);
         stepsTo[src] = 0;
