@@ -1,5 +1,7 @@
+#include <array>
 #include <climits>
 #include <cmath>
+#include <tuple>
 #include <queue>
 #include <vector>
 
@@ -32,41 +34,82 @@
 class Solution
 {
 public:
-    int minimumEffortPath(const std::vector<std::vector<int>>& heights)
+    int minimumEffortPath(std::vector<std::vector<int>>& heights) { return approach1(heights); }
+
+private:
+    int approach1(std::vector<std::vector<int>>& heights)
     {
-        if (heights.empty())
+        // Dijkstra's algorithm
+        if (heights.empty() || heights[0].empty())
             return -1;
 
-        const auto rows = heights.size();
-        const auto cols = heights.front().size();
-        std::vector<std::vector<int>> effortTo(rows, std::vector<int>(cols, INT_MAX));
+        const int m = heights.size();
+        const int n = heights[0].size();
+        using Triple = std::array<int, 3>; // [effort to this point, x, y]
+        auto comp = [](const auto& t1, const auto& t2) -> bool { return t1[0] > t2[0]; };
+        std::priority_queue<Triple, std::vector<Triple>, decltype(comp)> pq(comp);
+        pq.push({0, 0, 0});
+        std::vector<std::vector<int>> effortTo(m, std::vector<int>(n, INT_MAX));
         effortTo[0][0] = 0;
-        using Point = std::pair<int, int>; // position x and y
-        // directions: go up, go down, go left, go right
-        const std::vector<std::pair<int, int>> directions{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-        std::priority_queue<std::tuple<int, int, int>> minHeap; // <-1 * effort, x, y>
-        minHeap.push({0, 0, 0});
-        while (!minHeap.empty()) {
-            const auto [_, x, y] = minHeap.top();
-            minHeap.pop();
-            // reach the target position, return
-            if (x == rows - 1 && y == cols - 1)
+        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        while (!pq.empty()) {
+            const auto [_, x, y] = pq.top();
+            pq.pop();
+            if (x == m - 1 && y == n - 1)
                 return effortTo[x][y];
 
-            for (const auto& d : directions) {
-                const auto x1 = x + d.first;
-                const auto y1 = y + d.second;
-                if (x1 < 0 || x1 >= rows || y1 < 0 || y1 >= cols)
+            for (const auto& [dx, dy] : kDirections) {
+                const int i = x + dx;
+                const int j = y + dy;
+                if (i < 0 || i >= m || j < 0 || j >= n)
                     continue;
 
-                const auto newEffort =
-                    std::max(effortTo[x][y], std::abs(heights[x][y] - heights[x1][y1]));
-                if (effortTo[x1][y1] > newEffort) {
-                    effortTo[x1][y1] = newEffort;
-                    minHeap.push({-newEffort, x1, y1});
+                const int effort =
+                    std::max(effortTo[x][y], std::abs(heights[x][y] - heights[i][j]));
+                if (effortTo[i][j] > effort) {
+                    effortTo[i][j] = effort;
+                    pq.push({effort, i, j});
                 }
             }
         }
         return -1;
+    }
+
+    int approach2(std::vector<std::vector<int>>& heights)
+    {
+        // DP with space optimization and early return
+        if (heights.empty() || heights[0].empty())
+            return -1;
+
+        const int m = heights.size();
+        const int n = heights[0].size();
+        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        std::vector<int> dp(m * n, INT_MAX);
+        dp[0] = 0;
+        bool relaxed = true;
+        for (int k = 1; relaxed && k < m * n; ++k) {
+            relaxed = false;
+            for (int x = 0; x < m; ++x) {
+                for (int y = 0; y < n; ++y) {
+                    for (const auto& [dx, dy] : kDirections) {
+                        const int i = x + dx;
+                        const int j = y + dy;
+                        if (i < 0 || i >= m || j < 0 || j >= n)
+                            continue;
+
+                        if (dp[x * n + y] == INT_MAX)
+                            continue;
+
+                        const int diff = std::abs(heights[x][y] - heights[i][j]);
+                        const int effort = std::max(dp[x * n + y], diff);
+                        if (dp[i * n + j] > effort) {
+                            relaxed = true;
+                            dp[i * n + j] = effort;
+                        }
+                    }
+                }
+            }
+        }
+        return dp.back();
     }
 };
