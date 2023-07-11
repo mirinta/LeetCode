@@ -34,15 +34,13 @@ public:
             return 4; // 2x2
 
         // consider n >= 5
-        // - cut it into equal parts of length 3 as much as possible
-        // - #NOTE# if length = 4, 2 and 2 is better than 1 and 3,
-        // it means we do not cut the rope if length <= 4
-        // - cut the remaining part into equal parts of length 2 as much as possible
+        // - cut it into pieces with length 3, as much as possible
+        // - #NOTE#, if length <= 4, we don't cut the rope
         constexpr int kMod = 1e9 + 7;
         long long result = 1;
         while (n > 4) {
-            n -= 3;
             result = result * 3 % kMod;
+            n -= 3;
         }
         result = result * n % kMod;
         return result;
