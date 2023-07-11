@@ -21,13 +21,12 @@ public:
         int hi = nums.size() - 1;
         while (lo < hi) {
             const int sum = nums[lo] + nums[hi];
-            if (sum == target)
-                return {nums[lo], nums[hi]};
-
             if (sum > target) {
                 hi--;
-            } else {
+            } else if (sum < target) {
                 lo++;
+            } else {
+                return {nums[lo], nums[hi]};
             }
         }
         return {};
