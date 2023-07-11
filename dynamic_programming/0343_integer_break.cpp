@@ -56,10 +56,9 @@ private:
         if (n == 4)
             return 4; // 2x2
 
-        // here, we consider n >= 5
-        // cut it into pieces with length 3, as much as possible
-        // #NOTE#, if length = 4, we cut it into 2 and 2, it is better than 1 and 3
-        // cut the remaining part into pieces with length 2, as much as possible
+        // consider n >= 5
+        // - cut it into pieces with length 3, as much as possible
+        // - #NOTE#, if length <= 4, we don't cut the rope
         int numOf3 = n / 3;
         if (n % 3 == 1) {
             numOf3--;
