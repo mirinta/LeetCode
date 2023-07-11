@@ -59,11 +59,13 @@ private:
         // consider n >= 5
         // - cut it into pieces with length 3, as much as possible
         // - #NOTE#, if length <= 4, we don't cut the rope
-        int numOf3 = n / 3;
-        if (n % 3 == 1) {
-            numOf3--;
+        constexpr int kMod = 1e9 + 7;
+        long long result = 1;
+        while (n > 4) {
+            result = result * 3 % kMod;
+            n -= 3;
         }
-        int numOf2 = (n - numOf3 * 3) / 2;
-        return std::pow(3, numOf3) * std::pow(2, numOf2);
+        result = result * n % kMod;
+        return result;
     }
 };
