@@ -8,3 +8,34 @@
  *
  * ! 本题与LC 239相同。
  */
+
+class Solution
+{
+public:
+    std::vector<int> maxSlidingWindow(std::vector<int>& nums, int k)
+    {
+        std::vector<int> result;
+        std::deque<int> deque; // monotonic decreasing
+        for (int i = 0; i < k; ++i) {
+            push(deque, nums[i]);
+        }
+        result.push_back(deque.front());
+        for (int i = k; i < nums.size(); ++i) {
+            if (nums[i - k] == deque.front()) {
+                deque.pop_front();
+            }
+            push(deque, nums[i]);
+            result.push_back(deque.front());
+        }
+        return result;
+    }
+
+private:
+    void push(std::deque<int>& deque, int val)
+    {
+        while (!deque.empty() && deque.back() < val) {
+            deque.pop_back();
+        }
+        deque.push_back(val);
+    }
+};
