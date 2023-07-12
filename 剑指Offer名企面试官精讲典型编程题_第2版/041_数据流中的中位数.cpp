@@ -32,6 +32,9 @@ public:
 
     void addNum(int num)
     {
+        // divide elements into two parts, as evenly as possible
+        // - if left.size == right.size,
+        //   adding to left or right are both ok
         if (left.size() >= right.size()) {
             left.push(num);
             right.push(left.top());

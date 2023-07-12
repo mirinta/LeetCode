@@ -17,6 +17,10 @@ class Solution
 public:
     bool isStraight(std::vector<int>& nums)
     {
+        // x1 x2 x3 x4 x5
+        // - if it is straight without any zero,
+        //   then diff = max(x1...x5) - min(x1...x5) = 4
+        // - if it is straight with zeros, then diff < 4
         std::unordered_set<int> cards;
         int min = INT_MAX;
         int max = INT_MIN;

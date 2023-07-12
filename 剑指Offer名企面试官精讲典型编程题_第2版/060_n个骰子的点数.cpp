@@ -14,23 +14,23 @@ class Solution
 public:
     std::vector<double> dicesProbability(int n)
     {
-        constexpr double kProb = 1.0 / 6;
         // dp[i][j] = prob of value j rolling i dices
+        constexpr double kProb = 1.0 / 6;
         std::vector<std::vector<double>> dp(n + 1, std::vector<double>(6 * n + 1, 0));
         for (int j = 1; j <= 6; ++j) {
             dp[1][j] = kProb;
         }
         for (int i = 2; i <= n; ++i) {
-            for (int j = 2; j <= 6 * n; ++j) {
+            for (int j = 2; j <= 6 * i; ++j) {
                 double sum = 0;
-                for (int k = 1; k <= std::min(j - 1, 6); ++k) {
-                    // to make sure j - k >= 1, and k <= 6
+                // make sure j - k >= 1, and k <= 6
+                for (int k = 1; k <= std::min(6, j - 1); ++k) {
                     sum += dp[i - 1][j - k];
                 }
                 dp[i][j] = sum * kProb;
             }
         }
-        // the min value of rolling n dices = n
+        // the min value of rolling n dices is n
         return {dp[n].begin() + n, dp[n].end()};
     }
 };

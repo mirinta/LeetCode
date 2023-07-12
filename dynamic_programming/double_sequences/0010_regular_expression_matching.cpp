@@ -41,7 +41,7 @@ public:
         std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, false));
         // base cases: i in range [1,m], j in range [1,n]
         // - dp[0][0] = true, empty pattern matches empty string
-        // - dp[i][0] = false, empty pattern doesn't match empty string
+        // - dp[i][0] = false, empty pattern doesn't match any non-empty string
         // - dp[0][j] = what kind of pattern can match empty string?
         //   p: S * S * [S *] ..., repeat [S *]
         dp[0][0] = true;
