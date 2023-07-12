@@ -13,6 +13,7 @@ class Solution
 public:
     int missingNumber(std::vector<int>& nums)
     {
+        // find first i s.t. nums[i] > i
         int lo = 0;
         int hi = nums.size() - 1;
         while (lo <= hi) {
