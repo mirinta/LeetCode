@@ -39,7 +39,7 @@ private:
         return i;
     }
 
-    // Approach 2: time O(kNlogN), space (KN)
+    // Approach 2: time O(KNlogN), space (KN)
     int approach2(int k, int n)
     {
         // same dp definition as approach1

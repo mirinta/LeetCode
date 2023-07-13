@@ -25,28 +25,37 @@
 class SnapshotArray
 {
 public:
-    SnapshotArray(int length) : _snapID(0)
+    SnapshotArray(int length) : snapID(0), data(length)
     {
-        _snaps.resize(length);
-        for (size_t i = 0; i < length; ++i) {
-            _snaps[i].push_back({0, 0});
+        for (int i = 0; i < length; ++i) {
+            data[i].push_back({0, 0});
         }
     }
 
-    void set(int index, int val) { _snaps[index].push_back({_snapID, val}); }
+    void set(int index, int val) { data[index].push_back({snapID, val}); }
 
-    int snap() { return _snapID++; }
+    int snap() { return snapID++; }
 
     int get(int index, int snap_id)
     {
-        auto iter = std::upper_bound(_snaps[index].begin(), _snaps[index].end(),
-                                     std::make_pair(snap_id, INT_MAX));
-        return std::prev(iter)->second;
+        int lo = 0;
+        int hi = data[index].size() - 1;
+        // find the last element that has the given snap_id
+        while (lo <= hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (data[index][mid].first > snap_id) {
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return data[index][hi].second;
     }
 
 private:
-    int _snapID;
-    std::vector<std::vector<std::pair<int, int>>> _snaps;
+    int snapID; // current snap_id
+    // data[i] = [<snap_id, value>, ...]
+    std::vector<std::vector<std::pair<int, int>>> data;
 };
 
 /**
