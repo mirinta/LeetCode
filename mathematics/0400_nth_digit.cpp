@@ -1,3 +1,5 @@
+#include <string>
+
 /**
  * Given an integer n, return the nth digit of the infinite integer sequence [1, 2, 3, 4, 5, 6, 7,
  * 8, 9, 10, 11, ...].
@@ -21,15 +23,13 @@ public:
             k++;
             pow *= 10;
         }
-        // n = 13: 2nd digit (1-indexed, from left to right) of value 11
-        // - after the above operations: n = 4, k = 2, pow = 10
-        // n = 11: 2nd digit (1-indexed, from left to right) of value 10
-        // - after the above operations: n = 2, k = 2, pow = 10
-        int value = pow + (n - 1) / k;
-        const int index = (n - 1) % k; // 0-indexed, from left to right
-        for (int i = 0; i < k - 1 - index; ++i) {
-            value /= 10;
-        }
-        return value % 10;
+        // n = 11, after the above operations: n = 2, k = 2, pow = 10
+        // - k = 2 means the target value is a 2 digits number
+        // - n = 2 means the target digit is the 2nd digit (1-indexed) of {10|11|12...}
+        // - target value = 10
+        // - target index of the target value = 1 (0-indexed, from left to right)
+        const int value = pow + (n - 1) / k;
+        const int index = (n - 1) % k;
+        return std::to_string(value)[index] - '0';
     }
 };
