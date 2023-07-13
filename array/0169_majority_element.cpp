@@ -17,15 +17,15 @@ public:
     int majorityElement(std::vector<int>& nums)
     {
         int target = 0;
-        int count = 0;
+        int votes = 0;
         for (const auto& val : nums) {
-            if (count == 0) {
+            if (votes == 0) {
                 target = val;
-                count = 1;
+                votes = 1;
             } else if (val == target) {
-                count++;
+                votes++;
             } else {
-                count--;
+                votes--;
             }
         }
         return target;
