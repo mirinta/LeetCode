@@ -1,5 +1,5 @@
 #include <string>
-#include <sstream>
+#include <vector>
 
 /**
  * Given an input string "s", reverse the order of the words.
@@ -25,50 +25,36 @@
 class Solution
 {
 public:
-    // "  the sky  ":
-    // - extract each word and reverse its characters, "eht" and "yks"
-    // - concatenate the words with a single space, "eht yks"
-    // - reverse the entire string, "sky the", done
-    std::string reverseWords(const std::string& s)
+    std::string reverseWords(std::string s)
     {
         if (s.empty())
             return {};
 
-        std::istringstream stream{s};
-        std::string result{};
-        std::string word{};
-        while (stream >> word) {
-            reverseCharacters(word, 0, word.size());
-            result += word + ' '; // an extra space is at the end
+        const int n = s.size();
+        std::vector<std::string> words;
+        int left = 0;
+        int right = 0;
+        while (left < n) {
+            while (left < n && s[left] == ' ') {
+                left++;
+            }
+            right = left;
+            while (right < n && s[right] != ' ') {
+                right++;
+            }
+            if (right - left > 0) {
+                words.push_back(s.substr(left, right - left));
+            }
+            left = right;
         }
-        // without using std::istringstream:
-        // const auto length = s.size();
-        // int i = 0;
-        // while (true) {
-        //     while (i < length && s[i] == ' ') {
-        //         i++;
-        //     }
-        //     if (i == length)
-        //         break;
-        //
-        //     int start = i;
-        //     while (i < length && s[i] != ' ') {
-        //         i++;
-        //     }
-        //     auto word = s.substr(start, i - start);
-        //     reverseCharacters(word, 0, word.size());
-        //     result += word + ' '; // an extra space is at the end
-        // }
-        reverseCharacters(result, 0, result.size() - 1); // the extra space is at the end
-        return result.substr(0, result.size() - 1);
-    }
-
-    // reverse characters in range [start, end)
-    void reverseCharacters(std::string& s, int start, int end)
-    {
-        end--;
-        while (start >= 0 && end < s.size() && start < end) {
-            std::swap(s[start++], s[end--]);
+        std::reverse(words.begin(), words.end());
+        std::string result;
+        for (int i = 0; i < words.size(); ++i) {
+            result.append(words[i]);
+            if (i != words.size() - 1) {
+                result.push_back(' ');
+            }
         }
+        return result;
     }
 };

@@ -13,24 +13,21 @@ class Solution
 public:
     std::string mergeAlternately(const std::string& word1, const std::string& word2)
     {
-        if (word1.empty())
-            return word2;
-
-        if (word2.empty())
-            return word1;
-
-        const size_t length1 = word1.size();
-        const size_t length2 = word2.size();
-        size_t iter1 = 0;
-        size_t iter2 = 0;
-        std::string result{};
-        while (iter1 < length1 || iter2 < length2) {
-            if (iter1 < length1) {
-                result.push_back(word1[iter1++]);
+        const int n1 = word1.size();
+        const int n2 = word2.size();
+        std::string result(n1 + n2, ' ');
+        bool flag = true; // use characters of word1
+        for (int k = 0, i = 0, j = 0; k < result.size(); ++k) {
+            if (i == n1) {
+                result[k] = word2[j++];
+                continue;
             }
-            if (iter2 < length2) {
-                result.push_back(word2[iter2++]);
+            if (j == n2) {
+                result[k] = word1[i++];
+                continue;
             }
+            result[k] = flag ? word1[i++] : word2[j++];
+            flag ^= true;
         }
         return result;
     }
