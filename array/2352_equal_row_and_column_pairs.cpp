@@ -17,27 +17,27 @@
 class Solution
 {
 public:
-    int equalPairs(const std::vector<std::vector<int>>& grid)
+    int equalPairs(std::vector<std::vector<int>>& grid)
     {
-        const auto n = grid.size();
+        const int n = grid.size();
         std::unordered_map<std::string, int> map;
-        for (size_t row = 0; row < n; ++row) {
-            std::string rowString{};
-            for (const auto& val : grid[row]) {
-                rowString.append(std::to_string(val));
-                rowString.push_back(',');
+        for (const auto& rowValues : grid) {
+            std::string row;
+            for (const auto& val : rowValues) {
+                row.append(std::to_string(val));
+                row.push_back(',');
             }
-            map[rowString]++;
+            map[row]++;
         }
         int result = 0;
-        for (size_t col = 0; col < n; ++col) {
-            std::string colString{};
-            for (size_t row = 0; row < n; ++row) {
-                colString.append(std::to_string(grid[row][col]));
-                colString.push_back(',');
+        for (int i = 0; i < n; ++i) {
+            std::string col;
+            for (int j = 0; j < n; ++j) {
+                col.append(std::to_string(grid[j][i]));
+                col.push_back(',');
             }
-            if (map.count(colString)) {
-                result += map[colString];
+            if (map.count(col)) {
+                result += map[col];
             }
         }
         return result;
