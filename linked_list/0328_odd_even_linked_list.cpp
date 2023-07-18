@@ -21,43 +21,22 @@ struct ListNode
  *
  * You must solve this problem in O(1) extra space complexity and O(n) time complexity.
  *
+ * ! The number of nodes in the linked list is in the range [0, 10^4].
+ * ! -10^6 <= Node.val <= 10^6
  */
 
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
-
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
 class Solution
 {
 public:
-    ListNode* oddEvenList(ListNode* head) { return oddEvenList_v1(head); }
-
-private:
-    ListNode* oddEvenList_v2(ListNode* head)
+    ListNode* oddEvenList(ListNode* head)
     {
         if (!head)
             return nullptr;
 
         auto* even = head;
         auto* odd = head->next;
-        auto* oddHead = odd;
+        auto* oddHead = head->next;
+        // 0->[1]->2->3...
         while (odd && odd->next) {
             even->next = odd->next;
             even = even->next;
@@ -68,28 +47,32 @@ private:
         return head;
     }
 
-    ListNode* oddEvenList_v1(ListNode* head)
+private:
+    ListNode* approach1(ListNode* head)
     {
         if (!head)
             return nullptr;
 
-        ListNode vHeadEven(-1);
-        auto* even = &vHeadEven;
-        ListNode vHeadOdd(-1);
-        auto* odd = &vHeadOdd;
-        auto* iter = head;
-        for (int i = 0; iter; ++i) {
-            if (i % 2 == 0) {
-                even->next = iter;
+        ListNode vOdd(-1);
+        ListNode vEven(-1);
+        auto* odd = &vOdd;
+        auto* even = &vEven;
+        auto* i = head;
+        int index = 0;
+        while (i) {
+            auto* next = i->next;
+            i->next = nullptr; // break original link
+            if (index % 2 == 0) {
+                even->next = i;
                 even = even->next;
             } else {
-                odd->next = iter;
+                odd->next = i;
                 odd = odd->next;
             }
-            iter = iter->next;
+            index++;
+            i = next;
         }
-        even->next = vHeadOdd.next;
-        odd->next = nullptr;
-        return vHeadEven.next;
+        even->next = vOdd.next;
+        return vEven.next;
     }
 };
