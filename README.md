@@ -28,3 +28,4 @@ TODO:
 - [ ] No.0837 (DP)
 - [ ] No.1547 (DP)
 - [ ] No.2763 (weekly contest 352)
+- [ ] No.0042

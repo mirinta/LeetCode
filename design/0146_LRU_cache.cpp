@@ -163,12 +163,64 @@ private:
     DoubleList m_cache;
 };
 
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj = new LRUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
- */
+class LRUCache2
+{
+public:
+    LRUCache2(int capacity) : _capacity(capacity) {}
+
+    int get(int key)
+    {
+        if (!_map.count(key))
+            return -1;
+
+        makeRecently(key);
+        return _lru.front().second;
+    }
+
+    void put(int key, int value)
+    {
+        if (_map.count(key)) {
+            makeRecently(key);
+            _lru.front().second = value;
+            return;
+        }
+        if (_lru.size() == _capacity) {
+            removeLeastRecently();
+        }
+        _lru.push_front({key, value});
+        _map[key] = _lru.begin();
+    }
+
+private:
+    void makeRecently(int key)
+    {
+        if (!_map.count(key))
+            return;
+
+        const int val = (*_map[key]).second;
+        _lru.erase(_map[key]);
+        _lru.push_front({key, val});
+        _map[key] = _lru.begin();
+    }
+
+    void removeLeastRecently()
+    {
+        const int key = _lru.back().first;
+        if (!_map.count(key))
+            return;
+
+        _map.erase(key);
+        _lru.pop_back();
+    }
+
+private:
+    int _capacity;
+    // front() is the recently used "key-value"
+    // back() is the least recently used "key-value"
+    std::list<std::pair<int, int>> _lru;
+    using Iter = std::list<std::pair<int, int>>::iterator;
+    std::unordered_map<int, Iter> _map; // key to iterator
+};
 
 /**
  * Your LRUCache object will be instantiated and called as such:
