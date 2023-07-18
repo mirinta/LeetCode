@@ -23,6 +23,9 @@ struct ListNode
  *
  * Given the "head" of a linked list with even length, return the maximum twn sum of the linked
  * list.
+ *
+ * ! The number of nodes in the list is an even integer in the range [2, 10^5].
+ * ! 1 <= Node.val <= 10^5
  */
 
 class Solution
