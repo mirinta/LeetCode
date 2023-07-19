@@ -10,6 +10,9 @@
  *
  * Return a list of all possible valid combinations. The list must not contain the same combination
  * twice, and the combinations may be returned in any order.
+ *
+ * ! 2 <= k <= 9
+ * ! 1 <= n <= 60
  */
 
 class Solution
@@ -17,41 +20,35 @@ class Solution
 public:
     std::vector<std::vector<int>> combinationSum3(int k, int n)
     {
-        if (!isSolvable(k, n))
+        if (!isSovable(k, n))
             return {};
 
+        std::vector<std::vector<int>> result;
         std::vector<int> combination;
-        backtrack(combination, 1, n, k);
+        backtrack(result, combination, 1, k, n);
         return result;
     }
 
 private:
-    std::vector<std::vector<int>> result;
-
-    bool isSolvable(int k, int n)
+    bool isSovable(int k, int n)
     {
-        // example: k = 2, n = 18
-        // the maximum sum of two unique numbers in range [1, 9] is 17
-        int maxSum = 0;
-        for (int i = k, val = 9; i > 0; --i, --val) {
-            maxSum += val;
-        }
-        return maxSum >= n;
+        if (k > 9 || k < 1)
+            return false;
+
+        const int max = (9 + 9 - k + 1) * k / 2;
+        return max >= n;
     }
 
-    void backtrack(std::vector<int>& combination, int start, int target, int dimension)
+    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& combination,
+                   int current, int limit, int target)
     {
-        if (combination.size() == dimension && target == 0) {
+        if (combination.size() == limit && target == 0) {
             result.push_back(combination);
             return;
         }
-        for (int i = start; i <= 9; ++i) {
-            const auto diff = target - i;
-            if (diff < 0)
-                continue;
-
+        for (int i = current; i <= 9; ++i) {
             combination.push_back(i);
-            backtrack(combination, i + 1, target - i, dimension);
+            backtrack(result, combination, i + 1, limit, target - i);
             combination.pop_back();
         }
     }

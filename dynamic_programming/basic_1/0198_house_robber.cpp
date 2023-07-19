@@ -8,59 +8,42 @@
  *
  * Given an integer array "nums" representing the amount of money of each house, return the maximum
  * amount of money you can rob tonight without alerting the police.
+ *
+ * ! 1 <= nums.length <= 100
+ * ! 0 <= nums[i] <= 400
  */
 
 class Solution
 {
 public:
-    int rob(const std::vector<int>& nums) { return approach3(nums); }
+    int rob(std::vector<int>& nums) { return approach2(nums); }
 
 private:
-    int approach1(const std::vector<int>& nums)
+    int approach2(std::vector<int>& nums)
     {
-        if (nums.empty())
-            return 0;
+        // DP with space optimization
+        const int n = nums.size();
+        int rob = INT_MIN;
+        int notRob = 0;
+        for (int i = 0; i < n; ++i) {
+            const int temp = rob;
+            rob = notRob + nums[i];
+            notRob = std::max(temp, notRob);
+        }
+        return std::max(rob, notRob);
+    }
 
-        // dp[i][0] = max value of robbing nums[0:i) while the ith house is not robbed
-        // dp[i][1] = max value of robbing nums[0:i) while the ith house is robbed
-        const auto n = nums.size();
-        std::vector<std::pair<int, int>> dp(n + 1, {0, 0});
+    int approach1(std::vector<int>& nums)
+    {
+        const int n = nums.size();
+        // dp[i][0] = max value of robbing house[0:i), and the ith house is not robbed
+        // dp[i][1] = max value of robbing house[0:i), and the ith house is robbed
+        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(2, 0));
+        dp[0][1] = INT_MIN;
         for (int i = 1; i <= n; ++i) {
-            dp[i].first = std::max(dp[i - 1].first, dp[i - 1].second);
-            dp[i].second = dp[i - 1].first + nums[i - 1];
+            dp[i][0] = std::max(dp[i - 1][0], dp[i - 1][1]);
+            dp[i][1] = dp[i - 1][0] + nums[i - 1];
         }
-        return std::max(dp[n].first, dp[n].second);
-    }
-
-    int approach2(const std::vector<int>& nums)
-    {
-        if (nums.empty())
-            return 0;
-
-        // dp[i] = max value of robbing nums[i:n)
-        const auto n = nums.size();
-        std::vector<int> dp(n + 1, 0);
-        dp[n - 1] = nums[n - 1];
-        for (int i = n - 2; i >= 0; --i) {
-            dp[i] = std::max(dp[i + 1], nums[i] + dp[i + 2]);
-        }
-        return dp[0];
-    }
-
-    int approach3(const std::vector<int>& nums)
-    {
-        // optimize approach2
-        if (nums.empty())
-            return 0;
-
-        const auto n = nums.size();
-        int robNext = nums[n - 1];
-        int robNextPlusOne = 0;
-        for (int i = n - 2; i >= 0; --i) {
-            int thisRound = std::max(robNext, nums[i] + robNextPlusOne);
-            robNextPlusOne = robNext;
-            robNext = thisRound;
-        }
-        return robNext;
+        return std::max(dp[n][0], dp[n][1]);
     }
 };

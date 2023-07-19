@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <cmath>
 #include <vector>
 
 /**
@@ -17,37 +19,32 @@
 class Solution
 {
 public:
-    int minEatingSpeed(const std::vector<int>& piles, int h)
+    int minEatingSpeed(std::vector<int>& piles, int h)
     {
-        if (piles.empty() || h <= 0 || h < piles.size())
-            return -1;
-
-        // search range [1, maxBananasOfPile]
-        int maxBananas = INT_MIN;
-        for (const auto& bananas : piles) {
-            maxBananas = bananas > maxBananas ? bananas : maxBananas;
-        }
-        int left = 1;
-        int right = maxBananas;
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (isSatisfied(piles, h, mid)) {
-                right = mid - 1; // decrease upper bound
+        int lo = 1;
+        int hi = *std::max_element(piles.begin(), piles.end());
+        while (lo < hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (isValid(mid, h, piles)) {
+                hi = mid;
             } else {
-                left = mid + 1;
+                lo = mid + 1;
             }
-        } // the loop is terminated when left = right + 1 = mid
-        return right + 1;
+        }
+        return lo;
     }
 
 private:
-    bool isSatisfied(const std::vector<int>& piles, int h, int speed)
+    bool isValid(int speed, int timeLimit, const std::vector<int>& piles)
     {
-        int count = 0;
-        for (const auto& bananas : piles) {
-            int hours = bananas / speed;
-            count += bananas % speed == 0 ? hours : hours + 1;
-            if (count > h)
+        int time = 0;
+        for (const auto& pile : piles) {
+            if (speed >= pile) {
+                time++;
+            } else {
+                time += std::ceil(pile * 1.0 / speed);
+            }
+            if (time > timeLimit)
                 return false;
         }
         return true;

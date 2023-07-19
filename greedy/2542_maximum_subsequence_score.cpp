@@ -29,33 +29,33 @@
 class Solution
 {
 public:
-    long long maxScore(const std::vector<int>& nums1, const std::vector<int>& nums2, int k)
+    long long maxScore(std::vector<int>& nums1, std::vector<int>& nums2, int k)
     {
-        const auto n = nums1.size();
-        std::vector<std::pair<int, int>> pairs(n, {0, 0}); // <nums2[i], nums1[i]>
-        for (size_t i = 0; i < n; ++i) {
-            pairs[i].first = nums2[i];
-            pairs[i].second = nums1[i];
+        // put nums1[i] and nums2[i] together
+        const int n = nums1.size();
+        std::vector<std::pair<int, int>> pairs(n); // <nums1[i], nums2[i]>
+        for (int i = 0; i < n; ++i) {
+            pairs[i].first = nums1[i];
+            pairs[i].second = nums2[i];
         }
-        // sort nums2 in ascending order
-        std::sort(pairs.rbegin(), pairs.rend());
-        // maintain a min heap to find out top K nums1[i]
+        // sort by nums2 in descending order
+        std::sort(pairs.begin(), pairs.end(),
+                  [](const auto& p1, const auto& p2) { return p1.second > p2.second; });
+        // min heap to maintain top k elements of nums1
         std::priority_queue<int, std::vector<int>, std::greater<int>> pq;
-        long long score = 0;
         long long sum = 0;
-        long long min = INT_MAX;
-        for (const auto& pair : pairs) {
-            min = pair.first;
-            sum += pair.second;
-            pq.push(pair.second);
+        long long result = 0;
+        for (const auto& [val1, val2] : pairs) {
+            sum += val1;
+            pq.push(val1);
             if (pq.size() > k) {
                 sum -= pq.top();
                 pq.pop();
             }
             if (pq.size() == k) {
-                score = std::max(score, sum * min);
+                result = std::max(result, sum * val2);
             }
         }
-        return score;
+        return result;
     }
 };

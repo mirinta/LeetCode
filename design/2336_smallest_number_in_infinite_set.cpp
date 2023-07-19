@@ -1,5 +1,5 @@
 #include <queue>
-#include <unordered_set>
+#include <set>
 
 /**
  * You have a set which contains all positive integers [1, 2, 3, 4, 5, ...].
@@ -25,10 +25,9 @@ public:
 
     int popSmallest()
     {
-        if (!pq.empty()) {
-            const int val = pq.top();
-            pq.pop();
-            seen.erase(val);
+        if (!set.empty()) {
+            const int val = *set.begin();
+            set.erase(val);
             return val;
         }
         return current++;
@@ -36,17 +35,14 @@ public:
 
     void addBack(int num)
     {
-        if (num >= current || seen.count(num))
-            return;
-
-        pq.push(num);
-        seen.insert(num);
+        if (num < current && !set.count(num)) {
+            set.insert(num);
+        }
     }
 
 private:
+    std::set<int> set;
     int current;
-    std::unordered_set<int> seen;
-    std::priority_queue<int, std::vector<int>, std::greater<int>> pq; // min heap
 };
 
 /**

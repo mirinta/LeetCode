@@ -26,25 +26,32 @@
 class Solution
 {
 public:
-    int minCostClimbingStairs(std::vector<int>& cost)
-    {
-        const auto n = cost.size();
-        if (n < 2)
-            return -1;
+    int minCostClimbingStairs(std::vector<int>& cost) { return approach2(cost); }
 
-        // the start position is unknown (0 or 1), but the destination is known (n-1)
-        // so we deduce backwards:
-        // dp[i] = min cost to reach the top if we start from the ith stair
-        // - we need to pay for the ith stair first
+private:
+    int approach2(std::vector<int>& cost)
+    {
+        // DP with space optimization
+        const int n = cost.size();
+        int oneStepToTop = cost[n - 1];
+        int twoStepsToTop = cost[n - 2];
+        for (int i = n - 3; i >= 0; --i) {
+            const int temp = std::min(oneStepToTop, twoStepsToTop) + cost[i];
+            oneStepToTop = twoStepsToTop;
+            twoStepsToTop = temp;
+        }
+        return std::min(oneStepToTop, twoStepsToTop);
+    }
+
+    int approach1(std::vector<int>& cost)
+    {
+        const int n = cost.size();
+        // dp[i] = min cost from staircase i (0-indexed) to n-1
         std::vector<int> dp(n, 0);
-        // base cases:
-        // - dp[n-1] = cost[n-1], we are standing at the top, just pay for the current stair
-        // - dp[n-2] = cost[n-2], pay for the current stair first, and then move 1 step to reach the
-        // top
         dp[n - 1] = cost[n - 1];
         dp[n - 2] = cost[n - 2];
         for (int i = n - 3; i >= 0; --i) {
-            dp[i] = cost[i] + std::min(dp[i + 1], dp[i + 2]);
+            dp[i] = std::min(dp[i + 1], dp[i + 2]) + cost[i];
         }
         return std::min(dp[0], dp[1]);
     }
