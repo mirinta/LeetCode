@@ -52,7 +52,7 @@ public:
                 continue;
             }
             visited.clear();
-            result.push_back(backtrack(visited, 1, numerator, denominator, graph));
+            result.push_back(compute(visited, 1, numerator, denominator, graph));
         }
         return result;
     }
@@ -61,8 +61,8 @@ private:
     // graph[i][j] = result of i/j
     using BiGraph = std::unordered_map<std::string, std::unordered_map<std::string, double>>;
 
-    double backtrack(std::unordered_set<std::string>& visited, double product,
-                     const std::string& current, const std::string& target, const BiGraph& graph)
+    double compute(std::unordered_set<std::string>& visited, double product,
+                   const std::string& current, const std::string& target, const BiGraph& graph)
     {
         if (current == target)
             return product;
@@ -73,7 +73,7 @@ private:
             if (visited.count(adj))
                 continue;
 
-            result = backtrack(visited, product * val, adj, target, graph);
+            result = compute(visited, product * val, adj, target, graph);
             if (result != -1)
                 break;
         }
