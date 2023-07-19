@@ -16,34 +16,47 @@ struct TreeNode
  *
  * Find the node in the BST that the node's value equals "val" and return the subtree rooted with
  * that node. If such a node does not exist, return nullptr.
+ *
+ * ! The number of nodes in the tree is in the range [1, 5000].
+ * ! 1 <= Node.val <= 10^7
+ * ! root is a binary search tree.
+ * ! 1 <= val <= 10^7
  */
 
 class Solution
 {
 public:
-    // for the current root node of a BST:
-    // root->left->val < root->val < root->right->val
-    TreeNode* searchBST(TreeNode* root, int val)
+    TreeNode* searchBST(TreeNode* root, int val) { return approach2(root, val); }
+
+private:
+    // iteration
+    TreeNode* approach2(TreeNode* root, int val)
     {
-        // approach 1: recursion
-        // if (!root)
-        //     return nullptr;
+        auto* i = root;
+        while (i) {
+            if (i->val > val) {
+                i = i->left;
+            } else if (i->val < val) {
+                i = i->right;
+            } else {
+                return i;
+            }
+        }
+        return nullptr;
+    }
 
-        // if (root->val == val)
-        //     return root;
-
-        // return root->val > val ? searchBST(root->left, val) : searchBST(root->right, val);
-        // approach 2: traverse
+    // recursion
+    TreeNode* approach1(TreeNode* root, int val)
+    {
         if (!root)
             return nullptr;
 
-        auto* node = root;
-        while (node) {
-            if (node->val == val)
-                return node;
+        if (root->val > val)
+            return approach1(root->left, val);
 
-            node = node->val > val ? node->left : node->right;
-        }
-        return nullptr;
+        if (root->val < val)
+            return approach1(root->right, val);
+
+        return root;
     }
 };
