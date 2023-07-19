@@ -20,6 +20,12 @@ struct TreeNode
  * - Search for a node to remove.
  *
  * - If the node is found, delete the node.
+ *
+ * ! The number of nodes in the tree is in the range [0, 10^4].
+ * ! -10^5 <= Node.val <= 10^5
+ * ! Each node has a unique value.
+ * ! root is a valid binary search tree.
+ * ! -10^5 <= key <= 10^5
  */
 
 class Solution
