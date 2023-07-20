@@ -18,33 +18,28 @@
 class Solution
 {
 public:
-    int maxProfit(const std::vector<int>& prices, int fee) { return approach2(prices, fee); }
+    int maxProfit(std::vector<int>& prices, int fee) { return approach2(prices, fee); }
 
 private:
-    int approach2(const std::vector<int>& prices, int fee)
+    int approach2(std::vector<int>& prices, int fee)
     {
-        // space optimization of approach1
-        if (prices.empty())
-            return 0;
-
-        long withStock = INT_MIN;
+        // DP with space optimization
+        const int n = prices.size();
         long withoutStock = 0;
-        for (const auto& price : prices) {
-            long backup = withoutStock;
-            withoutStock = std::max(withoutStock, withStock + price - fee);
-            withStock = std::max(withStock, backup - price);
+        long withStock = INT_MIN;
+        for (int i = 0; i < n; ++i) {
+            const long temp = withoutStock;
+            withoutStock = std::max(withoutStock, withStock + prices[i] - fee);
+            withStock = std::max(withStock, temp - prices[i]);
         }
         return withoutStock;
     }
 
-    int approach1(const std::vector<int>& prices, int fee)
+    int approach1(std::vector<int>& prices, int fee)
     {
-        if (prices.empty())
-            return 0;
-
-        // dp[i][0] = max profit of days[0:i) without stock on the ith day
-        // dp[i][1] = max profit of days[0:i) with stock on the ith day
-        const auto n = prices.size();
+        const int n = prices.size();
+        // dp[i][0] = max profit of days[0:i) without any stock in-hand
+        // dp[i][1] = max profit of days[0:i) with one stock in-hand
         std::vector<std::vector<long>> dp(n + 1, std::vector<long>(2, 0));
         dp[0][1] = INT_MIN;
         for (int i = 1; i <= n; ++i) {
