@@ -18,21 +18,42 @@ class Solution
 public:
     int longestCommonSubsequence(std::string text1, std::string text2)
     {
-        // dp[i][j] = longestCommonSubsequence(text1[0: i), text2[0: j))
-        const auto m = text1.size();
-        const auto n = text2.size();
-        std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
-        // base cases:
-        // - dp[i][0] = 0, text2 is empty, no common subsequence exists
-        // - dp[0][j] = 0, text1 is empty, no common subsequence exists
+        return approach2(text1, text2);
+    }
+
+private:
+    int approach2(const std::string& text1, const std::string& text2)
+    {
+        // DP with space optimization
+        const int m = text1.size();
+        const int n = text2.size();
+        std::vector<int> iMinus1(n + 1, 0);
+        std::vector<int> dp(n + 1, 0);
         for (int i = 1; i <= m; ++i) {
             for (int j = 1; j <= n; ++j) {
-                // if text1[i] = text2[j], it means the character is in the LCS
-                // otherwise, we pick the max value of dp[i-1][j] and dp[i][j-1]
-                // note that the ranges are [0, i) and [0, j),
-                // when accessing characters, we need i - 1 and j - 1
                 if (text1[i - 1] == text2[j - 1]) {
-                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                    dp[j] = iMinus1[j - 1] + 1;
+                } else {
+                    dp[j] = std::max(iMinus1[j], dp[j - 1]);
+                }
+            }
+            iMinus1 = dp;
+        }
+        return dp[n];
+    }
+
+    int approach1(const std::string& text1, const std::string& text2)
+    {
+        const int m = text1.size();
+        const int n = text2.size();
+        // dp[i][j] = length of LCS between text1[0:i) and text2[0:j)
+        std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                // X X [?]
+                // Y [?]
+                if (text1[i - 1] == text2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
                 } else {
                     dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);
                 }
