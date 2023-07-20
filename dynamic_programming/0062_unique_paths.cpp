@@ -14,14 +14,12 @@
 class Solution
 {
 public:
-    int uniquePaths(int m, int n)
-    {
-        if (m < 1 || n < 1)
-            return 0;
+    int uniquePaths(int m, int n) { return approach2(m, n); }
 
-        // dp[i][j] = number of unique paths from pos(i,j) to pos(m-1,n-1)
-        // base cases:
-        // - dp[m-1][j] = dp[i][n-1] = 1, last row or last column
+private:
+    int approach2(int m, int n)
+    {
+        // dp[i][j] = num of paths from (i,j) to (m-1,n-1)
         std::vector<std::vector<int>> dp(m, std::vector<int>(n, 1));
         for (int i = m - 2; i >= 0; --i) {
             for (int j = n - 2; j >= 0; --j) {
@@ -29,5 +27,20 @@ public:
             }
         }
         return dp[0][0];
+    }
+
+    int approach1(int m, int n)
+    {
+        // dp[i][j] = num of paths from (0,0) to (i,j)
+        // base case:
+        // dp[i][0] = 1, i in [0, m)
+        // dp[0][j] = 1, j in [0, n)
+        std::vector<std::vector<int>> dp(m, std::vector<int>(n, 1));
+        for (int i = 1; i < m; ++i) {
+            for (int j = 1; j < n; ++j) {
+                dp[i][j] = dp[i][j - 1] + dp[i - 1][j];
+            }
+        }
+        return dp[m - 1][n - 1];
     }
 };
