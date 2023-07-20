@@ -14,7 +14,31 @@
 class Solution
 {
 public:
-    int numTilings(int n)
+    int numTilings(int n) { return approach2(n); }
+
+private:
+    static constexpr int kMod = 1e9 + 7;
+
+    int approach2(int n)
+    {
+        // DP with space optimization
+        if (n < 2)
+            return 1;
+
+        std::vector<long> iMinus2{1, 0, 0};
+        std::vector<long> iMinus1{1, 0, 0};
+        std::vector<long> dp(3, 0);
+        for (int i = 2; i <= n; ++i) {
+            dp[0] = (iMinus1[0] + iMinus1[1] + iMinus1[2] + iMinus2[0]) % kMod;
+            dp[1] = (iMinus2[0] + iMinus1[2]) % kMod;
+            dp[2] = (iMinus2[0] + iMinus1[1]) % kMod;
+            iMinus2 = iMinus1;
+            iMinus1 = dp;
+        }
+        return dp[0];
+    }
+
+    int approach1(int n)
     {
         // dp[i][j] = num of ways to tile an 2xi board
         // j = 0   j = 1   j = 2
@@ -23,7 +47,6 @@ public:
         // j = 0 means both rows are covered
         // j = 1 means only the first row is covered
         // j = 2 means only the second row is covered
-        constexpr int kMod = 1e9 + 7;
         std::vector<std::vector<long>> dp(n + 1, std::vector<long>(3, 0));
         dp[0][0] = 1;
         dp[1][0] = 1;
