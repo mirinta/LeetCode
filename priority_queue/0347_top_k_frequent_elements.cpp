@@ -34,7 +34,7 @@ private:
         const int rank = unique.size() - k;
         int lo = 0;
         int hi = unique.size() - 1;
-        while (lo <= hi) {
+        while (lo < hi) {
             const int pos = partition(lo, hi, unique, map);
             if (pos > rank) {
                 hi = pos - 1;
