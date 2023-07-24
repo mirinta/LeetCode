@@ -41,7 +41,7 @@ private:
         const int rank = nums.size() - k;
         int lo = 0;
         int hi = nums.size() - 1;
-        while (lo <= hi) {
+        while (lo < hi) {
             const int pos = partition(lo, hi, nums);
             if (pos > rank) {
                 hi = pos - 1;
