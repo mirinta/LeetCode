@@ -20,34 +20,41 @@ struct ListNode
 class Solution
 {
 public:
-    ListNode* swapPairs(ListNode* head)
+    ListNode* swapPairs(ListNode* head) { return approach2(head); }
+
+private:
+    // iteration
+    ListNode* approach2(ListNode* head)
     {
-        // approach 1: iteration
-        // - from: ... -> before -> (iter -> after) -> TAIL...
-        // - to: ... -> before -> (after -> iter) -> TAIL...
-        // - boundary: swap two adjacent nodes, i.e., iter and iter->next are not nullptr
-        ListNode vHead{-1, head};
+        // Before->[i]->After->{X X X} => Before->After->[i]->{X X X}
+        if (!head)
+            return nullptr;
+
+        ListNode vHead(-1);
+        vHead.next = head;
         auto* before = &vHead;
-        auto* iter = head;
-        while (iter && iter->next) {
-            auto* after = iter->next;
-            iter->next = after->next;
-            after->next = iter;
+        auto* i = head;
+        while (i && i->next) {
+            auto* after = i->next;
+            i->next = after->next;
+            after->next = i;
             before->next = after;
-            before = iter;
-            iter = iter->next;
+            before = i;
+            i = i->next;
         }
         return vHead.next;
-        // ------------------------------
-        // approach 2: recursion
-        // from: ... -> Ni -> N(i+1) -> swapPairs(N(i+2)->TAIL...)
-        // to: ... -> N(i+1) -> Ni -> swapPairs(N(i+2)->TAIL...)
-        // if (!head || !head->next)
-        //     return head;
+    }
 
-        // auto* newHead = head->next;
-        // head->next = swapPairs(newHead->next);
-        // newHead->next = head;
-        // return newHead;
+    // recursion
+    ListNode* approach1(ListNode* head)
+    {
+        if (!head || !head->next)
+            return head;
+
+        // [A->B]->{X X X} => [B->A]->{X X X}
+        auto* newHead = head->next;
+        head->next = approach1(newHead->next);
+        newHead->next = head;
+        return newHead;
     }
 };
