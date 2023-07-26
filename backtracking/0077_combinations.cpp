@@ -12,6 +12,9 @@
  * Explanation: There are 4 choose 2 = 6 total combinations.
  * Note that combinations are unordered, i.e., [1, 2] and [2, 1] are considered to be the same
  * combination.
+ *
+ * ! 1 <= n <= 20
+ * ! 1 <= k <= n
  */
 
 class Solution
@@ -19,26 +22,23 @@ class Solution
 public:
     std::vector<std::vector<int>> combine(int n, int k)
     {
-        if (n < 1 || k < 1)
-            return {};
-
+        std::vector<std::vector<int>> result;
         std::vector<int> combination;
-        backtrack(combination, 1, n, k);
+        backtrack(result, combination, 1, n, k);
         return result;
     }
 
 private:
-    std::vector<std::vector<int>> result;
-
-    void backtrack(std::vector<int>& combination, int start, int n, int targetSize)
+    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& combination, int start,
+                   int n, int k)
     {
-        if (combination.size() == targetSize) {
+        if (combination.size() == k) {
             result.push_back(combination);
             return;
         }
         for (int i = start; i <= n; ++i) {
             combination.push_back(i);
-            backtrack(combination, i + 1, n, targetSize);
+            backtrack(result, combination, i + 1, n, k);
             combination.pop_back();
         }
     }
