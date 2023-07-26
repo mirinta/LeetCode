@@ -12,43 +12,45 @@ class Solution
 public:
     int totalNQueens(int n)
     {
-        if (n < 1)
-            return 0;
+        if (n == 1)
+            return 1;
 
+        // 0 for empty space, 1 for queen
+        std::vector<std::vector<int>> board(n, std::vector<int>(n, 0));
         int result = 0;
-        // true for 'Q', false for '.' (empty space)
-        std::vector<std::vector<bool>> board(n, std::vector(n, false));
-        backtrack(board, 0, n, result);
+        backtrack(result, board, 0);
         return result;
     }
 
 private:
-    void backtrack(std::vector<std::vector<bool>>& board, int row, int dimension, int& result)
+    void backtrack(int& result, std::vector<std::vector<int>>& board, int row)
     {
-        if (row == dimension) {
+        if (row == board.size()) {
             result++;
             return;
         }
-        for (int col = 0; col < dimension; ++col) {
-            if (!isValid(board, row, col, dimension))
-                continue;
-
-            board[row][col] = true;
-            backtrack(board, row + 1, dimension, result);
-            board[row][col] = false;
+        for (int col = 0; col < board[row].size(); ++col) {
+            if (isValid(row, col, board)) {
+                board[row][col] = 1;
+                backtrack(result, board, row + 1);
+                board[row][col] = 0;
+            }
         }
     }
 
-    bool isValid(std::vector<std::vector<bool>>& board, int row, int col, int dimension)
+    bool isValid(int row, int col, const std::vector<std::vector<int>>& board)
     {
-        for (int r = row - 1, gap = 1; r >= 0; --r, ++gap) {
-            if (board[r][col])
+        for (int checkRow = row - 1, offset = 1; checkRow >= 0; --checkRow, ++offset) {
+            // row i-2: | ? _ ? _ ? |
+            // row i-1: | _ ? ? ? _ |
+            // row   i: | _ _ X _ _ |
+            if (board[checkRow][col] == 1)
                 return false;
 
-            if (int c = col - gap; c >= 0 && board[r][c])
+            if (col + offset < board[checkRow].size() && board[checkRow][col + offset] == 1)
                 return false;
 
-            if (int c = col + gap; c < dimension && board[r][c])
+            if (col - offset >= 0 && board[checkRow][col - offset] == 1)
                 return false;
         }
         return true;
