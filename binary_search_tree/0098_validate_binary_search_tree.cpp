@@ -23,57 +23,63 @@ struct TreeNode
  * - The right subtree of a node contains only nodes with keys greater than the node's key.
  *
  * - Both the left and right subtrees must also be binary search trees.
+ *
+ * ! The number of nodes in the tree is in the range [1, 10^4].
+ * ! -2^31 <= Node.val <= 2^31 - 1
  */
 
 class Solution
 {
-    // approach 1:
-    // public:
-    //     bool isValidBST(TreeNode* root) {
-    //         if (!root)
-    //             return false;
-
-    //         return traverse(root, nullptr, nullptr);
-    //     }
-
-    // private:
-    //     bool traverse(TreeNode* node, TreeNode* minNode, TreeNode* maxNode)
-    //     {
-    //         if (!node)
-    //             return true;
-    //         // for the current root node, we want minNode < node < maxNode
-    //         if (minNode && node->val <= minNode->val)
-    //             return false;
-
-    //         if (maxNode && node->val >= maxNode->val)
-    //             return false;
-
-    //         return traverse(node->left, minNode, node) && traverse(node->right, node, maxNode);
-    //     }
-    // approach 2: if it is a valid BST, the inorder traversal is in ascending order.
 public:
-    bool isValidBST(TreeNode* root)
+    bool isValidBST(TreeNode* root) { return approach1(root); }
+
+private:
+    bool approach2(TreeNode* root)
+    {
+        if (!root)
+            return false;
+
+        return validate(root, nullptr, nullptr);
+    }
+
+    bool validate(TreeNode* root, TreeNode* minNode, TreeNode* maxNode)
+    {
+        if (!root)
+            return true;
+
+        if (minNode && minNode->val >= root->val)
+            return false;
+
+        if (maxNode && maxNode->val <= root->val)
+            return false;
+
+        return validate(root->left, minNode, root) && validate(root->right, root, maxNode);
+    }
+
+    bool approach1(TreeNode* root)
     {
         if (!root)
             return false;
 
         std::vector<int> inorder;
-        traverse(root, inorder);
-        for (size_t i = 0; inorder.size() > 1 && i < inorder.size() - 1; ++i) {
-            if (inorder[i] >= inorder[i + 1])
+        traverse(inorder, root);
+        if (inorder.size() == 1)
+            return true;
+
+        for (int i = 1; i < inorder.size(); ++i) {
+            if (inorder[i] <= inorder[i - 1])
                 return false;
         }
         return true;
     }
 
-private:
-    void traverse(TreeNode* node, std::vector<int>& inorder)
+    void traverse(std::vector<int>& inorder, TreeNode* node)
     {
         if (!node)
             return;
 
-        traverse(node->left, inorder);
+        traverse(inorder, node->left);
         inorder.push_back(node->val);
-        traverse(node->right, inorder);
+        traverse(inorder, node->right);
     }
 };
