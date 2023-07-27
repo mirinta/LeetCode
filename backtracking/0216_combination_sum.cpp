@@ -20,7 +20,7 @@ class Solution
 public:
     std::vector<std::vector<int>> combinationSum3(int k, int n)
     {
-        if (!isSovable(k, n))
+        if (!isSolvable(k, n))
             return {};
 
         std::vector<std::vector<int>> result;
@@ -30,7 +30,7 @@ public:
     }
 
 private:
-    bool isSovable(int k, int n)
+    bool isSolvable(int k, int n)
     {
         if (k > 9 || k < 1)
             return false;
