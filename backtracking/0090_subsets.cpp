@@ -16,7 +16,7 @@ public:
         if (nums.empty())
             return {};
 
-        std::sort(nums.begin(), nums.end()); // to arrange repeated values togeter
+        std::sort(nums.begin(), nums.end()); // to arrange repeated values together
         std::vector<int> subset;
         backtrack(subset, nums, 0);
         return result;
