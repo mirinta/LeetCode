@@ -15,6 +15,7 @@ class Solution
 public:
     std::vector<int> dailyTemperatures(std::vector<int>& temperatures)
     {
+        // monotonic decreasing (from bottom to top)
         std::stack<std::pair<int, int>> stack;
         std::vector<int> result(temperatures.size(), 0);
         for (int i = temperatures.size() - 1; i >= 0; --i) {
