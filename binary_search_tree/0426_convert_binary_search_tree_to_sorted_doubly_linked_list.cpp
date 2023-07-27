@@ -39,9 +39,9 @@ public:
  * node should point to its predecessor, and the right pointer should point to its successor. You
  * should return the pointer to the smallest element of the linked list.
  *
- * The number of nodes in the tree is in the range [0, 2000].
- * -1000 <= Node.val <= 1000
- * All the values of the tree are unique.
+ * ! The number of nodes in the tree is in the range [0, 2000].
+ * ! -1000 <= Node.val <= 1000
+ * ! All the values of the tree are unique.
  */
 
 class Solution
@@ -52,18 +52,21 @@ public:
         if (!root)
             return nullptr;
 
+        // {L_HEAD<->...<->L_TAIL} <-> ROOT <-> {R_HEAD<->...<->R_TAIL}
+        // process root and left subtree
         auto* leftHead = treeToDoublyList(root->left);
-        auto* rightHead = treeToDoublyList(root->right);
         Node* leftTail = nullptr;
-        Node* rightTail = nullptr;
         if (leftHead) {
             leftTail = leftHead->left;
-            root->left = leftTail;
             leftTail->right = root;
+            root->left = leftTail;
         } else {
             leftHead = root;
             leftTail = root;
         }
+        // process root and right subtree
+        auto* rightHead = treeToDoublyList(root->right);
+        Node* rightTail = nullptr;
         if (rightHead) {
             rightTail = rightHead->left;
             root->right = rightHead;
@@ -72,6 +75,7 @@ public:
             rightHead = root;
             rightTail = root;
         }
+        // combine
         leftHead->left = rightTail;
         rightTail->right = leftHead;
         return leftHead;
@@ -91,7 +95,7 @@ private:
         }
         inorder.back()->right = inorder.front();
         inorder.front()->left = inorder.back();
-        return inorder[0];
+        return inorder.front();
     }
 
     void traverse(std::vector<Node*>& inorder, Node* node)
