@@ -24,17 +24,17 @@ public:
     bool PredictTheWinner(std::vector<int>& nums)
     {
         const int n = nums.size();
-        // dp[i][j].first = playerX's max score of playing with nums[i, j], and playerX plays first
-        // dp[i][j].second = playerX's max score of playing with nums[i, j], and playerX plays
+        // dp[i][j].first = a player's max score of playing with piles[i:j], and he plays first
+        // dp[i][j].second = a player's max score of playing with piles[i:j], and he plays second
         // second
         std::vector<std::vector<std::pair<int, int>>> dp(
             n, std::vector<std::pair<int, int>>(n, {0, 0}));
         // base case:
-        // - dp[i][0].first = nums[i], dp[i][0].second = 0,
-        // - because there's only one number which will be picked by player1
+        // - dp[i][i].first = nums[i], dp[i][i].second = 0,
+        // - because there's only one number to choose
         for (int i = 0; i < n; ++i) {
-            dp[i][0].first = nums[i];
-            dp[i][0].second = 0;
+            dp[i][i].first = nums[i];
+            dp[i][i].second = 0;
         }
         for (int i = n - 2; i >= 0; --i) {
             for (int j = i + 1; j < n; ++j) {
