@@ -15,33 +15,51 @@
 class Solution
 {
 public:
-    int deleteAndEarn(std::vector<int>& nums)
+    int deleteAndEarn(std::vector<int>& nums) { return approach2(nums); }
+
+private:
+    int approach2(std::vector<int>& nums)
     {
-        // nums = [2, 2, 3, 3, 3, 4]
-        // - number of 2 = 2, if we delete 2, we earn at least 2 * 2 = 4 points
-        // - number of 3 = 3, if we delete 3, we earn at least 3 * 3 = 9 points
-        // - number of 4 = 1, if we delete 4, we earn at least 4 * 1 = 4 points
-        // construct an array: arr[i] = min points we earn if we delete i
-        // index:  0  1  2  3  4
-        // value:  0  0  4  9  4
-        // if we pick index i, then index of i+1 and i-1 can't be picked
-        // this is similar to the House Robber Problem, see LC 198
-        std::unordered_map<int, int> map; // map[i] = nums[i] * number of nums[i]
-        int maxNum = INT_MIN;
+        // DP with space optimization
+        std::unordered_map<int, int> points; // val to frequency*val
+        int maxElement = 0;
         for (const auto& val : nums) {
-            map[val] += val;
-            maxNum = std::max(maxNum, val);
+            maxElement = std::max(maxElement, val);
+            points[val] += val;
         }
-        // dp[i] = max val of robbing house[i:end]
-        std::vector<int> dp(maxNum + 1); // n = maxNum + 1
-        // base cases:
-        // - dp[n-1], only one choice
-        // - dp[n-2], only two choices, pick the one with max value
-        dp[maxNum] = map[maxNum];
-        dp[maxNum - 1] = std::max(map[maxNum], map[maxNum - 1]);
-        for (int i = maxNum - 2; i >= 0; --i) {
-            dp[i] = std::max(dp[i + 1], dp[i + 2] + map[i]);
+        int robbed = INT_MIN;
+        int notRobbed = 0;
+        for (int i = 1; i <= maxElement; ++i) {
+            const int temp = notRobbed;
+            notRobbed = std::max(robbed, notRobbed);
+            robbed = temp + points[i];
         }
-        return dp[0];
+        return std::max(notRobbed, robbed);
+    }
+
+    int approach1(std::vector<int>& nums)
+    {
+        // let count[j] to be the number of nums[i]=j
+        // - if we pick nums[i]=j, we earn j*count[j] points
+        // - all nums[i]-1 are deleted, i.e., count[j-1]=0
+        // - all nums[i]+1 are deleted, i.e., count[j+1]=0
+        // this is similar to the House Robber problem:
+        // - if we rob house[j] in this round,
+        //   then house[j-1] and house[j+1] can't be robbed in the next round
+        std::unordered_map<int, int> points; // val to frequency*val
+        int maxElement = 0;
+        for (const auto& val : nums) {
+            maxElement = std::max(maxElement, val);
+            points[val] += val;
+        }
+        // dp[i][0] = max value of robbing the first i houses and the ith house is not robbed
+        // dp[i][1] = max value of robbing the first i houses and the ith house is robbed
+        std::vector<std::vector<int>> dp(maxElement + 1, std::vector<int>(2, 0));
+        dp[0][1] = INT_MIN;
+        for (int i = 1; i <= maxElement; ++i) {
+            dp[i][0] = std::max(dp[i - 1][0], dp[i - 1][1]);
+            dp[i][1] = dp[i - 1][0] + points[i];
+        }
+        return std::max(dp[maxElement][0], dp[maxElement][1]);
     }
 };
