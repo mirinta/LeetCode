@@ -14,38 +14,38 @@ class Solution
 public:
     int splitArray(std::vector<int>& nums, int k)
     {
-        if (nums.empty() || k <= 0 || k > nums.size())
-            return 0;
-
-        // search range [maxValue, totalSum]
-        int left = INT_MIN;
-        int right = 0;
-        for (const auto& i : nums) {
-            right += i;
-            left = std::max(left, i);
+        // the max element is in one of the subarrays
+        // so the min sum = max element,
+        // and the max sum = sum of nums
+        int lo = 0; // because 0 <= nums[i] <= 10^6
+        int hi = 0;
+        for (const auto& val : nums) {
+            hi += val;
+            lo = std::max(lo, val);
         }
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (canSplit(nums, k, mid)) {
-                right = mid - 1; // decrease upper bound
+        while (lo <= hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (canSplit(mid, k, nums)) {
+                hi = mid - 1;
             } else {
-                left = mid + 1;
+                lo = mid + 1;
             }
         }
-        return right + 1;
+        return lo;
     }
 
 private:
-    bool canSplit(const std::vector<int>& nums, int maxGroups, int maxSplitSum)
+    bool canSplit(int maxGroupSum, int maxGroups, const std::vector<int>& nums)
     {
+        // | X X X | X X X | X X X |
+        //   group1  group2  group3
         int groups = 1;
-        int groupSum = 0;
-        for (const auto& i : nums) {
-            if (groupSum + i > maxSplitSum) {
-                groupSum = i;
-                groups++;
-            } else {
-                groupSum += i;
+        int sum = 0;
+        for (const auto& val : nums) {
+            sum += val;
+            if (sum > maxGroupSum) {
+                sum = val;
+                groups += 1;
             }
         }
         return groups <= maxGroups;
