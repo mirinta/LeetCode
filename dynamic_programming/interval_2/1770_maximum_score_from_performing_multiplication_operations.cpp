@@ -19,7 +19,7 @@
  * ! n == nums.length
  * ! m == multipliers.length
  * ! 1 <= m <= 300
- * ! m <= n <= 105
+ * ! m <= n <= 10^5
  * ! -1000 <= nums[i], multipliers[i] <= 1000
  */
 
