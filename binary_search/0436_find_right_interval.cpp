@@ -27,7 +27,7 @@ public:
             return {};
 
         // interval to original index
-        // since the start points are unique, we can use them as key
+        // since the start points are unique, we can use them as keys
         std::unordered_map<int, int> map;
         for (int i = 0; i < intervals.size(); ++i) {
             map[intervals[i][0]] = i;
