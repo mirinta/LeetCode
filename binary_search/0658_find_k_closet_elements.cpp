@@ -22,7 +22,9 @@ public:
     std::vector<int> findClosestElements(std::vector<int>& arr, int k, int x)
     {
         const int index = binarySearch(arr, x);
-        // window, (left, right), both exclusive
+        // X X X X t X X X X
+        //       ^   ^
+        // elements in window (left, right), both exclusive
         int left = index - 1;
         int right = index;
         for (int i = 0; i < k; ++i) {

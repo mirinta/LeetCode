@@ -17,27 +17,40 @@ class Solution
 public:
     int singleNonDuplicate(std::vector<int>& nums)
     {
+        // nums.size is odd
+        // L ... M-2 M-1 M M+1 M+2... R
         int lo = 0;
         int hi = nums.size() - 1;
         while (lo < hi) {
             const int mid = lo + (hi - lo) / 2;
-            const bool isLeftPartOddSize = mid % 2;
+            const bool isLeftPartEvenSize = mid % 2 == 0;
             if (nums[mid] == nums[mid - 1]) {
-                if (isLeftPartOddSize) {
-                    lo = mid + 1;
-                } else {
+                if (isLeftPartEvenSize) {
                     hi = mid - 2;
+                } else {
+                    lo = mid + 1;
                 }
             } else if (nums[mid] == nums[mid + 1]) {
-                if (isLeftPartOddSize) {
-                    hi = mid - 1;
-                } else {
+                if (isLeftPartEvenSize) {
                     lo = mid + 2;
+                } else {
+                    hi = mid - 1;
                 }
             } else {
                 return nums[mid];
             }
         }
         return nums[lo];
+    }
+
+private:
+    // time O(n), space O(1)
+    int approach1(std::vector<int>& nums)
+    {
+        int result = 0;
+        for (const auto& val : nums) {
+            result ^= val;
+        }
+        return result;
     }
 };

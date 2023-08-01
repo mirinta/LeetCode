@@ -33,7 +33,16 @@ public:
         int left = 0;
         int right = m;
         while (left <= right) {
+            // nums1: [...MaxLeft1][MinLeft1...]
+            // nums2: [...MaxLeft2][MinLeft2...]
+            // merge: [...MaxLeft?][...MaxLeft?][MinRight?...][MinRight?...]
             const int cut1 = left + (right - left) / 2;
+            //  odd length (5): [0 1 2] [3 4]
+            // - 2 is the median index
+            // - cutting position is 3=(5+1)/2
+            // even length (4): [0 1] [2 3]
+            // - 2 and 3 are the indices for computing median
+            // - cutting position is 2=(4+1)/2
             const int cut2 = (m + n + 1) / 2 - cut1;
             const int maxLeft1 = cut1 == 0 ? INT_MIN : nums1[cut1 - 1];
             const int minRight1 = cut1 == m ? INT_MAX : nums1[cut1];

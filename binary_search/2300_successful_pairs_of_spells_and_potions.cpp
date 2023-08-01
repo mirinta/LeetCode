@@ -32,12 +32,6 @@ public:
         for (int i = 0; i < n; ++i) {
             // find the first element >= target
             // - ceil(a/b) = a/b if a%b=0 else a/b+1
-            // using STL:
-            // const auto target = std::ceil(success * 1.0 / spells[i]);
-            // auto iter = std::lower_bound(potions.begin(), potions.end(), target);
-            // if (iter != potions.end()) {
-            //     result[i] = std::distance(iter, potions.end());
-            // }
             const int index =
                 findFirstGreaterOrEqualTo(std::ceil(success * 1.0 / spells[i]), potions);
             if (index != -1) {
