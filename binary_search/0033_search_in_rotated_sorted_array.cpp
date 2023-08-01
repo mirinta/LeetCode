@@ -31,12 +31,6 @@ public:
         int left = 0;
         int right = nums.size() - 1;
         while (left <= right) {
-            if (nums[left] == target)
-                return left;
-
-            if (nums[right] == target)
-                return right;
-
             int mid = left + (right - left) / 2;
             if (nums[mid] == target)
                 return mid;
@@ -47,7 +41,7 @@ public:
                 // mid is in the left part
                 // [LEFT...M...][...RIGHT]
                 // | case1 |    case2    |
-                if (target < nums[mid] && target > nums[left]) {
+                if (target < nums[mid] && target >= nums[left]) {
                     right = mid - 1;
                 } else {
                     left = mid + 1;
@@ -56,7 +50,7 @@ public:
                 // mid is in the right part
                 // [LEFT...][...M...RIGHT]
                 // |    case2   |  case1 |
-                if (target > nums[mid] && target < nums[right]) {
+                if (target > nums[mid] && target <= nums[right]) {
                     left = mid + 1;
                 } else {
                     right = mid - 1;
