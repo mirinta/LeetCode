@@ -77,10 +77,19 @@ private:
                     dp[i][j] = dp[i - 1][j - 1];
                     continue;
                 }
+                // insert a new character after i:
+                // X X X i
+                // X X X X j
                 const int insertion = dp[i][j - 1] + 1;
-                const int swap = dp[i - 1][j - 1] + 1;
+                // replace i with another character:
+                // X X X i
+                // X X X j
+                const int replacement = dp[i - 1][j - 1] + 1;
+                // delete i:
+                // X X X X i
+                // X X X j
                 const int deletion = dp[i - 1][j] + 1;
-                dp[i][j] = std::min({insertion, swap, deletion});
+                dp[i][j] = std::min({insertion, replacement, deletion});
             }
         }
         return dp[m][n];
