@@ -1,3 +1,4 @@
+#include <unordered_set>
 #include <vector>
 
 /**
@@ -29,34 +30,22 @@
 class Solution
 {
 public:
-    int mincostTickets(const std::vector<int>& days, const std::vector<int>& costs)
+    int mincostTickets(std::vector<int>& days, std::vector<int>& costs)
     {
-        const std::vector<int> durations{1, 7, 30};
-        std::vector<int> memo(days.size(), -1);
-        return dp(0, memo, durations, days, costs);
-    }
-
-private:
-    // dp(start,...) = min cost of traveling in days[start:n)
-    int dp(int start, std::vector<int>& memo, const std::vector<int>& durations,
-           const std::vector<int>& days, const std::vector<int>& costs)
-    {
-        if (start >= days.size())
-            return 0;
-
-        if (memo[start] != -1)
-            return memo[start];
-
-        int minCost = INT_MAX;
-        for (int choice = 0; choice < 3; ++choice) {
-            const auto expireDay = days[start] + durations[choice];
-            int k = start;
-            while (k < days.size() && days[k] < expireDay) {
-                k++;
+        std::unordered_set<int> travel(days.begin(), days.end());
+        const int n = days.back();
+        // dp[i] = min cost of the first i days
+        std::vector<int> dp(n + 1, INT_MAX);
+        dp[0] = 0;
+        for (int i = 1; i <= n; ++i) {
+            if (!travel.count(i)) {
+                dp[i] = dp[i - 1];
+                continue;
             }
-            minCost = std::min(minCost, costs[choice] + dp(k, memo, durations, days, costs));
+            dp[i] = std::min(dp[i], dp[std::max(0, i - 1)] + costs[0]);
+            dp[i] = std::min(dp[i], dp[std::max(0, i - 7)] + costs[1]);
+            dp[i] = std::min(dp[i], dp[std::max(0, i - 30)] + costs[2]);
         }
-        memo[start] = minCost;
-        return minCost;
+        return dp[n];
     }
 };
