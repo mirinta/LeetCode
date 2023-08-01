@@ -15,8 +15,8 @@ public:
         int left = 1;
         int right = n;
         while (left <= right) {
-            long long mid = left + (right - left) / 2;
-            long long numOfCoins = (1 + mid) * mid / 2;
+            const long long mid = left + (right - left) / 2;
+            const long long numOfCoins = (1 + mid) * mid / 2;
             if (numOfCoins > n) {
                 right = mid - 1;
             } else if (numOfCoins < n) {
