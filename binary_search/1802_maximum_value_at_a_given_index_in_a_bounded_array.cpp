@@ -29,30 +29,37 @@ public:
     {
         int lo = 1;
         int hi = maxSum;
-        while (lo <= hi) {
-            int mid = lo + (hi - lo) / 2;
-            if (sum(mid, index, n) <= static_cast<long>(maxSum)) {
-                lo = mid + 1;
+        while (lo < hi) {
+            // infinite loop: const int mid = lo + (hi - lo) / 2;
+            const int mid = hi - (hi - lo) / 2;
+            if (isValid(mid, n, index, maxSum)) {
+                lo = mid;
             } else {
                 hi = mid - 1;
             }
-        } // the loop is terminated when lo = hi + 1
-        return lo - 1;
+        }
+        return lo;
     }
 
 private:
-    long sum(long val, long index, long n)
+    bool isValid(long val, long n, long index, long maxSum)
     {
-        // {1,...,1,1,2,...,val-1}  val  {val-1,...,2,1,1,...,1}
-        // {0,...,index-2,index-1} index {index+1,index+2,...,n-1}
-        long leftItems = std::max(std::min(index, val - 1), 0L);
-        long leftRemaining = std::max(0L, index - leftItems);
-        long leftSum = (val - 1 + val - leftItems) * leftItems / 2 + leftRemaining;
+        //  |           val           |
+        //  |     go up / \ go down   |
+        //  |          /   \          |
+        //  | 1 1 1 1 X     X 1 1 1 1 |
+        //  0          index          n-1
+        // where X >= 1
+        // AP sequence with common difference 1: #items = (last - first) + 1, diff = 1
+        const long leftAPItems = std::max(0L, std::min(val - 1, index));
+        const long leftRemainingItems = std::max(0L, index - leftAPItems);
+        const long leftSum = (val - 1 + val - leftAPItems) * leftAPItems / 2 + leftRemainingItems;
 
-        long rightItems = std::max(std::min(n - 1 - index, val - 1), 0L);
-        long rightRemaining = std::max(0L, n - 1 - index - rightItems);
-        long rightSum = (val - 1 + val - rightItems) * rightItems / 2 + rightRemaining;
+        const long rightAPItems = std::max(0L, std::min(val - 1, n - index - 1));
+        const long rightRemainingItems = std::max(0L, n - index - 1 - rightAPItems);
+        const long rightSum =
+            (val - 1 + val - rightAPItems) * rightAPItems / 2 + rightRemainingItems;
 
-        return leftSum + rightSum + val;
+        return leftSum + rightSum + val <= maxSum;
     }
 };

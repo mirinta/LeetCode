@@ -37,15 +37,15 @@ public:
 
         int lo = 1;
         int hi = maxSpeed;
-        while (lo <= hi) {
+        while (lo < hi) {
             const int mid = lo + (hi - lo) / 2;
             if (isValid(mid, dist, hour)) {
-                hi = mid - 1;
+                hi = mid;
             } else {
                 lo = mid + 1;
             }
         }
-        return lo > maxSpeed ? -1 : lo;
+        return lo;
     }
 
 private:
