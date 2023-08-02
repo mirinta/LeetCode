@@ -11,56 +11,47 @@
  * belt being shipped within "days" days.
  *
  * ! Note that the cargo must be shipped in the order given.
+ *
+ * ! 1 <= days <= weights.length <= 5 * 10^4
+ * ! 1 <= weights[i] <= 500
  */
 
 class Solution
 {
 public:
-    int shipWithinDays(const std::vector<int>& weights, int days)
+    int shipWithinDays(std::vector<int>& weights, int days)
     {
-        if (weights.empty() || days <= 0)
-            return -1;
-
-        // the capacity >= the max value of weights
-        int maxWeight = INT_MIN;
-        int totalWeights = 0;
+        // minimize the largest sum of k subarrays
+        // search range [max element, total sum]
+        int lo = 0;
+        int hi = 0;
         for (const auto& w : weights) {
-            totalWeights += w;
-            maxWeight = w > maxWeight ? w : maxWeight;
+            lo = std::max(lo, w);
+            hi += w;
         }
-        // search range [maxWeight, totalWeights]
-        int left = maxWeight;
-        int right = totalWeights;
-        int capacity = 0;
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (isSatisfied(weights, days, mid)) {
-                right = mid - 1;
+        while (lo < hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (isValid(mid, weights, days)) {
+                hi = mid;
             } else {
-                left = mid + 1;
+                lo = mid + 1;
             }
-        } // the loop is terminated when left = right + 1 = mid
-        return right + 1;
+        }
+        return lo;
     }
 
 private:
-    bool isSatisfied(const std::vector<int>& weights, int days, int capacity)
+    bool isValid(int weightsLimit, const std::vector<int>& weights, int daysLimit)
     {
-        int count = 1;
-        int carried = 0;
-        for (const auto& weight : weights) {
-            if (weight > capacity)
-                return false;
-
-            if (carried + weight > capacity) {
-                if (++count > days)
-                    return false;
-
-                carried = weight;
-            } else {
-                carried += weight;
+        int sum = 0;
+        int days = 1;
+        for (const auto& w : weights) {
+            sum += w;
+            if (sum > weightsLimit) {
+                sum = w;
+                days++;
             }
         }
-        return true;
+        return days <= daysLimit;
     }
 };
