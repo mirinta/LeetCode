@@ -19,44 +19,118 @@
  *
  * ! rows == heights.length
  * ! columns == heights[i].length
- *
- * Example:
- * Input:
- * [1   2   2]
- * [3   8   2]
- * [5   3   5]
- * Output: 2
- * Explanation: The route of [1, 3, 5, 3, 5] has a maximum absolute difference of 2 in consecutive
- * cells. This is better than the route of [1, 2, 2, 2, 5], where the maximum absolute difference
- * is 3.
+ * ! 1 <= rows, columns <= 100
+ * ! 1 <= heights[i][j] <= 10^6
  */
+
+class UnionFind
+{
+public:
+    explicit UnionFind(int n) : root(n), rank(n), count(n)
+    {
+        for (int i = 0; i < n; ++i) {
+            root[i] = i;
+            rank[i] = 1;
+        }
+    }
+
+    int numOfConnectedComponents() const { return count; }
+
+    int find(int x)
+    {
+        if (x != root[x]) {
+            root[x] = find(root[x]);
+        }
+        return root[x];
+    }
+
+    bool isConnected(int p, int q) { return find(p) == find(q); }
+
+    void connect(int p, int q)
+    {
+        const int rootP = find(p);
+        const int rootQ = find(q);
+        if (rootP == rootQ)
+            return;
+
+        if (rank[rootP] > root[rootQ]) {
+            root[rootQ] = rootP;
+        } else if (rank[rootP] < root[rootQ]) {
+            root[rootP] = root[rootQ];
+        } else {
+            root[rootQ] = rootP;
+            rank[rootP]++;
+        }
+        count--;
+    }
+
+private:
+    std::vector<int> root;
+    std::vector<int> rank;
+    int count;
+};
 
 class Solution
 {
 public:
-    int minimumEffortPath(std::vector<std::vector<int>>& heights) { return approach1(heights); }
+    int minimumEffortPath(std::vector<std::vector<int>>& heights) { return approach3(heights); }
 
 private:
-    int approach1(std::vector<std::vector<int>>& heights)
-    {
-        // Dijkstra's algorithm
-        if (heights.empty() || heights[0].empty())
-            return -1;
+    const std::vector<std::pair<int, int>> kDirections{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
+    // Union-Find, time O(mn(log(mn)), space (mn)
+    int approach3(std::vector<std::vector<int>>& heights)
+    {
+        std::vector<std::tuple<int, int, int>> edges;
         const int m = heights.size();
         const int n = heights[0].size();
-        using Triple = std::array<int, 3>; // [effort to this point, x, y]
-        auto comp = [](const auto& t1, const auto& t2) -> bool { return t1[0] > t2[0]; };
-        std::priority_queue<Triple, std::vector<Triple>, decltype(comp)> pq(comp);
-        pq.push({0, 0, 0});
+        auto encode = [n](int i, int j) { return i * n + j; };
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (i + 1 < m) { // go down, (i,j) to (i+1,j)
+                    edges.push_back({std::abs(heights[i][j] - heights[i + 1][j]), encode(i, j),
+                                     encode(i + 1, j)});
+                }
+                if (j + 1 < n) { // go right, (i,j) to (i,j+1)
+                    edges.push_back({std::abs(heights[i][j] - heights[i][j + 1]), encode(i, j),
+                                     encode(i, j + 1)});
+                }
+            }
+        }
+        if (edges.empty())
+            return 0;
+
+        std::sort(edges.begin(), edges.end(),
+                  [](const auto& t1, const auto& t2) { return std::get<0>(t1) < std::get<0>(t2); });
+        UnionFind uf(m * n);
+        const int source = 0;
+        const int destination = m * n - 1;
+        for (const auto& [effort, p, q] : edges) {
+            uf.connect(p, q);
+            if (uf.isConnected(source, destination))
+                return effort;
+        }
+        return -1;
+    }
+
+    // Dijkstra's algorithm, time O(mnlog(mn)), space O(mn)
+    int approach2(std::vector<std::vector<int>>& heights)
+    {
+        const int m = heights.size();
+        const int n = heights[0].size();
         std::vector<std::vector<int>> effortTo(m, std::vector<int>(n, INT_MAX));
         effortTo[0][0] = 0;
-        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        using Tuple = std::tuple<int, int, int>; // <effort, x, y>
+        auto comparator = [](const auto& t1, const auto& t2) -> bool {
+            return std::get<0>(t1) > std::get<0>(t2);
+        };
+        std::priority_queue<Tuple, std::vector<Tuple>, decltype(comparator)> pq(comparator);
+        pq.push({0, 0, 0});
         while (!pq.empty()) {
-            const auto [_, x, y] = pq.top();
+            const auto [effort, x, y] = pq.top();
             pq.pop();
             if (x == m - 1 && y == n - 1)
-                return effortTo[x][y];
+                return effort;
 
             for (const auto& [dx, dy] : kDirections) {
                 const int i = x + dx;
@@ -64,52 +138,62 @@ private:
                 if (i < 0 || i >= m || j < 0 || j >= n)
                     continue;
 
-                const int effort =
-                    std::max(effortTo[x][y], std::abs(heights[x][y] - heights[i][j]));
-                if (effortTo[i][j] > effort) {
-                    effortTo[i][j] = effort;
-                    pq.push({effort, i, j});
+                const int newEffort = std::max(effort, std::abs(heights[x][y] - heights[i][j]));
+                if (effortTo[i][j] > newEffort) {
+                    effortTo[i][j] = newEffort;
+                    pq.push({effortTo[i][j], i, j});
                 }
             }
         }
-        return -1;
+        return effortTo[m - 1][n - 1];
     }
 
-    int approach2(std::vector<std::vector<int>>& heights)
+    // binary search + BFS, time O(mnlog(10^6))=O(mn), space O(mn)
+    int approach1(std::vector<std::vector<int>>& heights)
     {
-        // DP with space optimization and early return
-        if (heights.empty() || heights[0].empty())
-            return -1;
+        // search min effort
+        int lo = 0;
+        int hi = 1e6;
+        while (lo < hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (isValid(mid, heights)) {
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return lo;
+    }
 
+    bool isValid(int maxEffort, const std::vector<std::vector<int>>& heights)
+    {
+        // source: top-left
+        // destination: bottom-right
         const int m = heights.size();
         const int n = heights[0].size();
-        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-        std::vector<int> dp(m * n, INT_MAX);
-        dp[0] = 0;
-        bool relaxed = true;
-        for (int k = 1; relaxed && k < m * n; ++k) {
-            relaxed = false;
-            for (int x = 0; x < m; ++x) {
-                for (int y = 0; y < n; ++y) {
-                    for (const auto& [dx, dy] : kDirections) {
-                        const int i = x + dx;
-                        const int j = y + dy;
-                        if (i < 0 || i >= m || j < 0 || j >= n)
-                            continue;
+        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
+        visited[0][0] = true;
+        std::queue<std::pair<int, int>> queue;
+        queue.push({0, 0});
+        while (!queue.empty()) {
+            const int size = queue.size();
+            for (int k = 0; k < size; ++k) {
+                const auto [x, y] = queue.front();
+                queue.pop();
+                for (const auto& [dx, dy] : kDirections) {
+                    const int i = x + dx;
+                    const int j = y + dy;
+                    if (i < 0 || i >= m || j < 0 || j >= n)
+                        continue;
 
-                        if (dp[x * n + y] == INT_MAX)
-                            continue;
+                    if (visited[i][j] || std::abs(heights[i][j] - heights[x][y]) > maxEffort)
+                        continue;
 
-                        const int diff = std::abs(heights[x][y] - heights[i][j]);
-                        const int effort = std::max(dp[x * n + y], diff);
-                        if (dp[i * n + j] > effort) {
-                            relaxed = true;
-                            dp[i * n + j] = effort;
-                        }
-                    }
+                    visited[i][j] = true;
+                    queue.push({i, j});
                 }
             }
         }
-        return dp.back();
+        return visited[m - 1][n - 1]; // check the destination is visited
     }
 };
