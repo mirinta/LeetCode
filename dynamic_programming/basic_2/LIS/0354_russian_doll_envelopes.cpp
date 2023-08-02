@@ -11,76 +11,36 @@
  * Return the maximum number of envelopes you can Russian doll (i.e., put one inside the other).
  *
  * ! Note: you cannot rotate an envelope.
+ *
+ * ! 1 <= envelopes.length <= 10^5
+ * ! envelopes[i].length == 2
+ * ! 1 <= wi, hi <= 10^5
  */
 
 class Solution
 {
-    // after sorting:
-    // width    height
-    // [1         8]
-    // [2         3] <-
-    // [5         4] <-
-    // [5         2]
-    // [6         7] <-
-    // [6         4]
-    // LIS of the height array is [3, 4, 7]
-    // maxEnvelopes = 3, the length of [3, 4, 7]
 public:
     int maxEnvelopes(std::vector<std::vector<int>>& envelopes)
     {
-        if (envelopes.empty())
-            return 0;
-
-        // sort width in ascending order
-        // if two envelopes have the same width,
-        // then sort their heights in descending order
-        std::sort(envelopes.begin(), envelopes.end(), [](const auto& e1, const auto& e2) {
-            return e1[0] == e2[0] ? e1[1] > e2[1] : e1[0] < e2[0];
+        // sort widths in ascending order,
+        // if two envelopes has the same width, sort heights in decreasing order
+        std::sort(envelopes.begin(), envelopes.end(), [](const auto& v1, const auto& v2) {
+            return v1[0] == v2[0] ? v1[1] > v2[1] : v1[0] < v2[0];
         });
-        // find LIS in sorted heights, the length is the result
-        std::vector<int> heights(envelopes.size());
-        for (size_t i = 0; i < envelopes.size(); ++i) {
-            heights[i] = envelopes[i][1];
-        }
-        return lengthOfLIS(heights); // see LC 300
-    }
-
-private:
-    int lengthOfLIS(const std::vector<int>& nums)
-    {
-        const auto size = nums.size();
-        if (size < 1)
-            return size;
-
-        std::vector<int> ascending; // strictly increasing
-        for (const auto& val : nums) {
-            if (ascending.empty() || val > ascending.back()) {
-                ascending.push_back(val);
-                continue;
-            }
-            if (const auto pos = findPos(ascending, val); pos >= 0) {
-                ascending[pos] = val;
-            }
-        }
-        return ascending.size();
-    }
-
-    // find the first position j in nums s.t. nums[j] > val
-    int findPos(const std::vector<int>& nums, int val)
-    {
-        if (nums.empty())
-            return -1;
-
-        int left = 0;
-        int right = nums.size() - 1;
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (nums[mid] >= val) {
-                right = mid - 1;
+        // find length of the LIS among heights
+        std::vector<int> vec; // strictly increasing
+        for (const auto& envelope : envelopes) {
+            const auto& height = envelope[1];
+            if (vec.empty() || height > vec.back()) {
+                vec.push_back(height);
             } else {
-                left = mid + 1;
+                // find the first index s.t. vec[index] >= height
+                auto iter = std::lower_bound(vec.begin(), vec.end(), height);
+                if (iter != vec.end()) {
+                    *iter = height;
+                }
             }
-        } // the loop is terminated when left = right + 1
-        return left == nums.size() ? -1 : left;
+        }
+        return vec.size();
     }
 };
