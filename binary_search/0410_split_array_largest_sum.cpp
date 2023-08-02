@@ -7,6 +7,10 @@
  * Return the minimized largest sum of the split.
  *
  * A sub-array is contiguous part of the array.
+ *
+ * ! 1 <= nums.length <= 1000
+ * ! 0 <= nums[i] <= 10^6
+ * ! 1 <= k <= min(50, nums.length)
  */
 
 class Solution
@@ -23,10 +27,10 @@ public:
             hi += val;
             lo = std::max(lo, val);
         }
-        while (lo <= hi) {
+        while (lo < hi) {
             const int mid = lo + (hi - lo) / 2;
             if (canSplit(mid, k, nums)) {
-                hi = mid - 1;
+                hi = mid;
             } else {
                 lo = mid + 1;
             }
