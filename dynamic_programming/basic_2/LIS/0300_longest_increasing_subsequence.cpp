@@ -1,9 +1,13 @@
+#include <algorithm>
 #include <vector>
 
 /**
  * Given an integer array "nums", return the length of the longest strictly increasing subsequence.
  *
  * ! Can you come up with an algorithm that runs in O(nlogn) time complexity?
+ *
+ * ! 1 <= nums.length <= 2500
+ * ! -10^4 <= nums[i] <= 10^4
  *
  * Example:
  * Input: nums = [10, 9, 2, 5, 3, 7, 101, 18]
@@ -14,66 +18,44 @@
 class Solution
 {
 public:
-    // approach 1: DP, time O(n)
-    // dp[i] = lengthOfLIS that ends with nums[i]
-    // find the values < nums[i] and update dp table
-    // int lengthOfLIS(std::vector<int>& nums) {
-    //     if (nums.empty())
-    //         return 0;
-
-    //     std::vector<int> dp(nums.size(), 1);
-    //     for (int i = 0; i < nums.size(); ++i) {
-    //         for (int j = 0; j < i; ++j) {
-    //             if (nums[j] < nums[i]) {
-    //                 dp[i] = std::max(dp[i], dp[j] + 1);
-    //             }
-    //         }
-    //     }
-    //     int result = 0;
-    //     for (const auto& val : dp) {
-    //         result = std::max(result, val);
-    //     }
-    //     return result;
-    // }
-    // approach 2: binary search, time O(nlogn)
-    int lengthOfLIS(std::vector<int>& nums)
-    {
-        if (nums.empty())
-            return 0;
-
-        std::vector<int> arr; // maintain arr in strictly increasing order
-        for (const auto& val : nums) {
-            if (arr.empty() || val > arr.back()) {
-                arr.push_back(val);
-            } else {
-                const auto j = lowerBound(arr, val);
-                if (j < 0)
-                    continue;
-
-                arr[j] = val;
-            }
-        }
-        return arr.size();
-    }
+    int lengthOfLIS(std::vector<int>& nums) { return approach2(nums); }
 
 private:
-    // the input arr is sorted in strictly increasing order
-    // find the first position j s.t. arr[j] >= val
-    int lowerBound(std::vector<int>& arr, int val)
+    // binary search, time O(nlogn), space O(n)
+    int approach2(std::vector<int>& nums)
     {
-        if (arr.empty())
-            return -1;
-
-        int left = 0;
-        int right = arr.size() - 1;
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (arr[mid] < val) {
-                left = mid + 1;
+        const int n = nums.size();
+        // maintain vec in strictly increasing order
+        std::vector<int> vec;
+        for (const auto& val : nums) {
+            if (vec.empty() || val > vec.back()) {
+                vec.push_back(val);
             } else {
-                right = mid - 1;
+                // find the first index i s.t. vec[i] >= val
+                // [X X i i+1 ... X], replace vec[i] with val
+                auto iter = std::lower_bound(vec.begin(), vec.end(), val);
+                if (iter != vec.end()) {
+                    *iter = val;
+                }
             }
         }
-        return left == arr.size() ? -1 : left;
+        return vec.size();
+    }
+
+    // DP, time O(n^2), space O(n)
+    int approach1(std::vector<int>& nums)
+    {
+        // dp[i] = length of LIS that ends with nums[i]
+        const int n = nums.size();
+        std::vector<int> dp(n, 1);
+        for (int i = 1; i < n; ++i) {
+            // X X j X X i, find a best j to maximize dp[i] = 1 + dp[j]
+            for (int j = i - 1; j >= 0; --j) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = std::max(dp[i], 1 + dp[j]);
+                }
+            }
+        }
+        return *std::max_element(dp.begin(), dp.end());
     }
 };
