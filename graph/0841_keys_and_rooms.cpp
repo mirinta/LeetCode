@@ -24,70 +24,50 @@
 class Solution
 {
 public:
-    bool canVisitAllRooms(std::vector<std::vector<int>>& rooms) { return approach3(rooms); }
+    bool canVisitAllRooms(std::vector<std::vector<int>>& rooms) { return approach2(rooms); }
 
 private:
-    // BFS
-    bool approach3(std::vector<std::vector<int>>& rooms)
+    // BFS, time O(V+E), space O(V)
+    // - V is the number of rooms (nodes), and E is the number of keys (edges)
+    bool approach2(std::vector<std::vector<int>>& rooms)
     {
+        const int n = rooms.size();
         std::unordered_set<int> visited;
         visited.insert(0);
         std::queue<int> queue;
         queue.push(0);
         while (!queue.empty()) {
-            const int size = queue.size();
-            for (int k = 0; k < size; ++k) {
-                const int v = queue.front();
-                queue.pop();
-                for (const auto& adj : rooms[v]) {
-                    if (!visited.count(adj)) {
-                        visited.insert(adj);
-                        queue.push(adj);
-                    }
-                }
-            }
-        }
-        return visited.size() == rooms.size();
-    }
-
-    // DFS, iteration
-    bool approach2(std::vector<std::vector<int>>& rooms)
-    {
-        std::unordered_set<int> visited;
-        visited.insert(0);
-        std::stack<int> stack;
-        stack.push(0);
-        while (!stack.empty()) {
-            const int v = stack.top();
-            stack.pop();
-            for (const auto& adj : rooms[v]) {
+            const int current = queue.front();
+            queue.pop();
+            for (const auto& adj : rooms[current]) {
                 if (!visited.count(adj)) {
                     visited.insert(adj);
-                    stack.push(adj);
+                    queue.push(adj);
                 }
             }
         }
-        return visited.size() == rooms.size();
+        return visited.size() == n;
     }
 
-    // DFS, recursion
+    // DFS, time O(V+E), space O(V)
+    // - V is the number of rooms (nodes), and E is the number of keys (edges)
     bool approach1(std::vector<std::vector<int>>& rooms)
     {
+        const int n = rooms.size();
         std::unordered_set<int> visited;
-        visited.insert(0);
         dfs(visited, 0, rooms);
-        return visited.size() == rooms.size();
+        return visited.size() == n;
     }
 
     void dfs(std::unordered_set<int>& visited, int current,
              const std::vector<std::vector<int>>& rooms)
     {
-        for (const auto& i : rooms[current]) {
-            if (visited.count(i))
+        visited.insert(current);
+        for (const auto& adj : rooms[current]) {
+            if (visited.count(adj))
                 continue;
 
-            visited.insert(i);
-            dfs(visited, i, rooms);
+            dfs(visited, adj, rooms);
         }
     }
 };

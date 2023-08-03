@@ -26,43 +26,14 @@ class Solution
 public:
     std::vector<int> eventualSafeNodes(std::vector<std::vector<int>>& graph)
     {
-        // a node is safe = start from this code, there's no cycle
-        return approach1(graph);
+        return approach2(graph);
     }
 
 private:
-    enum Color { White, Gray, Black };
-    // DFS, detect cycles with colors
-    std::vector<int> approach1(std::vector<std::vector<int>>& graph)
-    {
-        const int n = graph.size();
-        std::vector<Color> colors(n, White);
-        std::vector<int> result;
-        for (int i = 0; i < n; ++i) {
-            if (!hasCycle(colors, i, graph)) {
-                result.push_back(i);
-            }
-        }
-        return result;
-    }
-
-    bool hasCycle(std::vector<Color>& colors, int v, const std::vector<std::vector<int>>& graph)
-    {
-        colors[v] = Gray;
-        for (const auto& adj : graph[v]) {
-            if (colors[adj] == Gray)
-                return true;
-
-            if (colors[adj] == White && hasCycle(colors, adj, graph))
-                return true;
-        }
-        colors[v] = Black;
-        return false;
-    }
-
-    // Kahn's algorithm (the original graph needs to be reversed)
+    // Kahn's algorithm, time O(V+E), space O(V+E)
     std::vector<int> approach2(std::vector<std::vector<int>>& graph)
     {
+        // reverse the original graph:
         const int n = graph.size();
         std::vector<std::vector<int>> reversedGraph(n, std::vector<int>());
         std::vector<int> indegrees(n, 0);
@@ -78,12 +49,12 @@ private:
                 queue.push(i);
             }
         }
-        std::vector<bool> isSafe(n, false); // The answer should be sorted in ascending order.
+        std::vector<bool> isSafe(n, false);
         while (!queue.empty()) {
-            const int v = queue.front();
+            const int i = queue.front();
             queue.pop();
-            isSafe[v] = true;
-            for (const auto& adj : reversedGraph[v]) {
+            isSafe[i] = true;
+            for (const auto& adj : reversedGraph[i]) {
                 if (--indegrees[adj] == 0) {
                     queue.push(adj);
                 }
@@ -96,5 +67,41 @@ private:
             }
         }
         return result;
+    }
+
+    // White = not processed, Gray = being processed, Black = process finished
+    enum Color { White, Gray, Black };
+
+    // DFS with colors, time O(V+E), space O(V)
+    std::vector<int> approach1(std::vector<std::vector<int>>& graph)
+    {
+        // node i is a safe node if there's no cycle starting from node i
+        const int n = graph.size();
+        std::vector<int> result;
+        std::vector<int> colors(n, White);
+        for (int i = 0; i < n; ++i) {
+            // colors can be reused:
+            // if we can reach node i from node j,
+            // and there's a cycle starting from node i,
+            // then there must be a cycle starting from node j
+            if (!hasCycle(colors, i, graph)) {
+                result.push_back(i);
+            }
+        }
+        return result;
+    }
+
+    bool hasCycle(std::vector<int>& colors, int source, const std::vector<std::vector<int>>& graph)
+    {
+        colors[source] = Gray;
+        for (const auto& adj : graph[source]) {
+            if (colors[adj] == Gray)
+                return true;
+
+            if (colors[adj] == White && hasCycle(colors, adj, graph))
+                return true;
+        }
+        colors[source] = Black;
+        return false;
     }
 };
