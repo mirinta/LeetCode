@@ -93,6 +93,15 @@ private:
                 // BRUTE FORCE SEARCH
                 int min = INT_MAX;
                 for (int x = 1; x <= j; ++x) {
+                    // we are standing at floor x with i eggs (1 <= x <= j),
+                    // the problem is f(i, x)
+                    // now, we drop an egg at floor x:
+                    // - case1, the egg breaks, go downstairs and try x-1 floors with i-1 eggs,
+                    //   i.e., #moves_1 = f(i-1, x-1) + 1
+                    // - case2, the egg doesn't break, consider x as ground (floor 0)
+                    //   and try the remaining j-x floors with i eggs,
+                    //   i.e., #moves_2 = f(i, j-x) + 1
+                    // both cases should be covered, so f(i, x) = max(#moves_1, #moves_2)
                     min = std::min(min, std::max(dp[i - 1][x - 1], dp[i][j - x]) + 1);
                 }
                 dp[i][j] = min;
