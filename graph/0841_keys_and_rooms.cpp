@@ -28,7 +28,7 @@ public:
 
 private:
     // BFS, time O(V+E), space O(V)
-    // - V is the number of rooms (nodes), and E is the number of keys (edges)
+    // - V is the number of rooms (vertices), and E is the number of keys (edges)
     bool approach2(std::vector<std::vector<int>>& rooms)
     {
         const int n = rooms.size();
@@ -50,7 +50,7 @@ private:
     }
 
     // DFS, time O(V+E), space O(V)
-    // - V is the number of rooms (nodes), and E is the number of keys (edges)
+    // - V is the number of rooms (vertices), and E is the number of keys (edges)
     bool approach1(std::vector<std::vector<int>>& rooms)
     {
         const int n = rooms.size();
