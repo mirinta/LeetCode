@@ -18,7 +18,7 @@
  *
  * Return the number of minutes needed to inform all the employees about the urgent news.
  *
- * ! 1 <= n <= 105
+ * ! 1 <= n <= 10^5
  * ! 0 <= headID < n
  * ! manager.length == n
  * ! 0 <= manager[i] < n
@@ -32,44 +32,53 @@
 class Solution
 {
 public:
-    int numOfMinutes(int n, int headID, const std::vector<int>& manager,
-                     const std::vector<int>& informTime)
+    int numOfMinutes(int n, int headID, std::vector<int>& manager, std::vector<int>& informTime)
     {
-        std::vector<std::vector<int>> tree(n, std::vector<int>{}); // director->{employees}
-        for (int i = 0; i < n; ++i) {
-            const auto& director = manager[i] < 0 ? headID : manager[i];
-            if (director == i)
-                continue;
-
-            tree[director].push_back(i);
-        }
-        // return dfs(headID, tree, informTime);
-        return bfs(headID, tree, informTime);
+        // it is a tree structure, so we don't need a "visited" array
+        return approach2(n, headID, manager, informTime);
     }
 
 private:
-    int dfs(int director, const std::vector<std::vector<int>>& tree,
-            const std::vector<int>& informTime)
+    // DFS, time O(N), space O(N)
+    int approach2(int n, int headID, std::vector<int>& manager, std::vector<int>& informTime)
+    {
+        std::vector<std::vector<int>> graph(n);
+        for (int i = 0; i < manager.size(); ++i) {
+            if (manager[i] != -1) {
+                graph[manager[i]].push_back(i);
+            }
+        }
+        return dfs(headID, informTime, graph);
+    }
+
+    int dfs(int current, const std::vector<int>& informTime,
+            const std::vector<std::vector<int>>& graph)
     {
         int result = 0;
-        for (const auto& employee : tree[director]) {
-            result = std::max(result, informTime[director] + dfs(employee, tree, informTime));
+        for (const auto& adj : graph[current]) {
+            result = std::max(result, informTime[current] + dfs(adj, informTime, graph));
         }
         return result;
     }
 
-    int bfs(int headID, const std::vector<std::vector<int>>& tree,
-            const std::vector<int>& informTime)
+    // BFS, time O(N), space O(N)
+    int approach1(int n, int headID, std::vector<int>& manager, std::vector<int>& informTime)
     {
-        int result = 0;
-        std::queue<std::pair<int, int>> queue;
+        std::vector<std::vector<int>> graph(n);
+        for (int i = 0; i < manager.size(); ++i) {
+            if (manager[i] != -1) {
+                graph[manager[i]].push_back(i);
+            }
+        }
+        std::queue<std::pair<int, int>> queue; // <vertex, distance>
         queue.push({headID, 0});
+        int result = 0;
         while (!queue.empty()) {
-            const auto [director, time] = queue.front();
+            const auto [v, time] = queue.front();
             queue.pop();
-            result = std::max(time, result);
-            for (const auto& employee : tree[director]) {
-                queue.push({employee, time + informTime[director]});
+            result = std::max(result, time);
+            for (const auto& adj : graph[v]) {
+                queue.push({adj, time + informTime[v]});
             }
         }
         return result;
