@@ -30,32 +30,31 @@ class Solution
 public:
     int minReorder(int n, std::vector<std::vector<int>>& connections)
     {
-        // graph[from] = {<to,flag>...}
-        // flag = 1 means it is an original path
-        // flag = 0 means it is not an original path
-        // we apply BFS starting from node 0, all the original paths should be reordered
-        std::vector<std::vector<std::pair<int, int>>> graph(n, std::vector<std::pair<int, int>>());
+        std::vector<std::vector<std::pair<int, int>>> graph(n);
         for (const auto& connection : connections) {
             const auto& from = connection[0];
             const auto& to = connection[1];
-            graph[from].push_back({to, 1});
-            graph[to].push_back({from, 0});
+            graph[from].push_back({to, 1}); // 1 means it is an original edge
+            graph[to].push_back({from, 0}); // 0 means it isn't an original edge
         }
-        std::unordered_set<int> visited;
-        visited.insert(0);
         std::queue<int> queue;
         queue.push(0);
+        std::vector<bool> visited(n, false);
+        visited[0] = true;
         int result = 0;
         while (!queue.empty()) {
-            const auto v = queue.front();
-            queue.pop();
-            for (const auto& [adj, flag] : graph[v]) {
-                if (visited.count(adj))
-                    continue;
+            const int size = queue.size();
+            for (int k = 0; k < size; ++k) {
+                const auto v = queue.front();
+                queue.pop();
+                for (const auto& [adj, flag] : graph[v]) {
+                    if (visited[adj])
+                        continue;
 
-                result += flag;
-                visited.insert(adj);
-                queue.push(adj);
+                    result += flag;
+                    visited[adj] = true;
+                    queue.push(adj);
+                }
             }
         }
         return result;
