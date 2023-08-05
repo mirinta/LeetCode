@@ -17,13 +17,13 @@
 class Solution
 {
 public:
+    // BFS: time O(MN), space O(MN)
     std::vector<std::vector<int>> updateMatrix(std::vector<std::vector<int>>& mat)
     {
         const int m = mat.size();
         const int n = mat[0].size();
-        std::queue<std::pair<int, int>> queue;
         std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
-        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        std::queue<std::pair<int, int>> queue;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (mat[i][j] == 0) {
@@ -32,20 +32,27 @@ public:
                 }
             }
         }
+        static const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        std::vector<std::vector<int>> result(m, std::vector<int>(n, 0));
         while (!queue.empty()) {
-            const auto [x, y] = queue.front();
-            queue.pop();
-            for (const auto& [dx, dy] : kDirections) {
-                const int i = x + dx;
-                const int j = y + dy;
-                if (i < 0 || i >= m || j < 0 || j >= n || visited[i][j])
-                    continue;
+            const int size = queue.size();
+            for (int k = 0; k < size; ++k) {
+                const auto [x, y] = queue.front();
+                queue.pop();
+                for (const auto& [dx, dy] : kDirections) {
+                    const int i = x + dx;
+                    const int j = y + dy;
+                    if (i < 0 || i >= m || j < 0 || j >= n)
+                        continue;
 
-                queue.push({i, j});
-                mat[i][j] = mat[x][y] + 1;
-                visited[i][j] = true;
+                    if (!visited[i][j] && mat[i][j] == 1) {
+                        visited[i][j] = true;
+                        result[i][j] = 1 + result[x][y];
+                        queue.push({i, j});
+                    }
+                }
             }
         }
-        return mat;
+        return result;
     }
 };

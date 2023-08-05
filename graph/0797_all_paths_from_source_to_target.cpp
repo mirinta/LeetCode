@@ -25,27 +25,25 @@ class Solution
 public:
     std::vector<std::vector<int>> allPathsSourceTarget(std::vector<std::vector<int>>& graph)
     {
-        // since the graph is a DAG, we don't need a "visited" array
-        result.clear();
+        // it is a DAG, so we don't need a "visited" array
+        std::vector<std::vector<int>> result;
         std::vector<int> path;
-        backtrack(path, 0, graph.size() - 1, graph);
+        backtrack(result, path, 0, graph.size() - 1, graph);
         return result;
     }
 
 private:
-    std::vector<std::vector<int>> result;
-
-    void backtrack(std::vector<int>& path, int source, int destination,
+    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& path, int src, int dst,
                    const std::vector<std::vector<int>>& graph)
     {
-        if (source == destination) {
+        if (src == dst) {
             result.push_back(path);
-            result.back().push_back(destination);
+            result.back().push_back(dst);
             return;
         }
-        path.push_back(source);
-        for (const auto& adjacent : graph[source]) {
-            backtrack(path, adjacent, destination, graph);
+        path.push_back(src);
+        for (const auto& adj : graph[src]) {
+            backtrack(result, path, adj, dst, graph);
         }
         path.pop_back();
     }

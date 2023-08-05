@@ -16,20 +16,17 @@
 class Solution
 {
 public:
+    // DFS + BFS: time O(n^2), space O(n^2)
     int shortestBridge(std::vector<std::vector<int>>& grid)
     {
-        if (grid.size() < 2)
-            return 0;
-
-        // find any land position, say (x,y)
-        // DFS: find and store all land positions of the island that contains (x,y),
-        // and mark this island as island2 (land value = 2)
-        std::queue<std::pair<int, int>> island;
+        const int n = grid.size();
+        // step 1: DFS, mark one island with 2's and store coordinates of this island
+        std::queue<std::pair<int, int>> queue;
         bool found = false;
-        for (int i = 0; i < grid.size(); ++i) {
-            for (int j = 0; j < grid[i].size(); ++j) {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (grid[i][j] == 1) {
-                    dfs(i, j, grid, island);
+                    dfs(queue, grid, i, j);
                     found = true;
                     break;
                 }
@@ -37,61 +34,47 @@ public:
             if (found)
                 break;
         }
-        // BFS: expand island2 until it reaches island1,
-        // all points of island2 should move simultaneously
-        int dist = 0;
-        while (!island.empty()) {
-            const auto size = island.size();
-            for (size_t i = 0; i < size; ++i) {
-                const auto [x, y] = island.front();
-                island.pop();
-                for (const auto& [x1, y1] : adjacentPoints(x, y, grid.size())) {
-                    if (grid[x1][y1] == 1)
-                        return dist;
+        // step 2: BFS, find the min distance between 2's and 1's
+        int steps = 0;
+        while (!queue.empty()) {
+            const int size = queue.size();
+            for (int k = 0; k < size; ++k) {
+                const auto [x, y] = queue.front();
+                queue.pop();
+                for (const auto& [dx, dy] : kDirections) {
+                    const int i = x + dx;
+                    const int j = y + dy;
+                    if (i < 0 || i >= n || j < 0 || j >= n || grid[i][j] == 2)
+                        continue;
 
-                    if (grid[x1][y1] == 0) {
-                        grid[x1][y1] = 3; // mark 3 to represent visited "water"
-                        island.push({x1, y1});
-                    }
+                    if (grid[i][j] == 1)
+                        return steps;
+
+                    grid[i][j] = 2;
+                    queue.push({i, j});
                 }
             }
-            dist++;
+            steps++;
         }
-        return dist;
+        return steps;
     }
 
 private:
-    std::vector<std::pair<int, int>> adjacentPoints(int x, int y, int n)
+    const std::vector<std::pair<int, int>> kDirections{{0, -1}, {0, 1}, {1, 0}, {-1, 0}};
+
+    void dfs(std::queue<std::pair<int, int>>& queue, std::vector<std::vector<int>>& grid, int x,
+             int y)
     {
-        if (x < 0 || x >= n || y < 0 || y >= n)
-            return {};
+        queue.push({x, y});
+        grid[x][y] = 2;
+        const int n = grid.size();
+        for (const auto& [dx, dy] : kDirections) {
+            const int i = x + dx;
+            const int j = y + dy;
+            if (i < 0 || i >= n || j < 0 || j >= n || grid[i][j] != 1)
+                continue;
 
-        std::vector<std::pair<int, int>> result;
-        if (x - 1 >= 0) {
-            result.push_back({x - 1, y});
-        }
-        if (x + 1 < n) {
-            result.push_back({x + 1, y});
-        }
-        if (y - 1 >= 0) {
-            result.push_back({x, y - 1});
-        }
-        if (y + 1 < n) {
-            result.push_back({x, y + 1});
-        }
-        return result;
-    }
-
-    void dfs(int startX, int startY, std::vector<std::vector<int>>& grid,
-             std::queue<std::pair<int, int>>& island)
-    {
-        if (grid[startX][startY] == 0 || grid[startX][startY] == 2)
-            return;
-
-        grid[startX][startY] = 2;
-        island.push({startX, startY});
-        for (const auto& [x, y] : adjacentPoints(startX, startY, grid.size())) {
-            dfs(x, y, grid, island);
+            dfs(queue, grid, i, j);
         }
     }
 };
