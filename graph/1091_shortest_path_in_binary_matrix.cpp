@@ -24,42 +24,37 @@
 class Solution
 {
 public:
-    int shortestPathBinaryMatrix(std::vector<std::vector<int>>& grid)
+    int shortestPathBinaryMatrix(const std::vector<std::vector<int>>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return -1;
-
-        const int m = grid.size();
-        const int n = grid[0].size();
-        if (grid[0][0] != 0 || grid[m - 1][n - 1] != 0)
+        const int n = grid.size();
+        if (grid[0][0] != 0 || grid[n - 1][n - 1] != 0)
             return -1;
 
         static const std::vector<std::pair<int, int>> kDirections{
-            {0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+            {0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}};
+        std::vector<std::vector<bool>> visited(n, std::vector<bool>(n, false));
+        visited[0][0] = true;
         std::queue<std::pair<int, int>> queue;
         queue.push({0, 0});
-        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
-        visited[0][0] = true;
         int length = 1;
         while (!queue.empty()) {
             const int size = queue.size();
             for (int k = 0; k < size; ++k) {
-                const auto [i, j] = queue.front();
+                const auto [x, y] = queue.front();
                 queue.pop();
-                if (i == m - 1 && j == n - 1)
+                if (x == n - 1 && y == n - 1)
                     return length;
 
                 for (const auto& [dx, dy] : kDirections) {
-                    const int x = i + dx;
-                    const int y = j + dy;
-                    if (x < 0 || x >= m || y < 0 || y >= n)
+                    const int i = x + dx;
+                    const int j = y + dy;
+                    if (i < 0 || i >= n || j < 0 || j >= n)
                         continue;
 
-                    if (visited[x][y] || grid[x][y] != 0)
-                        continue;
-
-                    visited[x][y] = true;
-                    queue.push({x, y});
+                    if (!visited[i][j] && grid[i][j] == 0) {
+                        visited[i][j] = true;
+                        queue.push({i, j});
+                    }
                 }
             }
             length++;
