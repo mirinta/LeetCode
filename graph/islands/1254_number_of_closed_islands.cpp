@@ -14,28 +14,34 @@
 class Solution
 {
 public:
-    int closedIsland(std::vector<std::vector<int>>& grid)
+    // DFS, time O(MN), space O(MN)
+    int closedIsland(const std::vector<std::vector<int>>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return 0;
-
         const int m = grid.size();
         const int n = grid[0].size();
-        // flood lands connected with those lands on the boundary
+        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         for (int i = 0; i < m; ++i) {
-            dfs(i, 0, grid);
-            dfs(i, n - 1, grid);
+            if (grid[i][0] == kLand && !visited[i][0]) {
+                dfs(visited, i, 0, grid);
+            }
+            if (grid[i][n - 1] == kLand && !visited[i][n - 1]) {
+                dfs(visited, i, n - 1, grid);
+            }
         }
         for (int j = 0; j < n; ++j) {
-            dfs(0, j, grid);
-            dfs(m - 1, j, grid);
+            if (grid[0][j] == kLand && !visited[0][j]) {
+                dfs(visited, 0, j, grid);
+            }
+            if (grid[m - 1][j] == kLand && !visited[m - 1][j]) {
+                dfs(visited, m - 1, j, grid);
+            }
         }
         int result = 0;
-        for (int i = 1; i < m - 1; ++i) {
-            for (int j = 1; j < n - 1; ++j) {
-                if (grid[i][j] == kLand) {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == kLand && !visited[i][j]) {
+                    dfs(visited, i, j, grid);
                     result++;
-                    dfs(i, j, grid);
                 }
             }
         }
@@ -44,22 +50,23 @@ public:
 
 private:
     static constexpr int kLand = 0;
-    static constexpr int kWater = 1;
 
-    void dfs(int x, int y, std::vector<std::vector<int>>& grid)
+    void dfs(std::vector<std::vector<bool>>& visited, int x, int y,
+             const std::vector<std::vector<int>>& grid)
     {
+        static const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
         const int m = grid.size();
         const int n = grid[0].size();
-        if (x < 0 || x >= m || y < 0 || y >= n)
-            return;
+        visited[x][y] = true;
+        for (const auto& [dx, dy] : kDirections) {
+            const int i = x + dx;
+            const int j = y + dy;
+            if (i < 0 || i >= m || j < 0 || j >= n)
+                continue;
 
-        if (grid[x][y] != kLand)
-            return;
-
-        grid[x][y] = kWater;
-        dfs(x + 1, y, grid);
-        dfs(x - 1, y, grid);
-        dfs(x, y + 1, grid);
-        dfs(x, y - 1, grid);
+            if (!visited[i][j] && grid[i][j] == kLand) {
+                dfs(visited, i, j, grid);
+            }
+        }
     }
 };
