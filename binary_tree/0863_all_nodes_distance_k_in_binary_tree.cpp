@@ -30,26 +30,23 @@ struct TreeNode
 class Solution
 {
 public:
+    // DFS + BFS: time O(N), space O(N), N is the number of nodes
     std::vector<int> distanceK(TreeNode* root, TreeNode* target, int k)
     {
-        if (!root || !target)
-            return {};
-
-        // BFS
-        // since all the values are unique,
-        // we can build a graph based on values
+        // all the values are unique,
+        // so we can use node->val as vertex
         std::unordered_map<int, std::vector<int>> graph;
         buildGraph(graph, root);
         std::queue<int> queue;
         queue.push(target->val);
         std::unordered_set<int> visited;
         visited.insert(target->val);
-        int steps = 0;
         std::vector<int> result;
+        int steps = 0;
         while (!queue.empty()) {
             const int size = queue.size();
             for (int i = 0; i < size; ++i) {
-                const int v = queue.front();
+                const auto v = queue.front();
                 queue.pop();
                 if (steps == k) {
                     result.push_back(v);
@@ -67,20 +64,20 @@ public:
     }
 
 private:
-    void buildGraph(std::unordered_map<int, std::vector<int>>& graph, TreeNode* node)
+    void buildGraph(std::unordered_map<int, std::vector<int>>& graph, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        buildGraph(graph, node->left);
-        buildGraph(graph, node->right);
-        if (node->left) {
-            graph[node->val].push_back(node->left->val);
-            graph[node->left->val].push_back(node->val);
+        buildGraph(graph, root->left);
+        buildGraph(graph, root->right);
+        if (root->left) {
+            graph[root->val].push_back(root->left->val);
+            graph[root->left->val].push_back(root->val);
         }
-        if (node->right) {
-            graph[node->val].push_back(node->right->val);
-            graph[node->right->val].push_back(node->val);
+        if (root->right) {
+            graph[root->val].push_back(root->right->val);
+            graph[root->right->val].push_back(root->val);
         }
     }
 };
