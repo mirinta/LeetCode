@@ -20,72 +20,76 @@
  * that every edge in the graph connects a node in set "A" and a node in set "B".
  *
  * Return true if and only if it is bipartite.
+ *
+ * ! graph.length == n
+ * ! 1 <= n <= 100
+ * ! 0 <= graph[u].length < n
+ * ! 0 <= graph[u][i] <= n - 1
+ * ! graph[u] does not contain u.
+ * ! All the values of graph[u] are unique.
+ * ! If graph[u] contains v, then graph[v] contains u.
  */
 
 class Solution
 {
 public:
-    bool isBipartite(std::vector<std::vector<int>>& graph)
-    {
-        result = true;
-        visited = std::vector<int>(graph.size(), false);
-        color = std::vector<bool>(graph.size(), false);
-        for (size_t v = 0; v < graph.size(); ++v) {
-            // approach 1: dfs
-            dfs(graph, v);
-            // approach 2: bfs
-            // bfs(graph, v);
-        }
-        return result;
-    }
+    bool isBipartite(const std::vector<std::vector<int>>& graph) { return approach1(graph); }
 
 private:
-    bool result = true;
-    std::vector<int> visited;
-    std::vector<bool> color; // true and false represent different colors
-
-    void bfs(const std::vector<std::vector<int>>& graph, int v)
+    // BFS, time O(V+E), space O(V+E)
+    int approach2(const std::vector<std::vector<int>>& graph)
     {
-        if (!result || visited[v])
-            return;
-
-        visited[v] = true;
+        const int n = graph.size();
+        std::vector<int> colors(n, 0); // 0 or not visited, -1 for blue, 1 for red
         std::queue<int> queue;
-        queue.push(v);
-        while (!queue.empty() && result) {
-            const auto top = queue.front();
-            queue.pop();
-            for (const auto& w : graph[top]) {
-                if (!visited[w]) {
-                    color[w] = !color[top];
-                    visited[w] = true;
-                    queue.push(w);
-                } else {
-                    if (color[w] == color[top]) {
-                        result = false;
-                        return;
-                    }
+        for (int i = 0; i < n; ++i) {
+            if (colors[i] != 0)
+                continue;
+
+            queue.push(i);
+            colors[i] = 1;
+            while (!queue.empty()) {
+                const auto v = queue.front();
+                queue.pop();
+                for (const auto& adj : graph[v]) {
+                    if (colors[adj] == 0) {
+                        colors[adj] = -colors[v];
+                        queue.push(adj);
+                    } else if (colors[adj] == colors[v])
+                        return false;
                 }
             }
         }
+        return true;
     }
 
-    void dfs(const std::vector<std::vector<int>>& graph, int v)
+    // DFS, time O(V+E), space O(V+E)
+    int approach1(const std::vector<std::vector<int>>& graph)
     {
-        if (!result || visited[v])
-            return;
+        const int n = graph.size();
+        std::vector<int> colors(n, 0); // 0 or not visited, -1 for blue, 1 for red
+        for (int i = 0; i < n; ++i) {
+            if (colors[i] != 0)
+                continue;
 
-        visited[v] = true;
-        for (const auto& adj : graph[v]) {
-            if (!visited[adj]) {
-                color[adj] = !color[v]; // paint the adjacent node with a different color
-                dfs(graph, adj);
-            } else {
-                if (color[adj] == color[v]) {
-                    result = false;
-                    return;
-                }
-            }
+            colors[i] = 1; // -1 is also correct
+            if (!dfs(colors, i, graph))
+                return false;
         }
+        return true;
+    }
+
+    bool dfs(std::vector<int>& colors, int v, const std::vector<std::vector<int>>& graph)
+    {
+        for (const auto& adj : graph[v]) {
+            if (colors[adj] == 0) {
+                colors[adj] = -colors[v];
+                if (!dfs(colors, adj, graph))
+                    return false;
+
+            } else if (colors[adj] == colors[v])
+                return false;
+        }
+        return true;
     }
 };
