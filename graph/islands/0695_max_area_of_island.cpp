@@ -18,17 +18,18 @@
 class Solution
 {
 public:
-    int maxAreaOfIsland(std::vector<std::vector<int>>& grid)
+    // DFS, time O(MN), space O(MN)
+    int maxAreaOfIsland(const std::vector<std::vector<int>>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return 0;
-
         const int m = grid.size();
         const int n = grid[0].size();
+        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                result = std::max(result, dfs(i, j, grid));
+                if (grid[i][j] == 1 && !visited[i][j]) {
+                    result = std::max(result, dfs(visited, i, j, grid));
+                }
             }
         }
         return result;
@@ -36,20 +37,24 @@ public:
 
 private:
     static constexpr int kLand = 1;
-    static constexpr int kWater = 0;
-    const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
-    int dfs(int x, int y, std::vector<std::vector<int>>& grid)
+    int dfs(std::vector<std::vector<bool>>& visited, int x, int y,
+            const std::vector<std::vector<int>>& grid)
     {
         const int m = grid.size();
         const int n = grid[0].size();
-        if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != kLand)
-            return 0;
-
-        grid[x][y] = kWater;
+        visited[x][y] = true;
         int area = 1;
         for (const auto& [dx, dy] : kDirections) {
-            area += dfs(x + dx, y + dy, grid);
+            const int i = x + dx;
+            const int j = y + dy;
+            if (i < 0 || i >= m || j < 0 || j >= n)
+                continue;
+
+            if (!visited[i][j] && grid[i][j] == kLand) {
+                area += dfs(visited, i, j, grid);
+            }
         }
         return area;
     }
