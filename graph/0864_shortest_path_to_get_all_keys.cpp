@@ -41,15 +41,15 @@
 class Solution
 {
 public:
+    // BFS: time O(MN(2^K)), space O(MN(2^K))
     int shortestPathAllKeys(std::vector<std::string>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return -1;
-
         const int m = grid.size();
         const int n = grid[0].size();
-        std::queue<std::vector<int>> queue;
+        // there are at most 6 keys,
+        // so we can encode them into an integer
         int targetKeychain = 0;
+        std::queue<std::tuple<int, int, int>> queue; // <x, y, keychain>
         std::vector<std::vector<std::unordered_set<int>>> visited(
             m, std::vector<std::unordered_set<int>>(n));
         for (int i = 0; i < m; ++i) {
@@ -62,55 +62,60 @@ public:
                 }
             }
         }
-        int steps = -1;
+        static const std::vector<std::pair<int, int>> kDirections{{0, -1}, {0, 1}, {1, 0}, {-1, 0}};
+        int moves = 0;
         while (!queue.empty()) {
-            steps++;
             const int size = queue.size();
             for (int k = 0; k < size; ++k) {
-                const int x = queue.front()[0];
-                const int y = queue.front()[1];
-                const int keychain = queue.front()[2];
+                const auto [x, y, keychain] = queue.front();
                 queue.pop();
                 for (const auto& [dx, dy] : kDirections) {
                     const int i = x + dx;
                     const int j = y + dy;
-                    int newKeychain = keychain;
                     // case 1: out of boundary
                     if (i < 0 || i >= m || j < 0 || j >= n)
                         continue;
                     // case 2: hit wall
                     if (grid[i][j] == '#')
                         continue;
-                    // case 3: find a lock but can't open it
+                    // case 3: find a lock but we can't open it
                     if (isLock(grid[i][j]) && !canOpen(keychain, grid[i][j]))
                         continue;
                     // case 4: find a key, add it to keychain
+                    int newKeychain = keychain;
                     if (isKey(grid[i][j])) {
                         newKeychain = addKey(keychain, grid[i][j]);
                     }
-                    // case 5: check the new keychain is visited at the same position
+                    // case 5: check the keychain is visited
                     if (visited[i][j].count(newKeychain))
                         continue;
-                    // case 6: check the new keychain is the final target
+                    // case 6: check the keychain is target
                     if (newKeychain == targetKeychain)
-                        return steps + 1;
+                        return moves + 1;
 
                     queue.push({i, j, newKeychain});
                     visited[i][j].insert(newKeychain);
                 }
             }
+            moves++;
         }
         return -1;
     }
 
 private:
-    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    int addKey(int currentKeychain, char key)
+    {
+        // keys are lowercase letters
+        return currentKeychain | (1 << (key - 'a'));
+    }
 
-    bool isKey(char x) { return x >= 'a' && x <= 'z'; }
+    bool canOpen(int currentKeychain, char lock)
+    {
+        // locks are uppercase letters
+        return (currentKeychain >> (lock - 'A')) & 1;
+    }
 
-    bool isLock(char x) { return x >= 'A' && x <= 'Z'; }
+    bool isLock(char c) { return c >= 'A' && c <= 'Z'; }
 
-    bool canOpen(int keychain, char lock) { return (keychain >> (lock - 'A')) & 1; }
-
-    int addKey(int keychain, char key) { return keychain | (1 << (key - 'a')); }
+    bool isKey(char c) { return c >= 'a' && c <= 'z'; }
 };
