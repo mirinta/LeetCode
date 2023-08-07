@@ -21,14 +21,16 @@ class Solution
 public:
     std::vector<int> findSmallestSetOfVertices(int n, std::vector<std::vector<int>>& edges)
     {
-        // count indegree of each node,
-        // for the ith node, if indegree[i] = 0, it is in the final result
+        // it is a DAG, so all nodes are connected and there's no cycle
+        // the problem is asking us to find all nodes with 0 indegree
         std::vector<int> indegrees(n, 0);
         for (const auto& edge : edges) {
-            indegrees[edge[1]]++;
+            const auto& from = edge[0];
+            const auto& to = edge[1];
+            indegrees[to]++;
         }
         std::vector<int> result;
-        for (size_t i = 0; i < n; ++i) {
+        for (int i = 0; i < n; ++i) {
             if (indegrees[i] == 0) {
                 result.push_back(i);
             }
