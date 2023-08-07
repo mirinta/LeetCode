@@ -17,63 +17,61 @@
 class Solution
 {
 public:
-    int numIslands(std::vector<std::vector<char>>& grid) { return approach3(grid); }
+    int numIslands(std::vector<std::vector<char>>& grid) { return approach1(grid); }
 
 private:
-    static constexpr char kLand = '1';
-    static constexpr char kWater = '0';
-    const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
-    // approach3: BFS
-    int approach3(std::vector<std::vector<char>>& grid)
+    // BFS, time O(MN), space O(MN)
+    int approach2(const std::vector<std::vector<char>>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return 0;
-
         const int m = grid.size();
         const int n = grid[0].size();
+        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
+        std::queue<std::pair<int, int>> queue;
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] != kLand)
+                if (grid[i][j] != '1' || visited[i][j])
                     continue;
 
-                result++;
-                std::queue<std::pair<int, int>> queue;
+                visited[i][j] = true;
                 queue.push({i, j});
-                grid[i][j] = kWater;
                 while (!queue.empty()) {
-                    const auto [x, y] = queue.front();
-                    queue.pop();
-                    for (const auto& [dx, dy] : kDirections) {
-                        const int newX = x + dx;
-                        const int newY = y + dy;
-                        if (newX < 0 || newX >= m || newY < 0 || newY >= n ||
-                            grid[newX][newY] != kLand)
-                            continue;
+                    const int size = queue.size();
+                    for (int k = 0; k < size; ++k) {
+                        const auto [x, y] = queue.front();
+                        queue.pop();
+                        for (const auto& [dx, dy] : kDirections) {
+                            const int p = x + dx;
+                            const int q = y + dy;
+                            if (p < 0 || p >= m || q < 0 || q >= n)
+                                continue;
 
-                        queue.push({newX, newY});
-                        grid[newX][newY] = kWater;
+                            if (grid[p][q] == '1' && !visited[p][q]) {
+                                visited[p][q] = true;
+                                queue.push({p, q});
+                            }
+                        }
                     }
                 }
+                result++;
             }
         }
         return result;
     }
 
-    // approach2: DFS
-    int approach2(std::vector<std::vector<char>>& grid)
+    // DFS, time O(MN), space O(MN)
+    int approach1(const std::vector<std::vector<char>>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return 0;
-
         const int m = grid.size();
         const int n = grid[0].size();
+        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == kLand) {
-                    dfs(i, j, grid);
+                if (grid[i][j] == '1' && !visited[i][j]) {
+                    dfs(visited, i, j, grid);
                     result++;
                 }
             }
@@ -81,95 +79,21 @@ private:
         return result;
     }
 
-    void dfs(int x, int y, std::vector<std::vector<char>>& grid)
+    void dfs(std::vector<std::vector<bool>>& visited, int x, int y,
+             const std::vector<std::vector<char>>& grid)
     {
         const int m = grid.size();
         const int n = grid[0].size();
-        if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != kLand)
-            return;
-
-        grid[x][y] = kWater;
+        visited[x][y] = true;
         for (const auto& [dx, dy] : kDirections) {
-            dfs(x + dx, y + dy, grid);
-        }
-    }
+            const int i = x + dx;
+            const int j = y + dy;
+            if (i < 0 || i >= m || j < 0 || j >= n)
+                continue;
 
-    // approach1 : UnionFind
-    class UnionFind
-    {
-    public:
-        explicit UnionFind(int n1, int n2) : _root(n1), _rank(n1), _count(n2)
-        {
-            for (int i = 0; i < n1; ++i) {
-                _root[i] = i;
-                _rank[i] = 1;
+            if (!visited[i][j] && grid[i][j] == '1') {
+                dfs(visited, i, j, grid);
             }
         }
-
-        int count() const { return _count; }
-
-        int find(int x)
-        {
-            if (x != _root[x]) {
-                _root[x] = find(_root[x]);
-            }
-            return _root[x];
-        }
-
-        void connect(int p, int q)
-        {
-            const int rootP = find(p);
-            const int rootQ = find(q);
-            if (rootP == rootQ)
-                return;
-
-            if (_rank[rootP] > _rank[rootQ]) {
-                _root[rootQ] = rootP;
-            } else if (_rank[rootP] < _rank[rootQ]) {
-                _root[rootP] = rootQ;
-            } else {
-                _root[rootQ] = rootP;
-                _rank[rootP]++;
-            }
-            _count--;
-        }
-
-    private:
-        std::vector<int> _root;
-        std::vector<int> _rank;
-        int _count;
-    };
-
-    int approach1(std::vector<std::vector<char>>& grid)
-    {
-        if (grid.empty() || grid[0].empty())
-            return 0;
-
-        const int m = grid.size();
-        const int n = grid[0].size();
-        int numOfLands = 0;
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == kLand) {
-                    numOfLands++;
-                }
-            }
-        }
-        UnionFind uf(m * n, numOfLands);
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == kLand) {
-                    for (const auto& [dx, dy] : kDirections) {
-                        const int x = i + dx;
-                        const int y = j + dy;
-                        if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != kLand)
-                            continue;
-
-                        uf.connect(i * n + j, x * n + y);
-                    }
-                }
-            }
-        }
-        return uf.count();
     }
 };
