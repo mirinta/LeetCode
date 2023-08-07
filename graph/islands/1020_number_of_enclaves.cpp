@@ -19,41 +19,35 @@
 class Solution
 {
 public:
-    int numEnclaves(std::vector<std::vector<int>>& grid) { return approach2(grid); }
-
-private:
-    static constexpr int kLand = 1;
-    static constexpr int kWater = 0;
-    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
-    // approach2: DFS, flood all lands connected with those lands on the boundary
-    int approach2(std::vector<std::vector<int>>& grid)
+    // DFS, time O(MN), space O(MN)
+    int numEnclaves(const std::vector<std::vector<int>>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return 0;
-
         const int m = grid.size();
         const int n = grid[0].size();
+        // flood all islands that connect with the boundaries
+        // - mark the cells as "visited"
+        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         for (int i = 0; i < m; ++i) {
-            if (grid[i][0] == kLand) {
-                dfs(i, 0, grid);
+            if (grid[i][0] == 1 && !visited[i][0]) {
+                dfs(visited, i, 0, grid);
             }
-            if (grid[i][n - 1] == kLand) {
-                dfs(i, n - 1, grid);
+            if (grid[i][n - 1] == 1 && !visited[i][n - 1]) {
+                dfs(visited, i, n - 1, grid);
             }
         }
         for (int j = 0; j < n; ++j) {
-            if (grid[0][j] == kLand) {
-                dfs(0, j, grid);
+            if (grid[0][j] == 1 && !visited[0][j]) {
+                dfs(visited, 0, j, grid);
             }
-            if (grid[m - 1][j] == kLand) {
-                dfs(m - 1, j, grid);
+            if (grid[m - 1][j] == 1 && !visited[m - 1][j]) {
+                dfs(visited, m - 1, j, grid);
             }
         }
+        // count the total number of land cells
         int result = 0;
-        for (int i = 1; i < m; ++i) {
-            for (int j = 1; j < n; ++j) {
-                if (grid[i][j] == kLand) {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == 1 && !visited[i][j]) {
                     result++;
                 }
             }
@@ -61,105 +55,23 @@ private:
         return result;
     }
 
-    void dfs(int x, int y, std::vector<std::vector<int>>& grid)
+private:
+    void dfs(std::vector<std::vector<bool>>& visited, int x, int y,
+             const std::vector<std::vector<int>>& grid)
     {
+        static const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         const int m = grid.size();
         const int n = grid[0].size();
-        grid[x][y] = kWater;
+        visited[x][y] = true;
         for (const auto& [dx, dy] : kDirections) {
-            const int newX = x + dx;
-            const int newY = y + dy;
-            if (newX < 0 || newX >= m || newY < 0 || newY >= n || grid[newX][newY] != kLand)
+            const int i = x + dx;
+            const int j = y + dy;
+            if (i < 0 || i >= m || j < 0 || j >= n)
                 continue;
 
-            dfs(newX, newY, grid);
-        }
-    }
-
-    // approach1: UnionFind
-    class UnionFind
-    {
-    public:
-        explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
-        {
-            for (int i = 0; i < n; ++i) {
-                _root[i] = i;
-                _rank[i] = 1;
+            if (grid[i][j] == 1 && !visited[i][j]) {
+                dfs(visited, i, j, grid);
             }
         }
-
-        int count() const { return _count; }
-
-        int find(int x)
-        {
-            if (x != _root[x]) {
-                _root[x] = find(_root[x]);
-            }
-            return _root[x];
-        }
-
-        void connect(int p, int q)
-        {
-            const int rootP = find(p);
-            const int rootQ = find(q);
-            if (rootP == rootQ)
-                return;
-
-            if (_rank[rootP] > _rank[rootQ]) {
-                _root[rootQ] = rootP;
-            } else if (_rank[rootP] < _rank[rootQ]) {
-                _root[rootP] = rootQ;
-            } else {
-                _root[rootQ] = rootP;
-                _rank[rootP]++;
-            }
-            _count--;
-        }
-
-        bool isConnected(int p, int q) { return find(p) == find(q); }
-
-    private:
-        std::vector<int> _root;
-        std::vector<int> _rank;
-        int _count;
-    };
-
-    int approach1(std::vector<std::vector<int>>& grid)
-    {
-        if (grid.empty() || grid[0].empty())
-            return 0;
-
-        const int m = grid.size();
-        const int n = grid[0].size();
-        UnionFind uf(m * n + 1);
-        const int kVirtual = m * n; // connect with lands on the boundary
-        std::vector<std::pair<int, int>> landsNotOnBoudary;
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (grid[i][j] != kLand)
-                    continue;
-
-                if (i == 0 || i == m - 1 || j == 0 || j == n - 1) {
-                    uf.connect(kVirtual, i * n + j);
-                } else {
-                    landsNotOnBoudary.push_back({i, j});
-                }
-                for (const auto& [dx, dy] : kDirections) {
-                    const int x = i + dx;
-                    const int y = j + dy;
-                    if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != kLand)
-                        continue;
-
-                    uf.connect(i * n + j, x * n + y);
-                }
-            }
-        }
-        int result = 0;
-        for (const auto& [i, j] : landsNotOnBoudary) {
-            if (!uf.isConnected(kVirtual, i * n + j)) {
-                result++;
-            }
-        }
-        return result;
     }
 };
