@@ -24,18 +24,18 @@ class Solution
 public:
     std::vector<int> findOrder(int numCourses, std::vector<std::vector<int>>& prerequisites)
     {
-        return approach1(numCourses, prerequisites);
+        return approach2(numCourses, prerequisites);
     }
 
 private:
+    // Kahn's algorithm, time O(V+E), space O(V+E)
     std::vector<int> approach2(int numCourses, std::vector<std::vector<int>>& prerequisites)
     {
-        // topological sorting, Kahn's algorithm
-        std::vector<std::vector<int>> graph(numCourses, std::vector<int>());
+        std::vector<std::vector<int>> graph(numCourses);
         std::vector<int> indegrees(numCourses, 0);
-        for (const auto& p : prerequisites) {
-            graph[p[1]].push_back(p[0]);
-            indegrees[p[0]]++;
+        for (const auto& prerequisite : prerequisites) {
+            graph[prerequisite[1]].push_back(prerequisite[0]);
+            indegrees[prerequisite[0]]++;
         }
         std::queue<int> queue;
         for (int i = 0; i < numCourses; ++i) {
@@ -45,7 +45,7 @@ private:
         }
         std::vector<int> result;
         while (!queue.empty()) {
-            const int v = queue.front();
+            const auto v = queue.front();
             queue.pop();
             result.push_back(v);
             for (const auto& adj : graph[v]) {
@@ -60,13 +60,17 @@ private:
         return result;
     }
 
+    // DFS, time O(V+E), space O(V+E)
+    // White: not processed
+    // Gray: being processed
+    // Black: process finished
     enum Color { White, Gray, Black };
 
     std::vector<int> approach1(int numCourses, std::vector<std::vector<int>>& prerequisites)
     {
-        std::vector<std::vector<int>> graph(numCourses, std::vector<int>());
-        for (const auto& p : prerequisites) {
-            graph[p[1]].push_back(p[0]);
+        std::vector<std::vector<int>> graph(numCourses);
+        for (const auto& prerequisite : prerequisites) {
+            graph[prerequisite[1]].push_back(prerequisite[0]);
         }
         std::vector<Color> colors(numCourses, White);
         std::vector<int> result;
@@ -78,19 +82,19 @@ private:
         return result;
     }
 
-    bool hasCycle(std::vector<Color>& colors, std::vector<int>& result, int start,
+    bool hasCycle(std::vector<Color>& colors, std::vector<int>& result, int v,
                   const std::vector<std::vector<int>>& graph)
     {
-        colors[start] = Gray;
-        for (const auto& next : graph[start]) {
-            if (colors[next] == Gray)
+        colors[v] = Gray;
+        for (const auto& adj : graph[v]) {
+            if (colors[adj] == Gray)
                 return true;
 
-            if (colors[next] == White && hasCycle(colors, result, next, graph))
+            if (colors[adj] == White && hasCycle(colors, result, adj, graph))
                 return true;
         }
-        colors[start] = Black;
-        result.push_back(start);
+        result.push_back(v);
+        colors[v] = Black;
         return false;
     }
 };
