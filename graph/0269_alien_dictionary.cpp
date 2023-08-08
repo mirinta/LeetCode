@@ -35,7 +35,7 @@ public:
         for (int i = 0; i < words.size() - 1; ++i) {
             const auto& word1 = words[i];
             const auto& word2 = words[i + 1];
-            // ! check word1 starts with word2
+            // ! check word1 starts with word2, i.e., word2 is a prefix of word1
             if (word1.size() > word2.size() && word1.substr(0, word2.size()) == word2)
                 return {};
 
