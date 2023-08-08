@@ -33,3 +33,5 @@ TODO:
 - [ ] No.0218 (Sweeping line)
 - [ ] No.0929 (DP)
 - [ ] No.0269 (Topological sorting)
+- [ ] No.787 (Graph, Shortest path)
+- [ ] No.721 (Graph, Union-Find)
