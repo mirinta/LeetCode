@@ -1,5 +1,4 @@
 #include <queue>
-#include <unordered_map>
 #include <vector>
 
 /**
@@ -36,32 +35,37 @@ class Solution
 public:
     bool canFinish(int numCourses, std::vector<std::vector<int>>& prerequisites)
     {
-        return approach2(numCourses, prerequisites);
+        std::vector<std::vector<int>> graph(numCourses);
+        for (const auto& prerequisite : prerequisites) {
+            graph[prerequisite[1]].push_back(prerequisite[0]);
+        }
+        return approach2(graph);
     }
 
 private:
-    bool approach2(int n, std::vector<std::vector<int>>& prerequisites)
+    // Kahn's algorithm: time (V+E), space O(V+E)
+    bool approach2(const std::vector<std::vector<int>>& graph)
     {
-        // Kahn's algorithm (topological sorting )
-        std::vector<std::vector<int>> graph(n, std::vector<int>());
-        std::vector<int> indgrees(n, 0);
-        for (const auto& p : prerequisites) {
-            graph[p[1]].push_back(p[0]);
-            indgrees[p[0]]++;
+        const int n = graph.size();
+        std::vector<int> indegrees(n, 0);
+        for (const auto& adjacencies : graph) {
+            for (const auto& adj : adjacencies) {
+                indegrees[adj]++;
+            }
         }
         std::queue<int> queue;
         for (int i = 0; i < n; ++i) {
-            if (indgrees[i] == 0) {
+            if (indegrees[i] == 0) {
                 queue.push(i);
             }
         }
         int count = 0;
         while (!queue.empty()) {
-            const int v = queue.front();
+            const auto v = queue.front();
             queue.pop();
             count++;
             for (const auto& adj : graph[v]) {
-                if (--indgrees[adj] == 0) {
+                if (--indegrees[adj] == 0) {
                     queue.push(adj);
                 }
             }
@@ -69,15 +73,15 @@ private:
         return count == n;
     }
 
+    // DFS with colors: time O(V+E), space O(V+E)
+    // White: not processed
+    // Gray: being processed
+    // Black: process finished
     enum Color { White, Gray, Black };
 
-    bool approach1(int n, std::vector<std::vector<int>>& prerequisites)
+    bool approach1(const std::vector<std::vector<int>>& graph)
     {
-        // cycle detection: DFS with colors
-        std::vector<std::vector<int>> graph(n, std::vector<int>());
-        for (const auto& p : prerequisites) {
-            graph[p[1]].push_back(p[0]);
-        }
+        const int n = graph.size();
         std::vector<Color> colors(n, White);
         for (int i = 0; i < n; ++i) {
             if (colors[i] == White && hasCycle(colors, i, graph))
@@ -86,17 +90,17 @@ private:
         return true;
     }
 
-    bool hasCycle(std::vector<Color>& colors, int start, const std::vector<std::vector<int>>& graph)
+    bool hasCycle(std::vector<Color>& colors, int v, const std::vector<std::vector<int>>& graph)
     {
-        colors[start] = Gray;
-        for (const auto& next : graph[start]) {
-            if (colors[next] == Gray)
+        colors[v] = Gray;
+        for (const auto& adj : graph[v]) {
+            if (colors[adj] == Gray)
                 return true;
 
-            if (colors[next] == White && hasCycle(colors, next, graph))
+            if (colors[adj] == White && hasCycle(colors, adj, graph))
                 return true;
         }
-        colors[start] = Black;
+        colors[v] = Black;
         return false;
     }
 };
