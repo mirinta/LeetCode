@@ -8,6 +8,8 @@
  *
  * Return true if the edges of the given graph make up a valid tree, and false otherwise.
  *
+ * ! 1 <= n <= 2000
+ * ! 0 <= edges.length <= 5000
  * ! edges[i].length == 2
  * ! 0 <= ai, bi < n
  * ! ai != bi
@@ -17,22 +19,22 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
+    explicit UnionFind(int n) : count(n), root(n), rank(n)
     {
         for (int i = 0; i < n; ++i) {
-            _root[i] = i;
-            _rank[i] = 1;
+            root[i] = i;
+            rank[i] = 1;
         }
     }
 
-    int count() const { return _count; }
+    int numOfConnectedComponents() const { return count; };
 
     int find(int x)
     {
-        if (x != _root[x]) {
-            _root[x] = find(_root[x]);
+        if (root[x] != x) {
+            root[x] = find(root[x]);
         }
-        return _root[x];
+        return root[x];
     }
 
     bool isConnected(int p, int q) { return find(p) == find(q); }
@@ -44,40 +46,38 @@ public:
         if (rootP == rootQ)
             return;
 
-        if (_rank[rootP] > _rank[rootQ]) {
-            _root[rootQ] = rootP;
-        } else if (_rank[rootP] < _rank[rootQ]) {
-            _root[rootP] = rootQ;
+        if (rank[rootP] > rank[rootQ]) {
+            root[rootQ] = rootP;
+        } else if (rank[rootP] < rank[rootQ]) {
+            root[rootP] = rootQ;
         } else {
-            _root[rootQ] = rootP;
-            _rank[rootP] += 1;
+            root[rootQ] = rootP;
+            rank[rootP]++;
         }
-        _count -= 1;
+        count--;
     }
 
 private:
-    std::vector<int> _root;
-    std::vector<int> _rank;
-    int _count;
+    int count;
+    std::vector<int> root;
+    std::vector<int> rank;
 };
 
 class Solution
 {
 public:
+    // time O(E*a(N)), space O(N)
     bool validTree(int n, std::vector<std::vector<int>>& edges)
     {
-        // a valid tree:
-        // - no cycle
-        // - all nodes are connected, i.e., uf.count() = 1
         UnionFind uf(n);
         for (const auto& edge : edges) {
-            const int& p = edge[0];
-            const int& q = edge[1];
+            const auto& p = edge[0];
+            const auto& q = edge[1];
             if (uf.isConnected(p, q))
                 return false;
 
             uf.connect(p, q);
         }
-        return uf.count() == 1;
+        return uf.numOfConnectedComponents() == 1;
     }
 };
