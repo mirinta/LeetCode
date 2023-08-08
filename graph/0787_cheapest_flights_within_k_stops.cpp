@@ -16,7 +16,7 @@
  * ! flights[i].length == 3
  * ! 0 <= from_i, to_i < n
  * ! from_i != to_i
- * ! 1 <= price_i <= 104
+ * ! 1 <= price_i <= 10^4
  * ! There will not be any multiple flights between two cities.
  * ! 0 <= src, dst, k < n
  * ! src != dst
@@ -27,27 +27,34 @@ class Solution
 public:
     int findCheapestPrice(int n, std::vector<std::vector<int>>& flights, int src, int dst, int k)
     {
-        return approach1(n, flights, src, dst, k);
+        return approach2(n, flights, src, dst, k);
     }
 
 private:
     int approach3(int n, std::vector<std::vector<int>>& flights, int src, int dst, int k)
     {
         // Bellman-Ford (DP with space optimization)
+        std::vector<int> iMinus1(n, INT_MAX);
+        iMinus1[src] = 0;
         std::vector<int> dp(n, INT_MAX);
-        dp[src] = 0;
         for (int i = 1; i <= k + 1; ++i) {
-            auto update = dp;
+            bool update = false;
             for (const auto& flight : flights) {
                 const auto& from = flight[0];
                 const auto& to = flight[1];
                 const auto& weight = flight[2];
-                if (dp[from] == INT_MAX)
+                if (iMinus1[from] == INT_MAX)
                     continue;
 
-                update[to] = std::min(update[to], dp[from] + weight);
+                if (iMinus1[from] + weight < dp[to]) {
+                    dp[to] = iMinus1[from] + weight;
+                    update = true;
+                }
             }
-            dp = update;
+            if (!update)
+                break;
+
+            iMinus1 = dp;
         }
         return dp[dst] == INT_MAX ? -1 : dp[dst];
     }
@@ -62,6 +69,7 @@ private:
         dp[0][src] = 0;
         int result = INT_MAX;
         for (int i = 1; i <= k + 1; ++i) {
+            bool update = false;
             for (const auto& flight : flights) {
                 const auto& from = flight[0];
                 const auto& to = flight[1];
@@ -69,8 +77,14 @@ private:
                 if (dp[i - 1][from] == INT_MAX)
                     continue;
 
-                dp[i][to] = std::min(dp[i][to], dp[i - 1][from] + weight);
+                if (dp[i - 1][from] + weight < dp[i][to]) {
+                    dp[i][to] = dp[i - 1][from] + weight;
+                    update = true;
+                }
             }
+            if (!update)
+                break;
+
             result = std::min(result, dp[i][dst]);
         }
         return result == INT_MAX ? -1 : result;
