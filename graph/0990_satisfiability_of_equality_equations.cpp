@@ -21,68 +21,64 @@
 class UnionFind
 {
 public:
-    // node's value in range [0, n - 1]
-    explicit UnionFind(int n) : _parent(n, 0)
+    explicit UnionFind(int n) : count(n), root(n), rank(n)
     {
         for (int i = 0; i < n; ++i) {
-            _parent[i] = i;
+            root[i] = i;
+            rank[i] = 1;
         }
     }
 
-    // find the parent node of x
-    // with path compression
-    int find(int x) const
+    int numOfConnectedComponents() const { return count; }
+
+    int find(int x)
     {
-        if (_parent[x] != x) {
-            _parent[x] = find(_parent[x]);
+        if (root[x] != x) {
+            root[x] = find(root[x]);
         }
-        return _parent[x];
+        return root[x];
     }
 
-    // connect node p and node q
+    bool isConnected(int p, int q) { return find(p) == find(q); }
+
     void connect(int p, int q)
     {
-        const auto rootP = find(p);
-        const auto rootQ = find(q);
+        const int rootP = find(p);
+        const int rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        _parent[rootP] = rootQ;
-    }
-
-    // check node p is connected to node q
-    bool isConnected(int p, int q) const
-    {
-        const auto rootP = find(p);
-        const auto rootQ = find(q);
-        return rootP == rootQ;
+        if (rank[rootP] > rank[rootQ]) {
+            root[rootQ] = rootP;
+        } else if (rank[rootP] < rank[rootQ]) {
+            root[rootP] = rootQ;
+        } else {
+            root[rootQ] = rootP;
+            rank[rootP]++;
+        }
+        count--;
     }
 
 private:
-    mutable std::vector<int> _parent;
+    int count;
+    std::vector<int> root;
+    std::vector<int> rank;
 };
 
 class Solution
 {
 public:
-    bool equationsPossible(const std::vector<std::string>& equations)
+    bool equationsPossible(std::vector<std::string>& equations)
     {
-        if (equations.empty())
-            return false;
-
-        UnionFind uf(26); // 26 lowercase letters
-        // for each equation that contains '==',
-        // connect the operands
-        for (const auto& s : equations) {
-            if (s[1] == '=') {
-                uf.connect(s[0] - 'a', s[3] - 'a');
+        // variables are lowercase letters
+        UnionFind uf(26);
+        for (const auto& equation : equations) {
+            if (equation[1] == '=') {
+                uf.connect(equation[0] - 'a', equation[3] - 'a');
             }
         }
-        // for each equation that contains '!=',
-        // if the operands are connected,
-        // it means the equality is gonna broken, therefore return false
-        for (const auto& s : equations) {
-            if (s[1] == '!' && uf.isConnected(s[0] - 'a', s[3] - 'a'))
+        for (const auto& equation : equations) {
+            if (equation[1] == '!' && uf.isConnected(equation[0] - 'a', equation[3] - 'a'))
                 return false;
         }
         return true;
