@@ -40,7 +40,7 @@ private:
     int approach2(const std::vector<std::vector<int>>& graph)
     {
         const int n = graph.size();
-        std::vector<int> colors(n, 0); // 0 or not visited, -1 for blue, 1 for red
+        std::vector<int> colors(n, 0); // 0 for not visited, -1 for blue, 1 for red
         std::queue<int> queue;
         for (int i = 0; i < n; ++i) {
             if (colors[i] != 0)
@@ -67,7 +67,7 @@ private:
     int approach1(const std::vector<std::vector<int>>& graph)
     {
         const int n = graph.size();
-        std::vector<int> colors(n, 0); // 0 or not visited, -1 for blue, 1 for red
+        std::vector<int> colors(n, 0); // 0 for not visited, -1 for blue, 1 for red
         for (int i = 0; i < n; ++i) {
             if (colors[i] != 0)
                 continue;
