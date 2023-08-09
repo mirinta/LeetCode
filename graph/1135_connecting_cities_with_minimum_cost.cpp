@@ -1,7 +1,5 @@
 #include <algorithm>
 #include <queue>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 /**
@@ -20,7 +18,7 @@
  * ! connections[i].length == 3
  * ! 1 <= xi, yi <= n
  * ! xi != yi
- * ! 0 <= costi <= 10^5
+ * ! 0 <= cost_i <= 10^5
  */
 
 class UnionFind
