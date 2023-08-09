@@ -15,30 +15,33 @@
  *
  * The cost is the sum of the connection's costs used.
  *
+ * ! 1 <= n <= 10^4
+ * ! 1 <= connections.length <= 10^4
  * ! connections[i].length == 3
  * ! 1 <= xi, yi <= n
  * ! xi != yi
+ * ! 0 <= costi <= 10^5
  */
 
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
+    explicit UnionFind(int n) : count(n), root(n), rank(n)
     {
         for (int i = 0; i < n; ++i) {
-            _root[i] = i;
-            _rank[i] = 1;
+            root[i] = i;
+            rank[i] = 1;
         }
     }
 
-    int count() const { return _count; }
+    int numOfConnectedComponents() const { return count; }
 
     int find(int x)
     {
-        if (x != _root[x]) {
-            _root[x] = find(_root[x]);
+        if (x != root[x]) {
+            root[x] = find(root[x]);
         }
-        return _root[x];
+        return root[x];
     }
 
     bool isConnected(int p, int q) { return find(p) == find(q); }
@@ -50,21 +53,21 @@ public:
         if (rootP == rootQ)
             return;
 
-        if (_rank[rootP] > _rank[rootQ]) {
-            _root[rootQ] = rootP;
-        } else if (_rank[rootP] < _rank[rootQ]) {
-            _root[rootP] = rootQ;
+        if (rank[rootP] > rank[rootQ]) {
+            root[rootQ] = rootP;
+        } else if (rank[rootP] < rank[rootQ]) {
+            root[rootP] = rootQ;
         } else {
-            _root[rootQ] = rootP;
-            _rank[rootP] += 1;
+            root[rootQ] = rootP;
+            rank[rootP]++;
         }
-        _count -= 1;
+        count--;
     }
 
 private:
-    std::vector<int> _root;
-    std::vector<int> _rank;
-    int _count;
+    int count;
+    std::vector<int> root;
+    std::vector<int> rank;
 };
 
 class Solution
@@ -72,65 +75,67 @@ class Solution
 public:
     int minimumCost(int n, std::vector<std::vector<int>>& connections)
     {
-        return approach1(n, connections);
+        return approach2(n, connections);
     }
 
 private:
+    // Prim's algorithm
     int approach2(int n, std::vector<std::vector<int>>& connections)
     {
-        // MST, Prim's algorithm
-        std::unordered_map<int, std::vector<std::pair<int, int>>> graph;
-        for (const auto& connection : connections) {
-            graph[connection[0]].push_back({connection[2], connection[1]});
-            graph[connection[1]].push_back({connection[2], connection[0]});
+        using Pair = std::pair<int, int>; // <cost, vertex>
+        std::vector<std::vector<Pair>> graph(n);
+        for (const auto& edge : connections) {
+            const auto& from = edge[0] - 1;
+            const auto& to = edge[1] - 1;
+            const auto& cost = edge[2];
+            graph[from].push_back({cost, to});
+            graph[to].push_back({cost, from});
         }
-        auto comp = [](const auto& p1, const auto& p2) -> bool { return p1.first > p2.first; };
-        // cities are 1-indexed
-        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, decltype(comp)>
-            pq(comp);
-        for (const auto& pair : graph[1]) {
-            pq.push(pair);
+        auto comparator = [](const auto& p1, const auto& p2) { return p1.first > p2.first; };
+        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
+            comparator); // min heap
+        // start from vertex 0
+        for (const auto& p : graph[0]) {
+            pq.push(p);
         }
-        std::unordered_set<int> visited;
-        visited.insert(1);
+        std::vector<bool> visited(n, false);
+        visited[0] = true;
         int result = 0;
-        int edges = 0; // at the end, edges should be n-1
+        int edges = 0; // the MST requires n-1 edges
         while (!pq.empty()) {
             const auto [cost, v] = pq.top();
             pq.pop();
-            if (visited.count(v))
+            if (visited[v])
                 continue;
 
-            visited.insert(v);
+            visited[v] = true;
             result += cost;
             edges++;
-            for (const auto& pair : graph[v]) {
-                if (visited.count(pair.second))
-                    continue;
-
-                pq.push(pair);
+            for (const auto& p : graph[v]) {
+                if (!visited[p.second]) {
+                    pq.push(p);
+                }
             }
         }
         return edges == n - 1 ? result : -1;
     }
 
+    // Kruskal's algorithm
     int approach1(int n, std::vector<std::vector<int>>& connections)
     {
-        // MST, Kruskal's algorithm
         std::sort(connections.begin(), connections.end(),
-                  [](const auto& c1, const auto& c2) { return c1[2] < c2[2]; });
+                  [](const auto& e1, const auto& e2) { return e1[2] < e2[2]; });
         UnionFind uf(n);
         int result = 0;
-        for (const auto& connection : connections) {
-            const int from = connection[0] - 1;
-            const int to = connection[1] - 1;
-            const int cost = connection[2];
-            if (uf.isConnected(from, to))
-                continue;
-
-            uf.connect(from, to);
-            result += cost;
+        for (const auto& edge : connections) {
+            const auto& from = edge[0] - 1;
+            const auto& to = edge[1] - 1;
+            const auto& cost = edge[2];
+            if (!uf.isConnected(from, to)) {
+                uf.connect(from, to);
+                result += cost;
+            }
         }
-        return uf.count() == 1 ? result : -1;
+        return uf.numOfConnectedComponents() == 1 ? result : -1;
     }
 };
