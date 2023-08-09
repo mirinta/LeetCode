@@ -26,48 +26,48 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
+    explicit UnionFind(int n) : count(n), root(n), rank(n)
     {
         for (int i = 0; i < n; ++i) {
-            _root[i] = i;
-            _rank[i] = 1;
+            root[i] = i;
+            rank[i] = 1;
         }
     }
 
-    int count() const { return _count; }
+    int numOfConnectedComponents() const { return count; }
 
     int find(int x)
     {
-        if (x != _root[x]) {
-            _root[x] = find(_root[x]);
+        if (x != root[x]) {
+            root[x] = find(root[x]);
         }
-        return _root[x];
+        return root[x];
     }
 
     bool isConnected(int p, int q) { return find(p) == find(q); }
 
     void connect(int p, int q)
     {
-        int rootP = find(p);
-        int rootQ = find(q);
+        const int rootP = find(p);
+        const int rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        if (_rank[rootP] > _rank[rootQ]) {
-            _root[rootQ] = rootP;
-        } else if (_rank[rootP] < _rank[rootQ]) {
-            _root[rootP] = rootQ;
+        if (rank[rootP] > rank[rootQ]) {
+            root[rootQ] = rootP;
+        } else if (rank[rootP] < rank[rootQ]) {
+            root[rootP] = rootQ;
         } else {
-            _root[rootQ] = rootP;
-            _rank[rootP] += 1;
+            root[rootQ] = rootP;
+            rank[rootP]++;
         }
-        _count -= 1;
+        count--;
     }
 
 private:
-    std::vector<int> _root;
-    std::vector<int> _rank;
-    int _count;
+    int count;
+    std::vector<int> root;
+    std::vector<int> rank;
 };
 
 class Solution
@@ -79,68 +79,65 @@ public:
     }
 
 private:
-    // Kruskal's MST algorithm
-    int approach1(int n, std::vector<int>& wells, std::vector<std::vector<int>>& pipes)
-    {
-        // a virtual source node, id = 0
-        for (int i = 0; i < n; ++i) {
-            pipes.push_back({0, i + 1, wells[i]}); // maintain 1-indexed
-        }
-        std::sort(pipes.begin(), pipes.end(),
-                  [](const auto& pipe1, const auto& pipe2) { return pipe1[2] < pipe2[2]; });
-        UnionFind uf(n + 1);
-        int result = 0;
-        for (const auto& pipe : pipes) {
-            const int& p = pipe[0];
-            const int& q = pipe[1];
-            if (uf.isConnected(p, q))
-                continue;
-
-            uf.connect(p, q);
-            result += pipe[2];
-        }
-        return result;
-    }
-
-    // Prim's MST algorithm
+    // Prim's algorithm
     int approach2(int n, std::vector<int>& wells, std::vector<std::vector<int>>& pipes)
     {
-        std::vector<std::vector<std::pair<int, int>>> graph(n + 1,
-                                                            std::vector<std::pair<int, int>>{});
-        for (int i = 1; i <= n; ++i) {
-            graph[0].push_back({-1 * wells[i - 1], i});
-            graph[i].push_back({-1 * wells[i - 1], 0});
+        using Pair = std::pair<int, int>; // <cost, vertex>
+        auto comparator = [](const auto& p1, const auto& p2) { return p1.first > p2.first; };
+        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator);
+        std::vector<std::vector<Pair>> graph(n + 1);
+        for (int i = 0; i < wells.size(); ++i) {
+            graph[0].push_back({wells[i], i + 1});
+            graph[i + 1].push_back({wells[i], 0});
+            pq.push(graph[0].back());
         }
         for (const auto& pipe : pipes) {
-            graph[pipe[0]].push_back({-1 * pipe[2], pipe[1]});
-            graph[pipe[1]].push_back({-1 * pipe[2], pipe[0]});
+            const auto& from = pipe[0];
+            const auto& to = pipe[1];
+            const auto& cost = pipe[2];
+            graph[from].push_back({cost, to});
+            graph[to].push_back({cost, from});
         }
-        std::priority_queue<std::pair<int, int>> pq;
         std::vector<bool> visited(n + 1, false);
         visited[0] = true;
-        cut(visited, pq, 0, graph);
         int result = 0;
         while (!pq.empty()) {
-            const auto [negativeCost, v] = pq.top();
+            const auto [cost, v] = pq.top();
             pq.pop();
             if (visited[v])
                 continue;
 
             visited[v] = true;
-            result += -1 * negativeCost;
-            cut(visited, pq, v, graph);
+            result += cost;
+            for (const auto& p : graph[v]) {
+                if (!visited[p.second]) {
+                    pq.push(p);
+                }
+            }
         }
         return result;
     }
 
-    void cut(std::vector<bool>& visited, std::priority_queue<std::pair<int, int>>& pq, int v,
-             const std::vector<std::vector<std::pair<int, int>>>& graph)
+    // Kruskal's algorithm
+    int approach1(int n, std::vector<int>& wells, std::vector<std::vector<int>>& pipes)
     {
-        for (const auto& pair : graph[v]) {
-            if (visited[pair.second])
-                continue;
-
-            pq.push(pair);
+        // a virtual vertex denotes the source of water, index of this vertex is 0
+        for (int i = 0; i < wells.size(); ++i) {
+            pipes.push_back({0, i + 1, wells[i]});
         }
+        std::sort(pipes.begin(), pipes.end(),
+                  [](const auto& v1, const auto& v2) { return v1[2] < v2[2]; });
+        UnionFind uf(n + 1);
+        int result = 0;
+        for (const auto& pipe : pipes) {
+            const auto& from = pipe[0];
+            const auto& to = pipe[1];
+            const auto& cost = pipe[2];
+            if (!uf.isConnected(from, to)) {
+                result += cost;
+                uf.connect(from, to);
+            }
+        }
+        return result;
     }
 };
