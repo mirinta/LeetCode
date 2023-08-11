@@ -13,6 +13,10 @@
  * nums.
  *
  * - Return "k".
+ *
+ * ! 0 <= nums.length <= 100
+ * ! 0 <= nums[i] <= 50
+ * ! 0 <= val <= 100
  */
 
 class Solution
