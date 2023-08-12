@@ -28,11 +28,11 @@ public:
             graph[edge[0]].push_back(edge[1]);
             graph[edge[1]].push_back(edge[0]);
         }
-        clock = 0;
-        visited = std::vector<bool>(n, false);
-        disc = std::vector<int>(n, -1);
-        low = std::vector<int>(n, -1);
+        visited.assign(n, false);
+        dfn.assign(n, -1);
+        low.assign(n, -1);
         std::vector<std::vector<int>> bridges;
+        int time = 0;
         for (int i = 0; i < n; ++i) {
             if (!visited[i]) {
                 dfs(bridges, i, -1, graph);
@@ -42,31 +42,30 @@ public:
     }
 
 private:
-    int clock;
+    int time;
     std::vector<bool> visited;
-    std::vector<int> disc; // disc[i] is the earliest time of visiting vertex i
-    std::vector<int> low;  // low[i] is the earliest time of visiting any vertex reachable from
-                           // vertex i through i's DFS subtree, including i itself
+    std::vector<int> dfn;
+    std::vector<int> low;
 
     void dfs(std::vector<std::vector<int>>& bridges, int current, int parent,
              const std::vector<std::vector<int>>& graph)
     {
         visited[current] = true;
-        disc[current] = clock;
-        low[current] = clock;
-        clock++;
-        for (const auto& adj : graph[current]) {
-            if (adj == parent)
+        dfn[current] = time;
+        low[current] = time;
+        time++;
+        for (const auto& child : graph[current]) {
+            if (child == parent)
                 continue;
 
-            if (!visited[adj]) {
-                dfs(bridges, adj, current, graph);
-                low[current] = std::min(low[current], low[adj]);
-                if (low[adj] > disc[current]) {
-                    bridges.push_back({current, adj}); // found a bridge
+            if (!visited[child]) {
+                dfs(bridges, child, current, graph);
+                low[current] = std::min(low[current], low[child]);
+                if (low[child] > dfn[current]) {
+                    bridges.push_back({current, child});
                 }
             } else {
-                low[current] = std::min(low[current], disc[adj]);
+                low[current] = std::min(low[current], dfn[child]);
             }
         }
     }
