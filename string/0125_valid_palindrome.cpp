@@ -14,15 +14,9 @@
 class Solution
 {
 public:
-    bool isPalindrome(const std::string& s)
+    bool isPalindrome(std::string s)
     {
-        // X X X X X
-        // ^       ^
-        // i       j
-        const auto n = s.size();
-        if (n <= 1)
-            return true;
-
+        const int n = s.size();
         int left = 0;
         int right = n - 1;
         while (true) {
@@ -35,7 +29,7 @@ public:
             if (left >= right)
                 break;
 
-            if (toLowerCase(s[left]) != toLowerCase(s[right]))
+            if (toLowercase(s[left]) != toLowercase(s[right]))
                 return false;
 
             left++;
@@ -47,22 +41,13 @@ public:
 private:
     bool isAlphaNumeric(char c)
     {
-        if ('0' <= c && c <= '9') {
-            return true;
-        } else if ('a' <= c && c <= 'z') {
-            return true;
-        } else if ('A' <= c && c <= 'Z') {
-            return true;
-        } else {
-            return false;
-        }
+        return ('0' <= c && c <= '9') || ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
     }
 
-    char toLowerCase(char c)
+    char toLowercase(char c)
     {
-        constexpr char kOffset = 'A' - 'a';
         if ('A' <= c && c <= 'Z')
-            return c - kOffset;
+            return c - ('A' - 'a');
 
         return c;
     }
