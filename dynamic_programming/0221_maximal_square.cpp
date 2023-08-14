@@ -17,8 +17,9 @@ public:
     {
         const int m = matrix.size();
         const int n = matrix[0].size();
-        // dp[i][j] = length of the largest square whose bottom-right corner is matrix[i][j]
+        // dp[i][j] = length of the largest square whose bottom-right corner is (i,j)
         std::vector<std::vector<int>> dp(m, std::vector<int>(n, 0));
+        // base cases:
         for (int i = 0; i < m; ++i) {
             dp[i][0] = matrix[i][0] == '1' ? 1 : 0;
         }
@@ -27,9 +28,21 @@ public:
         }
         for (int i = 1; i < m; ++i) {
             for (int j = 1; j < n; ++j) {
-                if (matrix[i][j] != '1') {
+                if (matrix[i][j] == '0') {
                     dp[i][j] = 0;
                 } else {
+                    // case1: there's a rectangle of length length_A whose bottom-right corner is A
+                    //     |
+                    // --- A B
+                    //     C X
+                    // case2: there's a rectangle of length length_B whose bottom-right corner is B
+                    //       |
+                    // --- A B
+                    //     C X
+                    // case3: there's a rectangle of length length_C whose bottom-right corner is B
+                    //     |
+                    //     A B
+                    // --- C X
                     dp[i][j] = 1 + std::min({dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]});
                 }
             }
