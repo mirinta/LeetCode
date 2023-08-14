@@ -30,7 +30,7 @@ private:
             withStock = std::max(withStock, withoutStock - prices[i]);
             withoutStock = std::max(withoutStock, backup + prices[i]);
         }
-        return std::max(withStock, withoutStock);
+        return withoutStock;
     }
 
     // 2D-DP, time O(N), space O(N)
@@ -45,6 +45,6 @@ private:
             dp[i][0] = std::max(dp[i - 1][0], dp[i - 1][1] + prices[i - 1]);
             dp[i][1] = std::max(dp[i - 1][1], dp[i - 1][0] - prices[i - 1]);
         }
-        return std::max(dp[n][0], dp[n][1]);
+        return dp[n][0];
     }
 };
