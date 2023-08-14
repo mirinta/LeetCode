@@ -35,7 +35,7 @@ private:
                 dp[j][1] = std::max(dp[j][1], dp[j - 1][0] - prices[i]);
             }
         }
-        return std::max(dp[k][0], dp[k][1]);
+        return dp[k][0];
     }
 
     // DP, time O(NK), space O(NK)
@@ -58,6 +58,6 @@ private:
                 dp[i][j][1] = std::max(dp[i - 1][j][1], dp[i - 1][j - 1][0] - prices[i - 1]);
             }
         }
-        return std::max(dp[n][k][0], dp[n][k][1]);
+        return dp[n][k][0];
     }
 };
