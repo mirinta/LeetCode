@@ -18,51 +18,36 @@
 class Solution
 {
 public:
-    int maxProfit(const std::vector<int>& prices) { return approach2(prices); }
+    int maxProfit(std::vector<int>& prices) { return approach2(prices); }
 
 private:
+    // DP with space optimization, time O(N), space O(1)
     int approach2(const std::vector<int>& prices)
     {
-        // space optimization of approach1
-        if (prices.empty())
-            return 0;
-
+        const int n = prices.size();
         int withStock = INT_MIN;
         int withoutStock = 0;
         int withoutStockPrev = 0;
-        for (const auto& price : prices) {
-            int backup = withoutStock;
-            withoutStock = std::max(withoutStock, withStock + price);
-            withStock = std::max(withStock, withoutStockPrev - price);
+        for (int i = 0; i < n; ++i) {
+            const int backup = withoutStock;
+            withoutStock = std::max(withoutStock, withStock + prices[i]);
+            withStock = std::max(withStock, withoutStockPrev - prices[i]);
             withoutStockPrev = backup;
         }
         return withoutStock;
     }
+
+    // DP, time O(N), space O(N)
     int approach1(const std::vector<int>& prices)
     {
-        if (prices.empty())
-            return 0;
-
-        // dp[i][0] = max profit of days[0:i) without stock on the ith day
-        // dp[i][1] = max profit of days[0:i) with stock on the ith day
-        const auto n = prices.size();
+        const int n = prices.size();
+        // dp[i][0] = max profit at the end of ith day withou any stock in-hand
+        // dp[i][1] = max profit at the end of ith day with one stock in-hand
         std::vector<std::vector<int>> dp(n + 1, std::vector<int>(2, 0));
-        // base cases:
-        // - dp[0][0] = 0 = dp[1][0], no stock, no profit
-        // - dp[0][1] = -1, no way to have a stock at this day
-        // - dp[1][1] = -prices[0], buy stock on the first day
-        dp[0][1] = -1;
-        dp[1][1] = -prices[0];
-        for (int i = 2; i <= n; ++i) {
-            // this day without stock:
-            // - yesterday without stock, or
-            // - yesterday with stock and sell stock on this day
+        dp[0][1] = INT_MIN;
+        for (int i = 1; i <= n; ++i) {
             dp[i][0] = std::max(dp[i - 1][0], dp[i - 1][1] + prices[i - 1]);
-            // this day with stock:
-            // - yesterday with stock, or
-            // - the day before yesterday without stock and buy stock on this day
-            //   because there one day cool down between each transaction
-            dp[i][1] = std::max(dp[i - 1][1], dp[i - 2][0] - prices[i - 1]);
+            dp[i][1] = std::max(dp[i - 1][1], (i >= 2 ? dp[i - 2][0] : 0) - prices[i - 1]);
         }
         return dp[n][0];
     }
