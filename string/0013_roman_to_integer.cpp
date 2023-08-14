@@ -29,6 +29,7 @@
  *
  * Given a roman numeral, convert it to an integer.
  *
+ * ! 1 <= s.length <= 15
  * ! s contains only the characters ('I', 'V', 'X', 'L', 'C', 'D', 'M').
  * ! It is guaranteed that s is a valid roman numeral in the range [1, 3999].
  */
@@ -36,11 +37,8 @@
 class Solution
 {
 public:
-    int romanToInt(const std::string& s)
+    int romanToInt(std::string s)
     {
-        if (s.empty())
-            return 0;
-
         std::unordered_map<char, int> map;
         map['I'] = 1;
         map['V'] = 5;
@@ -49,19 +47,15 @@ public:
         map['C'] = 100;
         map['D'] = 500;
         map['M'] = 1000;
-        // M [C] M [X] C [I] V
-        // - if letter[i] < letter[i+1], the value should be subtracted from the result
-        // - otherwise,  add it to result
+        // according to the description:
+        // "Roman numerals are usually written largest to smallest from left to right."
+        const int n = s.size();
         int result = 0;
-        for (size_t i = 0; i < s.size(); ++i) {
-            const auto& letter = s[i];
-            if (!map.count(letter))
-                return 0;
-
-            if (i + 1 < s.size() && map[letter] < map[s[i + 1]]) {
-                result -= map[letter];
+        for (int i = 0; i < n; ++i) {
+            if (i + 1 < n && map[s[i]] < map[s[i + 1]]) {
+                result -= map[s[i]];
             } else {
-                result += map[letter];
+                result += map[s[i]];
             }
         }
         return result;

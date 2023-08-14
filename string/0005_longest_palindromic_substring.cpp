@@ -2,37 +2,48 @@
 
 /**
  * Given a string "s", return the longest palindromic substring in "s".
+ *
+ * ! 1 <= s.length <= 1000
+ * ! s consist of only digits and English letters.
  */
 
 class Solution
 {
 public:
-    std::string longestPalindrome(const std::string& s)
+    // time O(N^2), space O(1)
+    std::string longestPalindrome(std::string s)
     {
-        // loop through each character, use it as a center to find palindrome:
-        // START, ..., left, right, ..., END
-        //             <-|    |->
-        // - case 1: for even length palindrome, left = right
-        // - case 2: for odd length palindrome, left + 1 = right
-        std::string result{};
-        for (size_t i = 0; i < s.size(); ++i) {
-            const auto even = findPalindrome(s, i, i);
-            const auto odd = findPalindrome(s, i, i + 1);
-            result = result.size() > even.size() ? result : even;
-            result = result.size() > odd.size() ? result : odd;
+        if (s.size() == 1)
+            return s;
+
+        std::string result;
+        for (int i = 0; i < s.size(); ++i) {
+            const auto evenLengthPalindrome = getPalindrome(i, i + 1, s);
+            const auto oddLengthPalindrome = getPalindrome(i, i, s);
+            if (evenLengthPalindrome.size() > result.size()) {
+                result = evenLengthPalindrome;
+            }
+            if (oddLengthPalindrome.size() > result.size()) {
+                result = oddLengthPalindrome;
+            }
         }
         return result;
     }
 
 private:
-    std::string findPalindrome(const std::string& s, int left, int right)
+    std::string getPalindrome(int leftStart, int rightStart, const std::string& s)
     {
+        if (s[leftStart] != s[rightStart])
+            return {};
+
+        // X X X X L R X X X X
+        //       <-| |->
+        int left = leftStart;
+        int right = rightStart;
         while (left >= 0 && right < s.size() && s[left] == s[right]) {
             left--;
             right++;
-        }
-        // when the loop ends:
-        // START, ..., left, (PALINDROME), right, ..., END
+        } // the final answer is in range (left, right)
         return s.substr(left + 1, right - left - 1);
     }
 };
