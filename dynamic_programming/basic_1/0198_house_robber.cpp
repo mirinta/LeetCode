@@ -19,25 +19,26 @@ public:
     int rob(std::vector<int>& nums) { return approach2(nums); }
 
 private:
-    int approach2(std::vector<int>& nums)
+    // DP with space optimization, time O(N), space O(1)
+    int approach2(const std::vector<int>& nums)
     {
-        // DP with space optimization
         const int n = nums.size();
         int rob = INT_MIN;
         int notRob = 0;
-        for (int i = 0; i < n; ++i) {
-            const int temp = rob;
-            rob = notRob + nums[i];
-            notRob = std::max(temp, notRob);
+        for (int i = 1; i <= n; ++i) {
+            const int backup = notRob;
+            notRob = std::max(notRob, rob);
+            rob = backup + nums[i - 1];
         }
         return std::max(rob, notRob);
     }
 
-    int approach1(std::vector<int>& nums)
+    // DP, time O(N), space O(N)
+    int approach1(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        // dp[i][0] = max value of robbing house[0:i), and the ith house is not robbed
-        // dp[i][1] = max value of robbing house[0:i), and the ith house is robbed
+        // dp[i][0] = max profit of robbing the first i house, and the ith house is not robbed
+        // dp[i][1] = max profit of robbing the first i house, and the ith house is robbed
         std::vector<std::vector<int>> dp(n + 1, std::vector<int>(2, 0));
         dp[0][1] = INT_MIN;
         for (int i = 1; i <= n; ++i) {
