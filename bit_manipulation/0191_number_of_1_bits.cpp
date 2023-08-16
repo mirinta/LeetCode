@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * Write a function that takes the binary representation of an unsigned integer and returns the
@@ -13,11 +13,7 @@
  * - In Java, the compiler represents the signed integers using 2's complement notation. Therefore,
  * in Example 3, the input represents the signed integer, -3.
  *
- * Example 3:
- * Input: n = 11111111111111111111111111111101
- * Output: 31
- * Explanation:
- * The input binary string 11111111111111111111111111111101 has a total of thirty one '1' bits.
+ * ! The input must be a binary string of length 32.
  */
 
 class Solution
