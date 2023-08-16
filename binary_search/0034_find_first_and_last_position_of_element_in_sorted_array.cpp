@@ -7,6 +7,11 @@
  * If "target" is not found in the array, return [-1, -1].
  *
  * You must write an algorithm with O(logN) runtime complexity.
+ *
+ * ! 0 <= nums.length <= 10^5
+ * ! -10^9 <= nums[i] <= 10^9
+ * ! nums is a non-decreasing array.
+ * ! -10^9 <= target <= 10^9
  */
 
 class Solution
@@ -14,95 +19,43 @@ class Solution
 public:
     std::vector<int> searchRange(std::vector<int>& nums, int target)
     {
-        if (nums.empty())
-            return {-1, -1};
-
         return {findFirst(nums, target), findLast(nums, target)};
-        // return {findFirstV2(nums, target), findLastV2(nums, target)};
     }
 
 private:
     int findFirst(const std::vector<int>& nums, int target)
     {
-        if (nums.empty())
-            return -1;
-
-        int left = 0;
-        int right = nums.size(); // elements in range [left, right)
-        while (left < right) {   // the operator is not <=
-            int mid = left + (right - left) / 2;
+        int lo = 0;
+        int hi = nums.size() - 1;
+        while (lo <= hi) {
+            const int mid = lo + (hi - lo) / 2;
             if (nums[mid] >= target) {
-                right = mid; // decrease upper bound, search in [left, mid)
+                hi = mid - 1;
             } else {
-                left = mid + 1;
+                lo = mid + 1;
             }
-        } // the loop is terminated when left = right = mid
-        if (left == nums.size() || nums[left] != target)
+        }
+        if (lo == nums.size() || nums[lo] != target)
             return -1;
 
-        return left;
-    }
-
-    int findFirstV2(const std::vector<int>& nums, int target)
-    {
-        if (nums.empty())
-            return -1;
-
-        int left = 0;
-        int right = nums.size() - 1; // elements in range [left, right]
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (nums[mid] >= target) {
-                right = mid - 1;
-            } else {
-                left = mid + 1;
-            }
-        } // the loop is terminated when left = right + 1 = mid
-        if (left == nums.size() || nums[left] != target)
-            return -1;
-
-        return left;
+        return lo;
     }
 
     int findLast(const std::vector<int>& nums, int target)
     {
-        if (nums.empty())
-            return -1;
-
-        int left = 0;
-        int right = nums.size(); // elements in range [left, right)
-        while (left < right) {
-            int mid = left + (right - left) / 2;
+        int lo = 0;
+        int hi = nums.size() - 1;
+        while (lo <= hi) {
+            const int mid = lo + (hi - lo) / 2;
             if (nums[mid] <= target) {
-                left = mid + 1; // increase lower bound, search in [mid + 1, right)
+                lo = mid + 1;
             } else {
-                right = mid;
+                hi = mid - 1;
             }
-        } // the loop is terminated when left = right = mid + 1, thus mid = left - 1
-        if (left - 1 < 0 || nums[left - 1] != target)
+        }
+        if (hi < 0 || nums[hi] != target)
             return -1;
 
-        return left - 1;
-    }
-
-    int findLastV2(const std::vector<int>& nums, int target)
-    {
-        if (nums.empty())
-            return -1;
-
-        int left = 0;
-        int right = nums.size() - 1; // elements in range [left, right]
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (nums[mid] <= target) {
-                left = mid + 1; // increase lower bound, search in [mid + 1, right]
-            } else {
-                right = mid - 1;
-            }
-        } // the loop is terminated when left = right + 1 = mid + 1, thus mid = left - 1
-        if (left - 1 < 0 || nums[left - 1] != target)
-            return -1;
-
-        return left - 1;
+        return hi;
     }
 };

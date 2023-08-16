@@ -30,6 +30,7 @@ public:
     void addNum(int num)
     {
         // add new value to the part with smaller size,
+        // (if they have the same size, add new value to right part)
         // and maintain order: any(LEFT) <= any(RIGHT)
         if (left.size() >= right.size()) {
             left.push(num);

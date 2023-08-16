@@ -11,17 +11,34 @@
  *
  * You must write an algorithm that runs in O(log n) time.
  *
- * 1 <= nums.length <= 1000
- * -2^31 <= nums[i] <= 2^31 - 1
- * nums[i] != nums[i + 1] for all valid i.
+ * ! 1 <= nums.length <= 1000
+ * ! -2^31 <= nums[i] <= 2^31 - 1
+ * ! nums[i] != nums[i + 1] for all valid i.
  */
 
 class Solution
 {
 public:
-    int findPeakElement(const std::vector<int>& nums)
+    int findPeakElement(std::vector<int>& nums) { return approach2(nums); }
+
+private:
+    int approach2(const std::vector<int>& nums)
     {
-        // find any peak, not the global maximum value
+        int lo = 0;
+        int hi = nums.size() - 1;
+        while (lo < hi) {
+            const int mid = hi - (hi - lo) / 2;
+            if (nums[mid] > nums[mid - 1]) {
+                lo = mid;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        return lo;
+    }
+
+    int approach1(const std::vector<int>& nums)
+    {
         int lo = 0;
         int hi = nums.size() - 1;
         while (lo < hi) {
