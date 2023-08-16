@@ -1,3 +1,5 @@
+#include <climits>
+
 /**
  * Given a non-negative integer x, return the square root of x rounded down to the nearest integer.
  * The returned integer should be non-negative as well.
@@ -14,22 +16,20 @@ class Solution
 public:
     int mySqrt(int x)
     {
-        if (x < 2)
-            return x; // the constraint tells us x in [0, INT_MAX]
-
-        int left = 2;
-        int right = x / 2;
-        while (left <= right) {
-            long long mid = left + (right - left) / 2;
-            long long square = mid * mid;
-            if (square == x) {
+        int lo = 0;
+        int hi = INT_MAX;
+        while (lo <= hi) {
+            const long mid = lo + (hi - lo) / 2;
+            const long square = mid * mid;
+            if (square == x)
                 return mid;
-            } else if (square > x) {
-                right = mid - 1;
+
+            if (square > x) {
+                hi = mid - 1;
             } else {
-                left = mid + 1;
+                lo = mid + 1;
             }
-        } // the loop terminated when left = right + 1
-        return right;
+        }
+        return hi; // round down to the nearest integer, it means square < x
     }
 };
