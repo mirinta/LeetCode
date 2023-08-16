@@ -19,16 +19,17 @@ public:
         if (x == 0)
             return 0;
 
+        // -INT_MIN = INT_MAX + 1
         if (n == INT_MIN)
             return myPow(1 / x, INT_MAX) / x;
 
         if (n < 0)
             return myPow(1 / x, -n);
 
-        if (n % 2 == 1)
-            return x * myPow(x, n - 1);
+        if (n % 2 != 0)
+            return myPow(x, n - 1) * x;
 
-        const double subproblem = myPow(x, n / 2);
-        return subproblem * subproblem;
+        const double half = myPow(x, n / 2);
+        return half * half;
     }
 };
