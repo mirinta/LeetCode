@@ -10,12 +10,13 @@ class Solution
 public:
     int rangeBitwiseAnd(int left, int right)
     {
-        //   4 = 0100
-        //   5 = 0101
-        //   6 = 0110
-        //   7 = 0111
-        // [4,7], common prefix is 01 (from high level to low level)
-        // [6,7], common prefix is 11
+        // find common prefix
+        // 4 = 0100
+        // 5 = 0101
+        // 6 = 0110
+        // 7 = 0111
+        // 4~7, common prefix is 01
+        // 6~7, common prefix is 011
         int shift = 0;
         while (left != right) {
             left >>= 1;
