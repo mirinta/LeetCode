@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <array>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -11,67 +10,61 @@
  * An anagram is a word or phrase formed by rearranging the letters of a different word or phrase,
  * typically using all the original letters exactly once.
  *
+ * ! 1 <= strs.length <= 10^4
+ * ! 0 <= strs[i].length <= 100
  * ! strs[i] consists of lowercase English letters.
  */
 
 class Solution
 {
 public:
-    std::vector<std::vector<std::string>> groupAnagrams(const std::vector<std::string>& strs)
+    std::vector<std::vector<std::string>> groupAnagrams(std::vector<std::string>& strs)
     {
-        if (strs.empty())
-            return {};
+        return approach2(strs);
+    }
 
+private:
+    std::vector<std::vector<std::string>> approach2(const std::vector<std::string>& strs)
+    {
+        std::vector<int> freq(26, 0);
+        auto encode = [&freq](const std::string& word) {
+            std::fill(freq.begin(), freq.end(), 0);
+            for (const auto& c : word) {
+                freq[c - 'a']++;
+            }
+            std::string result;
+            for (int i = 0; i < 26; ++i) {
+                if (freq[i] == 0)
+                    continue;
+
+                result.push_back(i + 'a');
+                result.push_back(freq[i]);
+            }
+            return result;
+        };
         std::unordered_map<std::string, std::vector<std::string>> map;
-        for (const auto& str : strs) {
-            std::string key{str};
-            std::sort(key.begin(), key.end());
-            map[key].push_back(str);
+        for (const auto& word : strs) {
+            map[encode(word)].push_back(word);
         }
         std::vector<std::vector<std::string>> result;
-        for (auto& pair : map) {
-            result.push_back(std::move(pair.second));
+        for (auto& [key, anagrams] : map) {
+            result.push_back(std::move(anagrams));
         }
         return result;
     }
 
-    // approach 2: encoding
-    // public:
-    //     vector<vector<string>> groupAnagrams(vector<string>& strs) {
-    //         if (strs.empty())
-    //             return {};
-
-    //         std::unordered_map<std::string, std::vector<std::string>> map;
-    //         for (const auto& s : strs) {
-    //             map[encode(s)].push_back(s);
-    //         }
-    //         std::vector<std::vector<std::string>> result;
-    //         for (auto& pair : map) {
-    //             result.push_back(std::move(pair.second));
-    //         }
-    //         return result;
-    //     }
-
-    // private:
-    //     std::array<int, 26> letters;
-
-    //     std::string encode(const std::string& str) {
-    //         if (str.empty())
-    //             return {};
-
-    //         constexpr char k_a = 'a';
-    //         std::fill(letters.begin(), letters.end(), 0);
-    //         for (const auto& c : str) {
-    //             letters[c - k_a]++;
-    //         }
-    //         std::string result;
-    //         for (size_t i = 0; i < letters.size(); ++i) {
-    //             if (letters[i] == 0)
-    //                 continue;
-
-    //             result.push_back(i + k_a);
-    //             result.append(std::to_string(letters[i]));
-    //         }
-    //         return result;
-    //     }
+    std::vector<std::vector<std::string>> approach1(const std::vector<std::string>& strs)
+    {
+        std::unordered_map<std::string, std::vector<std::string>> map;
+        for (const auto& word : strs) {
+            std::string key(word);
+            std::sort(key.begin(), key.end());
+            map[key].push_back(word);
+        }
+        std::vector<std::vector<std::string>> result;
+        for (auto& [key, anagrams] : map) {
+            result.push_back(std::move(anagrams));
+        }
+        return result;
+    }
 };
