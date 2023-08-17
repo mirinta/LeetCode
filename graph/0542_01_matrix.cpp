@@ -17,13 +17,13 @@
 class Solution
 {
 public:
-    // BFS: time O(MN), space O(MN)
+    // BFS, time O(MN), space O(MN)
     std::vector<std::vector<int>> updateMatrix(std::vector<std::vector<int>>& mat)
     {
         const int m = mat.size();
         const int n = mat[0].size();
+        std::queue<std::pair<int, int>> queue; // <x, y>
         std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
-        std::queue<std::pair<int, int>> queue;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (mat[i][j] == 0) {
@@ -32,7 +32,7 @@ public:
                 }
             }
         }
-        static const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
         std::vector<std::vector<int>> result(m, std::vector<int>(n, 0));
         while (!queue.empty()) {
             const int size = queue.size();
@@ -47,8 +47,8 @@ public:
 
                     if (!visited[i][j] && mat[i][j] == 1) {
                         visited[i][j] = true;
-                        result[i][j] = 1 + result[x][y];
                         queue.push({i, j});
+                        result[i][j] = result[x][y] + 1;
                     }
                 }
             }
