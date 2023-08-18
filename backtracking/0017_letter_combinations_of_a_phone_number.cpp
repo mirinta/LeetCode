@@ -30,24 +30,23 @@ public:
         map['7'] = "pqrs";
         map['8'] = "tuv";
         map['9'] = "wxyz";
+        std::vector<std::string> result;
         std::string combination;
-        backtrack(combination, 0, digits, map);
+        backtrack(result, combination, 0, digits, map);
         return result;
     }
 
 private:
-    std::vector<std::string> result;
-
-    void backtrack(std::string& combination, int currentIndex, const std::string& digits,
-                   const std::unordered_map<char, std::string>& map)
+    void backtrack(std::vector<std::string>& result, std::string& combination, int start,
+                   const std::string& digits, const std::unordered_map<char, std::string>& map)
     {
-        if (combination.size() == digits.size()) {
+        if (start == digits.size()) {
             result.push_back(combination);
             return;
         }
-        for (const auto& letter : map.at(digits[currentIndex])) {
-            combination.push_back(letter);
-            backtrack(combination, currentIndex + 1, digits, map);
+        for (const auto& c : map.at(digits[start])) {
+            combination.push_back(c);
+            backtrack(result, combination, start + 1, digits, map);
             combination.pop_back();
         }
     }
