@@ -19,29 +19,33 @@ struct TreeNode
  *
  * A height-balanced binary tree is a binary tree in which the depth of the two subtrees of every
  * node never differs by more than one.
+ *
+ * ! 1 <= nums.length <= 10^4
+ * ! -10^4 <= nums[i] <= 10^4
+ * ! nums is sorted in a strictly increasing order.
  */
 
 class Solution
 {
 public:
-    TreeNode* sortedArrayToBST(const std::vector<int>& nums)
+    TreeNode* sortedArrayToBST(std::vector<int>& nums)
     {
         if (nums.empty())
             return nullptr;
 
-        return construct(nums, 0, nums.size() - 1);
+        return build(0, nums.size() - 1, nums);
     }
 
 private:
-    TreeNode* construct(const std::vector<int>& nums, int low, int high)
+    TreeNode* build(int lo, int hi, const std::vector<int>& nums)
     {
-        if (low > high)
+        if (lo > hi)
             return nullptr;
 
-        int mid = low + (high - low) / 2;
-        auto* node = new TreeNode(nums[mid]);
-        node->left = construct(nums, low, mid - 1);
-        node->right = construct(nums, mid + 1, high);
-        return node;
+        const int mid = lo + (hi - lo) / 2;
+        auto* root = new TreeNode(nums[mid]);
+        root->left = build(lo, mid - 1, nums);
+        root->right = build(mid + 1, hi, nums);
+        return root;
     }
 };
