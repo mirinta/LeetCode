@@ -1,59 +1,53 @@
 #include <array>
-#include <memory>
 #include <string>
 #include <vector>
 
+struct TrieNode
+{
+    static constexpr int R = 26;
+    std::array<TrieNode*, R> next{nullptr};
+    bool isEnd = false;
+};
+
 class WordDictionary
 {
-    struct TrieNode
-    {
-        static constexpr int R = 26;
-        bool isEnd = false;
-        std::array<std::unique_ptr<TrieNode>, R> next;
-    };
-
 public:
-    WordDictionary() : root(std::make_unique<TrieNode>()) {}
+    WordDictionary() : root(new TrieNode()) {}
 
     void addWord(const std::string& word)
     {
-        auto* node = root.get();
+        auto* node = root;
         for (const auto& c : word) {
             const int index = c - 'a';
             if (!node->next[index]) {
-                node->next[index] = std::make_unique<TrieNode>();
+                node->next[index] = new TrieNode();
             }
-            node = node->next[index].get();
+            node = node->next[index];
         }
         node->isEnd = true;
     }
 
-    bool search(const std::string& word) { return search(word, root.get()); }
+    bool search(const std::string& word) { return dfs(root, 0, word); }
 
 private:
-    bool search(const std::string& word, TrieNode* node)
+    bool dfs(TrieNode* node, int idx, const std::string& word)
     {
-        for (int i = 0; i < word.size(); ++i) {
-            const auto& c = word[i];
-            if (c != kWildCard) {
-                if (!node->next[c - 'a'])
-                    return false;
+        if (idx == word.size())
+            return node->isEnd;
 
-                node = node->next[c - 'a'].get();
-            } else {
-                for (const auto& ptr : node->next) {
-                    if (ptr && search(word.substr(i + 1, word.size()), ptr.get()))
-                        return true;
-                }
-                return false;
-            }
+        if (word[idx] != '.')
+            return node->next[word[idx] - 'a'] ? dfs(node->next[word[idx] - 'a'], idx + 1, word)
+                                               : false;
+
+        for (auto* nextNode : node->next) {
+            if (nextNode && dfs(nextNode, idx + 1, word))
+                return true;
         }
-        return node->isEnd;
+        return false;
     }
 
 private:
-    static constexpr char kWildCard = '.';
-    std::unique_ptr<TrieNode> root;
+    TrieNode* root;
 };
 
 /**

@@ -26,7 +26,7 @@
 struct TrieNode
 {
     static constexpr int R = 26;
-    std::array<TrieNode*, R> next;
+    std::array<TrieNode*, R> next{nullptr};
     bool isEnd = false;
 };
 
