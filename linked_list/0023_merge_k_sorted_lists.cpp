@@ -25,24 +25,27 @@ class Solution
 public:
     ListNode* mergeKLists(std::vector<ListNode*>& lists)
     {
-        ListNode resultVHead{};
-        auto greater = [](ListNode* n1, ListNode* n2) { return n1->val > n2->val; };
-        std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(greater)> queue(greater);
-        for (auto* const head : lists) {
-            if (head) {
-                queue.push(head);
+        if (lists.empty())
+            return nullptr;
+
+        auto greater = [](const auto* node1, const auto* node2) { return node1->val > node2->val; };
+        std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(greater)> pq(greater);
+        for (auto* node : lists) {
+            if (node) {
+                pq.push(node);
             }
         }
-        auto* iter = &resultVHead;
-        while (!queue.empty()) {
-            auto* node = queue.top();
-            iter->next = node;
-            queue.pop();
+        ListNode vHead(-1);
+        auto* i = &vHead;
+        while (!pq.empty()) {
+            auto* node = pq.top();
+            pq.pop();
+            i->next = node;
             if (node && node->next) {
-                queue.push(node->next);
+                pq.push(node->next);
             }
-            iter = iter->next;
+            i = i->next;
         }
-        return resultVHead.next;
+        return vHead.next;
     }
 };

@@ -47,6 +47,9 @@ private:
             return;
         }
         for (int i = current; i <= 9; ++i) {
+            if (target - i < 0)
+                continue;
+
             combination.push_back(i);
             backtrack(result, combination, i + 1, limit, target - i);
             combination.pop_back();

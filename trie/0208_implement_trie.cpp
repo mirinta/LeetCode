@@ -1,5 +1,4 @@
 #include <array>
-#include <memory>
 #include <string>
 
 /**
@@ -27,56 +26,56 @@
 struct TrieNode
 {
     static constexpr int R = 26;
+    std::array<TrieNode*, R> next;
     bool isEnd = false;
-    std::array<std::unique_ptr<TrieNode>, R> next;
 };
 
 class Trie
 {
 public:
-    explicit Trie() : root(std::make_unique<TrieNode>()) {}
+    Trie() : root(new TrieNode()) {}
 
     void insert(const std::string& word)
     {
-        auto* node = root.get();
+        auto* node = root;
         for (const auto& c : word) {
             const int index = c - 'a';
             if (!node->next[index]) {
-                node->next[index] = std::make_unique<TrieNode>();
+                node->next[index] = new TrieNode();
             }
-            node = node->next[index].get();
+            node = node->next[index];
         }
         node->isEnd = true;
     }
 
     bool search(const std::string& word)
     {
-        auto* node = root.get();
+        auto* node = root;
         for (const auto& c : word) {
             const int index = c - 'a';
             if (!node->next[index])
                 return false;
 
-            node = node->next[index].get();
+            node = node->next[index];
         }
         return node->isEnd;
     }
 
     bool startsWith(const std::string& prefix)
     {
-        auto* node = root.get();
+        auto* node = root;
         for (const auto& c : prefix) {
             const int index = c - 'a';
             if (!node->next[index])
                 return false;
 
-            node = node->next[index].get();
+            node = node->next[index];
         }
         return true;
     }
 
 private:
-    std::unique_ptr<TrieNode> root;
+    TrieNode* root;
 };
 
 /**

@@ -18,20 +18,14 @@
 class Solution
 {
 public:
-    bool exist(const std::vector<std::vector<char>>& board, std::string word)
+    bool exist(std::vector<std::vector<char>>& board, std::string word)
     {
-        if (board.empty())
-            return false;
-
-        const auto m = board.size();
-        const auto n = board[0].size();
-        found = false;
-        visited.clear();
-        visited.resize(m, std::vector<bool>(n, false));
-        for (size_t x = 0; x < m; ++x) {
-            for (size_t y = 0; y < n; ++y) {
-                backtrack(x, y, 0, board, word);
-                if (found)
+        const int m = board.size();
+        const int n = board[0].size();
+        Vec2D<bool> visited(m, std::vector<bool>(n, false));
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (!visited[i][j] && backtrack(visited, i, j, 0, word, board))
                     return true;
             }
         }
@@ -39,28 +33,31 @@ public:
     }
 
 private:
-    bool found = false;
-    std::vector<std::vector<bool>> visited;
+    template <typename T>
+    using Vec2D = std::vector<std::vector<T>>;
 
-    void backtrack(int x, int y, int i, const std::vector<std::vector<char>>& board,
-                   const std::string& word)
+    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    bool backtrack(Vec2D<bool>& visited, int x, int y, int idx, const std::string& word,
+                   const Vec2D<char>& board)
     {
-        if (i == word.size()) {
-            found = true;
-            return;
-        }
+        if (idx == word.size())
+            return true;
 
-        if (found || x < 0 || x >= board.size() || y < 0 || y >= board[0].size())
-            return;
+        const int m = board.size();
+        const int n = board[0].size();
+        if (x < 0 || x >= m || y < 0 || y >= n)
+            return false;
 
-        if (visited[x][y] || word[i] != board[x][y])
-            return;
+        if (visited[x][y] || word[idx] != board[x][y])
+            return false;
 
         visited[x][y] = true;
-        backtrack(x - 1, y, i + 1, board, word);
-        backtrack(x + 1, y, i + 1, board, word);
-        backtrack(x, y - 1, i + 1, board, word);
-        backtrack(x, y + 1, i + 1, board, word);
+        for (const auto& [dx, dy] : kDirections) {
+            if (backtrack(visited, x + dx, y + dy, idx + 1, word, board))
+                return true;
+        }
         visited[x][y] = false;
+        return false;
     }
 };
