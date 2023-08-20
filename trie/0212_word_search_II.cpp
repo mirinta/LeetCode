@@ -31,7 +31,7 @@ public:
     std::vector<std::string> findWords(std::vector<std::vector<char>>& board,
                                        std::vector<std::string>& words)
     {
-        root = new TrieNode();
+        auto* root = new TrieNode();
         for (const auto& word : words) {
             auto* node = root;
             for (const auto& c : word) {
@@ -42,10 +42,11 @@ public:
             }
             node->word = word;
         }
+        std::vector<std::string> result;
         for (int i = 0; i < board.size(); ++i) {
             for (int j = 0; j < board[i].size(); ++j) {
                 if (root->next.count(board[i][j])) {
-                    backtrack(i, j, root, board);
+                    backtrack(result, board, root, i, j);
                 }
             }
         }
@@ -53,38 +54,37 @@ public:
     }
 
 private:
-    void backtrack(int i, int j, TrieNode* parent, std::vector<std::vector<char>>& board)
+    const std::vector<std::pair<int, int>> kDirections{{0, -1}, {0, 1}, {1, 0}, {-1, 0}};
+
+    void backtrack(std::vector<std::string>& result, std::vector<std::vector<char>>& board,
+                   TrieNode* parent, int x, int y)
     {
-        const char c = board[i][j];
+        const auto c = board[x][y];
         if (!parent || !parent->next.count(c))
             return;
 
         auto* node = parent->next[c];
         if (!node->word.empty()) {
-            result.push_back(node->word);
+            result.push_back(std::move(node->word));
             node->word.clear();
+        }
+        if (node->next.empty()) {
+            parent->next.erase(c);
+            return;
         }
         const int m = board.size();
         const int n = board[0].size();
-        board[i][j] = '#';
+        board[x][y] = '#';
         for (const auto& [dx, dy] : kDirections) {
-            const int x = i + dx;
-            const int y = j + dy;
-            if (x < 0 || x >= m || y < 0 || y >= n)
+            const int i = x + dx;
+            const int j = y + dy;
+            if (i < 0 || i >= m || j < 0 || j >= n)
                 continue;
 
-            if (node->next.count(board[x][y])) {
-                backtrack(x, y, node, board);
+            if (node->next.count(board[i][j])) {
+                backtrack(result, board, node, i, j);
             }
         }
-        board[i][j] = c;
-        if (node->next.empty()) {
-            parent->next.erase(c);
-        }
+        board[x][y] = c;
     }
-
-private:
-    TrieNode* root;
-    std::vector<std::string> result;
-    const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 };
