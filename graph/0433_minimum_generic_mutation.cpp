@@ -31,38 +31,36 @@ class Solution
 public:
     int minMutation(std::string startGene, std::string endGene, std::vector<std::string>& bank)
     {
-        std::unordered_set<std::string> validGenes(bank.begin(), bank.end());
-        if (!validGenes.count(endGene))
+        const std::string kChoices{"ACGT"};
+        std::unordered_set<std::string> geneBank(bank.begin(), bank.end());
+        if (!geneBank.count(endGene))
             return -1;
 
         if (startGene == endGene)
             return 0;
 
-        std::unordered_set<std::string> visited;
-        visited.insert(startGene);
         std::queue<std::string> queue;
         queue.push(startGene);
-        const std::string kChoices{"ACGT"};
         int steps = 0;
         while (!queue.empty()) {
             const int size = queue.size();
             for (int k = 0; k < size; ++k) {
-                const auto gene = queue.front();
+                const auto current = queue.front();
                 queue.pop();
-                if (gene == endGene)
+                if (current == endGene)
                     return steps;
 
-                for (int i = 0; i < gene.size(); ++i) {
-                    for (const auto& choice : kChoices) {
-                        if (gene[i] == choice)
+                for (int i = 0; i < current.size(); ++i) {
+                    for (const auto& c : kChoices) {
+                        if (c == current[i])
                             continue;
 
-                        std::string mutation = gene;
-                        mutation[i] = choice;
-                        if (visited.count(mutation) || !validGenes.count(mutation))
+                        std::string mutation(current);
+                        mutation[i] = c;
+                        if (!geneBank.count(mutation))
                             continue;
 
-                        visited.insert(mutation);
+                        geneBank.erase(mutation);
                         queue.push(std::move(mutation));
                     }
                 }
