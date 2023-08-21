@@ -18,6 +18,9 @@ struct TreeNode
  * different nodes in the tree.
  *
  * ! This question is the same as 783.
+ *
+ * ! The number of nodes in the tree is in the range [2, 10^4].
+ * ! 0 <= Node.val <= 10^5
  */
 
 class Solution
@@ -26,29 +29,25 @@ public:
     int getMinimumDifference(TreeNode* root)
     {
         std::vector<int> inorder;
-        traverse(root, inorder);
-        if (inorder.empty())
-            return -1;
-
-        if (inorder.size() == 1)
-            return inorder.front();
+        traverse(inorder, root);
+        if (inorder.size() < 2)
+            return INT_MIN;
 
         int result = INT_MAX;
-        for (size_t i = 1; i < inorder.size(); ++i) {
+        for (int i = 1; i < inorder.size(); ++i) {
             result = std::min(result, inorder[i] - inorder[i - 1]);
         }
         return result;
     }
 
 private:
-    // the inorder traversal of a BST is sorted in ascending order
-    void traverse(TreeNode* node, std::vector<int>& inorder)
+    void traverse(std::vector<int>& inorder, TreeNode* node)
     {
         if (!node)
             return;
 
-        traverse(node->left, inorder);
+        traverse(inorder, node->left);
         inorder.push_back(node->val);
-        traverse(node->right, inorder);
+        traverse(inorder, node->right);
     }
 };
