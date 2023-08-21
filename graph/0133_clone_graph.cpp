@@ -60,7 +60,8 @@ public:
         if (!node)
             return nullptr;
 
-        std::unordered_map<Node*, Node*> map; // original node to copied node
+        // original node to copied node
+        std::unordered_map<Node*, Node*> map; 
         dfs(map, node);
         return map[node];
     }
