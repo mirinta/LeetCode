@@ -30,39 +30,37 @@ class Solution
 public:
     int ladderLength(std::string beginWord, std::string endWord, std::vector<std::string>& wordList)
     {
-        std::unordered_set<std::string> validWords(wordList.begin(), wordList.end());
-        if (!validWords.count(endWord))
+        std::unordered_set<std::string> dictionary(wordList.begin(), wordList.end());
+        if (!dictionary.count(endWord))
             return 0;
 
-        std::unordered_set<std::string> visited;
-        visited.insert(beginWord);
         std::queue<std::string> queue;
         queue.push(beginWord);
-        int result = 0;
+        int count = 1; // the number of words along the path
         while (!queue.empty()) {
             const int size = queue.size();
             for (int k = 0; k < size; ++k) {
                 const auto word = queue.front();
                 queue.pop();
                 if (word == endWord)
-                    return result + 1;
+                    return count;
 
                 for (int i = 0; i < word.size(); ++i) {
                     for (char c = 'a'; c <= 'z'; ++c) {
                         if (c == word[i])
                             continue;
 
-                        std::string transform = word;
-                        transform[i] = c;
-                        if (visited.count(transform) || !validWords.count(transform))
+                        std::string transformed = word;
+                        transformed[i] = c;
+                        if (!dictionary.count(transformed))
                             continue;
 
-                        visited.insert(transform);
-                        queue.push(std::move(transform));
+                        dictionary.erase(transformed);
+                        queue.push(std::move(transformed));
                     }
                 }
             }
-            result++;
+            count++;
         }
         return 0;
     }
