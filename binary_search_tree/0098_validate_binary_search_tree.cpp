@@ -42,18 +42,18 @@ private:
         return validate(root, nullptr, nullptr);
     }
 
-    bool validate(TreeNode* root, TreeNode* minNode, TreeNode* maxNode)
+    bool validate(TreeNode* current, TreeNode* min, TreeNode* max)
     {
-        if (!root)
+        if (!current)
             return true;
 
-        if (minNode && minNode->val >= root->val)
+        if (min && min->val >= current->val)
             return false;
 
-        if (maxNode && maxNode->val <= root->val)
+        if (max && max->val <= current->val)
             return false;
 
-        return validate(root->left, minNode, root) && validate(root->right, root, maxNode);
+        return validate(current->left, min, current) && validate(current->right, current, max);
     }
 
     bool approach1(TreeNode* root)
@@ -63,9 +63,6 @@ private:
 
         std::vector<int> inorder;
         traverse(inorder, root);
-        if (inorder.size() == 1)
-            return true;
-
         for (int i = 1; i < inorder.size(); ++i) {
             if (inorder[i] <= inorder[i - 1])
                 return false;
