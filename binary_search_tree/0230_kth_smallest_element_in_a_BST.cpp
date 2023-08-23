@@ -1,3 +1,5 @@
+#include <stack>
+
 /**
  Definition for a binary tree node.
  */
@@ -17,33 +19,54 @@ struct TreeNode
  *
  * ! The number of nodes in the tree is "n".
  * ! 1 <= k <= n
+ * ! 0 <= Node.val <= 10^4
  */
 
 class Solution
 {
 public:
-    int kthSmallest(TreeNode* root, int k)
+    int kthSmallest(TreeNode* root, int k) { return approach1(root, k); }
+
+private:
+    // iteration
+    int approach2(TreeNode* root, int k)
     {
-        traverse(root, k);
+        std::stack<TreeNode*> stack;
+        auto* node = root;
+        while (node || !stack.empty()) {
+            while (node) {
+                stack.push(node);
+                node = node->left;
+            }
+            node = stack.top();
+            stack.pop();
+            if (--k == 0)
+                return node->val;
+
+            node = node->right;
+        }
+        return -1;
+    }
+
+    // recursion
+    int approach1(TreeNode* root, int k)
+    {
+        int result = -1;
+        int count = 0;
+        traverse(result, count, root, k);
         return result;
     }
 
-private:
-    int rank = 0;
-    int result = 0;
-
-    void traverse(TreeNode* node, int k)
+    void traverse(int& result, int& count, TreeNode* node, int k)
     {
         if (!node)
             return;
 
-        // BST: value of left node < node's value
-        traverse(node->left, k);
-        // here, we have the smallest value of the current subtree
-        if (++rank == k) {
+        traverse(result, count, node->left, k);
+        if (++count == k) {
             result = node->val;
             return;
         }
-        traverse(node->right, k);
+        traverse(result, count, node->right, k);
     }
 };
