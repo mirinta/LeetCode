@@ -15,31 +15,32 @@ struct TreeNode
 };
 
 /**
- * Given the "root" of a binary tree, return the average value of the nodes on each level in the
- * from of an array. Answers within 10^-5 of the actual answer will be accepted.
+ * Given the root of a binary tree, return the zigzag level order traversal of its nodes' values.
+ * (i.e., from left to right, then right to left for the next level and alternate between).
  *
- * ! The number of nodes in the tree is in the range [1, 10^4].
- * ! -2^31 <= Node.val <= 2^31 - 1
+ * ! The number of nodes in the tree is in the range [0, 2000].
+ * ! -100 <= Node.val <= 100
  */
 
 class Solution
 {
 public:
-    std::vector<double> averageOfLevels(TreeNode* root)
+    std::vector<std::vector<int>> zigzagLevelOrder(TreeNode* root)
     {
         if (!root)
             return {};
 
-        std::vector<double> result;
+        std::vector<std::vector<int>> result;
         std::queue<TreeNode*> queue;
         queue.push(root);
+        bool reverse = false;
         while (!queue.empty()) {
-            const int size = queue.size();
-            double sum = 0;
-            for (int k = 0; k < size; ++k) {
+            const int n = queue.size();
+            std::vector<int> level(n, 0);
+            for (int i = reverse ? n - 1 : 0; reverse ? i >= 0 : i < n; reverse ? --i : ++i) {
                 auto* node = queue.front();
                 queue.pop();
-                sum += node->val;
+                level[i] = node->val;
                 if (node->left) {
                     queue.push(node->left);
                 }
@@ -47,7 +48,8 @@ public:
                     queue.push(node->right);
                 }
             }
-            result.push_back(sum / size);
+            result.push_back(std::move(level));
+            reverse = !reverse;
         }
         return result;
     }

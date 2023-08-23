@@ -25,27 +25,35 @@ struct TreeNode
 class Solution
 {
 public:
-    std::vector<int> rightSideView(TreeNode* root)
+    std::vector<int> rightSideView(TreeNode* root) { return approach2(root); }
+
+private:
+    std::vector<int> approach2(TreeNode* root)
     {
         if (!root)
             return {};
 
         std::vector<int> result;
-        traverse(result, 0, root);
+        dfs(result, 0, root);
         return result;
     }
 
-private:
-    void traverse(std::vector<int>& result, int level, TreeNode* node)
+    void dfs(std::vector<int>& result, int level, TreeNode* node)
     {
         if (!node)
             return;
 
+        /**   1 <= level 0
+         *    / \
+         *   2   3 <= level 1
+         *    \   \
+         *     5   4 <= level 2
+         */
         if (level == result.size()) {
             result.push_back(node->val);
         }
-        traverse(result, level + 1, node->right);
-        traverse(result, level + 1, node->left);
+        dfs(result, level + 1, node->right);
+        dfs(result, level + 1, node->left);
     }
 
     // BFS

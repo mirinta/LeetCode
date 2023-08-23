@@ -31,9 +31,33 @@ struct TreeNode
 class Solution
 {
 public:
-    bool isValidBST(TreeNode* root) { return approach1(root); }
+    bool isValidBST(TreeNode* root) { return approach3(root); }
 
 private:
+    bool approach3(TreeNode* root)
+    {
+        if (!root)
+            return false;
+
+        TreeNode* previous = nullptr;
+        return check(root, &previous);
+    }
+
+    bool check(TreeNode* current, TreeNode** previous)
+    {
+        if (!current)
+            return true;
+
+        if (!check(current->left, previous))
+            return false;
+
+        if (*previous && current->val <= (*previous)->val)
+            return false;
+
+        *previous = current;
+        return check(current->right, previous);
+    }
+
     bool approach2(TreeNode* root)
     {
         if (!root)
