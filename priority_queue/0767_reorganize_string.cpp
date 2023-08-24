@@ -19,10 +19,12 @@ public:
     std::string reorganizeString(std::string s)
     {
         // for any character x,
-        // if freq[x] > N/2, then there's no way to reorganize the given string
+        // if freq[x] > (N+1)/2, then there's no way to reorganize the given string
         // - N is the length of the given string
-        // - if N is odd, say s = aab, freq[x] < (N+1)/2
-        // - if N is even, say s = aabb, freq[x] < N/2 = (N+1)/2
+        // - if N is odd, say s = aab, freq[a]=2 <= (N+1)/2, OK
+        // - if N is odd, say s = aaa, freq[a]=3 > (N+1)/2, NO SOLUTION
+        // - if N is even, say s = aabb, freq[a]=2 <= (N+1)/2, OK
+        // - if N is even, say s = aaab, freq[a]=3 > (N+1)/2, NO SOLUTION
         std::unordered_map<char, int> map;
         for (const auto& c : s) {
             map[c]++;
