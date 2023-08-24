@@ -34,7 +34,7 @@ public:
             return p1.second == p2.second ? p1.first > p2.first : p1.second < p2.second;
         };
         // sort by frequency in decreasing order
-        // if two characters have the same frequency, sort them in increasing order
+        // if two characters have the same frequency, sort by letter in increasing order
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator);
         for (auto& pair : map) {
             if (pair.second > (s.size() + 1) / 2)
