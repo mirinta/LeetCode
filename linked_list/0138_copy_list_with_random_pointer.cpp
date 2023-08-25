@@ -43,13 +43,17 @@ public:
  *
  * Your code will only be given the head of the original linked list.
  *
+ * ! 0 <= n <= 1000
+ * ! -10^4 <= Node.val <= 10^4
  * ! Node.random is null or is pointing to some node in the linked list.
  */
 
 class Solution
 {
 public:
-    Node* copyRandomList(Node* head)
+    Node* copyRandomList(Node* head) { return approach2(head); }
+
+    Node* approach2(Node* head)
     {
         if (!head)
             return nullptr;
@@ -80,8 +84,7 @@ public:
         return vHead.next;
     }
 
-    // approach 1: hash map
-    Node* copyRandomList_v1(Node* head)
+    Node* approach1(Node* head)
     {
         if (!head)
             return nullptr;
@@ -90,8 +93,8 @@ public:
         std::unordered_map<Node*, Node*> map; // origin node to copied node
         for (auto i = head, j = &vHead; i; i = i->next, j = j->next) {
             // initialization of i and j, we have to use auto, not auto*
-            // because auto* i = head deduces auto as Node, and makes Node j = &vHead a compile
-            // error
+            // because auto* i = head deduces auto as Node,
+            // and makes Node j = &vHead a compile error
             auto* copy = new Node(i->val);
             j->next = copy;
             map[i] = copy;
