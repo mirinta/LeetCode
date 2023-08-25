@@ -31,11 +31,11 @@ public:
     }
 
 private:
-    // 1D-DP, time O(MN), space O(N)
+    // DP with space optimization, time O(MN), space O(N)
     bool approach2(const std::string& s1, const std::string& s2, const std::string& s3)
     {
         if (s1.empty() || s2.empty())
-            return s2 == s3 || s1 == s3;
+            return s1.empty() ? s3 == s2 : s3 == s1;
 
         const int m = s1.size();
         const int n = s2.size();
@@ -43,44 +43,45 @@ private:
             return false;
 
         std::vector<bool> dp(n + 1, false);
-        std::vector<bool> iMinus1(n + 1, false);
-        iMinus1[0] = true;
+        dp[0] = true;
         for (int j = 1; j <= n; ++j) {
-            iMinus1[j] = iMinus1[j - 1] && (s2[j - 1] == s3[j - 1]);
+            dp[j] = dp[j - 1] && (s2[j - 1] == s3[j - 1]);
         }
         for (int i = 1; i <= m; ++i) {
-            dp[0] = iMinus1[0] && (s1[i - 1] == s3[i - 1]);
+            dp[0] = dp[0] && (s1[i - 1] == s3[i - 1]);
             for (int j = 1; j <= n; ++j) {
-                if ((s3[i + j - 1] == s1[i - 1]) && iMinus1[j]) {
+                const auto& c1 = s1[i - 1];
+                const auto& c2 = s2[j - 1];
+                const auto& c3 = s3[i + j - 1];
+                if (c1 == c3 && dp[j]) {
                     dp[j] = true;
-                } else if ((s3[i + j - 1] == s2[j - 1]) && dp[j - 1]) {
+                } else if (c2 == c3 && dp[j - 1]) {
                     dp[j] = true;
                 } else {
                     dp[j] = false;
                 }
             }
-            iMinus1 = dp;
         }
         return dp[n];
     }
 
-    // 2D-DP, time O(MN), space O(MN)
+    // DP, time O(MN), space (MN)
     bool approach1(const std::string& s1, const std::string& s2, const std::string& s3)
     {
         if (s1.empty() || s2.empty())
-            return s2 == s3 || s1 == s3;
+            return s1.empty() ? s3 == s2 : s3 == s1;
 
         const int m = s1.size();
         const int n = s2.size();
         if (m + n != s3.size())
             return false;
 
-        // dp[i][j] = s3[0:i+j) can be formed by an interleaving of s1[0:i) and s2[0:j)
+        // dp[i][j] = whether s3[0:i+j) is formed by an interleaving of s1[0:i) and s2[0:j)
         std::vector<std::vector<bool>> dp(m + 1, std::vector<bool>(n + 1, false));
-        // base case:
+        // base cases:
         // - dp[0][0] = true
-        // - dp[i][0] = true if s1[0:i] == s3[0:i]
-        // - dp[0][j] = true if s2[0:j] == s3[0:j]
+        // - dp[i][0] = true if s1[0:i) = s3[0:i), s2 is empty
+        // - dp[0][j] = true if s2[0:j) = s3[0:j), s1 is empty
         dp[0][0] = true;
         for (int i = 1; i <= m; ++i) {
             dp[i][0] = dp[i - 1][0] && (s1[i - 1] == s3[i - 1]);
@@ -90,12 +91,12 @@ private:
         }
         for (int i = 1; i <= m; ++i) {
             for (int j = 1; j <= n; ++j) {
-                // X X X i
-                // X X j
-                // X X X X X i+j
-                if ((s3[i + j - 1] == s1[i - 1]) && dp[i - 1][j]) {
+                const auto& c1 = s1[i - 1];
+                const auto& c2 = s2[j - 1];
+                const auto& c3 = s3[i + j - 1];
+                if (c1 == c3 && dp[i - 1][j]) {
                     dp[i][j] = true;
-                } else if ((s3[i + j - 1] == s2[j - 1]) && dp[i][j - 1]) {
+                } else if (c2 == c3 && dp[i][j - 1]) {
                     dp[i][j] = true;
                 } else {
                     dp[i][j] = false;
