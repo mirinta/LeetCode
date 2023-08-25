@@ -1,3 +1,5 @@
+#include <climits>
+
 /**
  * Definition for singly-linked list.
  */
@@ -17,52 +19,20 @@ struct ListNode
  * the first two lists.
  *
  * Return the head of the merged linked list.
+ *
+ * ! The number of nodes in both lists is in the range [0, 50].
+ * ! -100 <= Node.val <= 100
+ * ! Both list1 and list2 are sorted in non-decreasing order.
  */
 
 class Solution
 {
 public:
-    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2)
-    {
-        if (!list1)
-            return list2;
-
-        if (!list2)
-            return list1;
-
-        ListNode vHead(-1);
-        auto* current = &vHead;
-        auto* p1 = list1;
-        auto* p2 = list2;
-        while (p1 || p2) {
-            if (!p1) {
-                current->next = p2;
-                current = current->next;
-                p2 = p2->next;
-                continue;
-            }
-            if (!p2) {
-                current->next = p1;
-                current = current->next;
-                p1 = p1->next;
-                continue;
-            }
-            if (p1->val < p2->val) {
-                current->next = p1;
-                p1 = p1->next;
-            } else {
-                current->next = p2;
-                p2 = p2->next;
-            }
-            current = current->next;
-        }
-        return vHead.next;
-    }
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) { return approach1(list1, list2); }
 
 private:
     ListNode* approach2(ListNode* list1, ListNode* list2)
     {
-        // recursion, the original inputs are changed:
         if (!list1)
             return list2;
 
@@ -70,10 +40,34 @@ private:
             return list1;
 
         if (list1->val < list2->val) {
-            list1->next = mergeTwoLists(list1->next, list2);
+            list1->next = approach2(list1->next, list2);
             return list1;
         }
-        list2->next = mergeTwoLists(list1, list2->next);
+        list2->next = approach2(list1, list2->next);
         return list2;
+    }
+
+    ListNode* approach1(ListNode* list1, ListNode* list2)
+    {
+        if (!list1 || !list2)
+            return list1 ? list1 : list2;
+
+        ListNode vHead(-1);
+        auto* k = &vHead;
+        auto* i = list1;
+        auto* j = list2;
+        while (i || j) {
+            const int val1 = i ? i->val : INT_MAX;
+            const int val2 = j ? j->val : INT_MAX;
+            if (val1 < val2) {
+                k->next = i;
+                i = i->next;
+            } else {
+                k->next = j;
+                j = j->next;
+            }
+            k = k->next;
+        }
+        return vHead.next;
     }
 };
