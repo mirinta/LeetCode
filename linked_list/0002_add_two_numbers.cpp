@@ -27,31 +27,28 @@ class Solution
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2)
     {
-        if (!l1 || !l2)
-            return nullptr;
-
-        auto* iter1 = l1;
-        auto* iter2 = l2;
-        int carry = 0;
         ListNode vHead(-1);
-        auto* iter = &vHead;
-        while (iter1 || iter2) {
-            iter->next = compute(carry, iter1 ? iter1->val : 0, iter2 ? iter2->val : 0);
-            iter1 = iter1 ? iter1->next : nullptr;
-            iter2 = iter2 ? iter2->next : nullptr;
-            iter = iter->next;
+        auto* i = l1;
+        auto* j = l2;
+        auto* k = &vHead;
+        int carry = 0;
+        while (i || j) {
+            const int val1 = i ? i->val : 0;
+            const int val2 = j ? j->val : 0;
+            const int sum = val1 + val2 + carry;
+            k->next = new ListNode(sum % 10);
+            carry = sum / 10;
+            k = k->next;
+            if (i) {
+                i = i->next;
+            }
+            if (j) {
+                j = j->next;
+            }
         }
         if (carry > 0) {
-            iter->next = new ListNode(carry);
+            k->next = new ListNode(carry);
         }
         return vHead.next;
-    }
-
-private:
-    ListNode* compute(int& carry, int v1, int v2)
-    {
-        const auto sum = v1 + v2 + carry;
-        carry = sum / 10;
-        return new ListNode(sum % 10);
     }
 };
