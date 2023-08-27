@@ -17,84 +17,62 @@ struct TreeNode
 /**
  * Given the "root" of a binary tree, check whether it is a mirror of itself (i.e., symmetric around
  * its center).
+ *
+ * ! The number of nodes in the tree is in the range [1, 1000].
+ * ! -100 <= Node.val <= 100
  */
 
 class Solution
 {
 public:
-    bool isSymmetric(TreeNode* root)
-    {
-        if (!root)
-            return false;
-
-        return approach3(root->left, root->right);
-    }
+    bool isSymmetric(TreeNode* root) { return approach2(root); }
 
 private:
-    bool approach3(TreeNode* root1, TreeNode* root2)
+    // DFS
+    bool approach2(TreeNode* root) { return dfs(root->left, root->right); }
+
+    bool dfs(TreeNode* node1, TreeNode* node2)
     {
-        if (!root1 && !root2)
+        if (!node1 && !node2)
             return true;
-
-        if (!root1 || !root2)
-            return false;
-
-        return (root1->val == root2->val) && approach3(root1->left, root2->right) &&
-               approach3(root1->right, root2->left);
-    }
-
-    bool approach2(TreeNode* root)
-    {
-        if (!root)
-            return false;
-
-        return compare(root->left, root->right);
-    }
-
-    bool compare(TreeNode* node1, TreeNode* node2)
-    {
-        if (!node1 && node2)
-            return false;
 
         if (node1 && !node2)
             return false;
 
-        if (!node1 && !node2)
-            return true;
+        if (!node1 && node2)
+            return false;
 
         if (node1->val != node2->val)
             return false;
 
-        return compare(node1->left, node2->right) && compare(node1->right, node2->left);
+        return dfs(node1->left, node2->right) && dfs(node1->right, node2->left);
     }
 
+    // BFS
     bool approach1(TreeNode* root)
     {
-        if (!root)
-            return false;
-
         std::queue<TreeNode*> queue;
         queue.push(root);
+        std::vector<TreeNode*> level;
         while (!queue.empty()) {
-            std::vector<TreeNode*> nodes(queue.size(), nullptr);
-            for (auto& node : nodes) {
-                node = queue.front();
+            level.resize(queue.size());
+            for (auto& val : level) {
+                auto* node = queue.front();
                 queue.pop();
+                val = node;
                 if (node) {
                     queue.push(node->left);
                     queue.push(node->right);
                 }
             }
-            for (size_t i = 0, j = nodes.size() - 1; i < j; ++i, --j) {
-                const auto* const left = nodes[i];
-                const auto* const right = nodes[j];
-                if (left && !right)
+            for (int i = 0, j = level.size() - 1; i <= j; ++i, --j) {
+                if (level[i] && !level[j])
                     return false;
 
-                if (!left && right)
+                if (!level[i] && level[j])
                     return false;
 
-                if (left && right && left->val != right->val)
+                if (level[i] && level[j] && level[i]->val != level[j]->val)
                     return false;
             }
         }

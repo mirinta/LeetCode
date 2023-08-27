@@ -18,6 +18,10 @@ struct ListNode
  * number of nodes is not a multiple of "k" then left-out nodes, in the end, should remain as it is.
  *
  * You may not alter the values in the list's nodes, only nodes themselves may be changed.
+ *
+ * ! The number of nodes in the list is n.
+ * ! 1 <= k <= n <= 5000
+ * ! 0 <= Node.val <= 1000
  */
 
 class Solution
@@ -26,34 +30,33 @@ public:
     ListNode* reverseKGroup(ListNode* head, int k)
     {
         if (!head)
-            return head;
+            return nullptr;
 
-        auto* a = head;
-        auto* b = head;
+        auto* newTail = head;
+        auto* afterNewTail = head;
         for (int i = 0; i < k; ++i) {
-            if (!b)
-                return head;
+            if (!afterNewTail)
+                return head; // not enough nodes, remain as it is
 
-            b = b->next;
+            afterNewTail = afterNewTail->next;
         }
-        auto* newHead = reverseBetween(a, b);
-        a->next = reverseKGroup(b, k);
+        auto* newHead = reverseBetween(head, afterNewTail);
+        newTail->next = reverseKGroup(afterNewTail, k);
         return newHead;
     }
 
 private:
-    // reverse nodes in [a, b)
-    ListNode* reverseBetween(ListNode* a, ListNode* b)
+    // ...->[1->...->k]->k+1 => ...->[k->...->1]->k+1
+    // reverse nodes in range [node1,nodeK+1)
+    ListNode* reverseBetween(ListNode* node1, ListNode* nodeKPlus1)
     {
-        // from ->(Na->...->Nb-1)->Nb to <-Na<-...<-Nb-1 Nb
         ListNode* prev = nullptr;
-        auto* iter = a;
-        auto* next = a;
-        while (iter != b) {
-            next = iter->next;
-            iter->next = prev;
-            prev = iter;
-            iter = next;
+        auto* current = node1;
+        while (current != nodeKPlus1) {
+            auto* next = current->next;
+            current->next = prev;
+            prev = current;
+            current = next;
         }
         return prev;
     }

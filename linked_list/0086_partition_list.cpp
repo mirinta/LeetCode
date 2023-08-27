@@ -15,28 +15,37 @@ struct ListNode
  * come before nodes greater than or equal to "x".
  *
  * You should preserve the original relative order of the nodes in each of the two partitions.
+ *
+ * ! The number of nodes in the list is in the range [0, 200].
+ * ! -100 <= Node.val <= 100
+ * ! -200 <= x <= 200
  */
 class Solution
 {
 public:
-    // add top-level const to "head"
-    ListNode* partition(ListNode* const head, int x)
+    ListNode* partition(ListNode* head, int x)
     {
-        ListNode leVHead{};
-        ListNode geVHead{};
-        auto* iterLe = &leVHead;
-        auto* iterGe = &geVHead;
-        for (auto* iter = head; iter; iter = iter->next) {
-            if (iter->val < x) {
-                iterLe->next = iter;
-                iterLe = iterLe->next;
+        if (!head)
+            return nullptr;
+
+        ListNode vHeadLt(-1); // less than x
+        auto* lt = &vHeadLt;
+        ListNode vHeadGe(-1); // greater or equal to x
+        auto* ge = &vHeadGe;
+        auto* current = head;
+        while (current) {
+            auto* next = current->next;
+            current->next = nullptr;
+            if (current->val < x) {
+                lt->next = current;
+                lt = lt->next;
             } else {
-                iterGe->next = iter;
-                iterGe = iterGe->next;
+                ge->next = current;
+                ge = ge->next;
             }
+            current = next;
         }
-        iterLe->next = geVHead.next;
-        iterGe->next = nullptr;
-        return leVHead.next;
+        lt->next = vHeadGe.next;
+        return vHeadLt.next;
     }
 };

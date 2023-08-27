@@ -13,6 +13,11 @@ struct ListNode
 /**
  * Given the "head" of a linked list, remove the "nth" node from the end of the list and return its
  * "head".
+ *
+ * ! The number of nodes in the list is sz.
+ * ! 1 <= sz <= 30
+ * ! 0 <= Node.val <= 100
+ * ! 1 <= n <= sz
  */
 
 class Solution
@@ -20,32 +25,30 @@ class Solution
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n)
     {
-        // get the (n+1)th node from the end, say it is x.
-        // then x->next = x->next->next, problem solved.
-        ListNode resultVHead{-1, head};
-        auto* prevNode = getKthNodeFromEnd(&resultVHead, n + 1);
-        prevNode->next = prevNode->next->next;
-        return resultVHead.next;
+        if (!head)
+            return nullptr;
+
+        ListNode vHead(-1);
+        vHead.next = head;
+        auto* prev = getKthNodeFromEnd(&vHead, n + 1);
+        prev->next = prev->next->next;
+        return vHead.next;
     }
 
 private:
     ListNode* getKthNodeFromEnd(ListNode* head, int k)
     {
-        // Suppose length of the list is N,
-        // then index of the kth node from end is N-k.
-        // Let iter1 move from 0 to k-1, i.e. move k nodes from start.
-        // For iter1, there are (N-1)-(k-1)+1=N-k+1 nodes to move to the end.
-        // Put iter2 at 0 and move with iter1 at the same time,
-        // when iter1 reaches the end, iter2 is at index (N-k+1)-1=N-k.
-        auto* iter1 = head;
+        // 0->1->...->n-k->n-k+1->...->n-1->NULL
+        // |<----n-k--->|  |<-------n-k------->|
+        auto* fast = head;
         for (int i = 0; i < k; ++i) {
-            iter1 = iter1->next; // according to the constraints, 1<=k<=N
+            fast = fast->next;
         }
-        auto* iter2 = head;
-        while (iter1) {
-            iter1 = iter1->next;
-            iter2 = iter2->next;
+        auto* slow = head;
+        while (fast) {
+            fast = fast->next;
+            slow = slow->next;
         }
-        return iter2;
+        return slow;
     }
 };
