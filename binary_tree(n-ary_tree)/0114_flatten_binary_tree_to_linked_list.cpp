@@ -18,6 +18,9 @@ struct TreeNode
  * to the next node in the list and the "left" child pointer is always nullptr.
  *
  * - The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+ *
+ * ! The number of nodes in the tree is in the range [0, 2000].
+ * ! -100 <= Node.val <= 100
  */
 
 class Solution

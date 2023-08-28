@@ -19,44 +19,64 @@ struct TreeNode
  * binary tree and "inorder" is the inorder traversal of the same tree, construct and return the
  * binary tree.
  *
- * ! "preorder" and "inorder" consist of unique values.
+ * ! 1 <= preorder.length <= 3000
+ * ! inorder.length == preorder.length
+ * ! -3000 <= preorder[i], inorder[i] <= 3000
+ * ! preorder and inorder consist of unique values.
+ * ! Each value of inorder also appears in preorder.
+ * ! preorder is guaranteed to be the preorder traversal of the tree.
+ * ! inorder is guaranteed to be the inorder traversal of the tree.
  */
 
 class Solution
 {
 public:
-    TreeNode* buildTree(const std::vector<int>& preorder, const std::vector<int>& inorder)
+    TreeNode* buildTree(std::vector<int>& preorder, std::vector<int>& inorder)
     {
         if (preorder.size() != inorder.size() || preorder.empty())
             return nullptr;
 
-        for (size_t i = 0; i < inorder.size(); ++i) {
-            valToIdx[inorder[i]] = i;
+        /**
+         *        3
+         *     /     \
+         *    9       8
+         *   / \     / \
+         *  1   5   6   7
+         * / \ / \ / \ / \
+         *
+         *    index: 0  1  2  3  4  5  6
+         * preorder: 3  9  1  5  8  6  7
+         *           ^  |LEFT |  |RIGHT|
+         *
+         *    index: 0  1  2  3  4  5  6
+         *  inorder: 1  9  5  3  6  8  7
+         *           |LEFT |  ^  |RIGHT|
+         */
+        const int n = preorder.size();
+        map.clear();
+        for (int i = 0; i < n; ++i) {
+            map[inorder[i]] = i;
         }
-        return build(preorder, 0, preorder.size() - 1, inorder, 0, inorder.size() - 1);
+        return build(preorder, 0, n - 1, inorder, 0, n - 1);
     }
 
 private:
-    std::unordered_map<int, int> valToIdx; // value = index of the "inorder" array
+    std::unordered_map<int, int> map; // node value to index of "inorder"
+
     TreeNode* build(const std::vector<int>& preorder, int preStart, int preEnd,
                     const std::vector<int>& inorder, int inStart, int inEnd)
     {
-        // Example:
-        //    index = [0, 1,  2,  3, 4]
-        // preorder = [3, 9, 20, 15, 7]
-        //  inorder = [9, 3, 15, 20, 7]
         if (preStart > preEnd)
             return nullptr;
 
-        const int rootVal = preorder[preStart]; // suppose the value is 3
-        const int index = valToIdx[rootVal];    // the index of current root node in "inorder"
-        const int nodes = index - inStart;      // #nodes of the left subtree
-        // construct the current node
-        auto* root = new TreeNode(rootVal);
-        // to construct the left side, we need preorder = [9], inorder = [9]
-        root->left = build(preorder, preStart + 1, preStart + nodes, inorder, inStart, index - 1);
-        // to construct the right side, we need preorder = [20, 15, 7], inorder = [15, 20, 7]
-        root->right = build(preorder, preStart + nodes + 1, preEnd, inorder, index + 1, inEnd);
+        const int rootValue = preorder[preStart];
+        const int index = map[rootValue]; // index of the root node in "inorder"
+        const int leftSubtreeNodes = index - inStart;
+        auto* root = new TreeNode(rootValue);
+        root->left =
+            build(preorder, preStart + 1, preStart + leftSubtreeNodes, inorder, inStart, index - 1);
+        root->right =
+            build(preorder, preStart + leftSubtreeNodes + 1, preEnd, inorder, index + 1, inEnd);
         return root;
     }
 };

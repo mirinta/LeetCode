@@ -26,6 +26,9 @@ public:
  * next pointer should be set to NULL.
  *
  * Initially, all next pointers are set to NULL.
+ *
+ * ! The number of nodes in the tree is in the range [0, 6000].
+ * ! -100 <= Node.val <= 100
  */
 
 class Solution
@@ -39,11 +42,13 @@ public:
         std::queue<Node*> queue;
         queue.push(root);
         while (!queue.empty()) {
-            auto size = queue.size();
-            for (size_t i = 0; i < size; ++i) {
+            const int size = queue.size();
+            for (int i = 0; i < size; ++i) {
                 auto* node = queue.front();
                 queue.pop();
-                node->next = i == size - 1 ? nullptr : queue.front();
+                if (i < size - 1) {
+                    node->next = queue.front();
+                }
                 if (node->left) {
                     queue.push(node->left);
                 }
