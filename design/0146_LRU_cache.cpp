@@ -13,213 +13,71 @@
  * key-value pair to the cache. If the number of keys exceeds the capacity from its operation, evict
  * the least recently used key.
  *
- * https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU
- *
  * ! The functions get and put must each run in O(1) average time complexity.
+ *
+ * ! 1 <= capacity <= 3000
+ * ! 0 <= key <= 10^4
+ * ! 0 <= value <= 10^5
+ * ! At most 2 * 10^5 calls will be made to get and put.
  */
-
-struct Node
-{
-    int key;
-    int val;
-    Node* next;
-    Node* prev;
-    Node(int k, int v) : key(k), val(v), next(nullptr), prev(nullptr) {}
-};
-
-class DoubleList
-{
-public:
-    explicit DoubleList() : m_head(new Node(-1, -1)), m_tail(new Node(-1, -1)), m_count(0)
-    {
-        m_head->next = m_tail;
-        m_tail->prev = m_head;
-    }
-
-    int count() const { return m_count; }
-
-    void pushFront(Node* n)
-    {
-        // before: m_head <-> P <-> ...
-        //  after: m_head <-> n <-> P ...
-        n->next = m_head->next;
-        m_head->next->prev = n;
-        m_head->next = n;
-        n->prev = m_head;
-        m_count++;
-    }
-
-    void pushBack(Node* n)
-    {
-        // before: ... <-> P <-> m_tail
-        //  after: ... <-> P <-> n <-> m_tail
-        m_tail->prev->next = n;
-        n->prev = m_tail->prev;
-        n->next = m_tail;
-        m_tail->prev = n;
-        m_count++;
-    }
-
-    void remove(Node* n)
-    {
-        if (!n)
-            return;
-
-        // before: ... <-> P <-> n <-> Q ...
-        //  after: ... <-> P <-> Q ...
-        n->prev->next = n->next;
-        n->next->prev = n->prev;
-        m_count--;
-    }
-
-    Node* popFront()
-    {
-        if (m_head->next == m_tail)
-            return nullptr;
-
-        // before: m_head <-> P <-> Q <-> ...
-        //  after: m_head <-> Q <-> ...
-        auto* p = m_head->next;
-        remove(p);
-        return p;
-    }
-
-    Node* popBack()
-    {
-        if (m_head->next == m_tail)
-            return nullptr;
-
-        // before: ... <-> P <-> Q <-> m_tail
-        //  after: ... <-> P <-> m_tail
-        auto* q = m_tail->prev;
-        remove(q);
-        return q;
-    }
-
-private:
-    Node* m_head;
-    Node* m_tail;
-    int m_count;
-};
 
 class LRUCache
 {
 public:
-    LRUCache(int capacity) : m_capacity(capacity) {}
+    LRUCache(int capacity) : capacity(capacity) {}
 
     int get(int key)
     {
-        if (!m_map.count(key))
+        if (!map.count(key))
             return -1;
 
         makeRecently(key);
-        return m_map[key]->val;
+        return cache.front().second;
     }
 
     void put(int key, int value)
     {
-        if (m_map.count(key)) {
-            m_map[key]->val = value;
+        if (map.count(key)) {
             makeRecently(key);
+            cache.front().second = value;
             return;
         }
-        if (m_cache.count() == m_capacity) {
+        if (cache.size() == capacity) {
             removeLeastRecently();
         }
-        addRecently(key, value);
+        cache.push_front({key, value});
+        map[key] = cache.begin();
     }
 
 private:
     void makeRecently(int key)
     {
-        auto* n = m_map[key];
-        m_cache.remove(n);
-        m_cache.pushBack(n);
-    }
+        if (!map.count(key))
+            return;
 
-    void addRecently(int key, int val)
-    {
-        auto* n = new Node(key, val);
-        m_cache.pushBack(n);
-        m_map[key] = n;
-    }
-
-    void deleteKey(int key)
-    {
-        auto* n = m_map[key];
-        m_cache.remove(n);
-        m_map.erase(key);
-    }
+        auto pair = *map[key];
+        cache.erase(map[key]);
+        cache.push_front(std::move(pair));
+        map[key] = cache.begin();
+    };
 
     void removeLeastRecently()
     {
-        auto* n = m_cache.popFront();
-        m_map.erase(n->key);
+        if (cache.empty() || map.empty())
+            return;
+
+        const int key = cache.back().first;
+        cache.pop_back();
+        map.erase(key);
     }
 
 private:
-    int m_capacity;
-    std::unordered_map<int, Node*> m_map; // key to node
-    DoubleList m_cache;
-};
-
-class LRUCache2
-{
-public:
-    LRUCache2(int capacity) : _capacity(capacity) {}
-
-    int get(int key)
-    {
-        if (!_map.count(key))
-            return -1;
-
-        makeRecently(key);
-        return _lru.front().second;
-    }
-
-    void put(int key, int value)
-    {
-        if (_map.count(key)) {
-            makeRecently(key);
-            _lru.front().second = value;
-            return;
-        }
-        if (_lru.size() == _capacity) {
-            removeLeastRecently();
-        }
-        _lru.push_front({key, value});
-        _map[key] = _lru.begin();
-    }
-
-private:
-    void makeRecently(int key)
-    {
-        if (!_map.count(key))
-            return;
-
-        const int val = (*_map[key]).second;
-        _lru.erase(_map[key]);
-        _lru.push_front({key, val});
-        _map[key] = _lru.begin();
-    }
-
-    void removeLeastRecently()
-    {
-        const int key = _lru.back().first;
-        if (!_map.count(key))
-            return;
-
-        _map.erase(key);
-        _lru.pop_back();
-    }
-
-private:
-    int _capacity;
-    // front() is the recently used "key-value"
-    // back() is the least recently used "key-value"
-    std::list<std::pair<int, int>> _lru;
+    int capacity;
+    // cache.front() is the recently used node
+    // cache.back() is the least recently used node
+    std::list<std::pair<int, int>> cache; // <key, value>
     using Iter = std::list<std::pair<int, int>>::iterator;
-    std::unordered_map<int, Iter> _map; // key to iterator
+    std::unordered_map<int, Iter> map; // <key, Iter>
 };
 
 /**
@@ -228,3 +86,156 @@ private:
  * int param_1 = obj->get(key);
  * obj->put(key,value);
  */
+
+struct Node
+{
+    int key;
+    int val;
+    Node* prev;
+    Node* next;
+    explicit Node(int key, int val) : key(key), val(val), prev(nullptr), next(nullptr){};
+};
+
+class DoublyLinkedList
+{
+public:
+    DoublyLinkedList() : count(0), vHead(new Node(-1, -1)), vTail(new Node(-1, -1))
+    {
+        vHead->next = vTail;
+        vTail->prev = vHead;
+    };
+
+    int size() const { return count; }
+
+    void push_back(Node* node)
+    {
+        if (!node)
+            return;
+
+        vTail->prev->next = node;
+        node->prev = vTail->prev;
+        node->next = vTail;
+        vTail->prev = node;
+        count++;
+    }
+
+    void push_front(Node* node)
+    {
+        if (!node)
+            return;
+
+        vHead->next->prev = node;
+        node->next = vHead->next;
+        node->prev = vHead;
+        vHead->next = node;
+        count++;
+    }
+
+    void remove(Node* node)
+    {
+        if (!node)
+            return;
+
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+        count--;
+    }
+
+    Node* pop_back()
+    {
+        if (count == 0)
+            return nullptr;
+
+        auto* node = back();
+        remove(node);
+        return node;
+    }
+
+    Node* pop_front()
+    {
+        if (count == 0)
+            return nullptr;
+
+        auto* node = front();
+        remove(node);
+        return node;
+    }
+
+    Node* front()
+    {
+        if (count == 0)
+            return nullptr;
+
+        return vHead->next;
+    }
+
+    Node* back()
+    {
+        if (count == 0)
+            return nullptr;
+
+        return vTail->prev;
+    }
+
+private:
+    int count;
+    Node* vHead;
+    Node* vTail;
+};
+
+class LRUCache2
+{
+public:
+    LRUCache2(int capacity) : capacity(capacity) {}
+
+    int get(int key)
+    {
+        if (!map.count(key))
+            return -1;
+
+        makeRecently(key);
+        return cache.front()->val;
+    }
+
+    void put(int key, int value)
+    {
+        if (map.count(key)) {
+            makeRecently(key);
+            cache.front()->val = value;
+            return;
+        }
+        if (cache.size() == capacity) {
+            removeLeastRecently();
+        }
+        cache.push_front(new Node(key, value));
+        map[key] = cache.front();
+    }
+
+private:
+    void makeRecently(int key)
+    {
+        if (!map.count(key))
+            return;
+
+        auto* node = map[key];
+        cache.remove(node);
+        cache.push_front(node);
+    }
+
+    void removeLeastRecently()
+    {
+        if (cache.size() == 0)
+            return;
+
+        const int key = cache.back()->key;
+        map.erase(key);
+        cache.pop_back();
+    }
+
+private:
+    int capacity;
+    // cache.front() is the recently used node
+    // cache.back() is the least recently used node
+    DoublyLinkedList cache;
+    std::unordered_map<int, Node*> map; // <key, Node*>
+};
