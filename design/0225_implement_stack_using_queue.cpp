@@ -21,6 +21,10 @@
  *
  * - Depending on your language, the queue may not be supported natively. You may simulate a queue
  * using a list or deque as long as you use only a queue's standard operations.
+ *
+ * ! 1 <= x <= 9
+ * ! At most 100 calls will be made to push, pop, top, and empty.
+ * ! All the calls to pop and top are valid.
  */
 
 class MyStack
@@ -28,6 +32,7 @@ class MyStack
 public:
     MyStack() {}
 
+    // time O(N)
     void push(int x)
     {
         const auto size = queue.size();
@@ -39,6 +44,7 @@ public:
         }
     }
 
+    // time O(1)
     int pop()
     {
         const auto val = queue.front();
@@ -46,8 +52,10 @@ public:
         return val;
     }
 
+    // time O(1)
     int top() { return queue.front(); }
 
+    // time O(1)
     bool empty() { return queue.empty(); }
 
 private:
