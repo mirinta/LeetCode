@@ -28,9 +28,10 @@ class Solution
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
     {
-        if (!p || !q)
+        if (!root || !p || !q)
             return nullptr;
 
+        // it is guaranteed that both p and q exist in the tree
         return find(root, p->val, q->val);
     }
 
