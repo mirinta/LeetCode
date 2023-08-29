@@ -21,33 +21,56 @@ struct TreeNode
  * and 2h nodes inclusive at the last level h.
  *
  * Design an algorithm that runs in less than O(n) time complexity.
+ *
+ * ! The number of nodes in the tree is in the range [0, 5 * 10^4].
+ * ! 0 <= Node.val <= 5 * 10^4
+ * ! The tree is guaranteed to be complete.
  */
 
 class Solution
 {
 public:
-    // for a complete binary tree,
-    // either the left subtree or the right subtree must be a perfect binary ree
-    int countNodes(TreeNode* root)
+    int countNodes(TreeNode* root) { return approach2(root); }
+
+private:
+    int approach2(TreeNode* root)
     {
         if (!root)
             return 0;
 
+        /**
+         *      root
+         *      /  \
+         *  left    right
+         *   / \     / \
+         * ... ... ... ...
+         *
+         * if root is a complete binary tree,
+         * then at least one of its subtrees (left or right) is a perfect binary tree
+         */
+        int leftHeight = 0;
         auto* left = root;
-        auto* right = root;
-        int heightLeft = 0;
-        int heightRight = 0;
         while (left) {
+            leftHeight++;
             left = left->left;
-            heightLeft++;
         }
+        int rightHeight = 0;
+        auto* right = root;
         while (right) {
+            rightHeight++;
             right = right->right;
-            heightRight++;
         }
-        if (heightLeft == heightRight) // perfect binary tree
-            return std::pow(2, heightLeft) - 1;
+        if (leftHeight == rightHeight)
+            return std::pow(2, leftHeight) - 1;
 
-        return 1 + countNodes(root->left) + countNodes(root->right);
+        return 1 + approach2(root->left) + approach2(root->right);
+    }
+
+    int approach1(TreeNode* root)
+    {
+        if (!root)
+            return 0;
+
+        return 1 + approach1(root->left) + approach1(root->right);
     }
 };
