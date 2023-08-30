@@ -8,14 +8,14 @@ TODO:
 - [ ] No.1089 (array)
 - [ ] No.0124 (binary tree)
 - [ ] No.0297 (binary tree), try other methods
-- [ ] No.1644 (binary tree)
-- [ ] No.1650 (binary tree)
-- [ ] No.1676 (binary tree)
+- [x] No.1644 (LCA)
+- [x] No.1650 (LCA)
+- [x] No.1676 (LCA)
 - [x] No.0323 (graph), UnionFind
 - [x] No.1135 (graph), MST (Prim's algorithm or Kruskal's algorithm)
 - [x] No.1584 (graph), MST (Prim's algorithm or Kruskal's algorithm)
-- [ ] No.0146 (LRU Cache), try STL
-- [x] No.0460 (LFU Cache), time limit exceeded
+- [x] No.0146 (LRU Cache)
+- [ ] No.0460 (LFU Cache)
 - [x] No.1143 (LCS)
 - [x] No.1035 (LCS, DP)
 - [x] No.0518 (DP), turn into a Knapsack problem
@@ -35,3 +35,5 @@ TODO:
 - [ ] No.0269 (Topological sorting)
 - [ ] No.787 (Graph, Shortest path)
 - [ ] No.721 (Graph, Union-Find)
+- [ ] No.2096 (LCA)
+- [ ] No.2509 (LCA)
