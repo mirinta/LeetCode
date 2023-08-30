@@ -33,6 +33,7 @@ public:
         if (!root || !p || !q)
             return nullptr;
 
+        // all Node.val are unique, and p != q
         dfs(root, p->val, q->val);
         return result;
     }
@@ -43,16 +44,17 @@ private:
     // return 0: both val1 and val2 doesn't exist in "root"
     // return 1: either val1 or val2 exists in "root"
     // return 2: both val1 and val2 exist in "root"
+    // #NOTE# make sure val1 != val2
     int dfs(TreeNode* root, int val1, int val2)
     {
         if (!root)
             return 0;
 
         const int self = root->val == val1 || root->val == val2 ? 1 : 0;
-        const int sum = dfs(root->left, val1, val2) + dfs(root->right, val1, val2) + self;
-        if (sum == 2 && !result) {
+        const int count = dfs(root->left, val1, val2) + dfs(root->right, val1, val2) + self;
+        if (count == 2 && !result) {
             result = root;
         }
-        return sum;
+        return count;
     }
 };
