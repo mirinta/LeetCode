@@ -22,46 +22,46 @@
  *
  * - The answer and all the intermediate calculations can be represented in a 32-bit integer.
  *
- * ! tokens[i] is either an operator or an integer.
+ * ! 1 <= tokens.length <= 10^4
+ * ! tokens[i] is either an operator: "+", "-", "*", or "/", or an integer in the range [-200, 200].
  */
 
 class Solution
 {
 public:
-    int evalRPN(const std::vector<std::string>& tokens)
+    int evalRPN(std::vector<std::string>& tokens)
     {
         std::stack<int> stack;
-        const std::string k_addition = "+";
-        const std::string k_subtraction = "-";
-        const std::string k_multiplication = "*";
-        const std::string k_division = "/";
-        for (const auto& s : tokens) {
-            if (s == k_addition) {
-                const auto pair = pop2Nums(stack);
-                stack.push(pair.first + pair.second);
-            } else if (s == k_subtraction) {
-                const auto pair = pop2Nums(stack);
-                stack.push(pair.second - pair.first);
-            } else if (s == k_multiplication) {
-                const auto pair = pop2Nums(stack);
-                stack.push(pair.first * pair.second);
-            } else if (s == k_division) {
-                const auto pair = pop2Nums(stack);
-                stack.push(pair.second / pair.first);
+        for (const auto& token : tokens) {
+            if (token == "+") {
+                const auto [v1, v2] = popTwoNumbers(stack);
+                stack.push(v1 + v2);
+            } else if (token == "-") {
+                const auto [v1, v2] = popTwoNumbers(stack);
+                stack.push(v1 - v2);
+            } else if (token == "*") {
+                const auto [v1, v2] = popTwoNumbers(stack);
+                stack.push(v1 * v2);
+            } else if (token == "/") {
+                const auto [v1, v2] = popTwoNumbers(stack);
+                stack.push(v1 / v2);
             } else {
-                stack.push(std::stoi(s));
+                stack.push(std::stoi(token));
             }
         }
         return stack.top();
     }
 
 private:
-    std::pair<int, int> pop2Nums(std::stack<int>& stack)
+    std::pair<int, int> popTwoNumbers(std::stack<int>& stack)
     {
-        const auto first = stack.top();
+        if (stack.size() < 2)
+            return {};
+
+        const int val2 = stack.top();
         stack.pop();
-        const auto second = stack.top();
+        const int val1 = stack.top();
         stack.pop();
-        return {first, second};
+        return {val1, val2};
     }
 };
