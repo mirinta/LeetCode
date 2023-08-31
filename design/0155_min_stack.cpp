@@ -30,30 +30,30 @@ public:
 
     void push(int val)
     {
-        _data.push(val);
-        if (_min.empty() || val < _min.top()) {
-            _min.push(val);
+        data.push(val);
+        if (min.empty()) {
+            min.push(val);
         } else {
-            _min.push(getMin());
+            min.push(std::min(min.top(), val));
         }
     }
 
     void pop()
     {
-        if (_data.empty() || _min.empty())
+        if (data.empty() || min.empty())
             return;
 
-        _data.pop();
-        _min.pop();
+        data.pop();
+        min.pop();
     }
 
-    int top() { return _data.top(); }
+    int top() { return data.empty() ? INT_MIN : data.top(); }
 
-    int getMin() { return _min.top(); }
+    int getMin() { return min.empty() ? INT_MIN : min.top(); }
 
 private:
-    std::stack<int> _data;
-    std::stack<int> _min;
+    std::stack<int> data;
+    std::stack<int> min;
 };
 
 /**
