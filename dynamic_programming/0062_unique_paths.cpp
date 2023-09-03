@@ -9,6 +9,8 @@
  * take to reach the bottom-right corner.
  *
  * The test cases are generated so that the answer will be less than or equal to 2 * 10^9.
+ *
+ * ! 1 <= m, n <= 100
  */
 
 class Solution
@@ -17,28 +19,36 @@ public:
     int uniquePaths(int m, int n) { return approach2(m, n); }
 
 private:
+    // DP with space optimization, time O(MN), space O(N)
     int approach2(int m, int n)
     {
-        // dp[i][j] = num of paths from (i,j) to (m-1,n-1)
-        std::vector<std::vector<int>> dp(m, std::vector<int>(n, 1));
-        for (int i = m - 2; i >= 0; --i) {
-            for (int j = n - 2; j >= 0; --j) {
-                dp[i][j] = dp[i + 1][j] + dp[i][j + 1];
+        std::vector<int> dp(n, 1);
+        for (int i = 1; i < m; ++i) {
+            dp[0] = 1;
+            for (int j = 1; j < n; ++j) {
+                dp[j] += dp[j - 1];
             }
         }
-        return dp[0][0];
+        return dp[n - 1];
     }
 
+    // DP, time O(MN), space O(MN)
     int approach1(int m, int n)
     {
-        // dp[i][j] = num of paths from (0,0) to (i,j)
+        // dp[i][j] = num of possible unique paths from (0,0) to (i,j)
         // base case:
-        // dp[i][0] = 1, i in [0, m)
-        // dp[0][j] = 1, j in [0, n)
-        std::vector<std::vector<int>> dp(m, std::vector<int>(n, 1));
+        // - dp[i][0] = 1, the first row
+        // - dp[0][j] = 1, the first col
+        std::vector<std::vector<int>> dp(m, std::vector<int>(n, 0));
+        for (int i = 0; i < m; ++i) {
+            dp[i][0] = 1;
+        }
+        for (int j = 0; j < n; ++j) {
+            dp[0][j] = 1;
+        }
         for (int i = 1; i < m; ++i) {
             for (int j = 1; j < n; ++j) {
-                dp[i][j] = dp[i][j - 1] + dp[i - 1][j];
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
             }
         }
         return dp[m - 1][n - 1];
