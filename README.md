@@ -22,7 +22,7 @@ TODO:
 - [x] No.2140 (DP, iterate in reverse order)
 - [x] No.2466 (DP)
 - [x] No.1799 (DP with bitmask)
-- [ ] No.0265 (DP), try better solution
+- [ ] No.0265 (DP), try a better solution
 - [ ] No.0174 (DP), rethink
 - [ ] No.0514 (DP), rethink
 - [ ] No.0837 (DP)
@@ -37,3 +37,5 @@ TODO:
 - [ ] No.721 (Graph, Union-Find)
 - [ ] No.2096 (LCA)
 - [ ] No.2509 (LCA)
+- [ ] No.0030 (sliding window)
+- [ ] No.0076 (sliding window)
