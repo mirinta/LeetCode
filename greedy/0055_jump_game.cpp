@@ -13,7 +13,11 @@
 class Solution
 {
 public:
-    bool canJump(std::vector<int>& nums)
+    bool canJump(std::vector<int>& nums) { return approach2(nums); }
+
+private:
+    // Greedy, time O(N), space O(1)
+    bool approach2(const std::vector<int>& nums)
     {
         int furthest = 0;
         for (int i = 0; i < nums.size(); ++i) {
@@ -23,5 +27,22 @@ public:
             furthest = std::max(furthest, i + nums[i]);
         }
         return furthest >= nums.size() - 1;
+    }
+
+    // DP, time O(N^2), space O(N)
+    bool approach1(const std::vector<int>& nums)
+    {
+        const int n = nums.size();
+        std::vector<bool> dp(n, false);
+        dp[n - 1] = true;
+        for (int i = n - 2; i >= 0; --i) {
+            for (int steps = std::min(nums[i], n - i - 1); steps > 0; --steps) {
+                if (dp[i + steps]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[0];
     }
 };
