@@ -1,3 +1,4 @@
+#include <random>
 #include <unordered_map>
 #include <vector>
 
@@ -18,43 +19,53 @@
  *
  * ! You must implement the functions of the class such that each function works in average O(1)
  * ! time complexity.
+ *
+ * ! -2^31 <= val <= 2^31 - 1
+ * ! At most 2 * 10^5 calls will be made to insert, remove, and getRandom.
+ * ! There will be at least one element in the data structure when getRandom is called.
  */
 
 class RandomizedSet
 {
-    // std::vector: access O(1), insertion/removal at the end O(1)
-    // std::unordered_map: access O(1), insertion/removal O(1)
-private:
-    std::vector<int> _nums;
-    std::unordered_map<int, size_t> _valToIndex;
-
 public:
-    RandomizedSet() = default;
+    RandomizedSet()
+    {
+        std::random_device rd;
+        gen = std::mt19937(rd());
+    }
 
     bool insert(int val)
     {
-        if (_valToIndex.count(val))
+        if (valToIndex.count(val))
             return false;
 
-        _valToIndex[val] = _nums.size();
-        _nums.push_back(val);
+        data.push_back(val);
+        valToIndex[val] = data.size() - 1;
         return true;
     }
 
     bool remove(int val)
     {
-        if (!_valToIndex.count(val))
+        if (!valToIndex.count(val))
             return false;
 
-        const auto idx = _valToIndex[val];
-        _valToIndex[_nums.back()] = idx;
-        std::swap(_nums[idx], _nums.back());
-        _nums.pop_back();
-        _valToIndex.erase(val);
+        valToIndex[data.back()] = valToIndex[val];
+        std::swap(data.back(), data[valToIndex[val]]);
+        data.pop_back();
+        valToIndex.erase(val);
         return true;
     }
 
-    int getRandom() { return _nums[std::rand() % _nums.size()]; }
+    int getRandom()
+    {
+        std::uniform_int_distribution<int> dist(0, data.size() - 1);
+        return data[dist(gen)];
+    }
+
+private:
+    std::vector<int> data;
+    std::unordered_map<int, int> valToIndex;
+    std::mt19937 gen;
 };
 
 /**
