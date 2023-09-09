@@ -21,33 +21,29 @@ public:
         if (digits.empty())
             return {};
 
-        std::unordered_map<char, std::string> map;
-        map['2'] = "abc";
-        map['3'] = "def";
-        map['4'] = "ghi";
-        map['5'] = "jkl";
-        map['6'] = "mno";
-        map['7'] = "pqrs";
-        map['8'] = "tuv";
-        map['9'] = "wxyz";
         std::vector<std::string> result;
         std::string combination;
-        backtrack(result, combination, 0, digits, map);
+        backtrack(result, combination, 0, digits);
         return result;
     }
 
 private:
-    void backtrack(std::vector<std::string>& result, std::string& combination, int start,
-                   const std::string& digits, const std::unordered_map<char, std::string>& map)
+    static const std::unordered_map<char, std::string> map;
+    void backtrack(std::vector<std::string>& result, std::string& combination, int i,
+                   const std::string& digits)
     {
-        if (start == digits.size()) {
+        if (combination.size() == digits.size()) {
             result.push_back(combination);
             return;
         }
-        for (const auto& c : map.at(digits[start])) {
+        for (const auto& c : map.at(digits[i])) {
             combination.push_back(c);
-            backtrack(result, combination, start + 1, digits, map);
+            backtrack(result, combination, i + 1, digits);
             combination.pop_back();
         }
     }
 };
+
+const std::unordered_map<char, std::string> Solution::map{{'2', "abc"}, {'3', "def"}, {'4', "ghi"},
+                                                          {'5', "jkl"}, {'6', "mno"}, {'7', "pqrs"},
+                                                          {'8', "tuv"}, {'9', "wxyz"}};

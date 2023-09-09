@@ -22,29 +22,35 @@ class Solution
 public:
     std::vector<std::vector<int>> combinationSum(std::vector<int>& candidates, int target)
     {
-        std::vector<std::vector<int>> result;
-        std::vector<int> combination;
+        Vec2D<int> result;
+        Vec1D<int> combination;
         backtrack(result, combination, 0, target, candidates);
         return result;
     }
 
 private:
-    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& combination, int start,
-                   int target, const std::vector<int>& candidates)
+    template <typename T>
+    using Vec1D = std::vector<T>;
+
+    template <typename T>
+    using Vec2D = std::vector<std::vector<T>>;
+
+    void backtrack(Vec2D<int>& result, Vec1D<int>& combination, int index, int target,
+                   const Vec1D<int>& candidates)
     {
         if (target == 0) {
             result.push_back(combination);
             return;
         }
-        for (int i = start; i < candidates.size(); ++i) {
-            const int diff = target - candidates[i];
-            if (diff < 0)
+
+        for (int i = index; i < candidates.size(); ++i) {
+            if (target - candidates[i] < 0)
                 continue;
 
             combination.push_back(candidates[i]);
-            // next round still starts from candidates[i],
-            // because the same number can be chosen multiple times
-            backtrack(result, combination, i, diff, candidates);
+            // the same number can be chosen infinite times,
+            // so the next round still starts from index "i"
+            backtrack(result, combination, i, target - candidates[i], candidates);
             combination.pop_back();
         }
     }

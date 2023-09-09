@@ -14,16 +14,22 @@ class Solution
 public:
     std::vector<std::vector<int>> permute(std::vector<int>& nums)
     {
-        std::vector<std::vector<int>> result;
-        std::vector<int> permutation;
-        std::vector<bool> visited(nums.size(), false);
-        backtrack(result, visited, permutation, nums);
+        Vec2D<int> result;
+        Vec1D<int> permutation;
+        Vec1D<bool> visited(nums.size(), false);
+        backtrack(result, permutation, visited, nums);
         return result;
     }
 
 private:
-    void backtrack(std::vector<std::vector<int>>& result, std::vector<bool>& visited,
-                   std::vector<int>& permutation, const std::vector<int>& nums)
+    template <typename T>
+    using Vec1D = std::vector<T>;
+
+    template <typename T>
+    using Vec2D = std::vector<std::vector<T>>;
+
+    void backtrack(Vec2D<int>& result, Vec1D<int>& permutation, Vec1D<bool>& visited,
+                   const Vec1D<int>& nums)
     {
         if (permutation.size() == nums.size()) {
             result.push_back(permutation);
@@ -35,7 +41,7 @@ private:
 
             visited[i] = true;
             permutation.push_back(nums[i]);
-            backtrack(result, visited, permutation, nums);
+            backtrack(result, permutation, visited, nums);
             permutation.pop_back();
             visited[i] = false;
         }

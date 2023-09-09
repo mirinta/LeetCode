@@ -25,7 +25,7 @@ public:
         Vec2D<bool> visited(m, std::vector<bool>(n, false));
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (!visited[i][j] && backtrack(visited, i, j, 0, word, board))
+                if (backtrack(visited, i, j, 0, word, board))
                     return true;
             }
         }
@@ -36,12 +36,10 @@ private:
     template <typename T>
     using Vec2D = std::vector<std::vector<T>>;
 
-    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
-    bool backtrack(Vec2D<bool>& visited, int x, int y, int idx, const std::string& word,
+    bool backtrack(Vec2D<bool>& visited, int x, int y, int index, const std::string& word,
                    const Vec2D<char>& board)
     {
-        if (idx == word.size())
+        if (index == word.size())
             return true;
 
         const int m = board.size();
@@ -49,12 +47,13 @@ private:
         if (x < 0 || x >= m || y < 0 || y >= n)
             return false;
 
-        if (visited[x][y] || word[idx] != board[x][y])
+        if (visited[x][y] || board[x][y] != word[index])
             return false;
 
+        static const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         visited[x][y] = true;
         for (const auto& [dx, dy] : kDirections) {
-            if (backtrack(visited, x + dx, y + dy, idx + 1, word, board))
+            if (backtrack(visited, x + dx, y + dy, index + 1, word, board))
                 return true;
         }
         visited[x][y] = false;

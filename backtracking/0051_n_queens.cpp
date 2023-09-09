@@ -19,50 +19,51 @@ class Solution
 public:
     std::vector<std::vector<std::string>> solveNQueens(int n)
     {
-        if (n < 1)
-            return {};
-
-        std::vector<std::string> board(n, std::string(n, k_empty));
-        result.clear();
-        backtrack(board, 0, n);
+        Vec2D<std::string> result;
+        Vec1D<std::string> board(n, std::string(n, kEmpty));
+        backtrack(result, board, 0, n);
         return result;
     }
 
 private:
-    static constexpr auto k_queen = 'Q';
-    static constexpr auto k_empty = '.';
-    std::vector<std::vector<std::string>> result;
+    template <typename T>
+    using Vec1D = std::vector<T>;
 
-    void backtrack(std::vector<std::string>& board, int row, int dimension)
+    template <typename T>
+    using Vec2D = std::vector<std::vector<T>>;
+
+    static constexpr char kQueen = 'Q';
+    static constexpr char kEmpty = '.';
+
+    void backtrack(Vec2D<std::string>& result, Vec1D<std::string>& board, int row, int n)
     {
-        if (row == dimension) {
+        if (row == n) {
             result.push_back(board);
             return;
         }
-        for (int col = 0; col < dimension; ++col) {
-            if (!isValid(board, row, col, dimension))
+        for (int col = 0; col < n; ++col) {
+            if (!isValid(row, col, board))
                 continue;
 
-            board[row][col] = k_queen;
-            backtrack(board, row + 1, dimension);
-            board[row][col] = k_empty;
+            board[row][col] = kQueen;
+            backtrack(result, board, row + 1, n);
+            board[row][col] = kEmpty;
         }
     }
 
-    bool isValid(std::vector<std::string>& board, int row, int col, int dimension)
+    bool isValid(int x, int y, const Vec1D<std::string>& board)
     {
-        // for current row, we only need to check the previous rows, i.e., [0, ..., row - 1]
-        // because we start from row = 0, the next rows [row + 1, ..., N] are all empty
-        // [?  ?  ?] row - 1
-        // [   x   ] row
-        for (int r = row - 1, gap = 1; r >= 0; --r, ++gap) {
-            if (board[r][col] == k_queen)
+        // X   X   X
+        //   X X X
+        //     Q     <= check this row is valid
+        for (int i = x - 1, offset = 1; i >= 0; --i, ++offset) {
+            if (board[i][y] == kQueen)
                 return false;
 
-            if (col - gap >= 0 && board[r][col - gap] == k_queen)
+            if (y - offset >= 0 && board[i][y - offset] == kQueen)
                 return false;
 
-            if (col + gap < dimension && board[r][col + gap] == k_queen)
+            if (y + offset < board.size() && board[i][y + offset] == kQueen)
                 return false;
         }
         return true;

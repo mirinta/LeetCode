@@ -13,6 +13,7 @@ class Solution
 public:
     std::vector<std::string> generateParenthesis(int n)
     {
+        // the num of remaining '(' must be less than or equal to the num of remaining ')'
         std::vector<std::string> result;
         std::string combination;
         backtrack(result, combination, n, n);
