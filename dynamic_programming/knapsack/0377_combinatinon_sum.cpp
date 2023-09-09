@@ -22,7 +22,7 @@ public:
         dp[0] = 1;
         for (int i = 1; i <= target; ++i) {
             for (const auto& j : nums) {
-                if (i - j < 0)
+                if (i < j)
                     continue;
 
                 dp[i] += dp[i - j];
