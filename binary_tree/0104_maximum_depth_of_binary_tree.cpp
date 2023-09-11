@@ -1,4 +1,4 @@
-#include <algorithm>
+#include <queue>
 
 /**
  Definition for a binary tree node.
@@ -26,13 +26,41 @@ struct TreeNode
 class Solution
 {
 public:
-    int maxDepth(TreeNode* root)
+    int maxDepth(TreeNode* root) { return approach2(root); }
+
+private:
+    // BFS
+    int approach2(TreeNode* root)
     {
         if (!root)
             return 0;
 
-        const int left = maxDepth(root->left);
-        const int right = maxDepth(root->right);
-        return 1 + std::max(left, right);
+        int result = 0;
+        std::queue<TreeNode*> queue;
+        queue.push(root);
+        while (!queue.empty()) {
+            const int size = queue.size();
+            for (int k = 0; k < size; ++k) {
+                auto* node = queue.front();
+                queue.pop();
+                if (node->left) {
+                    queue.push(node->left);
+                }
+                if (node->right) {
+                    queue.push(node->right);
+                }
+            }
+            result++;
+        }
+        return result;
+    }
+
+    // DFS
+    int approach1(TreeNode* root)
+    {
+        if (!root)
+            return 0;
+
+        return 1 + std::max(approach1(root->left), approach1(root->right));
     }
 };

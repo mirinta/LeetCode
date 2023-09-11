@@ -29,50 +29,51 @@ public:
 
 private:
     // DFS
-    bool approach2(TreeNode* root) { return dfs(root->left, root->right); }
-
-    bool dfs(TreeNode* node1, TreeNode* node2)
+    bool approach2(TreeNode* root)
     {
-        if (!node1 && !node2)
+        if (!root)
+            return false;
+
+        return dfs(root->left, root->right);
+    }
+
+    bool dfs(TreeNode* root1, TreeNode* root2)
+    {
+        // similar to checking whether two binary trees are exactly the same
+        if (!root1 && !root2)
             return true;
 
-        if (node1 && !node2)
+        if (!root1 || !root2)
             return false;
 
-        if (!node1 && node2)
+        if (root1->val != root2->val)
             return false;
 
-        if (node1->val != node2->val)
-            return false;
-
-        return dfs(node1->left, node2->right) && dfs(node1->right, node2->left);
+        return dfs(root1->left, root2->right) && dfs(root1->right, root2->left);
     }
 
     // BFS
     bool approach1(TreeNode* root)
     {
+        if (!root)
+            return false;
+
         std::queue<TreeNode*> queue;
         queue.push(root);
-        std::vector<TreeNode*> level;
         while (!queue.empty()) {
-            level.resize(queue.size());
-            for (auto& val : level) {
+            const int size = queue.size();
+            std::vector<int> values(size);
+            for (int k = 0; k < size; ++k) {
                 auto* node = queue.front();
                 queue.pop();
-                val = node;
+                values[k] = node ? node->val : INT_MIN; // Node.val is in the range [-100,100]
                 if (node) {
                     queue.push(node->left);
                     queue.push(node->right);
                 }
             }
-            for (int i = 0, j = level.size() - 1; i <= j; ++i, --j) {
-                if (level[i] && !level[j])
-                    return false;
-
-                if (!level[i] && level[j])
-                    return false;
-
-                if (level[i] && level[j] && level[i]->val != level[j]->val)
+            for (int i = 0, j = size - 1; i <= j; ++i, --j) {
+                if (values[i] != values[j])
                     return false;
             }
         }

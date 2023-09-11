@@ -20,6 +20,10 @@ struct TreeNode
  *
  * A root-to-leaf path is a path starting from the root and ending at any leaf node. A leaf node is
  * a node with no children.
+ *
+ * ! The number of nodes in the tree is in the range [0, 5000].
+ * ! -1000 <= Node.val <= 1000
+ * ! -1000 <= targetSum <= 1000
  */
 
 class Solution
@@ -30,28 +34,27 @@ public:
         if (!root)
             return {};
 
-        result.clear();
-        std::vector<int> values;
-        traverse(root, targetSum, values);
+        std::vector<std::vector<int>> result;
+        std::vector<int> path;
+        backtrack(result, path, targetSum, root);
         return result;
     }
 
 private:
-    std::vector<std::vector<int>> result;
-
-    void traverse(TreeNode* node, int targetSum, std::vector<int>& values)
+    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& path, int targetSum,
+                   TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        if (targetSum == node->val && !node->left && !node->right) {
-            result.push_back(values);
-            result.back().push_back(node->val);
+        if (root->val == targetSum && !root->left && !root->right) {
+            result.push_back(path);
+            result.back().push_back(root->val);
             return;
         }
-        values.push_back(node->val);
-        traverse(node->left, targetSum - node->val, values);
-        traverse(node->right, targetSum - node->val, values);
-        values.pop_back(); // process finished, pop the current value
+        path.push_back(root->val);
+        backtrack(result, path, targetSum - root->val, root->left);
+        backtrack(result, path, targetSum - root->val, root->right);
+        path.pop_back();
     }
 };

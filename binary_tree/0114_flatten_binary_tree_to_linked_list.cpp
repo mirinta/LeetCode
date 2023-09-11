@@ -1,3 +1,5 @@
+#include <stack>
+
 /**
  Definition for a binary tree node.
  */
@@ -26,25 +28,50 @@ struct TreeNode
 class Solution
 {
 public:
-    void flatten(TreeNode* root)
+    void flatten(TreeNode* root) { approach2(root); }
+
+private:
+    // Post-order
+    void approach2(TreeNode* root)
     {
         if (!root)
             return;
 
-        // solve sub-problems
-        flatten(root->left);
-        flatten(root->right);
-        // backup flattened head nodes
-        auto* left = root->left;   // e.g., 2->3->4
-        auto* right = root->right; // e.g., 5->6
-        // construct the linked list
+        approach2(root->left);  // left subtree is flattened, 2->3->4
+        approach2(root->right); // right subtree is flattened, 5->6
+        auto* leftHead = root->left;
+        auto* rightHead = root->right;
         root->left = nullptr;
-        root->right = left; // e.g., 1->2->3->4
-        // find the last node
-        auto* last = root;
-        while (last->right) {
-            last = last->right;
+        root->right = leftHead;
+        auto* leftTail = root;
+        while (leftTail && leftTail->right) {
+            leftTail = leftTail->right;
         }
-        last->right = right; // e.g., 1->2->3->4->5->6
+        leftTail->right = rightHead;
+    }
+
+    // Pre-order
+    void approach1(TreeNode* root)
+    {
+        if (!root)
+            return;
+
+        TreeNode vHead(0);
+        auto* node = &vHead;
+        std::stack<TreeNode*> stack;
+        stack.push(root);
+        while (!stack.empty()) {
+            auto* top = stack.top();
+            stack.pop();
+            if (top->right) {
+                stack.push(top->right);
+            }
+            if (top->left) {
+                stack.push(top->left);
+                top->left = nullptr;
+            }
+            node->right = top;
+            node = node->right;
+        }
     }
 };

@@ -28,6 +28,7 @@ public:
     std::vector<int> rightSideView(TreeNode* root) { return approach2(root); }
 
 private:
+    // Pre-order traversal (right subtree first)
     std::vector<int> approach2(TreeNode* root)
     {
         if (!root)
@@ -56,7 +57,7 @@ private:
         dfs(result, level + 1, node->left);
     }
 
-    // BFS
+    // Level order traversal
     std::vector<int> approach1(TreeNode* root)
     {
         if (!root)

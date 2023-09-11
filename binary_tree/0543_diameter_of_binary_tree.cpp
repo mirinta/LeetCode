@@ -19,8 +19,10 @@ struct TreeNode
  * The diameter of a binary tree is the length of the longest path between any two nodes in a tree.
  * This path may or may not pass through the "root".
  *
- *
  * The length of a path between two nodes is represented by the number of edges between them.
+ *
+ * ! The number of nodes in the tree is in the range [1, 10^4].
+ * ! -100 <= Node.val <= 100
  */
 
 class Solution
@@ -28,20 +30,20 @@ class Solution
 public:
     int diameterOfBinaryTree(TreeNode* root)
     {
-        maxDepth(root);
+        int result = 0;
+        dfs(result, root);
         return result;
     }
 
 private:
-    int result = 0;
-    int maxDepth(TreeNode* node)
+    // return the max depth of the given node
+    int dfs(int& result, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return 0;
 
-        int left = maxDepth(node->left);
-        int right = maxDepth(node->right);
-        // diameter = max depth of left subtree + max depth of right sub-tree
+        const int left = dfs(result, root->left);
+        const int right = dfs(result, root->right);
         result = std::max(result, left + right);
         return 1 + std::max(left, right);
     }

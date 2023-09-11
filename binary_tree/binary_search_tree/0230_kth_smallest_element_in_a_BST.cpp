@@ -25,12 +25,43 @@ struct TreeNode
 class Solution
 {
 public:
-    int kthSmallest(TreeNode* root, int k) { return approach1(root, k); }
+    int kthSmallest(TreeNode* root, int k)
+    {
+        // the in-order traversal of a BST gives nodes in ascending order
+        return approach2(root, k);
+    }
 
 private:
-    // iteration
+    // Recursion
     int approach2(TreeNode* root, int k)
     {
+        int result = -1;
+        traverse(result, k, root);
+        return result;
+    }
+
+    void traverse(int& result, int& k, TreeNode* node)
+    {
+        if (!node)
+            return;
+
+        traverse(result, k, node->left);
+        if (result != -1)
+            return;
+
+        if (--k == 0) {
+            result = node->val;
+            return;
+        }
+        traverse(result, k, node->right);
+    }
+
+    // Iteration
+    int approach1(TreeNode* root, int k)
+    {
+        if (!root)
+            return -1;
+
         std::stack<TreeNode*> stack;
         auto* node = root;
         while (node || !stack.empty()) {
@@ -38,35 +69,13 @@ private:
                 stack.push(node);
                 node = node->left;
             }
-            node = stack.top();
+            auto* top = stack.top();
             stack.pop();
             if (--k == 0)
-                return node->val;
+                return top->val;
 
-            node = node->right;
+            node = top->right;
         }
         return -1;
-    }
-
-    // recursion
-    int approach1(TreeNode* root, int k)
-    {
-        int result = -1;
-        int count = 0;
-        traverse(result, count, root, k);
-        return result;
-    }
-
-    void traverse(int& result, int& count, TreeNode* node, int k)
-    {
-        if (!node)
-            return;
-
-        traverse(result, count, node->left, k);
-        if (++count == k) {
-            result = node->val;
-            return;
-        }
-        traverse(result, count, node->right, k);
     }
 };

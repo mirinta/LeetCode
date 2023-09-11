@@ -34,11 +34,12 @@ public:
         std::queue<TreeNode*> queue;
         queue.push(root);
         while (!queue.empty()) {
-            std::vector<int> values(queue.size(), 0);
-            for (auto& val : values) {
+            const int size = queue.size();
+            std::vector<int> values(size);
+            for (int k = 0; k < size; ++k) {
                 auto* node = queue.front();
                 queue.pop();
-                val = node->val;
+                values[k] = node->val;
                 if (node->left) {
                     queue.push(node->left);
                 }

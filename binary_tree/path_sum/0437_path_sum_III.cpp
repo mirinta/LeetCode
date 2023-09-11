@@ -30,29 +30,35 @@ class Solution
 public:
     int pathSum(TreeNode* root, int targetSum)
     {
-        traverse(0, targetSum, root);
+        if (!root)
+            return 0;
+
+        std::unordered_map<long, int> map; // prefix sum to frequency
+        int result = 0;
+        backtrack(result, map, root, 0, targetSum);
         return result;
     }
 
 private:
-    int result = 0;
-    std::unordered_map<long, int> map; // map[i]=j, there are j paths with path sum i
-
-    void traverse(long currentSum, int targetSum, TreeNode* node)
+    void backtrack(int& result, std::unordered_map<long, int>& map, TreeNode* node,
+                   long currentPrefix, long targetSum)
     {
         if (!node)
             return;
 
-        currentSum += node->val;
-        if (currentSum == targetSum) {
+        currentPrefix += node->val;
+        if (currentPrefix == targetSum) {
             result++;
         }
-        if (map.count(currentSum - targetSum)) {
-            result += map[currentSum - targetSum];
+        // START X ... X X X X ... X X
+        // |<-prefix'->| |<--target->|
+        // |<---------prefix-------->|
+        if (const long prevPrefix = currentPrefix - targetSum; map.count(prevPrefix)) {
+            result += map[prevPrefix];
         }
-        map[currentSum]++;
-        traverse(currentSum, targetSum, node->left);
-        traverse(currentSum, targetSum, node->right);
-        map[currentSum]--;
+        map[currentPrefix]++;
+        backtrack(result, map, node->left, currentPrefix, targetSum);
+        backtrack(result, map, node->right, currentPrefix, targetSum);
+        map[currentPrefix]--;
     }
 };
