@@ -1,3 +1,4 @@
+#include <stack>
 #include <vector>
 
 /**
@@ -28,56 +29,43 @@ struct TreeNode
  * ! -2^31 <= Node.val <= 2^31 - 1
  */
 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution
 {
 public:
-    bool isValidBST(TreeNode* root) { return approach3(root); }
+    bool isValidBST(TreeNode* root) { return approach1(root); }
 
 private:
-    bool approach3(TreeNode* root)
-    {
-        if (!root)
-            return false;
-
-        TreeNode* previous = nullptr;
-        return check(root, &previous);
-    }
-
-    bool check(TreeNode* current, TreeNode** previous)
-    {
-        if (!current)
-            return true;
-
-        if (!check(current->left, previous))
-            return false;
-
-        if (*previous && current->val <= (*previous)->val)
-            return false;
-
-        *previous = current;
-        return check(current->right, previous);
-    }
-
     bool approach2(TreeNode* root)
     {
         if (!root)
             return false;
 
-        return validate(root, nullptr, nullptr);
+        return check(root, nullptr, nullptr);
     }
 
-    bool validate(TreeNode* current, TreeNode* min, TreeNode* max)
+    bool check(TreeNode* root, TreeNode* min, TreeNode* max)
     {
-        if (!current)
+        if (!root)
             return true;
 
-        if (min && min->val >= current->val)
+        if (min && root->val <= min->val)
             return false;
 
-        if (max && max->val <= current->val)
+        if (max && root->val >= max->val)
             return false;
 
-        return validate(current->left, min, current) && validate(current->right, current, max);
+        return check(root->left, min, root) && check(root->right, root, max);
     }
 
     bool approach1(TreeNode* root)
@@ -85,22 +73,23 @@ private:
         if (!root)
             return false;
 
-        std::vector<int> inorder;
-        traverse(inorder, root);
-        for (int i = 1; i < inorder.size(); ++i) {
-            if (inorder[i] <= inorder[i - 1])
+        // inorder traversal of a BST gives nodes in ascending order
+        auto* node = root;
+        std::stack<TreeNode*> stack;
+        std::vector<int> values;
+        while (node || !stack.empty()) {
+            while (node) {
+                stack.push(node);
+                node = node->left;
+            }
+            auto* top = stack.top();
+            stack.pop();
+            if (!values.empty() && top->val <= values.back())
                 return false;
+
+            values.push_back(top->val);
+            node = top->right;
         }
         return true;
-    }
-
-    void traverse(std::vector<int>& inorder, TreeNode* node)
-    {
-        if (!node)
-            return;
-
-        traverse(inorder, node->left);
-        inorder.push_back(node->val);
-        traverse(inorder, node->right);
     }
 };
