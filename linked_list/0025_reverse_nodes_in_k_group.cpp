@@ -47,7 +47,8 @@ public:
 
 private:
     // ...->[1->...->k]->k+1 => ...->[k->...->1]->k+1
-    // reverse nodes in range [node1,nodeK+1)
+    // ...->prev->i->{X...X} => ...->i->prev->{X...X}
+    // reverse nodes in range [node1,node_k+1)
     ListNode* reverseBetween(ListNode* node1, ListNode* nodeKPlus1)
     {
         ListNode* prev = nullptr;
