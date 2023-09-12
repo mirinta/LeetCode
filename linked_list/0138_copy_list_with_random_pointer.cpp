@@ -58,7 +58,7 @@ public:
         if (!head)
             return nullptr;
 
-        // step 1: put each copied node right after the origin node
+        // step 1: put each copied node right after the original node
         // - for example, node1->copy1->node2->...
         for (auto* i = head; i; i = i->next->next) {
             auto* next = i->next;
@@ -90,11 +90,10 @@ public:
             return nullptr;
 
         Node vHead(-1);
-        std::unordered_map<Node*, Node*> map; // origin node to copied node
+        std::unordered_map<Node*, Node*> map; // original node to copied node
         for (auto i = head, j = &vHead; i; i = i->next, j = j->next) {
             // initialization of i and j, we have to use auto, not auto*
-            // because auto* i = head deduces auto as Node,
-            // and makes Node j = &vHead a compile error
+            // because auto* i = head deduces auto as Node, and Node j = &vHead is a compile error
             auto* copy = new Node(i->val);
             j->next = copy;
             map[i] = copy;
