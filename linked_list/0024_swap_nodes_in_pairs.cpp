@@ -15,6 +15,8 @@ struct ListNode
  * problem without modifying the values in the lits's nodes (i.e., only nodes themselves may be
  * changed.)
  *
+ * ! The number of nodes in the list is in the range [0, 100].
+ * ! 0 <= Node.val <= 100
  */
 
 class Solution
@@ -23,35 +25,35 @@ public:
     ListNode* swapPairs(ListNode* head) { return approach2(head); }
 
 private:
-    // iteration
+    // Iteration
     ListNode* approach2(ListNode* head)
     {
-        // Before->[i]->After->{X X X} => Before->After->[i]->{X X X}
+        // prev_i->[i]->next_i->{X...X} => prev_i->next_i->[i]->{X...X}
         if (!head)
             return nullptr;
 
         ListNode vHead(-1);
         vHead.next = head;
-        auto* before = &vHead;
+        auto* prev = &vHead;
         auto* i = head;
         while (i && i->next) {
-            auto* after = i->next;
-            i->next = after->next;
-            after->next = i;
-            before->next = after;
-            before = i;
+            auto* next = i->next;
+            i->next = next->next;
+            next->next = i;
+            prev->next = next;
+            prev = i;
             i = i->next;
         }
         return vHead.next;
     }
 
-    // recursion
+    // Recursion
     ListNode* approach1(ListNode* head)
     {
         if (!head || !head->next)
             return head;
 
-        // [A->B]->{X X X} => [B->A]->{X X X}
+        // A->B->{X...X} => B->A->{X...X}
         auto* newHead = head->next;
         head->next = approach1(newHead->next);
         newHead->next = head;
