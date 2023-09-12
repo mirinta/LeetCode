@@ -18,6 +18,13 @@ struct ListNode
  * order.
  *
  * Merge all the linked-lists into one sorted linked-list and return it.
+ *
+ * ! k == lists.length
+ * ! 0 <= k <= 10^4
+ * ! 0 <= lists[i].length <= 500
+ * ! -10^4 <= lists[i][j] <= 10^4
+ * ! lists[i] is sorted in ascending order.
+ * ! The sum of lists[i].length will not exceed 10^4.
  */
 
 class Solution
@@ -28,23 +35,24 @@ public:
         if (lists.empty())
             return nullptr;
 
-        auto greater = [](const auto* node1, const auto* node2) { return node1->val > node2->val; };
-        std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(greater)> pq(greater);
-        for (auto* node : lists) {
-            if (node) {
-                pq.push(node);
+        auto comparator = [](auto* node1, auto* node2) { return node1->val > node2->val; };
+        std::priority_queue<ListNode*, std::vector<ListNode*>, decltype(comparator)> pq(
+            comparator); // min head
+        for (auto* head : lists) {
+            if (head) {
+                pq.push(head);
             }
         }
         ListNode vHead(-1);
-        auto* i = &vHead;
+        auto* node = &vHead;
         while (!pq.empty()) {
-            auto* node = pq.top();
+            auto* top = pq.top();
             pq.pop();
-            i->next = node;
-            if (node && node->next) {
-                pq.push(node->next);
+            node->next = top;
+            if (top->next) {
+                pq.push(top->next);
             }
-            i = i->next;
+            node = node->next;
         }
         return vHead.next;
     }
