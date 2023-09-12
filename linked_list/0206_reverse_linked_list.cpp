@@ -25,54 +25,57 @@ public:
     ListNode* reverseList(ListNode* head) { return approach3(head); }
 
 private:
-    // iteration
+    // Iterative, time O(N), space O(1)
     ListNode* approach3(ListNode* head)
-    {
-        if (!head)
-            return nullptr;
-
-        ListNode* prev = nullptr;
-        auto* current = head;
-        while (current) {
-            auto* next = current->next;
-            current->next = prev;
-            prev = current;
-            current = next;
-        }
-        return prev;
-    }
-
-    // recursion
-    ListNode* approach2(ListNode* head)
     {
         if (!head || !head->next)
             return head;
 
-        // 0->[1<-2<-...]
+        ListNode* prev = nullptr;
+        auto* node = head;
+        while (node) {
+            auto* next = node->next;
+            node->next = prev;
+            prev = node;
+            node = next;
+        }
+        return prev;
+    }
+
+    // Recursive, time O(N), space O(N)
+    ListNode* approach2(ListNode* head)
+    {
+        // HEAD->X1->X2->...->TAIL
+        // =>
+        // HEAD->[X1<-X2<-...<-TAIL]
+        if (!head || !head->next)
+            return head;
+
         auto* newHead = approach2(head->next);
         head->next->next = head;
         head->next = nullptr;
         return newHead;
     }
 
-    // stack
+    // Stack, time O(N), space O(N)
     ListNode* approach1(ListNode* head)
     {
-        if (!head)
-            return nullptr;
+        if (!head || !head->next)
+            return head;
 
         std::stack<ListNode*> stack;
-        for (auto* i = head; i; i = i->next) {
-            stack.push(i);
+        while (head) {
+            auto* next = head->next;
+            head->next = nullptr;
+            stack.push(head);
+            head = next;
         }
         ListNode vHead(-1);
-        auto* i = &vHead;
+        auto* node = &vHead;
         while (!stack.empty()) {
-            auto* next = stack.top()->next;
-            stack.top()->next = nullptr;
-            i->next = stack.top();
-            i = i->next;
+            node->next = stack.top();
             stack.pop();
+            node = node->next;
         }
         return vHead.next;
     }
