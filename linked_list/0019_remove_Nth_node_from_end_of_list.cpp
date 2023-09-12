@@ -30,25 +30,24 @@ public:
 
         ListNode vHead(-1);
         vHead.next = head;
-        auto* prev = getKthNodeFromEnd(&vHead, n + 1);
-        prev->next = prev->next->next;
+        auto* node = getKthNodeFromEnd(&vHead, n + 1);
+        node->next = node->next->next;
         return vHead.next;
     }
 
 private:
     ListNode* getKthNodeFromEnd(ListNode* head, int k)
     {
-        // 0->1->...->n-k->n-k+1->...->n-1->NULL
-        // |<----n-k--->|  |<-------n-k------->|
+        // 0->...->n-k->...->n-1->NULL
         auto* fast = head;
         for (int i = 0; i < k; ++i) {
             fast = fast->next;
-        }
+        } // fast is at index k
         auto* slow = head;
         while (fast) {
             fast = fast->next;
             slow = slow->next;
-        }
+        } // slow is at index n-k
         return slow;
     }
 };
