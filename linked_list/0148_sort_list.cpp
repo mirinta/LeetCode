@@ -26,13 +26,14 @@ public:
     ListNode* sortList(ListNode* head) { return approach2(head); }
 
 private:
-    // time O(NlogN), space O(logN)
+    // Merge sort, time O(NlogN), space O(logN)
     ListNode* approach2(ListNode* head)
     {
-        if (!head || !head->next)
+        if (!head || !head->next) // at least two nodes
             return head;
 
-        // HEAD->...->MID->MID+1->...->TAIL
+        // HEAD->...->prev->MID->...->TAIL
+        // |<---part1--->|  |<--part2--->|
         auto* slow = head;
         auto* fast = head;
         ListNode* prev = nullptr;
@@ -42,28 +43,33 @@ private:
             slow = slow->next;
         }
         prev->next = nullptr;
-        auto* sortedLeft = approach2(head);
-        auto* sortedRight = approach2(slow);
-        return mergeSortedLinkedLists(sortedLeft, sortedRight);
+        auto* left = approach2(head);
+        auto* right = approach2(slow);
+        return mergeTwoSortedLinkedLists(left, right);
     }
 
-    ListNode* mergeSortedLinkedLists(ListNode* head1, ListNode* head2)
+    ListNode* mergeTwoSortedLinkedLists(ListNode* list1, ListNode* list2)
     {
+        if (!list1 && !list2)
+            return nullptr;
+
         ListNode vHead(-1);
         auto* node = &vHead;
-        while (head1 || head2) {
-            if (!head1) {
-                node->next = head2;
-                head2 = head2->next;
-            } else if (!head2) {
-                node->next = head1;
-                head1 = head1->next;
-            } else if (head1->val < head2->val) {
-                node->next = head1;
-                head1 = head1->next;
+        auto* i1 = list1;
+        auto* i2 = list2;
+        while (i1 || i2) {
+            if (!i1) {
+                node->next = i2;
+                i2 = i2->next;
+            } else if (!i2) {
+                node->next = i1;
+                i1 = i1->next;
+            } else if (i1->val < i2->val) {
+                node->next = i1;
+                i1 = i1->next;
             } else {
-                node->next = head2;
-                head2 = head2->next;
+                node->next = i2;
+                i2 = i2->next;
             }
             node = node->next;
         }
@@ -77,16 +83,17 @@ private:
             return nullptr;
 
         std::vector<ListNode*> nodes;
-        for (auto node = head; node; node = node->next) {
+        auto* node = head;
+        while (node) {
             nodes.push_back(node);
+            auto* next = node->next;
+            node->next = nullptr;
+            node = next;
         }
-        std::sort(nodes.begin(), nodes.end(), [](const auto* const node1, const auto* const node2) {
-            return node1->val < node2->val;
-        });
+        std::sort(nodes.begin(), nodes.end(), [](auto* n1, auto* n2) { return n1->val < n2->val; });
         for (int i = 0; i < nodes.size() - 1; ++i) {
             nodes[i]->next = nodes[i + 1];
         }
-        nodes.back()->next = nullptr;
         return nodes.front();
     }
 };
