@@ -13,74 +13,42 @@ struct ListNode
 };
 
 /**
- * Given the "head" of a singly linked list, return "true" if it is a palindrome or "false"
- * otherwise.
+ * Given the head of a singly linked list, return true if it is a palindrome or false otherwise.
+ *
+ * ! The number of nodes in the list is in the range [1, 10^5].
+ * ! 0 <= Node.val <= 9
  */
 
 class Solution
 {
 public:
-    // approach 1: stack
-    // bool isPalindrome(ListNode* head)
-    // {
-    //     if (!head)
-    //         return false;
+    bool isPalindrome(ListNode* head) { return approach2(head); }
 
-    //     std::stack<decltype(head->val)> stack;
-    //     for (auto* iter = head; iter; iter = iter->next) {
-    //         stack.push(iter->val);
-    //     }
-    //     for (auto* iter = head; iter && !stack.empty(); iter = iter->next) {
-    //         if (iter->val != stack.top())
-    //             return false;
-
-    //         stack.pop();
-    //     }
-    //     return true;
-    // }
-    // ------------------------------
-    // approach 2: recursion
-    //     bool isPalindrome(ListNode* head)
-    //     {
-    //         if (!head)
-    //             return false;
-
-    //         left = head;
-    //         return checkPalindrome(head);
-    //     }
-
-    // private:
-    //     ListNode* left = nullptr;
-    //     bool checkPalindrome(ListNode* head)
-    //     {
-    //         if (!head)
-    //             return true;
-
-    //         const auto result = checkPalindrome(head->next) && (head->val == left->val);
-    //         left = left->next;
-    //         return result;
-    //     }
-    // ------------------------------
-    // approach 3: iteration
-    bool isPalindrome(ListNode* head)
+private:
+    // time O(N), space O(1)
+    bool approach2(ListNode* head)
     {
-        // step 1: find the middle node
-        // - case 1 (even number): N0 -> N1 -> [N2] -> N3 -> NULL, N2 is the middle node
-        // - case 2 (odd number): N0 -> N1 -> [N2] -> N3 -> N4 -> NULL, N2 is the middle node
-        // step 2: reverse and compare
-        // - case 1: compare (N0->N1) and reverse(N2->N3)
-        // - case 2: compare (N0->N1) and reverse(N3->N4)
+        if (!head)
+            return false;
+
+        if (!head->next)
+            return true; // only one node
+
+        // length is even: X0 -> X1 -> X2 -> X3 ->NULL
+        //                 | part1|    | part2|
+        //  length is odd: X0 -> X1 -> X2 -> X3 -> X4 -> NULL
+        //                 | part1|          | part2|
         auto* slow = head;
         auto* fast = head;
         while (fast && fast->next) {
-            slow = slow->next;
             fast = fast->next->next;
+            slow = slow->next;
         }
         if (fast) {
-            slow = slow->next; // for case 2
+            slow = slow->next; // length is odd
         }
         auto* forward = head;
-        auto* backward = reverse(slow);
+        auto* backward = reverseLinkedList(slow);
         while (backward) {
             if (forward->val != backward->val)
                 return false;
@@ -91,17 +59,40 @@ public:
         return true;
     }
 
-private:
-    ListNode* reverse(ListNode* head)
+    ListNode* reverseLinkedList(ListNode* head)
     {
-        ListNode* before = nullptr;
-        auto* iter = head;
-        while (iter) {
-            auto* after = iter->next;
-            iter->next = before;
-            before = iter;
-            iter = after;
+        ListNode* prev = nullptr;
+        while (head) {
+            auto* next = head->next;
+            head->next = prev;
+            prev = head;
+            head = next;
         }
-        return before;
+        return prev;
+    }
+
+    // time O(N), space O(N)
+    bool approach1(ListNode* head)
+    {
+        if (!head)
+            return false;
+
+        if (!head->next)
+            return true; // only one node
+
+        std::stack<ListNode*> stack;
+        auto* node = head;
+        while (node || !stack.empty()) {
+            while (node) {
+                stack.push(node);
+                node = node->next;
+            }
+            if (head->val != stack.top()->val)
+                return false;
+
+            head = head->next;
+            stack.pop();
+        }
+        return true;
     }
 };
