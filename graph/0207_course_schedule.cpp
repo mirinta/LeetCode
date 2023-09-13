@@ -43,14 +43,16 @@ public:
     }
 
 private:
-    // Kahn's algorithm: time (V+E), space O(V+E)
+    // Kahn's algorithm (topological sorting), time O(V+E), space O(V+E)
+    // - V is the number of vertices (courses),
+    // - E is the number of edges (prerequisites)
     bool approach2(const std::vector<std::vector<int>>& graph)
     {
         const int n = graph.size();
         std::vector<int> indegrees(n, 0);
-        for (const auto& adjacencies : graph) {
-            for (const auto& adj : adjacencies) {
-                indegrees[adj]++;
+        for (int i = 0; i < n; ++i) {
+            for (const auto& v : graph[i]) {
+                indegrees[v]++;
             }
         }
         std::queue<int> queue;
@@ -73,12 +75,13 @@ private:
         return count == n;
     }
 
-    // DFS with colors: time O(V+E), space O(V+E)
-    // White: not processed
-    // Gray: being processed
-    // Black: process finished
+    // DFS, time O(V+E), space O(V+E)
+    // - V is the number of vertices (courses),
+    // - E is the number of edges (prerequisites)
+    // white = not processed
+    // gray = being processed
+    // black = process finished
     enum Color { White, Gray, Black };
-
     bool approach1(const std::vector<std::vector<int>>& graph)
     {
         const int n = graph.size();
