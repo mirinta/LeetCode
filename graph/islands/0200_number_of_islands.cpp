@@ -17,10 +17,11 @@
 class Solution
 {
 public:
-    int numIslands(std::vector<std::vector<char>>& grid) { return approach1(grid); }
+    int numIslands(std::vector<std::vector<char>>& grid) { return approach2(grid); }
 
 private:
-    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    static constexpr char kLand = '1';
+    static const std::vector<std::pair<int, int>> kDirections;
 
     // BFS, time O(MN), space O(MN)
     int approach2(const std::vector<std::vector<char>>& grid)
@@ -28,37 +29,44 @@ private:
         const int m = grid.size();
         const int n = grid[0].size();
         std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
-        std::queue<std::pair<int, int>> queue;
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] != '1' || visited[i][j])
-                    continue;
-
-                visited[i][j] = true;
-                queue.push({i, j});
-                while (!queue.empty()) {
-                    const int size = queue.size();
-                    for (int k = 0; k < size; ++k) {
-                        const auto [x, y] = queue.front();
-                        queue.pop();
-                        for (const auto& [dx, dy] : kDirections) {
-                            const int p = x + dx;
-                            const int q = y + dy;
-                            if (p < 0 || p >= m || q < 0 || q >= n)
-                                continue;
-
-                            if (grid[p][q] == '1' && !visited[p][q]) {
-                                visited[p][q] = true;
-                                queue.push({p, q});
-                            }
-                        }
-                    }
+                if (!visited[i][j] && grid[i][j] == kLand) {
+                    bfs(visited, i, j, grid);
+                    result++;
                 }
-                result++;
             }
         }
         return result;
+    }
+
+    void bfs(std::vector<std::vector<bool>>& visited, int startX, int startY,
+             const std::vector<std::vector<char>>& grid)
+    {
+        const int m = grid.size();
+        const int n = grid[0].size();
+        visited[startX][startY] = true;
+        std::queue<std::pair<int, int>> queue;
+        queue.push({startX, startY});
+        while (!queue.empty()) {
+            const int size = queue.size();
+            for (int k = 0; k < size; ++k) {
+                const auto [x, y] = queue.front();
+                queue.pop();
+                for (const auto& [dx, dy] : kDirections) {
+                    const int i = x + dx;
+                    const int j = y + dy;
+                    if (i < 0 || i >= m || j < 0 || j >= n)
+                        continue;
+
+                    if (!visited[i][j] && grid[i][j] == kLand) {
+                        visited[i][j] = true;
+                        queue.push({i, j});
+                    }
+                }
+            }
+        }
     }
 
     // DFS, time O(MN), space O(MN)
@@ -70,7 +78,7 @@ private:
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == '1' && !visited[i][j]) {
+                if (!visited[i][j] && grid[i][j] == kLand) {
                     dfs(visited, i, j, grid);
                     result++;
                 }
@@ -91,9 +99,11 @@ private:
             if (i < 0 || i >= m || j < 0 || j >= n)
                 continue;
 
-            if (!visited[i][j] && grid[i][j] == '1') {
+            if (!visited[i][j] && grid[i][j] == kLand) {
                 dfs(visited, i, j, grid);
             }
         }
     }
 };
+
+const std::vector<std::pair<int, int>> Solution::kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
