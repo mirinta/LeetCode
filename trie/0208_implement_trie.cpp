@@ -25,15 +25,28 @@
 
 struct TrieNode
 {
-    static constexpr int R = 26;
-    std::array<TrieNode*, R> next{nullptr};
+    static constexpr int R = 26; // only lowercase English letters
+    std::array<TrieNode*, R> next;
     bool isEnd = false;
+
+    TrieNode() = default;
+
+    ~TrieNode()
+    {
+        auto iter = next.begin();
+        while (iter != next.end()) {
+            delete *iter;
+            ++iter;
+        }
+    }
 };
 
 class Trie
 {
 public:
     Trie() : root(new TrieNode()) {}
+
+    ~Trie() { delete root; }
 
     void insert(const std::string& word)
     {
