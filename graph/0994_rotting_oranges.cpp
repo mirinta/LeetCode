@@ -26,31 +26,32 @@ class Solution
 public:
     int orangesRotting(std::vector<std::vector<int>>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return -1;
-
+        static constexpr int kFresh = 1;
+        static constexpr int kRotten = 2;
+        static const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         const int m = grid.size();
         const int n = grid[0].size();
-        const int kRot = 2;
-        const int kFresh = 1;
-        std::queue<std::pair<int, int>> queue;
         int numOfFreshOranges = 0;
+        std::vector<std::vector<int>> visited(m, std::vector<int>(n, false));
+        std::queue<std::pair<int, int>> queue;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == kRot) {
+                if (grid[i][j] == kRotten) {
                     queue.push({i, j});
+                    visited[i][j] = true;
                 } else if (grid[i][j] == kFresh) {
                     numOfFreshOranges++;
                 }
             }
         }
         if (numOfFreshOranges == 0)
-            return 0;
+            return 0; // no fresh oranges
 
-        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-        int time = -1;
-        while (!queue.empty()) {
-            time++;
+        if (queue.empty())
+            return -1; // no rotten oranges
+
+        int time = 0;
+        while (!queue.empty() && numOfFreshOranges) {
             const int size = queue.size();
             for (int k = 0; k < size; ++k) {
                 const auto [x, y] = queue.front();
@@ -61,13 +62,14 @@ public:
                     if (i < 0 || i >= m || j < 0 || j >= n)
                         continue;
 
-                    if (grid[i][j] == kFresh) {
-                        grid[i][j] = kRot;
-                        numOfFreshOranges--;
+                    if (!visited[i][j] && grid[i][j] == kFresh) {
+                        visited[i][j] = true;
                         queue.push({i, j});
+                        numOfFreshOranges--;
                     }
                 }
             }
+            time++;
         }
         return numOfFreshOranges == 0 ? time : -1;
     }
