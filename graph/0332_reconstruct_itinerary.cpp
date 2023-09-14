@@ -29,27 +29,29 @@ class Solution
 public:
     std::vector<std::string> findItinerary(std::vector<std::vector<std::string>>& tickets)
     {
-        Graph graph;
+        std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> graph;
         std::unordered_set<int> remainingTickets;
         for (int i = 0; i < tickets.size(); ++i) {
-            graph[tickets[i][0]].push_back({tickets[i][1], i});
+            const auto& from = tickets[i][0];
+            const auto& to = tickets[i][1];
+            graph[from].push_back({to, i});
             remainingTickets.insert(i);
         }
-        for (auto& [from, adjacency] : graph) {
-            std::sort(adjacency.begin(), adjacency.end());
+        for (auto& [from, adjacencies] : graph) {
+            std::sort(adjacencies.begin(), adjacencies.end());
         }
         const std::string kStart{"JFK"};
         std::vector<std::string> result{kStart};
-        backtrack(remainingTickets, result, kStart, graph);
+        backtrack(result, remainingTickets, kStart, graph);
         return result;
     }
 
 private:
-    using Graph = std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>;
-
-    // return true if the final result is found, i.e., there is no remaining ticket
-    bool backtrack(std::unordered_set<int>& remainingTickets, std::vector<std::string>& result,
-                   const std::string& from, const Graph& graph)
+    // return true if there is no remaining ticket, i.e., the final answer is found
+    bool backtrack(
+        std::vector<std::string>& result, std::unordered_set<int>& remainingTickets,
+        const std::string& from,
+        const std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& graph)
     {
         if (remainingTickets.empty())
             return true;
@@ -63,7 +65,7 @@ private:
 
             remainingTickets.erase(ticketID);
             result.push_back(to);
-            if (backtrack(remainingTickets, result, to, graph))
+            if (backtrack(result, remainingTickets, to, graph))
                 return true;
 
             remainingTickets.insert(ticketID);
