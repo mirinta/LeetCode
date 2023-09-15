@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <queue>
 #include <vector>
 
@@ -76,32 +77,32 @@ private:
     }
 
     // Prim's algorithm
-    int approach2(std::vector<std::vector<int>>& points)
+    int approach2(const std::vector<std::vector<int>>& points)
     {
         const int n = points.size();
-        using Pair = std::pair<int, int>; // <cost, vertex>
-        auto comparator = [](const auto& p1, const auto& p2) { return p1.first > p2.first; };
+        using Pair = std::pair<int, int>; // <vertex, distance>
+        auto comparator = [](const auto& p1, const auto& p2) { return p1.second > p2.second; };
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
             comparator); // min heap
         for (int i = 1; i < n; ++i) {
-            pq.push({manhattanDistance(points[0], points[i]), i});
+            pq.push({i, manhattanDistance(points[0], points[i])});
         }
         std::vector<bool> visited(n, false);
         visited[0] = true;
         int result = 0;
         int edges = 0;
         while (!pq.empty()) {
-            const auto [cost, v] = pq.top();
+            const auto [v, dist] = pq.top();
             pq.pop();
             if (visited[v])
                 continue;
 
             visited[v] = true;
-            result += cost;
+            result += dist;
             edges++;
-            for (int i = 0; i < n; ++i) {
-                if (!visited[i]) {
-                    pq.push({manhattanDistance(points[v], points[i]), i});
+            for (int w = 0; w < n; ++w) {
+                if (!visited[w]) {
+                    pq.push({w, manhattanDistance(points[v], points[w])});
                 }
             }
         }
@@ -109,26 +110,23 @@ private:
     }
 
     // Kruskal's algorithm
-    int approach1(std::vector<std::vector<int>>& points)
+    int approach1(const std::vector<std::vector<int>>& points)
     {
         const int n = points.size();
-        std::vector<std::tuple<int, int, int>> edges; // <cost, x, y>
+        std::vector<std::array<int, 3>> edges; // <from, to, distance>
         for (int i = 0; i < n; ++i) {
             for (int j = i + 1; j < n; ++j) {
-                edges.push_back({manhattanDistance(points[i], points[j]), i, j});
+                edges.push_back({i, j, manhattanDistance(points[i], points[j])});
             }
         }
         std::sort(edges.begin(), edges.end(),
-                  [](const auto& e1, const auto& e2) { return std::get<0>(e1) < std::get<0>(e2); });
+                  [](const auto& e1, const auto& e2) { return e1[2] < e2[2]; });
         UnionFind uf(n);
         int result = 0;
         for (const auto& edge : edges) {
-            const auto& cost = std::get<0>(edge);
-            const auto& from = std::get<1>(edge);
-            const auto& to = std::get<2>(edge);
-            if (!uf.isConnected(from, to)) {
-                result += cost;
-                uf.connect(from, to);
+            if (!uf.isConnected(edge[0], edge[1])) {
+                uf.connect(edge[0], edge[1]);
+                result += edge[2];
             }
         }
         return uf.numOfConnectedComponents() == 1 ? result : -1;
