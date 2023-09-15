@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <set>
 #include <unordered_set>
 #include <vector>
 
@@ -24,13 +25,12 @@ private:
         std::unordered_set<int> set(nums.begin(), nums.end());
         int result = 0;
         for (const auto& val : nums) {
-            // if val-1 is found, it indicates that val is not the
-            // beginning of a consecutive sequence
+            // if val-1 is found, it means that val is not the beginning of the consecutive sequence
             if (set.count(val - 1))
                 continue;
 
-            int current = val;
             int count = 0;
+            int current = val;
             while (set.count(current)) {
                 set.erase(current);
                 current++;
@@ -41,23 +41,18 @@ private:
         return result;
     }
 
-    // time O(NlogN), space O(N+std::sort)
+    // time O(NlogN), space O(N)
     int approach1(const std::vector<int>& nums)
     {
-        std::unordered_set<int> set(nums.begin(), nums.end());
-        std::vector<int> unique;
-        for (const auto& val : set) {
-            unique.push_back(val);
-        }
-        std::sort(unique.begin(), unique.end());
+        std::set<int> set(nums.begin(), nums.end());
+        auto i = set.begin();
         int result = 0;
-        int i = 0;
-        while (i < unique.size()) {
-            int j = i + 1;
-            while (j < unique.size() && unique[j] - unique[j - 1] == 1) {
-                j++;
+        while (i != set.end()) {
+            auto j = std::next(i, 1);
+            while (j != set.end() && *j - *std::prev(j) == 1) {
+                j = std::next(j, 1);
             }
-            result = std::max(result, j - i);
+            result = std::max<int>(result, std::distance(i, j));
             i = j;
         }
         return result;
