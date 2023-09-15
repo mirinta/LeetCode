@@ -29,7 +29,56 @@ class Solution
 public:
     std::vector<std::string> findItinerary(std::vector<std::vector<std::string>>& tickets)
     {
-        std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> graph;
+        return approach2(tickets);
+    }
+
+private:
+    // graph[from] = {<to, ticketID>, ...}
+    using Graph = std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>;
+
+    // Eulerian Path
+    std::vector<std::string> approach2(const std::vector<std::vector<std::string>>& tickets)
+    {
+        Graph graph;
+        for (int i = 0; i < tickets.size(); ++i) {
+            const auto& from = tickets[i][0];
+            const auto& to = tickets[i][1];
+            graph[from].push_back({to, i});
+        }
+        std::unordered_map<std::string, int> outdegrees;
+        for (auto& [from, adjacencies] : graph) {
+            std::sort(adjacencies.begin(), adjacencies.end(),
+                      [](const auto& p1, const auto& p2) { return p1.first < p2.first; });
+            outdegrees[from] += adjacencies.size();
+        }
+        // the problem guarantees the existence of Eulerian path
+        std::unordered_set<int> usedTickets;
+        std::vector<std::string> result;
+        dfs(result, usedTickets, outdegrees, "JFK", graph);
+        std::reverse(result.begin(), result.end());
+        return result;
+    }
+
+    void dfs(std::vector<std::string>& result, std::unordered_set<int>& usedTickets,
+             std::unordered_map<std::string, int>& outdegrees, const std::string& start,
+             const Graph& graph)
+    {
+        while (outdegrees[start] > 0) {
+            for (const auto& [to, ticketID] : graph.at(start)) {
+                if (!usedTickets.count(ticketID)) {
+                    usedTickets.insert(ticketID);
+                    outdegrees[start]--;
+                    dfs(result, usedTickets, outdegrees, to, graph);
+                }
+            }
+        }
+        result.push_back(start);
+    }
+
+    // Backtracking
+    std::vector<std::string> approach1(const std::vector<std::vector<std::string>>& tickets)
+    {
+        Graph graph;
         std::unordered_set<int> remainingTickets;
         for (int i = 0; i < tickets.size(); ++i) {
             const auto& from = tickets[i][0];
@@ -38,7 +87,8 @@ public:
             remainingTickets.insert(i);
         }
         for (auto& [from, adjacencies] : graph) {
-            std::sort(adjacencies.begin(), adjacencies.end());
+            std::sort(adjacencies.begin(), adjacencies.end(),
+                      [](const auto& p1, const auto& p2) { return p1.first < p2.first; });
         }
         const std::string kStart{"JFK"};
         std::vector<std::string> result{kStart};
@@ -46,12 +96,9 @@ public:
         return result;
     }
 
-private:
-    // return true if there is no remaining ticket, i.e., the final answer is found
-    bool backtrack(
-        std::vector<std::string>& result, std::unordered_set<int>& remainingTickets,
-        const std::string& from,
-        const std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& graph)
+    // return true if there is no remaining ticket
+    bool backtrack(std::vector<std::string>& result, std::unordered_set<int>& remainingTickets,
+                   const std::string& from, const Graph& graph)
     {
         if (remainingTickets.empty())
             return true;
