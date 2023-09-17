@@ -1,4 +1,5 @@
 #include <queue>
+#include <random>
 #include <vector>
 
 /**
@@ -18,10 +19,54 @@ public:
     int findKthLargest(std::vector<int>& nums, int k) { return approach2(nums, k); }
 
 private:
-    // Min Heap, time O(NlogK), space O(K)
+    int approach2(std::vector<int>& nums, int k)
+    {
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(nums.begin(), nums.end(), g);
+        const int n = nums.size();
+        const int rank = n - k; // index of the kth largest element
+        int lo = 0;
+        int hi = n - 1;
+        while (lo < hi) {
+            const auto [lt, gt] = threeWayPartition(nums, lo, hi);
+            if (rank < lt) {
+                hi = lt - 1;
+            } else if (rank > gt) {
+                lo = gt + 1;
+            } else {
+                return nums[rank];
+            }
+        }
+        return nums[rank];
+    }
+
+    std::pair<int, int> threeWayPartition(std::vector<int>& nums, int lo, int hi)
+    {
+        // lo ... lt-1 lt ... gt gt+1 ... hi
+        // |<-part1->| |<part2>| |<-part3->|
+        // part1, nums[lo:lt-1] < pivot
+        // part2, nums[lt:gt] = pivot
+        // part3, nums[gt+1:hi] > pivot
+        const int pivot = nums[lo];
+        int lt = lo;
+        int gt = hi;
+        int i = lo;
+        while (i <= gt) {
+            if (nums[i] < pivot) {
+                std::swap(nums[i++], nums[lt++]);
+            } else if (nums[i] > pivot) {
+                std::swap(nums[i], nums[gt--]);
+            } else {
+                i++;
+            }
+        }
+        return {lt, gt};
+    }
+
     int approach1(const std::vector<int>& nums, int k)
     {
-        std::priority_queue<int, std::vector<int>, std::greater<int>> pq; // min heap
+        std::priority_queue<int, std::vector<int>, std::greater<int>> pq; // min heap;
         for (const auto& val : nums) {
             pq.push(val);
             if (pq.size() > k) {
@@ -29,47 +74,5 @@ private:
             }
         }
         return pq.top();
-    }
-
-    // Quick-Select, time average O(N), time worst O(N^2), space O(1)
-    int approach2(std::vector<int>& nums, int k)
-    {
-        const int n = nums.size();
-        const int rank = n - k;
-        int lo = 0;
-        int hi = n - 1;
-        while (lo < hi) {
-            const int j = partition(nums, lo, hi);
-            if (j == rank)
-                return nums[j];
-
-            if (j > rank) {
-                hi = j - 1;
-            } else {
-                lo = j + 1;
-            }
-        }
-        return nums[rank];
-    }
-
-    int partition(std::vector<int>& nums, int lo, int hi)
-    {
-        const int pivot = nums[lo];
-        int i = lo + 1;
-        int j = hi;
-        while (true) {
-            while (i <= hi && nums[i] <= pivot) {
-                i++;
-            }
-            while (j >= lo && nums[j] > pivot) {
-                j--;
-            }
-            if (i >= j)
-                break;
-
-            std::swap(nums[i], nums[j]);
-        }
-        std::swap(nums[lo], nums[j]);
-        return j;
     }
 };
