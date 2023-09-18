@@ -26,17 +26,24 @@ class Solution
 public:
     std::vector<int> kWeakestRows(std::vector<std::vector<int>>& mat, int k)
     {
-        // priority queue + binary search
-        std::priority_queue<std::pair<int, int>> pq; // max heap
-        for (int i = 0; i < mat.size(); ++i) {
+        const int m = mat.size();
+        const int n = mat[0].size();
+        using Pair = std::pair<int, int>; // num of soldiers, row index
+        auto comparator = [](const auto& p1, const auto& p2) {
+            return p1.first == p2.first ? p1.second < p2.second : p1.first < p2.first;
+        };
+        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
+            comparator); // max heap
+        for (int i = 0; i < m; ++i) {
             auto iter = std::upper_bound(mat[i].rbegin(), mat[i].rend(), 0);
+            // soldiers appears to the left of all civilians
             const int soldiers = std::distance(iter, mat[i].rend());
             pq.push({soldiers, i});
             if (pq.size() > k) {
                 pq.pop();
             }
         }
-        std::vector<int> result(std::min<size_t>(k, pq.size()));
+        std::vector<int> result(std::min<size_t>(pq.size(), k));
         for (int i = result.size() - 1; i >= 0; --i) {
             result[i] = pq.top().second;
             pq.pop();
