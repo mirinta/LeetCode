@@ -15,11 +15,14 @@ class Solution
 public:
     std::vector<int> dailyTemperatures(std::vector<int>& temperatures)
     {
-        // monotonic decreasing (from bottom to top)
-        std::stack<std::pair<int, int>> stack;
-        std::vector<int> result(temperatures.size(), 0);
-        for (int i = temperatures.size() - 1; i >= 0; --i) {
-            while (!stack.empty() && stack.top().first <= temperatures[i]) {
+        // given nums[i],
+        // find the next greater element, i.e., nums[j] > nums[i]
+        // then j-i is the num of days we have to wait after the ith day to get a warmer temperature
+        const int n = temperatures.size();
+        std::stack<std::pair<int, int>> stack; // <value, index>
+        std::vector<int> result(n, 0);
+        for (int i = n - 1; i >= 0; --i) {
+            while (!stack.empty() && temperatures[i] >= stack.top().first) {
                 stack.pop();
             }
             result[i] = stack.empty() ? 0 : stack.top().second - i;
