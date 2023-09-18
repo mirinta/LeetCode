@@ -69,6 +69,7 @@ private:
             std::sort(key.begin(), key.end());
             map[key].push_back(s);
         }
+        result.reserve(map.size());
         for (auto& [key, anagrams] : map) {
             result.push_back(std::move(anagrams));
         }

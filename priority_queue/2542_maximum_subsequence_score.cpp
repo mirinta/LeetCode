@@ -42,7 +42,7 @@ public:
         std::sort(pairs.begin(), pairs.end(),
                   [](const auto& p1, const auto& p2) { return p1.second > p2.second; });
         // min heap to maintain top k elements of nums1
-        std::priority_queue<int, std::vector<int>, std::greater<int>> pq;
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq;
         long long sum = 0;
         long long result = 0;
         for (const auto& [val1, val2] : pairs) {

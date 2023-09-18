@@ -26,7 +26,7 @@ public:
                 stack.pop();
             }
             result[i] = stack.empty() ? 0 : stack.top().second - i;
-            stack.push({temperatures[i], i});
+            stack.emplace(temperatures[i], i);
         }
         return result;
     }

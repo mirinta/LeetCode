@@ -27,7 +27,7 @@ public:
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (mat[i][j] == 0) {
-                    queue.push({i, j});
+                    queue.emplace(i, j);
                     visited[i][j] = true;
                 }
             }
@@ -47,7 +47,7 @@ public:
 
                     if (!visited[i][j] && mat[i][j] == 1) {
                         visited[i][j] = true;
-                        queue.push({i, j});
+                        queue.emplace(i, j);
                         result[i][j] = result[x][y] + 1;
                     }
                 }

@@ -58,7 +58,7 @@ public:
     }
 
     std::string generateFullyJustified(int left, int right, int maxWidth,
-                                       const std::vector<std::string> words)
+                                       const std::vector<std::string>& words)
     {
         // words[left:right]
         if (right - left + 1 <= 0)
@@ -75,7 +75,7 @@ public:
                 std::string temp(right - i > 0 ? std::ceil(1.0 * spaces / (right - i)) : spaces,
                                  ' ');
                 spaces -= temp.size();
-                result.append(std::move(temp));
+                result.append(temp);
             }
         }
         return result;

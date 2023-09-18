@@ -48,7 +48,7 @@ private:
         const int n = grid[0].size();
         visited[startX][startY] = true;
         std::queue<std::pair<int, int>> queue;
-        queue.push({startX, startY});
+        queue.emplace(startX, startY);
         while (!queue.empty()) {
             const int size = queue.size();
             for (int k = 0; k < size; ++k) {
@@ -62,7 +62,7 @@ private:
 
                     if (!visited[i][j] && grid[i][j] == kLand) {
                         visited[i][j] = true;
-                        queue.push({i, j});
+                        queue.emplace(i, j);
                     }
                 }
             }

@@ -37,7 +37,7 @@ public:
         std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         visited[start[0]][start[1]] = true;
         std::queue<std::pair<int, int>> queue;
-        queue.push({start[0], start[1]});
+        queue.emplace(start[0], start[1]);
         const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         while (!queue.empty()) {
             const auto [x, y] = queue.front();
@@ -56,7 +56,7 @@ public:
                 }
                 if (updated && !visited[i - dx][j - dy]) {
                     visited[i - dx][j - dy] = true;
-                    queue.push({i - dx, j - dy});
+                    queue.emplace(i - dx, j - dy);
                 }
             }
         }

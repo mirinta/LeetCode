@@ -51,7 +51,7 @@ public:
                         return steps;
 
                     grid[i][j] = 2;
-                    queue.push({i, j});
+                    queue.emplace(i, j);
                 }
             }
             steps++;
@@ -65,7 +65,7 @@ private:
     void dfs(std::queue<std::pair<int, int>>& queue, std::vector<std::vector<int>>& grid, int x,
              int y)
     {
-        queue.push({x, y});
+        queue.emplace(x, y);
         grid[x][y] = 2;
         const int n = grid.size();
         for (const auto& [dx, dy] : kDirections) {

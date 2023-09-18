@@ -66,7 +66,7 @@ private:
 
     int approach1(const std::vector<int>& nums, int k)
     {
-        std::priority_queue<int, std::vector<int>, std::greater<int>> pq; // min heap;
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq; // min heap;
         for (const auto& val : nums) {
             pq.push(val);
             if (pq.size() > k) {

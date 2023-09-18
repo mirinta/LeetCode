@@ -38,8 +38,8 @@ public:
             chars[length++] = chars[left];
             if (right - left > 1) {
                 const std::string freq = std::to_string(right - left);
-                for (int i = 0; i < freq.size(); ++i) {
-                    chars[length++] = freq[i];
+                for (const auto& i : freq) {
+                    chars[length++] = i;
                 }
             }
             left = right;

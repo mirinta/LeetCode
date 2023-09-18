@@ -21,7 +21,6 @@ public:
     // - A is the amount, and N is the number of coins
     int coinChange(std::vector<int>& coins, int amount)
     {
-        const int n = coins.size();
         // dp[i] = min number of coins to make up amount i
         std::vector<long> dp(amount + 1, INT_MAX);
         dp[0] = 0;

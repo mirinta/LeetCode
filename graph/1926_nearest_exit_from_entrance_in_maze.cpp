@@ -39,18 +39,18 @@ public:
         std::queue<std::pair<int, int>> queue;
         for (int i = 0; i < m; ++i) {
             if (maze[i][0] == kEmpty && !isSameLocation(i, 0, x0, y0)) {
-                queue.push({i, 0});
+                queue.emplace(i, 0);
             }
             if (maze[i][n - 1] == kEmpty && !isSameLocation(i, n - 1, x0, y0)) {
-                queue.push({i, n - 1});
+                queue.emplace(i, n - 1);
             }
         }
         for (int j = 1; j < n - 1; ++j) {
             if (maze[0][j] == kEmpty && !isSameLocation(0, j, x0, y0)) {
-                queue.push({0, j});
+                queue.emplace(0, j);
             }
             if (maze[m - 1][j] == kEmpty && !isSameLocation(m - 1, j, x0, y0)) {
-                queue.push({m - 1, j});
+                queue.emplace(m - 1, j);
             }
         }
         static const std::vector<std::pair<int, int>> kDirections{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
@@ -70,7 +70,7 @@ public:
                         continue;
 
                     maze[i][j] = kWall;
-                    queue.push({i, j});
+                    queue.emplace(i, j);
                 }
             }
             steps++;

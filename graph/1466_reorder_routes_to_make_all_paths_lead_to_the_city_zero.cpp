@@ -34,8 +34,8 @@ public:
         for (const auto& connection : connections) {
             const auto& from = connection[0];
             const auto& to = connection[1];
-            graph[from].push_back({to, 1}); // 1 means it is an original edge
-            graph[to].push_back({from, 0}); // 0 means it isn't an original edge
+            graph[from].emplace_back(to, 1); // 1 means it is an original edge
+            graph[to].emplace_back(from, 0); // 0 means it isn't an original edge
         }
         std::queue<int> queue;
         queue.push(0);

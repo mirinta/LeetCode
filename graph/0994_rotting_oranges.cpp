@@ -37,7 +37,7 @@ public:
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (grid[i][j] == kRotten) {
-                    queue.push({i, j});
+                    queue.emplace(i, j);
                     visited[i][j] = true;
                 } else if (grid[i][j] == kFresh) {
                     numOfFreshOranges++;
@@ -64,7 +64,7 @@ public:
 
                     if (!visited[i][j] && grid[i][j] == kFresh) {
                         visited[i][j] = true;
-                        queue.push({i, j});
+                        queue.emplace(i, j);
                         numOfFreshOranges--;
                     }
                 }

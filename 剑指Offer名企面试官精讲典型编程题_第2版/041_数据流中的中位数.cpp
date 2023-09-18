@@ -58,7 +58,7 @@ private:
     // [...MAX][MIN...]
     // | LEFT || RIGHT|
     std::priority_queue<int> left;
-    std::priority_queue<int, std::vector<int>, std::greater<int>> right;
+    std::priority_queue<int, std::vector<int>, std::greater<>> right;
 };
 
 /**

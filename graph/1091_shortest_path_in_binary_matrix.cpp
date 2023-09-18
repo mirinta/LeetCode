@@ -35,7 +35,7 @@ public:
         std::vector<std::vector<bool>> visited(n, std::vector<bool>(n, false));
         visited[0][0] = true;
         std::queue<std::pair<int, int>> queue;
-        queue.push({0, 0});
+        queue.emplace(0, 0);
         int length = 1;
         while (!queue.empty()) {
             const int size = queue.size();
@@ -53,7 +53,7 @@ public:
 
                     if (!visited[i][j] && grid[i][j] == 0) {
                         visited[i][j] = true;
-                        queue.push({i, j});
+                        queue.emplace(i, j);
                     }
                 }
             }

@@ -48,7 +48,7 @@ private:
                 stack.pop();
             }
             result[i] = stack.empty() ? n : stack.top().second;
-            stack.push({heights[i], i});
+            stack.emplace(heights[i], i);
         }
         return result;
     }
@@ -63,7 +63,7 @@ private:
                 stack.pop();
             }
             result[i] = stack.empty() ? -1 : stack.top().second;
-            stack.push({heights[i], i});
+            stack.emplace(heights[i], i);
         }
         return result;
     }

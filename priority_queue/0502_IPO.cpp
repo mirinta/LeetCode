@@ -36,7 +36,7 @@ public:
     {
         std::vector<std::pair<int, int>> projects(capital.size()); // <capital, profit>
         for (int i = 0; i < capital.size(); ++i) {
-            projects.push_back({capital[i], profits[i]});
+            projects.emplace_back(capital[i], profits[i]);
         }
         std::sort(projects.begin(), projects.end(),
                   [](const auto& p1, const auto& p2) { return p1.first < p2.first; });

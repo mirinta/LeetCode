@@ -78,7 +78,8 @@ private:
 class Solution
 {
 public:
-    std::string smallestEquivalentString(std::string s1, std::string s2, std::string baseStr)
+    std::string smallestEquivalentString(const std::string& s1, const std::string& s2,
+                                         const std::string& baseStr)
     {
         UnionFind uf(26);
         const int length = s1.size();

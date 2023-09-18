@@ -40,9 +40,10 @@ private:
         const int rank = nums.size() / 2;
         while (lo <= hi) {
             const int pos = partition(lo, hi, nums);
-            if (pos == rank) {
+            if (pos == rank)
                 return nums[pos];
-            } else if (pos > rank) {
+
+            if (pos > rank) {
                 hi = pos - 1;
             } else {
                 lo = pos + 1;

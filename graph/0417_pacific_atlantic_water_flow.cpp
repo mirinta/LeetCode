@@ -34,12 +34,12 @@ public:
         std::queue<std::pair<int, int>> pacific;
         std::queue<std::pair<int, int>> atlantic;
         for (int i = 0; i < m; ++i) {
-            pacific.push({i, 0});
-            atlantic.push({i, n - 1});
+            pacific.emplace(i, 0);
+            atlantic.emplace(i, n - 1);
         }
         for (int j = 0; j < n; ++j) {
-            pacific.push({0, j});
-            atlantic.push({m - 1, j});
+            pacific.emplace(0, j);
+            atlantic.emplace(m - 1, j);
         }
         const auto pacificReachable = bfs(pacific, heights);
         const auto atlanticReachable = bfs(atlantic, heights);
@@ -74,7 +74,7 @@ private:
                     continue;
 
                 if (!visited[i][j] && heights[i][j] >= heights[x][y]) {
-                    queue.push({i, j});
+                    queue.emplace(i, j);
                 }
             }
         }

@@ -45,7 +45,7 @@ public:
         };
         std::priority_queue<Tuple, std::vector<Tuple>, decltype(comparator)> pq(
             comparator); // min heap
-        pq.push({0, start[0], start[1]});
+        pq.emplace(0, start[0], start[1]);
         const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         while (!pq.empty()) {
             const auto [dist, x, y] = pq.top();
@@ -69,7 +69,7 @@ public:
                 j -= dy;
                 if (distTo[i][j] > dist + count) {
                     distTo[i][j] = dist + count;
-                    pq.push({distTo[i][j], i, j});
+                    pq.emplace(distTo[i][j], i, j);
                 }
             }
         }

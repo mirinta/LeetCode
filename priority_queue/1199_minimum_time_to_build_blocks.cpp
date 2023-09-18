@@ -35,7 +35,7 @@ private:
         // - min cost = 1 + max(4, 1 + max(3, 1 + max(1, 2)))
         //                                    |<---val1-->|
         //                         |<--------val2-------->|
-        std::priority_queue<int, std::vector<int>, std::greater<int>> pq; // min heap
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq; // min heap
         for (const auto& cost : blocks) {
             pq.push(cost);
         }

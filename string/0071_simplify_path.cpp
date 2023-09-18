@@ -55,9 +55,9 @@ public:
             i = j;
         }
         std::string result("/");
-        for (int i = 0; i < words.size(); ++i) {
-            result.append(std::move(words[i]));
-            if (i < words.size() - 1) {
+        for (int k = 0; k < words.size(); ++k) {
+            result.append(words[k]);
+            if (k < words.size() - 1) {
                 result.push_back('/');
             }
         }

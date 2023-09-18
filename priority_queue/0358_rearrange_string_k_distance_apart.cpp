@@ -31,8 +31,8 @@ public:
         for (const auto& c : s) {
             map[c]++;
         }
-        for (auto& pair : map) {
-            pq.push(std::move(pair));
+        for (const auto& pair : map) {
+            pq.emplace(pair);
         }
         std::string result;
         while (!pq.empty()) {
@@ -45,14 +45,14 @@ public:
 
             std::vector<Pair> pairs(std::min<int>(k, pq.size()));
             for (auto& pair : pairs) {
-                pair = std::move(pq.top());
+                pair = pq.top();
                 pq.pop();
                 result.push_back(pair.first);
                 pair.second--;
             }
-            for (auto& pair : pairs) {
+            for (const auto& pair : pairs) {
                 if (pair.second > 0) {
-                    pq.push(std::move(pair));
+                    pq.emplace(pair);
                 }
             }
         }

@@ -8,7 +8,7 @@
 class CQueue
 {
 public:
-    CQueue() {}
+    CQueue() = default;
 
     void appendTail(int value) { m_in.push(value); }
 

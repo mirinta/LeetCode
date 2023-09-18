@@ -86,8 +86,8 @@ private:
             const auto& from = edge[0] - 1;
             const auto& to = edge[1] - 1;
             const auto& cost = edge[2];
-            graph[from].push_back({cost, to});
-            graph[to].push_back({cost, from});
+            graph[from].emplace_back(cost, to);
+            graph[to].emplace_back(cost, from);
         }
         auto comparator = [](const auto& p1, const auto& p2) { return p1.first > p2.first; };
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(

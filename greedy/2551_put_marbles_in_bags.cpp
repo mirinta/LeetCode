@@ -37,6 +37,7 @@ public:
         // then diff = (X2 + Y1) + (Y2 + Z1),
         // it is the sum of adjacent values (at most k-1 pairs)
         std::vector<long long> adjacentSum;
+        adjacentSum.reserve(weights.size() - 1);
         for (int i = 0; i < weights.size() - 1; ++i) {
             adjacentSum.push_back(weights[i] + weights[i + 1]);
         }

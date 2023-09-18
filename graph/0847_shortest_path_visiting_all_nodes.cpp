@@ -29,7 +29,7 @@ public:
         for (int i = 0; i < n; ++i) {
             const int state = 1 << i;
             target |= state;
-            queue.push({i, state});
+            queue.emplace(i, state);
             visited[i].insert(state);
         }
         int result = -1;
@@ -46,7 +46,7 @@ public:
                     const int newState = state | (1 << adj);
                     if (!visited[adj].count(newState)) {
                         visited[adj].insert(newState);
-                        queue.push({adj, newState});
+                        queue.emplace(adj, newState);
                     }
                 }
             }

@@ -85,7 +85,7 @@ private:
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
             comparator); // min heap
         for (int i = 1; i < n; ++i) {
-            pq.push({i, manhattanDistance(points[0], points[i])});
+            pq.emplace(i, manhattanDistance(points[0], points[i]));
         }
         std::vector<bool> visited(n, false);
         visited[0] = true;
@@ -102,7 +102,7 @@ private:
             edges++;
             for (int w = 0; w < n; ++w) {
                 if (!visited[w]) {
-                    pq.push({w, manhattanDistance(points[v], points[w])});
+                    pq.emplace(w, manhattanDistance(points[v], points[w]));
                 }
             }
         }

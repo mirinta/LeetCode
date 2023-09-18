@@ -26,21 +26,21 @@ public:
         int num = 0;
         int sign = 1;
         int sum = 0;
-        for (int i = 0; i < s.size(); ++i) {
-            if (std::isdigit(s[i])) {
-                num = num * 10 + (s[i] - '0');
-            } else if (s[i] == '-' || s[i] == '+') {
+        for (const auto& i : s) {
+            if (std::isdigit(i)) {
+                num = num * 10 + (i - '0');
+            } else if (i == '-' || i == '+') {
                 sum += sign * num;
-                sign = s[i] == '-' ? -1 : 1;
+                sign = i == '-' ? -1 : 1;
                 num = 0;
-            } else if (s[i] == '(') {
+            } else if (i == '(') {
                 // SUM operator (...)
                 stack.push(sum);  // store current sum
                 stack.push(sign); // store sign before parenthesis
                 sum = 0;
                 num = 0;
                 sign = 1;
-            } else if (s[i] == ')') {
+            } else if (i == ')') {
                 // PREV_SUM operator CURRENT_SUM
                 sum += sign * num; // last operation in parenthesis
                 sum *= stack.top();

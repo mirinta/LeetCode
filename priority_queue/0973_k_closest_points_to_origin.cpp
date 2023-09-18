@@ -28,7 +28,7 @@ public:
         using Tuple = std::tuple<long, int, int>;
         std::priority_queue<Tuple, std::vector<Tuple>, decltype(comp)> pq(comp);
         for (const auto& point : points) {
-            pq.push({point[0] * point[0] + point[1] * point[1], point[0], point[1]});
+            pq.emplace(point[0] * point[0] + point[1] * point[1], point[0], point[1]);
             if (pq.size() > k) {
                 pq.pop();
             }

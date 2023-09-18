@@ -46,8 +46,8 @@ public:
             rowIndex += direction;
         }
         std::string result;
-        for (auto& row : rows) {
-            result.append(std::move(row));
+        for (const auto& row : rows) {
+            result.append(row);
         }
         return result;
     }

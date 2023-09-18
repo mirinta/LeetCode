@@ -23,8 +23,7 @@ public:
             return 0;
 
         // min heap
-        std::priority_queue<int, std::vector<int>, std::greater<int>> pq(sticks.begin(),
-                                                                         sticks.end());
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq(sticks.begin(), sticks.end());
         int result = 0;
         while (pq.size() > 1) {
             int cost = pq.top();

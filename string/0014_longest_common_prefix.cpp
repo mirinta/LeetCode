@@ -81,9 +81,9 @@ private:
     bool isValid(int prefixLength, const std::vector<std::string>& strs)
     {
         const std::string prefix = strs[0].substr(0, prefixLength);
-        for (int i = 0; i < strs.size(); ++i) {
+        for (const auto& str : strs) {
             for (int j = 0; j < prefixLength; ++j) {
-                if (strs[i][j] != prefix[j])
+                if (str[j] != prefix[j])
                     return false;
             }
         }

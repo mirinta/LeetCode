@@ -27,7 +27,6 @@ public:
     std::vector<int> kWeakestRows(std::vector<std::vector<int>>& mat, int k)
     {
         const int m = mat.size();
-        const int n = mat[0].size();
         using Pair = std::pair<int, int>; // num of soldiers, row index
         auto comparator = [](const auto& p1, const auto& p2) {
             return p1.first == p2.first ? p1.second < p2.second : p1.first < p2.first;
@@ -38,7 +37,7 @@ public:
             auto iter = std::upper_bound(mat[i].rbegin(), mat[i].rend(), 0);
             // soldiers appears to the left of all civilians
             const int soldiers = std::distance(iter, mat[i].rend());
-            pq.push({soldiers, i});
+            pq.emplace(soldiers, i);
             if (pq.size() > k) {
                 pq.pop();
             }

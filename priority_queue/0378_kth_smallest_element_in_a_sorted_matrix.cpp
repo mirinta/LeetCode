@@ -31,7 +31,7 @@ private:
         using Tuples = std::vector<std::tuple<int, int, int>>;
         std::priority_queue<std::tuple<int, int, int>, Tuples, decltype(comp)> pq(comp);
         for (int i = 0; i < matrix.size(); ++i) {
-            pq.push({matrix[i][0], i, 0});
+            pq.emplace(matrix[i][0], i, 0);
         }
         int result = -1;
         while (!pq.empty() && k > 0) {
@@ -40,7 +40,7 @@ private:
             pq.pop();
             result = val;
             if (j + 1 < matrix[i].size()) {
-                pq.push({matrix[i][j + 1], i, j + 1});
+                pq.emplace(matrix[i][j + 1], i, j + 1);
             }
         }
         return result;

@@ -95,7 +95,7 @@ private:
         // Dijkstra
         std::unordered_map<int, std::vector<std::pair<int, int>>> graph;
         for (const auto& flight : flights) {
-            graph[flight[0]].push_back({flight[1], flight[2]}); // from:[<to,price>,...]
+            graph[flight[0]].emplace_back(flight[1], flight[2]); // from:[<to,price>,...]
         }
         using Triple = std::array<int, 3>; // <cost, steps, vertex>
         auto comp = [](const auto& t1, const auto& t2) -> bool { return t1[0] > t2[0]; };

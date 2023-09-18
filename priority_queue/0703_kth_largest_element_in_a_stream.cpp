@@ -42,7 +42,7 @@ public:
 
 private:
     int m_k;
-    std::priority_queue<int, std::vector<int>, std::greater<int>> m_minHeap; // at most k elements
+    std::priority_queue<int, std::vector<int>, std::greater<>> m_minHeap; // at most k elements
 };
 
 /**

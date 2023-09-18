@@ -90,8 +90,8 @@ private:
 class Solution
 {
 public:
-    std::vector<std::vector<std::string>> suggestedProducts(std::vector<std::string>& products,
-                                                            std::string searchWord)
+    std::vector<std::vector<std::string>> suggestedProducts(
+        const std::vector<std::string>& products, const std::string& searchWord)
     {
         Trie trie;
         for (const auto& name : products) {

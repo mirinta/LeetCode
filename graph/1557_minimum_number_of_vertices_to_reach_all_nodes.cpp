@@ -25,7 +25,6 @@ public:
         // the problem is asking us to find all nodes with 0 indegree
         std::vector<int> indegrees(n, 0);
         for (const auto& edge : edges) {
-            const auto& from = edge[0];
             const auto& to = edge[1];
             indegrees[to]++;
         }

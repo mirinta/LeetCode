@@ -36,11 +36,11 @@ public:
         // sort by frequency in decreasing order
         // if two characters have the same frequency, sort by letter in increasing order
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator);
-        for (auto& pair : map) {
+        for (const auto& pair : map) {
             if (pair.second > (s.size() + 1) / 2)
                 return {};
 
-            pq.push(std::move(pair));
+            pq.emplace(pair);
         }
         std::string result;
         while (!pq.empty()) {
@@ -52,11 +52,11 @@ public:
                 pq.pop();
                 result.push_back(c2);
                 if (freq2 > 1) {
-                    pq.push({c2, freq2 - 1});
+                    pq.emplace(c2, freq2 - 1);
                 }
             }
             if (freq1 > 1) {
-                pq.push({c1, freq1 - 1});
+                pq.emplace(c1, freq1 - 1);
             }
         }
         return result;

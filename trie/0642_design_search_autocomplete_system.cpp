@@ -125,7 +125,7 @@ private:
 class AutocompleteSystem
 {
 public:
-    AutocompleteSystem(std::vector<std::string>& sentences, std::vector<int>& times)
+    AutocompleteSystem(const std::vector<std::string>& sentences, const std::vector<int>& times)
     {
         for (int i = 0; i < sentences.size(); ++i) {
             trie.insert(sentences[i], times[i]);

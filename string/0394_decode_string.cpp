@@ -1,3 +1,4 @@
+#include <ranges>
 #include <stack>
 #include <string>
 
@@ -49,8 +50,8 @@ public:
             }
             // add component to stack and repeat k times
             for (int i = 0; i < k; ++i) {
-                for (auto iter = component.rbegin(); iter != component.rend(); ++iter) {
-                    stack.push(*iter);
+                for (auto& iter : std::ranges::reverse_view(component)) {
+                    stack.push(iter);
                 }
             }
         }

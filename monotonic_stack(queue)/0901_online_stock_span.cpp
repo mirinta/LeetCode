@@ -29,7 +29,7 @@
 class StockSpanner
 {
 public:
-    StockSpanner() {}
+    StockSpanner() = default;
 
     int next(int price)
     {
@@ -38,7 +38,7 @@ public:
             count += stack.top().second;
             stack.pop();
         }
-        stack.push({price, count});
+        stack.emplace(price, count);
         return count;
     }
 

@@ -38,8 +38,8 @@ private:
             return;
 
         int numOfSpaces = 0;
-        for (int i = 0; i < s.size(); ++i) {
-            if (s[i] == ' ') {
+        for (const auto& i : s) {
+            if (i == ' ') {
                 numOfSpaces++;
             }
         }

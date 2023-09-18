@@ -55,7 +55,7 @@ public:
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (grid[i][j] == '@') {
-                    queue.push({i, j, 0});
+                    queue.emplace(i, j, 0);
                     visited[i][j].insert(0);
                 } else if (isKey(grid[i][j])) {
                     targetKeychain = addKey(targetKeychain, grid[i][j]);
@@ -93,7 +93,7 @@ public:
                     if (newKeychain == targetKeychain)
                         return moves + 1;
 
-                    queue.push({i, j, newKeychain});
+                    queue.emplace(i, j, newKeychain);
                     visited[i][j].insert(newKeychain);
                 }
             }

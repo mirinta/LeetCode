@@ -31,7 +31,7 @@ public:
     int furthestBuilding(std::vector<int>& heights, int bricks, int ladders)
     {
         // min heap
-        std::priority_queue<int, std::vector<int>, std::greater<int>> pq;
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq;
         for (int i = 1; i < heights.size(); ++i) {
             // we are standing at building i-1
             const int diff = heights[i] - heights[i - 1];

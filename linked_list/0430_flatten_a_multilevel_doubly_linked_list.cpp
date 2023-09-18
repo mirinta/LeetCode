@@ -37,16 +37,17 @@ private:
             childTail->next = next;
             next->prev = childTail;
             return nextTail;
-        } else if (!next && child) {
+        }
+        if (!next && child) {
             auto* childTail = dfs(child);
             head->next = child;
             child->prev = head;
             return childTail;
-        } else if (next && !child) {
+        }
+        if (next && !child) {
             auto* nextTail = dfs(next);
             return nextTail;
-        } else {
-            return head;
         }
+        return head;
     }
 };

@@ -47,8 +47,8 @@ public:
             const auto& left = building[0];
             const auto& right = building[1];
             const auto& height = building[2];
-            map[left].push_back({height, 1});
-            map[right].push_back({height, -1});
+            map[left].emplace_back(height, 1);
+            map[right].emplace_back(height, -1);
         }
         std::multiset<int> set;
         std::vector<std::vector<int>> result;

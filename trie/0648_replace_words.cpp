@@ -76,7 +76,8 @@ private:
 class Solution
 {
 public:
-    std::string replaceWords(std::vector<std::string>& dictionary, std::string sentence)
+    std::string replaceWords(const std::vector<std::string>& dictionary,
+                             const std::string& sentence)
     {
         Trie trie;
         for (const auto& word : dictionary) {

@@ -42,18 +42,17 @@ public:
         if (k == n)
             return std::accumulate(costs.begin(), costs.end(), 0LL);
 
-        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>,
-                            std::greater<std::pair<int, int>>>
-            pq;
+        using Pair = std::pair<int, int>;
+        std::priority_queue<Pair, std::vector<Pair>, std::greater<>> pq;
         // candidates of each session, in range [0,left) and (right, n-1]
         // remaining candidates in range [left, right]
         int left = 0;
         int right = n - 1;
         for (; left + 1 <= candidates; ++left) {
-            pq.push({costs[left], 0}); // 0 means it belongs to the left part
+            pq.emplace(costs[left], 0); // 0 means it belongs to the left part
         }
         for (; right >= left && n - right <= candidates; --right) {
-            pq.push({costs[right], 1}); // 1 means it belongs to the right part
+            pq.emplace(costs[right], 1); // 1 means it belongs to the right part
         }
         long long result = 0LL;
         while (k > 0 && !pq.empty()) {
@@ -61,10 +60,10 @@ public:
             pq.pop();
             if (right - left + 1 > 0) {
                 if (flag == 0) {
-                    pq.push({costs[left], 0});
+                    pq.emplace(costs[left], 0);
                     left++;
                 } else {
-                    pq.push({costs[right], 1});
+                    pq.emplace(costs[right], 1);
                     right--;
                 }
             }

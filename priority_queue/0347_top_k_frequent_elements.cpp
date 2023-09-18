@@ -1,4 +1,5 @@
 #include <queue>
+#include <ranges>
 #include <unordered_map>
 #include <vector>
 
@@ -83,14 +84,14 @@ private:
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
             comparator); // min heap
         for (const auto& [val, freq] : map) {
-            pq.push({val, freq});
+            pq.emplace(val, freq);
             if (pq.size() > k) {
                 pq.pop();
             }
         }
         std::vector<int> result(std::min<size_t>(k, pq.size()));
-        for (auto iter = result.rbegin(); iter != result.rend(); ++iter) {
-            *iter = pq.top().first;
+        for (auto& iter : std::ranges::reverse_view(result)) {
+            iter = pq.top().first;
             pq.pop();
         }
         return result;

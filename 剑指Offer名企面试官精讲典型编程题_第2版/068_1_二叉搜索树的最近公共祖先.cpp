@@ -33,12 +33,12 @@ public:
 
         const int min = std::min(p->val, q->val);
         const int max = std::max(p->val, q->val);
-        if (min > root->val) {
+        if (min > root->val)
             return lowestCommonAncestor(root->right, p, q);
-        } else if (max < root->val) {
+
+        if (max < root->val)
             return lowestCommonAncestor(root->left, p, q);
-        } else {
-            return root;
-        }
+
+        return root;
     }
 };

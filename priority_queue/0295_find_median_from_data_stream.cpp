@@ -25,7 +25,7 @@
 class MedianFinder
 {
 public:
-    MedianFinder() {}
+    MedianFinder() = default;
 
     void addNum(int num)
     {
@@ -59,7 +59,7 @@ private:
     // | LEFT || RIGHT|
     // where |LEFT.size() - RIGHT.size()| <= 1,
     // any element in the RIGHT part >= any element in the LEFT part
-    std::priority_queue<int, std::vector<int>, std::greater<int>> right;
+    std::priority_queue<int, std::vector<int>, std::greater<>> right;
     std::priority_queue<int> left;
 };
 

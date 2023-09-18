@@ -50,7 +50,7 @@ private:
         if (memo[mask] != -1)
             return memo[mask];
 
-        int maxScore = 0;
+        int result = 0;
         // pick value in reverse order:
         // 1 << 0 means the nums[size - 1] is picked
         for (int first = 0; first < nums.size(); ++first) {
@@ -61,10 +61,10 @@ private:
                 int newMask = mask | ((1 << first) | (1 << second));
                 int currentScore = (pairsPicked + 1) * std::gcd(nums[first], nums[second]);
                 int remainingScore = dp(nums, newMask, pairsPicked + 1, memo);
-                maxScore = std::max(maxScore, currentScore + remainingScore);
+                result = std::max(result, currentScore + remainingScore);
             }
         }
-        memo[mask] = maxScore;
-        return maxScore;
+        memo[mask] = result;
+        return result;
     }
 };

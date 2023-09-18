@@ -43,7 +43,7 @@ private:
         for (int i = 0; i < tickets.size(); ++i) {
             const auto& from = tickets[i][0];
             const auto& to = tickets[i][1];
-            graph[from].push_back({to, i});
+            graph[from].emplace_back(to, i);
         }
         std::unordered_map<std::string, int> outdegrees;
         for (auto& [from, adjacencies] : graph) {
@@ -83,7 +83,7 @@ private:
         for (int i = 0; i < tickets.size(); ++i) {
             const auto& from = tickets[i][0];
             const auto& to = tickets[i][1];
-            graph[from].push_back({to, i});
+            graph[from].emplace_back(to, i);
             remainingTickets.insert(i);
         }
         for (auto& [from, adjacencies] : graph) {

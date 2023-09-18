@@ -75,8 +75,7 @@ public:
         for (const auto& pair : pairs) {
             uf.connect(pair[0], pair[1]);
         }
-        std::unordered_map<int, std::priority_queue<char, std::vector<char>, std::greater<char>>>
-            map;
+        std::unordered_map<int, std::priority_queue<char, std::vector<char>, std::greater<>>> map;
         for (int i = 0; i < s.size(); ++i) {
             map[uf.find(i)].push(s[i]);
         }

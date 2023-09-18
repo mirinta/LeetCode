@@ -29,7 +29,7 @@ class Solution
 {
 public:
     std::vector<std::string> findWords(std::vector<std::vector<char>>& board,
-                                       std::vector<std::string>& words)
+                                       const std::vector<std::string>& words)
     {
         auto* root = new TrieNode();
         for (const auto& word : words) {

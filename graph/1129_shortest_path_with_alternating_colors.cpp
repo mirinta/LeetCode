@@ -41,8 +41,8 @@ public:
             graph[edge[0]][kBlue].push_back(edge[1]);
         }
         std::queue<std::pair<int, int>> queue; // <vertex, color>
-        queue.push({0, kRed});
-        queue.push({0, kBlue});
+        queue.emplace(0, kRed);
+        queue.emplace(0, kBlue);
         std::vector<std::vector<bool>> visited(n, std::vector<bool>(2, false));
         visited[0][kRed] = true;
         ;
@@ -64,7 +64,7 @@ public:
                         continue;
 
                     visited[adj][requiredColor] = true;
-                    queue.push({adj, requiredColor});
+                    queue.emplace(adj, requiredColor);
                 }
             }
             steps++;

@@ -44,7 +44,7 @@ private:
         // then 2x, 3x, and 5x are all ugly numbers
         // - x = 1, the next ugly numbers are 2, 3, and 5
         // - x = 2, the next ugly numbers are 4, 6, and 10
-        std::priority_queue<long long, std::vector<long long>, std::greater<long long>> pq;
+        std::priority_queue<long long, std::vector<long long>, std::greater<>> pq;
         pq.push(1);
         int count = 0;
         while (!pq.empty()) {

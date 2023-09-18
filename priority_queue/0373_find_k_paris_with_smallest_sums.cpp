@@ -30,7 +30,7 @@ public:
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
             comparator); // min heap
         for (int i = 0; i < nums1.size(); ++i) {
-            pq.push({i, 0});
+            pq.emplace(i, 0);
         }
         std::vector<std::vector<int>> result;
         while (!pq.empty() && k > 0) {
@@ -38,7 +38,7 @@ public:
             pq.pop();
             result.push_back({nums1[i], nums2[j]});
             if (j + 1 < nums2.size()) {
-                pq.push({i, j + 1});
+                pq.emplace(i, j + 1);
             }
             k--;
         }

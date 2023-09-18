@@ -33,7 +33,7 @@ public:
         std::unordered_set<std::string> visited;
         visited.insert("0000");
         std::queue<std::string> queue;
-        queue.push("0000");
+        queue.emplace("0000");
         int steps = 0;
         while (!queue.empty()) {
             const int size = queue.size();

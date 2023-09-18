@@ -139,7 +139,7 @@ private:
         std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         visited[0][0] = true;
         std::queue<std::pair<int, int>> queue;
-        queue.push({0, 0});
+        queue.emplace(0, 0);
         while (!queue.empty()) {
             const int size = queue.size();
             for (int k = 0; k < size; ++k) {
@@ -158,7 +158,7 @@ private:
                         continue;
 
                     visited[i][j] = true;
-                    queue.push({i, j});
+                    queue.emplace(i, j);
                 }
             }
         }
@@ -178,7 +178,7 @@ private:
         };
         std::priority_queue<Tuple, std::vector<Tuple>, decltype(comparator)> pq(
             comparator); // min heap
-        pq.push({0, 0, 0});
+        pq.emplace(0, 0, 0);
         while (!pq.empty()) {
             const auto [x, y, effort] = pq.top();
             pq.pop();
@@ -194,7 +194,7 @@ private:
                 const int newEffort = std::max(effort, std::abs(heights[i][j] - heights[x][y]));
                 if (effortTo[i][j] > newEffort) {
                     effortTo[i][j] = newEffort;
-                    pq.push({i, j, newEffort});
+                    pq.emplace(i, j, newEffort);
                 }
             }
         }

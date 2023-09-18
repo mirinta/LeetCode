@@ -71,14 +71,14 @@ private:
             }
         }
         std::queue<std::pair<int, int>> queue; // <vertex, distance>
-        queue.push({headID, 0});
+        queue.emplace(headID, 0);
         int result = 0;
         while (!queue.empty()) {
             const auto [v, time] = queue.front();
             queue.pop();
             result = std::max(result, time);
             for (const auto& adj : graph[v]) {
-                queue.push({adj, time + informTime[v]});
+                queue.emplace(adj, time + informTime[v]);
             }
         }
         return result;

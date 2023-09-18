@@ -26,7 +26,7 @@
 struct TrieNode
 {
     static constexpr int R = 26; // only lowercase English letters
-    std::array<TrieNode*, R> next;
+    std::array<TrieNode*, R> next{};
     bool isEnd = false;
 
     TrieNode() = default;

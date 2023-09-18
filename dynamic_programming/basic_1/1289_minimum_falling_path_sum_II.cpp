@@ -37,8 +37,9 @@ public:
         }
         for (int i = 1; i < n; ++i) {
             std::vector<std::pair<int, int>> lastRow;
+            lastRow.reserve(n);
             for (int k = 0; k < n; ++k) {
-                lastRow.push_back({dp[i - 1][k], k});
+                lastRow.emplace_back(dp[i - 1][k], k);
             }
             std::sort(lastRow.begin(), lastRow.end());
             for (int j = 0; j < n; ++j) {

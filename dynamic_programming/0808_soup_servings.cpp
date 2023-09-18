@@ -25,3 +25,40 @@
  *
  * ! 0 <= n <= 10^9
  */
+
+class Solution
+{
+public:
+    double soupServings(int n)
+    {
+        if (n >= 5000) // magic number by obervation
+            return 1.0;
+
+        std::unordered_map<int, std::unordered_map<int, double>> memo;
+        return dp(memo, n, n);
+    }
+
+private:
+    double dp(std::unordered_map<int, std::unordered_map<int, double>>& memo, int A, int B)
+    {
+        if (A <= 0 && B <= 0)
+            return 0.5;
+
+        if (A <= 0 && B > 0)
+            return 1.0;
+
+        if (B <= 0)
+            return 0;
+
+        if (memo.count(A) && memo[A].count(B))
+            return memo[A][B];
+
+        static const std::vector<std::pair<int, int>> operations{
+            {-100, 0}, {-75, -25}, {-50, -50}, {-25, -75}};
+        memo[A][B] = 0;
+        for (const auto& operation : operations) {
+            memo[A][B] += 0.25 * dp(memo, A + operation.first, B + operation.second);
+        }
+        return memo[A][B];
+    }
+};

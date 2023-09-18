@@ -105,13 +105,13 @@ private:
             const auto& from = edges[i][0];
             const auto& to = edges[i][1];
             const auto& prob = succProb[i];
-            graph[from].push_back({prob, to});
-            graph[to].push_back({prob, from});
+            graph[from].emplace_back(prob, to);
+            graph[to].emplace_back(prob, from);
         }
         auto comparator = [](const auto& p1, const auto& p2) { return p1.first < p2.first; };
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
             comparator); // max heap
-        pq.push({1.0, src});
+        pq.emplace(1.0, src);
         std::vector<double> probTo(n, -1);
         probTo[src] = 1.0;
         while (!pq.empty()) {
@@ -123,7 +123,7 @@ private:
             for (const auto& [prob, adj] : graph[v]) {
                 if (probTo[adj] < probTo[v] * prob) {
                     probTo[adj] = probTo[v] * prob;
-                    pq.push({probTo[adj], adj});
+                    pq.emplace(probTo[adj], adj);
                 }
             }
         }

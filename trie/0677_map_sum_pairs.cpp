@@ -65,11 +65,11 @@ private:
         if (!node)
             return 0;
 
-        int sum = 0;
+        int result = 0;
         for (const auto& ptr : node->next) {
-            sum += dfs(ptr.get());
+            result += dfs(ptr.get());
         }
-        return node->value + sum;
+        return node->value + result;
     }
 
 private:

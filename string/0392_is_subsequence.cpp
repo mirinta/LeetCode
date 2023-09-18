@@ -24,8 +24,8 @@ public:
             return false;
 
         int check = 0;
-        for (int i = 0; i < t.size(); ++i) {
-            if (t[i] == s[check]) {
+        for (const auto& i : t) {
+            if (i == s[check]) {
                 check++;
             }
         }

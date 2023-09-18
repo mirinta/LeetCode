@@ -16,9 +16,9 @@ public:
         // DP with space optimization
         int withStock = INT_MIN;
         int witoutStock = 0;
-        for (int i = 0; i < prices.size(); ++i) {
-            witoutStock = std::max(witoutStock, withStock + prices[i]);
-            withStock = std::max(withStock, -prices[i]);
+        for (const auto& price : prices) {
+            witoutStock = std::max(witoutStock, withStock + price);
+            withStock = std::max(withStock, -price);
         }
         return witoutStock;
     }

@@ -87,16 +87,16 @@ private:
         std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator);
         std::vector<std::vector<Pair>> graph(n + 1);
         for (int i = 0; i < wells.size(); ++i) {
-            graph[0].push_back({wells[i], i + 1});
-            graph[i + 1].push_back({wells[i], 0});
+            graph[0].emplace_back(wells[i], i + 1);
+            graph[i + 1].emplace_back(wells[i], 0);
             pq.push(graph[0].back());
         }
         for (const auto& pipe : pipes) {
             const auto& from = pipe[0];
             const auto& to = pipe[1];
             const auto& cost = pipe[2];
-            graph[from].push_back({cost, to});
-            graph[to].push_back({cost, from});
+            graph[from].emplace_back(cost, to);
+            graph[to].emplace_back(cost, from);
         }
         std::vector<bool> visited(n + 1, false);
         visited[0] = true;

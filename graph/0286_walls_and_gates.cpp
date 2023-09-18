@@ -34,7 +34,7 @@ public:
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (rooms[i][j] == kGate) {
-                    queue.push({i, j});
+                    queue.emplace(i, j);
                 }
             }
         }
@@ -52,7 +52,7 @@ public:
                     continue;
 
                 rooms[i][j] = rooms[x][y] + 1;
-                queue.push({i, j});
+                queue.emplace(i, j);
             }
         }
     }
