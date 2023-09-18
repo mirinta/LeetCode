@@ -26,7 +26,6 @@ public:
         int left = 0;
         int right = 0;
         std::vector<int> result;
-        // sliding window, elements are in the range [left, right]
         while (right < s.size()) {
             while (right - left + 1 <= p.size()) {
                 const auto& charRight = s[right++];
