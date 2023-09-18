@@ -17,7 +17,7 @@ class Solution
 public:
     std::string minWindow(std::string s, std::string t)
     {
-        std::unordered_map<char, int> map; // frequency of t[i]
+        std::unordered_map<char, int> map; // char of t, frequency
         for (const auto& c : t) {
             map[c]++;
         }
@@ -25,23 +25,20 @@ public:
         int minLength = INT_MAX;
         int left = 0;
         int right = 0;
-        int count = 0; // count the num of valid characters
-        // sliding window, characters in range [left, right)
+        int count = 0; // num of unique characters of t
         while (right < s.size()) {
-            // expand the window size to find a feasible solution
-            const auto& c1 = s[right++];
-            if (map.count(c1) && --map[c1] == 0) {
+            const auto& charRight = s[right++];
+            if (map.count(charRight) && --map[charRight] == 0) {
                 count++;
             }
             while (count == map.size()) {
-                // update the optimal solution
+                // elements in range [left, right)
                 if (right - left < minLength) {
-                    minStart = left;
                     minLength = right - left;
+                    minStart = left;
                 }
-                // shrink the window to find a better solution
-                const auto& c2 = s[left++];
-                if (map.count(c2) && map[c2]++ == 0) {
+                const auto& charLeft = s[left++];
+                if (map.count(charLeft) && map[charLeft]++ == 0) {
                     count--;
                 }
             }
