@@ -18,56 +18,43 @@ public:
             return {};
 
         const int n = nums.size();
-        std::sort(nums.begin(), nums.end());
         std::vector<std::vector<int>> result;
-        for (int i = 0; i < n; ++i) {
-            auto pairs = twoSum(i + 1, -nums[i], nums);
-            if (pairs.empty())
+        std::sort(nums.begin(), nums.end()); // arrange duplicates together
+        // given nums[i], we are going to find nums[j] and nums[k],
+        // s.t., nums[i] + nums[j] + nums[k] = 0, where
+        // j != k, and both j and k are in the range [i+1, n)
+        for (int i = 0; i <= n - 3; ++i) {
+            if (i - 1 >= 0 && nums[i] == nums[i - 1])
+                continue; // skip duplicates
+
+            // optimization1:
+            if (nums[i] + nums[i + 1] + nums[i + 2] > 0)
+                break;
+
+            // optimization2:
+            if (nums[i] + nums[n - 2] + nums[n - 1] < 0)
                 continue;
 
-            for (auto& pair : pairs) {
-                pair.push_back(nums[i]);
-                result.push_back(std::move(pair));
-            }
-            // since the array is sorted, all duplicates of nums[i] are arranged together
-            // move the pointer until we find a new number
-            while (i + 1 < n && nums[i] == nums[i + 1]) {
-                i++;
-            }
-        }
-        return result;
-    }
-
-private:
-    // find two numbers in nums[start:] that can add up to the "target"
-    // nums is sorted in ascending order
-    std::vector<std::vector<int>> twoSum(int start, int target, const std::vector<int>& nums)
-    {
-        if (nums.size() < 2)
-            return {};
-
-        std::vector<std::vector<int>> result;
-        int left = start;
-        int right = nums.size() - 1;
-        while (left < right) {
-            const int leftVal = nums[left];
-            const int rightVal = nums[right];
-            const int sum = leftVal + rightVal;
-            if (sum > target) {
-                while (left < right && nums[right] == rightVal) {
+            const int target = -nums[i];
+            // apply two-sum algorithm:
+            int left = i + 1;
+            int right = n - 1;
+            while (left < right) {
+                const int sum = nums[left] + nums[right];
+                if (sum > target) {
                     right--;
-                }
-            } else if (sum < target) {
-                while (left < right && nums[left] == leftVal) {
+                } else if (sum < target) {
                     left++;
-                }
-            } else {
-                result.push_back({leftVal, rightVal});
-                while (left < right && nums[left] == leftVal) {
+                } else {
+                    result.push_back({nums[i], nums[left], nums[right]});
                     left++;
-                }
-                while (left < right && nums[right] == rightVal) {
+                    while (left < right && nums[left] == nums[left - 1]) {
+                        left++;
+                    }
                     right--;
+                    while (left < right && nums[right] == nums[right + 1]) {
+                        right--;
+                    }
                 }
             }
         }
