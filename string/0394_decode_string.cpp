@@ -38,7 +38,7 @@ public:
                 component.push_back(stack.top());
                 stack.pop();
             }
-            stack.pop();
+            stack.pop(); // pop '['
             // parse k
             int k = 0;
             int base = 1;
