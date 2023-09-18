@@ -20,26 +20,27 @@ public:
     std::vector<int> topKFrequent(std::vector<int>& nums, int k) { return approach2(nums, k); }
 
 private:
-    // quick-select
+    // quick-select (two-way partition)
     std::vector<int> approach2(std::vector<int>& nums, int k)
     {
-        std::unordered_map<int, int> map;
+        std::unordered_map<int, int> map; // val to frequency
         for (const auto& val : nums) {
             map[val]++;
         }
         std::vector<int> unique;
-        for (const auto& [val, frequency] : map) {
-            unique.push_back(val);
+        unique.reserve(map.size());
+        for (const auto& pair : map) {
+            unique.push_back(pair.first);
         }
-        const int rank = unique.size() - k;
+        int rank = unique.size() - k;
         int lo = 0;
         int hi = unique.size() - 1;
-        while (lo < hi) {
-            const int pos = partition(lo, hi, unique, map);
-            if (pos > rank) {
-                hi = pos - 1;
-            } else if (pos < rank) {
-                lo = pos + 1;
+        while (lo < hi && rank) {
+            const int j = partition(unique, lo, hi, map);
+            if (rank < j) {
+                hi = j - 1;
+            } else if (rank > j) {
+                lo = j + 1;
             } else {
                 break;
             }
@@ -47,7 +48,7 @@ private:
         return {unique.begin() + rank, unique.end()};
     }
 
-    int partition(int lo, int hi, std::vector<int>& nums, const std::unordered_map<int, int>& map)
+    int partition(std::vector<int>& nums, int lo, int hi, const std::unordered_map<int, int>& map)
     {
         const int pivot = map.at(nums[lo]);
         int i = lo + 1;
@@ -69,25 +70,27 @@ private:
     }
 
     // priority queue
-    std::vector<int> approach1(std::vector<int>& nums, int k)
+    std::vector<int> approach1(const std::vector<int>& nums, int k)
     {
-        std::unordered_map<int, int> map;
+        std::unordered_map<int, int> map; // val to frequency
         for (const auto& val : nums) {
             map[val]++;
         }
-        auto comp = [](const auto& p1, const auto& p2) -> bool { return p1.first > p2.first; };
-        // min heap, <frequency, val>
-        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, decltype(comp)>
-            pq(comp);
-        for (const auto& [val, frequency] : map) {
-            pq.push({frequency, val});
+        using Pair = std::pair<int, int>; // val, frequency
+        auto comparator = [](const auto& p1, const auto& p2) {
+            return p1.second == p2.second ? p1.first > p2.first : p1.second > p2.second;
+        };
+        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
+            comparator); // min heap
+        for (const auto& [val, freq] : map) {
+            pq.push({val, freq});
             if (pq.size() > k) {
                 pq.pop();
             }
         }
-        std::vector<int> result(std::min<size_t>(k, pq.size()), 0);
-        for (int i = result.size() - 1; i >= 0; --i) {
-            result[i] = pq.top().second;
+        std::vector<int> result(std::min<size_t>(k, pq.size()));
+        for (auto iter = result.rbegin(); iter != result.rend(); ++iter) {
+            *iter = pq.top().first;
             pq.pop();
         }
         return result;
