@@ -56,7 +56,8 @@ public:
             minNodeOfRight->left = root->left;
             minNodeOfRight->right = root->right;
             return minNodeOfRight;
-        } else if (root->val > key) {
+        }
+        if (root->val > key) {
             root->left = deleteNode(root->left, key);
         } else {
             root->right = deleteNode(root->right, key);

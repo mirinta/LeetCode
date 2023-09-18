@@ -30,10 +30,7 @@
 class BrowserHistory
 {
 public:
-    BrowserHistory(std::string homepage) : _currentPos(0)
-    {
-        _deque.push_front(std::move(homepage));
-    }
+    explicit BrowserHistory(std::string homepage) { _deque.push_front(std::move(homepage)); }
 
     void visit(std::string url)
     {
@@ -58,7 +55,7 @@ public:
     }
 
 private:
-    int _currentPos;
+    int _currentPos{0};
     std::deque<std::string> _deque;
 };
 

@@ -38,7 +38,7 @@ public:
 class NestedIterator
 {
 public:
-    NestedIterator(std::vector<NestedInteger>& nestedList)
+    explicit NestedIterator(std::vector<NestedInteger>& nestedList)
         : list(nestedList.begin(), nestedList.end())
     {
     }

@@ -26,7 +26,7 @@
 class MinStack
 {
 public:
-    MinStack() {}
+    MinStack() = default;
 
     void push(int val)
     {

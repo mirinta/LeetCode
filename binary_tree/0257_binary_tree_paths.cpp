@@ -36,8 +36,8 @@ private:
 
         if (!node->left && !node->right) {
             std::string concat;
-            for (size_t i = 0; i < values.size(); ++i) {
-                concat.append(std::to_string(values[i]));
+            for (const auto& value : values) {
+                concat.append(std::to_string(value));
                 concat.append("->");
             }
             concat.append(std::to_string(node->val));

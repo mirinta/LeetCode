@@ -26,15 +26,15 @@ public:
         std::priority_queue<Tuple, std::vector<Tuple>, decltype(comparator)> pq(
             comparator); // min heap
         for (int i = 0; i < m; ++i) {
-            pq.push({heightMap[i][0], i, 0});
+            pq.emplace(heightMap[i][0], i, 0);
             visited[i][0] = true;
-            pq.push({heightMap[i][n - 1], i, n - 1});
+            pq.emplace(heightMap[i][n - 1], i, n - 1);
             visited[i][n - 1] = true;
         }
         for (int j = 1; j < n - 1; ++j) {
-            pq.push({heightMap[0][j], 0, j});
+            pq.emplace(heightMap[0][j], 0, j);
             visited[0][j] = true;
-            pq.push({heightMap[m - 1][j], m - 1, j});
+            pq.emplace(heightMap[m - 1][j], m - 1, j);
             visited[m - 1][j] = true;
         }
         const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
@@ -55,7 +55,7 @@ public:
 
                 if (!visited[i][j]) {
                     visited[i][j] = true;
-                    pq.push({heightMap[i][j], i, j});
+                    pq.emplace(heightMap[i][j], i, j);
                 }
             }
         }

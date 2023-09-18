@@ -26,7 +26,6 @@ public:
     int removeDuplicates(std::vector<int>& nums)
     {
         const int n = nums.size();
-        int i = 0;
         int keep = 0;
         for (int i = 0; i < n; ++i) {
             // X X X X Y

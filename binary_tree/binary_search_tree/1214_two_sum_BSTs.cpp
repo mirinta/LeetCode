@@ -58,13 +58,13 @@ private:
         if (!root)
             return false;
 
-        if (root->val < target) {
+        if (root->val < target)
             return binarySearch(root->right, target);
-        } else if (root->val > target) {
+
+        if (root->val > target)
             return binarySearch(root->left, target);
-        } else {
-            return true;
-        }
+
+        return true;
     }
 
     bool approach1(TreeNode* root1, TreeNode* root2, int target)

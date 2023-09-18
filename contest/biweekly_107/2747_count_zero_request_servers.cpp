@@ -35,7 +35,7 @@ public:
                   [](const auto& log1, const auto& log2) { return log1[1] < log2[1]; });
         std::vector<std::pair<int, int>> queryPairs;
         for (int i = 0; i < queries.size(); ++i) {
-            queryPairs.push_back({queries[i], i});
+            queryPairs.emplace_back(queries[i], i);
         }
         std::sort(queryPairs.begin(), queryPairs.end());
 

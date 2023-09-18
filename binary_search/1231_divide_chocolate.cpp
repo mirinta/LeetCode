@@ -19,7 +19,7 @@
 class Solution
 {
 public:
-    int maximizeSweetness(std::vector<int>& sweetness, int k)
+    int maximizeSweetness(const std::vector<int>& sweetness, int k)
     {
         // k+1 subarrays, sum of each subarray >= x
         // we want to maximize x

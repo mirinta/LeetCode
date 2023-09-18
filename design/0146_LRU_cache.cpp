@@ -24,7 +24,7 @@
 class LRUCache
 {
 public:
-    LRUCache(int capacity) : capacity(capacity) {}
+    explicit LRUCache(int capacity) : capacity(capacity) {}
 
     int get(int key)
     {
@@ -45,7 +45,7 @@ public:
         if (cache.size() == capacity) {
             removeLeastRecently();
         }
-        cache.push_front({key, value});
+        cache.emplace_front(key, value);
         map[key] = cache.begin();
     }
 
@@ -57,7 +57,7 @@ private:
 
         auto pair = *map[key];
         cache.erase(map[key]);
-        cache.push_front(std::move(pair));
+        cache.push_front(pair);
         map[key] = cache.begin();
     };
 
@@ -91,15 +91,15 @@ struct Node
 {
     int key;
     int val;
-    Node* prev;
-    Node* next;
-    explicit Node(int key, int val) : key(key), val(val), prev(nullptr), next(nullptr){};
+    Node* prev{nullptr};
+    Node* next{nullptr};
+    explicit Node(int key, int val) : key(key), val(val){};
 };
 
 class DoublyLinkedList
 {
 public:
-    DoublyLinkedList() : count(0), vHead(new Node(-1, -1)), vTail(new Node(-1, -1))
+    explicit DoublyLinkedList() : vHead(new Node(-1, -1)), vTail(new Node(-1, -1))
     {
         vHead->next = vTail;
         vTail->prev = vHead;
@@ -178,7 +178,7 @@ public:
     }
 
 private:
-    int count;
+    int count{0};
     Node* vHead;
     Node* vTail;
 };
@@ -186,7 +186,7 @@ private:
 class LRUCache2
 {
 public:
-    LRUCache2(int capacity) : capacity(capacity) {}
+    explicit LRUCache2(int capacity) : capacity(capacity) {}
 
     int get(int key)
     {

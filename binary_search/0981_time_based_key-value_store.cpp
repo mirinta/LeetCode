@@ -26,14 +26,14 @@
 class TimeMap
 {
 public:
-    TimeMap() {}
+    TimeMap() = default;
 
-    void set(std::string key, std::string value, int timestamp)
+    void set(const std::string &key, const std::string& value, int timestamp)
     {
-        map[key].push_back({value, timestamp});
+        map[key].emplace_back(value, timestamp);
     }
 
-    std::string get(std::string key, int timestamp)
+    std::string get(const std::string &key, int timestamp)
     {
         if (!map.count(key))
             return {};

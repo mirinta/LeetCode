@@ -17,3 +17,26 @@
  *
  * ! This question is the same as LC 724.
  */
+
+class Solution
+{
+public:
+    int findMiddleIndex(std::vector<int>& nums)
+    {
+        if (nums.size() <= 1)
+            return nums.empty() ? -1 : 0;
+
+        int totalSum = 0;
+        for (const auto& val : nums) {
+            totalSum += val;
+        }
+        int leftSum = 0;
+        for (size_t i = 0; i < nums.size(); ++i) {
+            if (leftSum == totalSum - nums[i] - leftSum)
+                return i;
+
+            leftSum += nums[i];
+        }
+        return -1;
+    }
+};

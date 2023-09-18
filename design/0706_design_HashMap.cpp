@@ -33,13 +33,13 @@ public:
         if (iter != bucket.end()) {
             (*iter).second = value;
         } else {
-            bucket.push_back({key, value});
+            bucket.emplace_back(key, value);
         }
     }
 
     int get(int key)
     {
-        auto& bucket = getBucket(key);
+        const auto& bucket = getBucket(key);
         auto iter = find(key);
         if (iter != bucket.end())
             return (*iter).second;

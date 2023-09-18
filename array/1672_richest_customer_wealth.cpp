@@ -14,10 +14,10 @@ public:
     int maximumWealth(std::vector<std::vector<int>>& accounts)
     {
         int result = INT_MIN;
-        for (size_t i = 0; i < accounts.size(); ++i) {
+        for (const auto& account : accounts) {
             int sum = 0;
-            for (size_t j = 0; j < accounts[i].size(); ++j) {
-                sum += accounts[i][j];
+            for (const auto& j : account) {
+                sum += j;
             }
             result = std::max(result, sum);
         }

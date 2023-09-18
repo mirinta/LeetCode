@@ -39,7 +39,7 @@
 class MyCircularQueue
 {
 public:
-    MyCircularQueue(int k) : _headIndex(0), _count(0), _capacity(k), _queue(k, 0) {}
+    explicit MyCircularQueue(int k) : _capacity(k), _queue(k, 0) {}
 
     bool enQueue(int value)
     {
@@ -86,13 +86,13 @@ public:
         return _queue[(_headIndex + _count - 1) % _capacity];
     }
 
-    bool isEmpty() { return _count == 0; }
+    bool isEmpty() const { return _count == 0; }
 
-    bool isFull() { return _count == _capacity; }
+    bool isFull() const { return _count == _capacity; }
 
 private:
-    int _headIndex;
-    int _count;    // actual size
+    int _headIndex{0};
+    int _count{0}; // actual size
     int _capacity; // max size
     std::vector<int> _queue;
 };

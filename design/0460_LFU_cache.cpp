@@ -30,7 +30,7 @@
 class LFUCache
 {
 public:
-    LFUCache(int capacity) : m_capacity(capacity), m_minFreq(0) {}
+    explicit LFUCache(int capacity) : m_capacity(capacity) {}
 
     int get(int key)
     {
@@ -108,20 +108,13 @@ private:
 
 private:
     int m_capacity;
-    int m_minFreq;
+    int m_minFreq{0};
     std::unordered_map<int, std::pair<int, int>> m_keyToValAndFreq; // key = <val, freq>
     std::unordered_map<int, std::list<int>> m_freqToKeys;           // the LRU key is at the front
     // to remove any element in std::list in O(1) time complexity,
     // we store each element's iterator and use std::list::erase() instead of std::list::remove()
     std::unordered_map<int, std::list<int>::iterator> m_keyToIter; // iter to in m_freqToKeys[freq]
 };
-
-/**
- * Your LFUCache object will be instantiated and called as such:
- * LFUCache* obj = new LFUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
- */
 
 /**
  * Your LFUCache object will be instantiated and called as such:

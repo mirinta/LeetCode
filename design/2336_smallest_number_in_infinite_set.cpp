@@ -21,7 +21,7 @@
 class SmallestInfiniteSet
 {
 public:
-    SmallestInfiniteSet() : current(1) {}
+    SmallestInfiniteSet() = default;
 
     int popSmallest()
     {
@@ -42,7 +42,7 @@ public:
 
 private:
     std::set<int> set;
-    int current;
+    int current{1};
 };
 
 /**

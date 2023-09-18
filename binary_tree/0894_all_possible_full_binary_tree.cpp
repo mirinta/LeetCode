@@ -53,8 +53,8 @@ private:
             const int rightNodes = n - leftNodes - 1;
             const auto leftFBTs = dp(leftNodes);
             const auto rightFBTs = dp(rightNodes);
-            for (auto* left : leftFBTs) {
-                for (auto* right : rightFBTs) {
+            for (auto* const left : leftFBTs) {
+                for (auto* const right : rightFBTs) {
                     auto* root = new TreeNode(0);
                     root->left = left;
                     root->right = right;

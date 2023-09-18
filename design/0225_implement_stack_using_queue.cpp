@@ -30,7 +30,7 @@
 class MyStack
 {
 public:
-    MyStack() {}
+    MyStack() = default;
 
     // time O(N)
     void push(int x)

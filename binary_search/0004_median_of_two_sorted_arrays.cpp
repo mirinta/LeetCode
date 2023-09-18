@@ -57,7 +57,8 @@ private:
                     return (std::max(maxLeft1, maxLeft2) + std::min(minRight1, minRight2)) * 0.5;
 
                 return std::max(maxLeft1, maxLeft2);
-            } else if (maxLeft1 > minRight2) {
+            }
+            if (maxLeft1 > minRight2) {
                 hi = cut1 - 1;
             } else {
                 lo = cut1 + 1;

@@ -25,14 +25,14 @@
 class SnapshotArray
 {
 public:
-    SnapshotArray(int length) : snapID(0), data(length)
+    explicit SnapshotArray(int length) : data(length)
     {
         for (int i = 0; i < length; ++i) {
-            data[i].push_back({0, 0});
+            data[i].emplace_back(0, 0);
         }
     }
 
-    void set(int index, int val) { data[index].push_back({snapID, val}); }
+    void set(int index, int val) { data[index].emplace_back(snapID, val); }
 
     int snap() { return snapID++; }
 
@@ -53,7 +53,7 @@ public:
     }
 
 private:
-    int snapID; // current snap_id
+    int snapID{0}; // current snap_id
     // data[i] = [<snap_id, value>, ...]
     std::vector<std::vector<std::pair<int, int>>> data;
 };

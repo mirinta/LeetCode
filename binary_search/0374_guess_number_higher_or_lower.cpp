@@ -41,7 +41,8 @@ public:
             const int state = guess(mid);
             if (state == 0)
                 return mid;
-            else if (state == -1) {
+
+            if (state == -1) {
                 hi = mid - 1;
             } else {
                 lo = mid + 1;

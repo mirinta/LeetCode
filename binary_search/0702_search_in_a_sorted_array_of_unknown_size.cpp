@@ -48,9 +48,10 @@ private:
         while (lo <= hi) {
             const int mid = lo + (hi - lo) / 2;
             const int val = reader.get(mid);
-            if (val == target) {
+            if (val == target)
                 return mid;
-            } else if (val > target) {
+
+            if (val > target) {
                 hi = mid - 1;
             } else {
                 lo = mid + 1;
@@ -67,9 +68,10 @@ private:
         while (lo <= hi) {
             const int mid = lo + (hi - lo) / 2;
             const int val = reader.get(mid);
-            if (val == target) {
+            if (val == target)
                 return mid;
-            } else if (val > target) {
+
+            if (val > target) {
                 // if mid is out of boundary,
                 // then val = INT_MAX which is always larger than target
                 hi = mid - 1;

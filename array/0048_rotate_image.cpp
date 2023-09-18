@@ -23,7 +23,6 @@ public:
         //   |                                     |
         //   |---------------TRANSPOSE------------>|
         const int m = matrix.size();
-        const int n = matrix[0].size();
         // transpose
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < i; ++j) {

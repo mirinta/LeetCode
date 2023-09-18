@@ -23,9 +23,9 @@ public:
 
         std::vector<bool> result(candies.size(), false);
         int maxValue = 0;
-        for (size_t i = 0; i < candies.size(); ++i) {
-            if (candies[i] > maxValue) {
-                maxValue = candies[i];
+        for (const auto& candie : candies) {
+            if (candie > maxValue) {
+                maxValue = candie;
             }
         }
         for (size_t i = 0; i < candies.size(); ++i) {

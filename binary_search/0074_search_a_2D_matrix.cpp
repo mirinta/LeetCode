@@ -32,9 +32,10 @@ public:
             const int mid = lo + (hi - lo) / 2;
             const int row = mid / n;
             const int col = mid % n;
-            if (matrix[row][col] == target) {
+            if (matrix[row][col] == target)
                 return true;
-            } else if (matrix[row][col] > target) {
+
+            if (matrix[row][col] > target) {
                 hi = mid - 1;
             } else {
                 lo = mid + 1;

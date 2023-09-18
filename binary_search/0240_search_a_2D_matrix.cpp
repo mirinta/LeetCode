@@ -49,7 +49,8 @@ private:
             const auto& pivot = matrix[pivotRow][pivotCol];
             if (pivot == target)
                 return true;
-            else if (pivot > target) {
+
+            if (pivot > target) {
                 pivotCol--;
             } else {
                 pivotRow++;
@@ -80,7 +81,8 @@ private:
             const auto& pivot = matrix[pivotRow][pivotCol];
             if (pivot == target)
                 return true;
-            else if (pivot > target) {
+
+            if (pivot > target) {
                 pivotRow--;
             } else {
                 pivotCol++;

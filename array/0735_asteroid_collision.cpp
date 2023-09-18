@@ -31,7 +31,8 @@ public:
                 if (sum < 0) {
                     stack.pop();
                     continue;
-                } else if (sum == 0) {
+                }
+                if (sum == 0) {
                     stack.pop();
                 }
                 survived = false;

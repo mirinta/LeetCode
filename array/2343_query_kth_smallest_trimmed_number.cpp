@@ -53,7 +53,7 @@ public:
             const auto& trim = query[1];
             if (!memo.count(trim)) {
                 for (size_t i = 0; i < nums.size(); ++i) {
-                    memo[trim].push_back({nums[i].substr(nums[i].size() - trim, trim), i});
+                    memo[trim].emplace_back(nums[i].substr(nums[i].size() - trim, trim), i);
                 }
                 std::sort(memo[trim].begin(), memo[trim].end());
             }

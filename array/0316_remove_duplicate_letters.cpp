@@ -53,7 +53,7 @@ public:
             stack.push(c);
             freq[c].second = true;
         }
-        std::string result = "";
+        std::string result;
         for (; !stack.empty(); stack.pop()) {
             result += stack.top();
         }

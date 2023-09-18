@@ -26,7 +26,7 @@
 class MyQueue
 {
 public:
-    MyQueue() {}
+    MyQueue() = default;
 
     void push(int x) { in.push(x); }
 

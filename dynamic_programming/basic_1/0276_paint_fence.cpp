@@ -48,7 +48,6 @@ public:
         // approach 2: 1D DP
         int lastTwoSame = k;
         int lastTwoDiff = k * (k - 1);
-        std::vector<int> dp(n + 1, 0);
         for (int i = 3; i <= n; ++i) {
             int diff = (k - 1) * (lastTwoSame + lastTwoDiff);
             int same = lastTwoDiff;

@@ -34,8 +34,8 @@ private:
             // use i as root node
             const auto leftSubtrees = build(low, i - 1);
             const auto rightSubtrees = build(i + 1, high);
-            for (auto* left : leftSubtrees) {
-                for (auto* right : rightSubtrees) {
+            for (auto* const left : leftSubtrees) {
+                for (auto* const right : rightSubtrees) {
                     auto* root = new TreeNode(i);
                     root->left = left;
                     root->right = right;

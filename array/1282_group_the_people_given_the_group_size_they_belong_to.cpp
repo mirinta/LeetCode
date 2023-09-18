@@ -33,6 +33,7 @@ public:
         for (const auto& [size, indices] : map) {
             for (int i = 0; i + size <= indices.size(); i += size) {
                 std::vector<int> group;
+                group.reserve(size);
                 for (int j = 0; j < size; ++j) {
                     group.push_back(indices[i + j]);
                 }

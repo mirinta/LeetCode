@@ -18,7 +18,7 @@
 class MovingAverage
 {
 public:
-    MovingAverage(int size) : _capacity(size), _sum(0) {}
+    explicit MovingAverage(int size) : _capacity(size) {}
 
     double next(int val)
     {
@@ -34,7 +34,7 @@ public:
 private:
     std::queue<int> _queue;
     const int _capacity;
-    int _sum;
+    int _sum{0};
 };
 
 /**
