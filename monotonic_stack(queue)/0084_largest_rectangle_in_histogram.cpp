@@ -14,49 +14,56 @@ class Solution
 public:
     int largestRectangleArea(std::vector<int>& heights)
     {
-        // for heights[i], we need to find j and k
-        // - heights[j] is the previous smaller element of heights[i]
-        // - heights[k] is the next smaller element of heights[i]
-        // then, for each index p in range (j, k), heights[p] >= heights[i]
-        // then, the rectangle area with heights[i] as height = heights[i] * (k - j - 1)
-        const auto nextSmaller = genNextSmaller(heights);
-        const auto prevSmaller = genPrevSmaller(heights);
+        // Given heights[i], find index j and index k,
+        // s.t. heights[j] is the previous smaller element of heights[i],
+        // and heights[k] is the next smaller element of heights[i].
+        // Then, any index x in the range [j+1,k-1] satisfies heights[x] >= heights[i]
+        //    |   |
+        //    | | |
+        //  | | | | |
+        //  j   i   k
+        // Then, the max rectangle area of heights[i]=heights[i]*(k-1-(j+1)+1)=heights[i]*(k-j-1)
+        // - if j doesn't exist, let j = -1
+        // - if k doesn't exist, let k = n
+        const int n = heights.size();
+        const auto nextSmaller = calcNextSmaller(heights);
+        const auto prevSmaller = calcPrevSmaller(heights);
         int result = 0;
-        for (int i = 0; i < heights.size(); ++i) {
-            result = std::max(result, heights[i] * (nextSmaller[i] - prevSmaller[i] - 1));
+        for (int i = 0; i < n; ++i) {
+            const int j = prevSmaller[i];
+            const int k = nextSmaller[i];
+            result = std::max(result, heights[i] * (k - j - 1));
         }
         return result;
     }
 
 private:
-    std::vector<int> genNextSmaller(const std::vector<int>& nums)
+    std::vector<int> calcNextSmaller(const std::vector<int>& heights)
     {
-        const int n = nums.size();
+        const int n = heights.size();
+        std::stack<std::pair<int, int>> stack; // <val, index>
         std::vector<int> result(n, n);
-        std::stack<int> stack; // monotonic non-decreasing (from bottom to top)
-        for (int i = 0; i < n; ++i) {
-            while (!stack.empty() && nums[i] < nums[stack.top()]) {
-                result[stack.top()] = i;
+        for (int i = n - 1; i >= 0; --i) {
+            while (!stack.empty() && stack.top().first >= heights[i]) {
                 stack.pop();
             }
-            stack.push(i);
+            result[i] = stack.empty() ? n : stack.top().second;
+            stack.push({heights[i], i});
         }
         return result;
     }
 
-    std::vector<int> genPrevSmaller(const std::vector<int>& nums)
+    std::vector<int> calcPrevSmaller(const std::vector<int>& heights)
     {
-        const int n = nums.size();
+        const int n = heights.size();
+        std::stack<std::pair<int, int>> stack;
         std::vector<int> result(n, -1);
-        std::stack<int> stack; // monotonic non-decreasing (from bottom to top)
         for (int i = 0; i < n; ++i) {
-            while (!stack.empty() && nums[i] < nums[stack.top()]) {
+            while (!stack.empty() && stack.top().first >= heights[i]) {
                 stack.pop();
             }
-            if (!stack.empty()) {
-                result[i] = stack.top();
-            }
-            stack.push(i);
+            result[i] = stack.empty() ? -1 : stack.top().second;
+            stack.push({heights[i], i});
         }
         return result;
     }
