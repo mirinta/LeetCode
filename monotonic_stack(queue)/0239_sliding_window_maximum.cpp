@@ -8,39 +8,39 @@
  * window. Each time the sliding window moves right by one position.
  *
  * Return the max sliding window.
+ *
+ * ! 1 <= nums.length <= 10^5
+ * ! -10^4 <= nums[i] <= 10^4
+ * ! 1 <= k <= nums.length
  */
 
 class Solution
 {
 public:
-    std::vector<int> maxSlidingWindow(const std::vector<int>& nums, int k)
+    std::vector<int> maxSlidingWindow(std::vector<int>& nums, int k)
     {
-        if (nums.empty() || nums.size() < k)
-            return {};
-
         std::vector<int> result;
-        // decreasing monotonic queue
-        // front [x0, x1, ..., xn] back
-        // we need to maintain x0 >= x1 >= ... >= xn
-        std::deque<int> dq;
-        for (size_t i = 0; i < k; ++i) {
-            push(dq, nums[i]);
+        std::deque<int> dq; // monotonic queue, non-increasing from front() to back()
+        for (int i = 0; i < k; ++i) {
+            addToDeque(dq, nums[i]);
         }
         result.push_back(dq.front());
-        for (size_t i = k; i < nums.size(); ++i) {
-            if (nums[i - k] == dq.front()) {
+        for (int i = k; i < nums.size(); ++i) {
+            const auto& in = nums[i];
+            const auto& out = nums[i - k];
+            if (out == dq.front()) {
                 dq.pop_front();
             }
-            push(dq, nums[i]);
+            addToDeque(dq, in);
             result.push_back(dq.front());
         }
         return result;
     }
 
 private:
-    void push(std::deque<int>& dq, int val)
+    void addToDeque(std::deque<int>& dq, int val)
     {
-        while (!dq.empty() && dq.back() < val) {
+        while (!dq.empty() && val > dq.back()) {
             dq.pop_back();
         }
         dq.push_back(val);
