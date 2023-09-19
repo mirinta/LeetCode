@@ -29,12 +29,11 @@ public:
         // i0<-------->j1  k0<---->k1
         const int n = intervals.size();
         std::vector<std::vector<int>> result;
-        result.push_back(intervals[0]);
-        for (int i = 1; i < n; ++i) {
-            if (intervals[i][0] <= result.back()[1]) {
-                result.back()[1] = std::max(result.back()[1], intervals[i][1]);
-            } else {
+        for (int i = 0; i < n; ++i) {
+            if (result.empty() || intervals[i][0] > result.back()[1]) {
                 result.push_back(intervals[i]);
+            } else {
+                result.back()[1] = std::max(result.back()[1], intervals[i][1]);
             }
         }
         return result;
