@@ -14,63 +14,65 @@
 class Solution
 {
 public:
-    int majorityElement(std::vector<int>& nums)
-    {
-        int target = 0;
-        int votes = 0;
-        for (const auto& val : nums) {
-            if (votes == 0) {
-                target = val;
-                votes = 1;
-            } else if (val == target) {
-                votes++;
-            } else {
-                votes--;
-            }
-        }
-        return target;
-    }
+    int majorityElement(std::vector<int>& nums) { return approach2(nums); }
 
 private:
-    int approach1(std::vector<int>& nums)
+    // time O(N), space O(1)
+    int approach2(const std::vector<int>& nums)
     {
-        // find the n/2-th largest element
-        // worst case O(n^2)
-        int lo = 0;
-        int hi = nums.size() - 1;
-        const int rank = nums.size() / 2;
-        while (lo <= hi) {
-            const int pos = partition(lo, hi, nums);
-            if (pos == rank)
-                return nums[pos];
-
-            if (pos > rank) {
-                hi = pos - 1;
+        int count = 0;
+        int majority = 0;
+        for (const auto& val : nums) {
+            if (count == 0) {
+                majority = val;
+                count = 1;
+            } else if (val == majority) {
+                count++;
             } else {
-                lo = pos + 1;
+                count--;
             }
         }
-        return -1;
+        return majority;
     }
 
-    int partition(int lo, int hi, std::vector<int>& nums)
+    // quick-select, find the n/2 th largest element
+    int approach1(std::vector<int>& nums)
     {
+        const int n = nums.size();
+        const int rank = n / 2;
+        int lo = 0;
+        int hi = n - 1;
+        while (lo < hi) {
+            const auto [left, right] = threeWayPartition(nums, lo, hi);
+            if (rank < left) {
+                hi = left - 1;
+            } else if (rank > right) {
+                lo = right + 1;
+            } else {
+                return nums[rank];
+            }
+        }
+        return nums[rank];
+    }
+
+    std::pair<int, int> threeWayPartition(std::vector<int>& nums, int lo, int hi)
+    {
+        // lo ... lt-1 lt ... gt gt+1 ... hi
+        // |<------->| |<----->| |<------->|
+        //    <pivot     =pivot     >pivot
         const int pivot = nums[lo];
-        int i = lo + 1;
-        int j = hi;
-        while (true) {
-            while (i <= hi && nums[i] <= pivot) {
+        int i = lo;
+        int lt = lo;
+        int gt = hi;
+        while (i <= gt) {
+            if (nums[i] < pivot) {
+                std::swap(nums[i++], nums[lt++]);
+            } else if (nums[i] > pivot) {
+                std::swap(nums[i], nums[gt--]);
+            } else {
                 i++;
             }
-            while (j >= 0 && nums[j] > pivot) {
-                j--;
-            }
-            if (i >= j)
-                break;
-
-            std::swap(nums[i], nums[j]);
         }
-        std::swap(nums[lo], nums[j]);
-        return j;
+        return {lt, gt};
     }
 };
