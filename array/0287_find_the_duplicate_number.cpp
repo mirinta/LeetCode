@@ -26,8 +26,8 @@ private:
     // time O(n), space O(1)
     int approach3(std::vector<int>& nums)
     {
-        // indices are pigeonholes, elements are pigeons' ID
-        // if nums[i] = j, we need to put pigeon j into pigeonhole j
+        // indicies are pigeonholes, and elements are pigeon IDs
+        // given nums[i] = j and i!=j, we need to put pigeon j into pigeonhole j
         // if pigeonhole j is not empty, then j is the duplicate number
         for (int pigeonhole = 0; pigeonhole < nums.size(); ++pigeonhole) {
             const int pigeonID = std::abs(nums[pigeonhole]);
@@ -51,7 +51,7 @@ private:
     }
 
     // hash set, time O(n), space O(n)
-    int approach1(std::vector<int>& nums)
+    int approach1(const std::vector<int>& nums)
     {
         std::unordered_set<int> set;
         for (const auto& val : nums) {
