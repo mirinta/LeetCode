@@ -27,7 +27,7 @@ public:
     int minimumSemesters(int n, std::vector<std::vector<int>>& relations)
     {
         // topological sorting, Kahn's algorithm
-        std::vector<std::vector<int>> graph(n, std::vector<int>());
+        std::vector<std::vector<int>> graph(n);
         std::vector<int> indegrees(n, 0);
         for (const auto& relation : relations) {
             graph[relation[0] - 1].push_back(relation[1] - 1);
