@@ -32,23 +32,22 @@ public:
     int maxPathSum(TreeNode* root)
     {
         if (!root)
-            return 0;
+            return INT_MIN;
 
         int result = INT_MIN;
-        traverse(result, root);
+        dfs(result, root);
         return result;
     }
 
 private:
-    // max sum of one side path  (either left side or right side)
-    int traverse(int& result, TreeNode* node)
+    int dfs(int& result, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return 0;
 
-        const auto left = traverse(result, node->left);
-        const auto right = traverse(result, node->right);
-        result = std::max(result, node->val + std::max(0, left) + std::max(0, right));
-        return std::max({0, left, right}) + node->val;
+        const int left = dfs(result, root->left);   // no benefit to the result if it is < 0
+        const int right = dfs(result, root->right); // no benefit to the result if it is < 0
+        result = std::max(result, root->val + std::max(0, left) + std::max(0, right));
+        return root->val + std::max({0, left, right});
     }
 };

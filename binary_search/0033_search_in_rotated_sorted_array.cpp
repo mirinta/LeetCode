@@ -26,31 +26,31 @@ public:
     int search(std::vector<int>& nums, int target)
     {
         if (nums.empty())
-            return -1;
+            return false;
 
         int left = 0;
         int right = nums.size() - 1;
         while (left <= right) {
-            int mid = left + (right - left) / 2;
+            const int mid = left + (right - left) / 2;
             if (nums[mid] == target)
                 return mid;
 
-            // actually, we don't need to care about nums[mid] == nums[left],
-            // because all elements are unique
             if (nums[mid] >= nums[left]) {
-                // mid is in the left part
-                // [LEFT...M...][...RIGHT]
-                // | case1 |    case2    |
-                if (target < nums[mid] && target >= nums[left]) {
+                // target is in part1
+                // |      part1        ||  part2  |
+                // [LEFT...MID MID+1...][... RIGHT]
+                // |<-case1->| |<-----case2------>|
+                if (target >= nums[left] && target < nums[mid]) {
                     right = mid - 1;
                 } else {
                     left = mid + 1;
                 }
             } else {
-                // mid is in the right part
-                // [LEFT...][...M...RIGHT]
-                // |    case2   |  case1 |
-                if (target > nums[mid] && target <= nums[right]) {
+                // target is in part1
+                // | part2 ||       part1        |
+                // [LEFT...][...MID-1 MID...RIGHT]
+                // |<-----case2---->| |<-case1-->|
+                if (target <= nums[right] && target > nums[mid]) {
                     left = mid + 1;
                 } else {
                     right = mid - 1;

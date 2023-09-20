@@ -18,14 +18,18 @@
 class Solution
 {
 public:
-    bool searchMatrix(const std::vector<std::vector<int>>& matrix, int target)
+    bool searchMatrix(std::vector<std::vector<int>>& matrix, int target)
     {
         if (matrix.empty() || matrix[0].empty())
             return false;
 
         const int m = matrix.size();
         const int n = matrix[0].size();
-        // flatten the matrix and apply binary search:
+        // top-left is the min value, and bottom-right is the max value
+        if (matrix[0][0] > target || matrix[m - 1][n - 1] < target)
+            return false;
+
+        // compress the (row, col) to a single number, i.e., flatten the matrix
         int lo = 0;
         int hi = m * n - 1;
         while (lo <= hi) {

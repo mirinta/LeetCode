@@ -6,30 +6,31 @@
  *
  * You must write an algorithm with O(logN) runtime complexity.
  *
- * ! "nums" contains distinct values stored in ascending order.
+ * ! 1 <= nums.length <= 10^4
+ * ! -10^4 <= nums[i] <= 10^4
+ * ! nums contains distinct values sorted in ascending order.
+ * ! -10^4 <= target <= 10^4
  */
 
 class Solution
 {
 public:
-    int searchInsert(const std::vector<int>& nums, int target)
+    int searchInsert(std::vector<int>& nums, int target)
     {
-        if (nums.empty())
-            return 0;
-
-        int left = 0;
-        int right = nums.size() - 1;
-        while (left <= right) {
-            int mid = left + (right - right) / 2;
+        int lo = 0;
+        int hi = nums.size() - 1;
+        while (lo <= hi) {
+            const int mid = lo + (hi - lo) / 2;
             if (nums[mid] == target)
-                return mid;
+                return mid; // the problem guarantees that nums contains distinct values
 
+            // find index i such that nums[i] is the first element > target
             if (nums[mid] > target) {
-                right = mid - 1;
+                hi = mid - 1;
             } else {
-                left = mid + 1;
+                lo = mid + 1;
             }
-        } // the loop is terminated when left = right + 1;
-        return left;
+        } // when the loop ends, lo = hi + 1
+        return lo;
     }
 };

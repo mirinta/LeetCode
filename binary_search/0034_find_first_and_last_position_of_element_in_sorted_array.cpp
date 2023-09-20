@@ -19,11 +19,12 @@ class Solution
 public:
     std::vector<int> searchRange(std::vector<int>& nums, int target)
     {
-        return {findFirst(nums, target), findLast(nums, target)};
+        return {findFirst(target, nums), findLast(target, nums)};
     }
 
 private:
-    int findFirst(const std::vector<int>& nums, int target)
+    // find index j such that nums[j] is the first element equal to target
+    int findFirst(int target, const std::vector<int>& nums)
     {
         int lo = 0;
         int hi = nums.size() - 1;
@@ -34,14 +35,12 @@ private:
             } else {
                 lo = mid + 1;
             }
-        }
-        if (lo == nums.size() || nums[lo] != target)
-            return -1;
-
-        return lo;
+        } // when the loop ends, lo = hi + 1
+        return lo < nums.size() && nums[lo] == target ? lo : -1;
     }
 
-    int findLast(const std::vector<int>& nums, int target)
+    // find index j such that nums[j] is the last element equal to target
+    int findLast(int target, const std::vector<int>& nums)
     {
         int lo = 0;
         int hi = nums.size() - 1;
@@ -52,10 +51,7 @@ private:
             } else {
                 hi = mid - 1;
             }
-        }
-        if (hi < 0 || nums[hi] != target)
-            return -1;
-
-        return hi;
+        } // when the loop ends, lo = hi + 1
+        return hi >= 0 && nums[hi] == target ? hi : -1;
     }
 };
