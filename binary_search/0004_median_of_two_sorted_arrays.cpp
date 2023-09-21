@@ -23,7 +23,7 @@ public:
     }
 
 private:
-    // binary search, time O(log(min(M, N))), space O(1)
+    // time O(log(min(M,N))), space O(1)
     double approach3(const std::vector<int>& nums1, const std::vector<int>& nums2)
     {
         if (nums1.size() > nums2.size())
@@ -31,93 +31,88 @@ private:
 
         const int m = nums1.size();
         const int n = nums2.size();
-        const int totalLength = m + n;
+        // divide nums1 into two parts: [...LEFT_MAX_1][RIGHT_MIN_1...]
+        // divide nums2 into two parts: [...LEFT_MAX_2][RIGHT_MIN_2...]
+        // make sure LEFT1.size + LEFT2.size = (m + n + 1) / 2
+        // the expected array after merging: [LEFT_1 and LEFT_2][RIGHT_1 and RIGHT_2]
         int lo = 0;
         int hi = m;
         while (lo <= hi) {
-            // cut nums1 at cut1
-            // 0 ... cut1-1 cut1 ... m-1
-            // |<--LEFT-->| |<-RIGHT-->|
-            // - if i = 0, LEFT = {}, RIGHT = {0...m-1}
-            // - if i = m, LEFT = {0...m-1}, RIGHT = {}
-            // - LEFT_ELEMS_1 = i
             const int cut1 = lo + (hi - lo) / 2;
-            // cut nums2 at cut2
-            // odd length: [0 1 2][3 4], cutting position=3=(5+1)/2
-            // even length: [0 1][2 3], cutting position=2=(4+1)/2
-            const int cut2 = (totalLength + 1) / 2 - cut1;
-            // nums1 => [...MaxLeft1] | [MinRight1...]
-            // nums2 => [...MaxLeft2] | [MinRight2...]
-            const int maxLeft1 = cut1 == 0 ? INT_MIN : nums1[cut1 - 1];
-            const int minRight1 = cut1 == m ? INT_MAX : nums1[cut1];
-            const int maxLeft2 = cut2 == 0 ? INT_MIN : nums2[cut2 - 1];
-            const int minRight2 = cut2 == n ? INT_MAX : nums2[cut2];
-            if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1) {
-                if (totalLength % 2 == 0)
-                    return (std::max(maxLeft1, maxLeft2) + std::min(minRight1, minRight2)) * 0.5;
+            const int cut2 = (m + n + 1) / 2 - cut1;
+            const int leftMax1 = cut1 == 0 ? INT_MIN : nums1[cut1 - 1];
+            const int rightMin1 = cut1 == m ? INT_MAX : nums1[cut1];
+            const int leftMax2 = cut2 == 0 ? INT_MIN : nums2[cut2 - 1];
+            const int rightMin2 = cut2 == n ? INT_MAX : nums2[cut2];
+            if (leftMax1 <= rightMin2 && leftMax2 <= rightMin1) {
+                if ((m + n) % 2)
+                    return std::max(leftMax1, leftMax2);
 
-                return std::max(maxLeft1, maxLeft2);
+                return 0.5 * (std::max(leftMax1, leftMax2) + std::min(rightMin1, rightMin2));
             }
-            if (maxLeft1 > minRight2) {
+            if (leftMax1 > rightMin2) {
                 hi = cut1 - 1;
             } else {
                 lo = cut1 + 1;
             }
         }
-        return 0;
+        return INT_MAX;
     }
 
-    // merge with space optimization, time O(M+N), space O(1)
+    // time O(M+N), space O(1)
     double approach2(const std::vector<int>& nums1, const std::vector<int>& nums2)
     {
         const int m = nums1.size();
         const int n = nums2.size();
         int i = 0;
         int j = 0;
-        auto nextMin = [&]() {
-            const int m = nums1.size();
-            const int n = nums2.size();
-            if (i == m && j < n)
+        auto nextSmaller = [&]() {
+            if (i == m && j == n)
+                return INT_MAX;
+            if (i == m)
                 return nums2[j++];
-
-            if (j == n && i < m)
+            if (j == n)
                 return nums1[i++];
-
-            return nums1[i] < nums2[j] ? nums1[i++] : nums2[j++];
+            if (nums1[i] > nums2[j])
+                return nums2[j++];
+            return nums1[i++];
         };
-        if ((m + n) % 2 == 0) {
-            for (int k = 0; k < (m + n) / 2 - 1; ++k) {
-                nextMin();
-            }
-            return (nextMin() + nextMin()) * 0.5;
+        int current = 0;
+        for (int k = 0, mid = (m + n) / 2; k < mid; ++k) {
+            current = nextSmaller();
         }
-        for (int k = 0; k < (m + n) / 2; ++k) {
-            nextMin();
-        }
-        return nextMin();
+        if ((m + n) % 2)
+            return nextSmaller();
+
+        return 0.5 * (current + nextSmaller());
     }
 
-    // merge, time O(M+N), space O(M+N)
+    // time O(M+N), space O(M+N)
     double approach1(const std::vector<int>& nums1, const std::vector<int>& nums2)
     {
         const int m = nums1.size();
         const int n = nums2.size();
-        const int totalLength = m + n;
-        std::vector<int> vec(totalLength, 0);
-        for (int k = 0, i = 0, j = 0; k < vec.size(); ++k) {
+        std::vector<int> aux(m + n);
+        for (int i = 0, j = 0, k = 0; k < aux.size(); ++k) {
             if (i == m) {
-                vec[k] = nums2[j++];
-            } else if (j == n) {
-                vec[k] = nums1[i++];
-            } else if (nums1[i] < nums2[j]) {
-                vec[k] = nums1[i++];
+                aux[k] = nums2[j++];
+                continue;
+            }
+            if (j == n) {
+                aux[k] = nums1[i++];
+                continue;
+            }
+            if (nums1[i] > nums2[j]) {
+                aux[k] = nums2[j++];
             } else {
-                vec[k] = nums2[j++];
+                aux[k] = nums1[i++];
             }
         }
-        if (totalLength % 2 == 0)
-            return (vec[totalLength / 2 - 1] + vec[totalLength / 2]) * 0.5;
+        const bool isOdd = (m + n) % 2;
+        const int mid = (m + n) / 2;
+        if (isOdd)
+            return aux[mid];
 
-        return vec[totalLength / 2];
+        return 0.5 * (aux[mid] + aux[mid - 1]);
     }
 };

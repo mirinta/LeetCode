@@ -35,10 +35,11 @@ private:
     // DP, time O(MN), space O(MN)
     int approach1(int m, int n)
     {
-        // dp[i][j] = num of possible unique paths from (0,0) to (i,j)
-        // base case:
-        // - dp[i][0] = 1, the first row
-        // - dp[0][j] = 1, the first col
+        // dp[i][j] = num of unique paths that the robot can take to reach (i,j)
+        // base cases:
+        // - dp[0][0] = 1
+        // - dp[i][0] = 1
+        // - dp[0][j] = 1
         std::vector<std::vector<int>> dp(m, std::vector<int>(n, 0));
         for (int i = 0; i < m; ++i) {
             dp[i][0] = 1;
