@@ -1,5 +1,5 @@
+#include <array>
 #include <string>
-#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -16,72 +16,62 @@
  * ! All the strings of wordDict are unique.
  */
 
+struct TrieNode
+{
+    static constexpr int R = 26;
+    std::array<TrieNode*, R> next{};
+    bool isEnd = false;
+
+    ~TrieNode()
+    {
+        auto iter = next.begin();
+        while (iter != next.end()) {
+            delete *iter;
+            iter++;
+        }
+    };
+};
+
 class Solution
 {
 public:
     bool wordBreak(std::string s, std::vector<std::string>& wordDict)
     {
-        return approach3(s, wordDict);
+        return approach2(s, wordDict);
     }
 
 private:
-    // DP + Hash Set
-    bool approach3(std::string& s, std::vector<std::string>& wordDict)
-    {
-        std::unordered_set<std::string> dict(wordDict.begin(), wordDict.end());
-        const int n = s.size();
-        // dp[i] = s[0:i) can be "word break"
-        std::vector<int> dp(n + 1, false);
-        dp[0] = true;
-        for (int i = 1; i <= n; ++i) {
-            // 0 X X X X j-1 j X X X X i-1 i
-            // |<--dp[j]-->| |<---word-->|
-            // |<---------dp[i]--------->|
-            for (int j = 0; j < i; ++j) {
-                if (dp[j] && dict.count(s.substr(j, i - j))) {
-                    dp[i] = true;
-                    break;
-                }
-            }
-        }
-        return dp[n];
-    }
-
-    struct TrieNode
-    {
-        bool isEnd = false;
-        std::unordered_map<char, TrieNode*> next;
-    };
-
     // DP + Trie
-    bool approach2(std::string& s, std::vector<std::string>& wordDict)
+    bool approach2(const std::string& s, const std::vector<std::string>& wordDict)
     {
-        auto* root = new TrieNode();
+        TrieNode root;
         for (const auto& word : wordDict) {
-            auto* node = root;
+            auto* node = &root;
             for (const auto& c : word) {
-                if (!node->next.count(c)) {
-                    node->next[c] = new TrieNode();
+                const int index = c - 'a';
+                if (!node->next[index]) {
+                    node->next[index] = new TrieNode;
                 }
-                node = node->next[c];
+                node = node->next[index];
             }
             node->isEnd = true;
         }
         const int n = s.size();
-        std::vector<bool> dp(n, false); // dp[i] = s[0:i] can be "word break"
+        std::vector<bool> dp(n, false); // dp[i] = whether s[0:i] can be segmented
+        // 0 X X X X i-1 i X X X X j ... n-1
+        // |<-dp[i-1]->| |<--word->|
+        // |<--------dp[j]-------->|
+        // if s[0:j] can be segmented, then s[0:i-1] can be segmented and s[i:j] is in the
+        // dictionary
         for (int i = 0; i < n; ++i) {
-            // 0 X X i-1 i X X X j
-            // |<----->| |<----->|
-            // if s[0:j] can be "word break":
-            // - s[0:i-1] can be "word break", and
-            // - s[i:j] is in the dictionary
             if (i == 0 || dp[i - 1]) {
-                auto* node = root;
+                auto* node = &root;
                 for (int j = i; j < n; ++j) {
-                    if (!node->next.count(s[j]))
+                    const int index = s[j] - 'a';
+                    if (!node->next[index])
                         break;
 
-                    node = node->next[s[j]];
+                    node = node->next[index];
                     if (node->isEnd) {
                         dp[j] = true;
                     }
@@ -91,21 +81,20 @@ private:
         return dp[n - 1];
     }
 
-    // DP
-    bool approach1(std::string& s, std::vector<std::string>& wordDict)
+    // DP + Hash Set
+    bool approach1(const std::string& s, const std::vector<std::string>& wordDict)
     {
+        // dp[i] = whether s[0:i) can be segmented according to the given dictionary
+        // 0 X X X j-1 j X X X i-1 i
+        // |<-dp[j]->| |<--word->|, word.size()=i-j
+        // |<-------dp[i]------->|
+        std::unordered_set<std::string> set(wordDict.begin(), wordDict.end());
         const int n = s.size();
-        // dp[i] = s[0:i) can be "word break"
-        std::vector<bool> dp(n + 1, false);
+        std::vector<int> dp(n + 1, false);
         dp[0] = true;
         for (int i = 1; i <= n; ++i) {
-            // 0 X X X X j-1 j X X X X i-1 i
-            // |<--dp[j]-->| |<---word-->|
-            // |<---------dp[i]--------->|
-            for (const auto& word : wordDict) {
-                const int length = word.size();
-                const int j = i - length;
-                if (j >= 0 && s.substr(j, length) == word && dp[j]) {
+            for (int j = 0; j < i; ++j) {
+                if (dp[j] && set.count(s.substr(j, i - j))) {
                     dp[i] = true;
                     break;
                 }

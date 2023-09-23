@@ -13,17 +13,17 @@ class Solution
 public:
     std::vector<std::vector<int>> generate(int numRows)
     {
-        if (numRows <= 0)
-            return {};
-
+        // row1: 1
+        // row2: 1 1
+        // row3: 1 2 1
+        // row4: 1 3 3 1
         // num of elements of ith row = i (1-indexed)
-        std::vector<std::vector<int>> result;
+        std::vector<std::vector<int>> result(numRows);
         for (int i = 1; i <= numRows; ++i) {
-            std::vector<int> row(i, 1);
+            result[i - 1] = std::vector<int>(i, 1);
             for (int j = 1; j < i - 1; ++j) {
-                row[j] = result[i - 2][j - 1] + result[i - 2][j];
+                result[i - 1][j] = result[i - 2][j - 1] + result[i - 2][j];
             }
-            result.push_back(std::move(row));
         }
         return result;
     }
