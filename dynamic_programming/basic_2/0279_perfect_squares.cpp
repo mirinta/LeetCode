@@ -7,10 +7,7 @@
  * product of some integer with itself. For example, 1, 4, 9, and 16 are perfect squares while 3 and
  * 11 are not.
  *
- * Example:
- * Input: n = 13
- * Output: 2
- * Explanation: 13 = 4 + 9
+ * ! 1 <= n <= 104
  */
 
 class Solution
@@ -18,15 +15,20 @@ class Solution
 public:
     int numSquares(int n)
     {
-        if (n < 1)
-            return 0;
-
-        // knapsack capacity = n
-        // packages are 1, 4, 9, ..., j^2, where j^2 <= n
-        // problem: min number of packages to fill the knapsack
-        std::vector<int> dp(n + 1, 0);
+        // dp[i] = least num of perfect square numbers that sum to i
+        // base case:
+        // - dp[0] = 0
+        // - if i is a perfect square, then dp[i] = 1 is already the optimal answer
+        // - otherwise, let dp[i] = i, because i is the sum of i 1's
+        std::vector<int> dp(n + 1, INT_MAX);
+        dp[0] = 0;
+        for (int i = 1; i * i <= n; ++i) {
+            dp[i * i] = 1;
+        }
         for (int i = 1; i <= n; ++i) {
-            dp[i] = i;
+            if (dp[i] == 1)
+                continue;
+
             for (int j = 1; j * j <= i; ++j) {
                 dp[i] = std::min(dp[i], 1 + dp[i - j * j]);
             }

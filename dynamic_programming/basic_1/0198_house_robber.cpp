@@ -23,28 +23,27 @@ private:
     int approach2(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        int rob = INT_MIN;
-        int notRob = 0;
+        int robbed = INT_MIN;
+        int notRobbed = 0;
         for (int i = 1; i <= n; ++i) {
-            const int backup = notRob;
-            notRob = std::max(notRob, rob);
-            rob = backup + nums[i - 1];
+            const int backup = notRobbed;
+            notRobbed = std::max(notRobbed, robbed);
+            robbed = backup + nums[i - 1];
         }
-        return std::max(rob, notRob);
+        return std::max(robbed, notRobbed);
     }
-
     // DP, time O(N), space O(N)
     int approach1(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        // dp[i][0] = max profit of robbing the first i house, and the ith house is not robbed
-        // dp[i][1] = max profit of robbing the first i house, and the ith house is robbed
-        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(2, 0));
-        dp[0][1] = INT_MIN;
+        // dp[i].first = max amount of money of robbing house[0:i) and the ith house is not robbed
+        // dp[i].second = max amount of money of robbing house[0:i) and the ith house is robbed
+        std::vector<std::pair<int, int>> dp(n + 1, {INT_MIN, INT_MIN});
+        dp[0] = {0, INT_MIN};
         for (int i = 1; i <= n; ++i) {
-            dp[i][0] = std::max(dp[i - 1][0], dp[i - 1][1]);
-            dp[i][1] = dp[i - 1][0] + nums[i - 1];
+            dp[i].first = std::max(dp[i - 1].first, dp[i - 1].second);
+            dp[i].second = dp[i - 1].first + nums[i - 1];
         }
-        return std::max(dp[n][0], dp[n][1]);
+        return std::max(dp[n].first, dp[n].second);
     }
 };
