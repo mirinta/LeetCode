@@ -1,62 +1,75 @@
+#include <numeric>
 #include <vector>
 
 /**
  * Given an integer array "nums", return true if you can partition the array into two subsets such
  * that the sum of the elements in both subsets is equal or false otherwise.
+ *
+ * ! 1 <= nums.length <= 200
+ * ! 1 <= nums[i] <= 100
  */
 
 class Solution
 {
 public:
-    // if canPartition = true,
-    // then the sum of each subset = total sum of nums / 2 = M
-    // consider it as a 0/1 knapsack problem:
-    // - we have a knapsack of capacity M
-    // - nums[i] represents the capacity that the ith package occupies
-    // - is it possible to fill the knapsack?
-    bool canPartition(std::vector<int>& nums)
+    bool canPartition(std::vector<int>& nums) { return approach2(nums); }
+
+private:
+    // DP with space optimization, time O(MN), space O(M)
+    // - N is the number of nums, and M is the half sum of nums
+    bool approach2(const std::vector<int>& nums)
     {
-        int sum = 0;
-        for (const auto& val : nums) {
-            sum += val;
-        }
-        if (sum % 2 != 0)
+        const int totalSum = std::accumulate(nums.begin(), nums.end(), 0);
+        if (totalSum % 2 != 0)
             return false;
 
-        const auto m = sum / 2;
-        const auto n = nums.size();
-        // dp[i][j] = can/can't fill a knapsack of capacity j with packages[0:i)
-        // base case:
-        // - dp[0][0] = true
-        // - dp[0][j] = false, package list is empty
-        // - dp[i][0] = true, put nothing into the knapsack
-        // std::vector<std::vector<bool>> dp(n + 1, std::vector<bool>(m + 1, false));
-        // for (int i = 0; i <= n; ++i) {
-        //     dp[i][0] = true;
-        // }
-        // for (int i = 1; i <= n; ++i) {
-        //     for (int j = 1; j <= m; ++j) {
-        //         const auto remaining = j - nums[i - 1];
-        //         if (remaining < 0) {
-        //             dp[i][j] = dp[i - 1][j];
-        //         } else {
-        //             dp[i][j] = dp[i - 1][j] || dp[i - 1][remaining];
-        //         }
-        //     }
-        // }
-        // return dp[n][m];
-        // since dp[i][...] is only dependent on dp[i - 1][...],
-        // we can replace the 2D matrix with a 1D array
-        // - dp[j] = can/can't fill the knapsack of capacity j
-        std::vector<bool> dp(m + 1, false);
+        const int target = totalSum / 2;
+        const int n = nums.size();
+        std::vector<bool> dp(target + 1, false);
         dp[0] = true;
-        for (int i = 0; i < n; ++i) {
-            for (int j = m; j >= 1; --j) {
-                if (j - nums[i] >= 0) {
-                    dp[j] = dp[j] || dp[j - nums[i]];
+        for (int i = 1; i <= n; ++i) {
+            for (int j = target; j >= 1; --j) {
+                const int diff = j - nums[i - 1];
+                if (diff >= 0) {
+                    dp[j] = dp[j] || dp[diff];
                 }
             }
         }
-        return dp[m];
+        return dp[target];
+    }
+
+    // DP, time O(MN), space O(MN)
+    // - N is the number of nums, and M is the half sum of nums
+    bool approach1(const std::vector<int>& nums)
+    {
+        const int totalSum = std::accumulate(nums.begin(), nums.end(), 0);
+        if (totalSum % 2 != 0)
+            return false;
+
+        const int target = totalSum / 2;
+        const int n = nums.size();
+        // dp[i][j] = is it possible to make up amount j using nums[0:i)
+        // base case:
+        // - dp[0][0] = true
+        // - dp[i][0] = true
+        // - dp[0][j] = false
+        std::vector<std::vector<bool>> dp(n + 1, std::vector<bool>(target + 1, false));
+        for (int i = 0; i <= n; ++i) {
+            dp[i][0] = true;
+        }
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= target; ++j) {
+                const int diff = j - nums[i - 1]; // nums[i] > 0, it means diff < j
+                if (diff < 0) {
+                    dp[i][j] =
+                        dp[i - 1][j]; // the ith num can't be used, use nums[0:i-1) to make up j
+                } else {
+                    // case1: the ith num is not used, use nums[0:i-1) to make up j
+                    // case2: the ith num is used, use nums[0:i-1) to make up the remaining amount
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][diff];
+                }
+            }
+        }
+        return dp[n][target];
     }
 };
