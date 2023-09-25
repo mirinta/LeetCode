@@ -8,7 +8,9 @@
  *
  * Return the letter that was added to "t".
  *
+ * ! 0 <= s.length <= 1000
  * ! t.length == s.length + 1
+ * ! s and t consist of lowercase English letters.
  */
 
 class Solution
@@ -16,7 +18,7 @@ class Solution
 public:
     char findTheDifference(std::string s, std::string t)
     {
-        // approach: xor, a ^ b ^ a = (a ^ a) ^ b = 0 ^ b = b
+        // a^b^a = (a^a)^b = 0^b = b
         char result = 0;
         for (const auto& c : s) {
             result ^= c;
