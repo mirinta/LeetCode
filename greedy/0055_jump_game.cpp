@@ -17,22 +17,27 @@ public:
 
 private:
     // Greedy, time O(N), space O(1)
-    bool approach2(const std::vector<int>& nums)
+    int approach2(const std::vector<int>& nums)
     {
+        const int n = nums.size();
+        // assume we are at index n-2, then we can reach index n-1 as long as the allowed jump
+        // length >= 1, it doesn't matter the reached index > n-1 thus, if we are at index i, we
+        // always jump to the furthest index
         int furthest = 0;
-        for (int i = 0; i < nums.size(); ++i) {
+        for (int i = 0; i < n; ++i) {
             if (i > furthest)
-                return false;
+                return false; // we can't reach index i
 
             furthest = std::max(furthest, i + nums[i]);
         }
-        return furthest >= nums.size() - 1;
+        return furthest >= n - 1;
     }
 
-    // DP, time O(N^2), space O(N)
-    bool approach1(const std::vector<int>& nums)
+    // DP, time O(N), space O(N)
+    int approach1(const std::vector<int>& nums)
     {
         const int n = nums.size();
+        // dp[i] = whether we can reach the last index starting at index i
         std::vector<bool> dp(n, false);
         dp[n - 1] = true;
         for (int i = n - 2; i >= 0; --i) {

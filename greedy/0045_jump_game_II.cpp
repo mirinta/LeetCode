@@ -25,60 +25,66 @@ public:
     int jump(std::vector<int>& nums) { return approach3(nums); }
 
 private:
-    // Greedy, time O(N), space O(1)
+    // time O(N), space O(1)
     int approach3(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        int end = 0;      // where the current jump ends
-        int furthest = 0; // the furthest reachable index of the next jump
-        int result = 0;
+        int jumpTo = 0;
+        int furthest = 0;
+        int jumps = 0;
         for (int i = 0; i < n - 1; ++i) {
             furthest = std::max(furthest, i + nums[i]);
-            if (i == end) {
-                result++;
-                end = furthest;
+            if (i == jumpTo) {
+                jumpTo = furthest;
+                jumps++;
             }
         }
-        return result;
+        return jumps;
     }
 
-    // Like BFS, time O(N), space O(1)
+    // time O(N), space O(1)
     int approach2(const std::vector<int>& nums)
     {
-        // indices: 0 1 2 3 4
-        //    nums: 2 3 1 1 4
+        // assume we're at index i, the reachable range is [start, end]
+        // - where start=i+1, end=i+nums[i]
+        // for each j in the range [start, end], we can update the reachable range to [start', end']
+        // - where start'=j+1, end'=max(j+nums[j]...)
+        if (nums.size() == 1)
+            return 0;
+
         const int n = nums.size();
-        int left = 0; // reachable range [left, right]
-        int right = 0;
-        int result = 0;
-        while (right < n - 1) {
-            int furthest = 0;
-            for (int i = left; i <= right; ++i) {
+        int start = 0;
+        int end = 0;
+        int jumps = 0;
+        while (start <= end) {
+            int furthest = end;
+            for (int i = start; i <= end; ++i) {
                 furthest = std::max(furthest, i + nums[i]);
+                if (furthest >= n - 1)
+                    return jumps + 1;
             }
-            left = right + 1;
-            right = furthest;
-            result++;
+            jumps++;
+            start = end + 1;
+            end = furthest;
         }
-        return result;
+        return jumps;
     }
 
     // DP, time O(N^2), space O(N)
     int approach1(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        // dp[i] = min steps of jumping from index 0 to index i
+        // dp[i] = starting from index 0, the min num of jumps to reach index i
         std::vector<int> dp(n, INT_MAX);
         dp[0] = 0;
         for (int i = 0; i < n; ++i) {
-            if (i + nums[i] >= n - 1) {
-                dp[n - 1] = std::min(dp[n - 1], 1 + dp[i]);
-                break;
-            }
-            for (int j = 1; j <= nums[i]; ++j) {
-                dp[i + j] = std::min(dp[i + j], 1 + dp[i]);
+            if (i + nums[i] >= n - 1)
+                return std::min(dp[n - 1], 1 + dp[i]);
+
+            for (int steps = 1; steps <= std::min(nums[i], n - i - 1); ++steps) {
+                dp[i + steps] = std::min(dp[i + steps], 1 + dp[i]);
             }
         }
-        return dp[n - 1];
+        return dp[n - 1] == INT_MAX ? -1 : dp[n - 1];
     }
 };
