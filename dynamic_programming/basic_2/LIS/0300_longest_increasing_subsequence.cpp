@@ -19,14 +19,15 @@ private:
     // Binary search, time O(NlogN), space O(N)
     int approach2(const std::vector<int>& nums)
     {
+        const int n = nums.size();
         std::vector<int> vec; // strictly increasing
         for (const auto& val : nums) {
             if (vec.empty() || val > vec.back()) {
                 vec.push_back(val);
                 continue;
             }
-            // if val <= vec.back(), find the first index i such that vec[i] >= val
-            // replace vec[i] with val
+            // val >= vec.back()
+            // find the first index i s.t., vec[i] >= val and replace with val
             auto iter = std::lower_bound(vec.begin(), vec.end(), val);
             if (iter != vec.end()) {
                 *iter = val;
@@ -40,17 +41,20 @@ private:
     {
         const int n = nums.size();
         // dp[i] = length of the LIS that ends with nums[i]
+        // base case: dp[i] = 1
+        // X X X X X j X i
+        // |<-dp[j]->|
+        // |<---dp[i]--->|
         std::vector<int> dp(n, 1);
+        int result = 1;
         for (int i = 1; i < n; ++i) {
-            // X X X X X j i
-            // |<-dp[j]->|
-            // |<--dp[i]-->|
             for (int j = i - 1; j >= 0; --j) {
                 if (nums[i] > nums[j]) {
-                    dp[i] = std::max(dp[i], 1 + dp[j]);
+                    dp[i] = std::max(dp[i], dp[j] + 1);
                 }
             }
+            result = std::max(result, dp[i]);
         }
-        return dp[n - 1];
+        return result;
     }
 };
