@@ -17,17 +17,18 @@
 class Solution
 {
 public:
-    // time O(AN), space O(A)
-    // - A is the amount, and N is the number of coins
+    // DP, time O(AN), space O(A)
+    // - A is the amount, and N is the num of coins
     int coinChange(std::vector<int>& coins, int amount)
     {
-        // dp[i] = min number of coins to make up amount i
-        std::vector<long> dp(amount + 1, INT_MAX);
+        // dp[i] = fewest num of coins to make up i
+        std::vector<long long> dp(amount + 1, INT_MAX);
         dp[0] = 0;
         for (int i = 1; i <= amount; ++i) {
-            for (const auto& j : coins) {
-                if (i >= j) {
-                    dp[i] = std::min(dp[i], 1 + dp[i - j]);
+            for (const auto& val : coins) {
+                const long long diff = i - val;
+                if (diff >= 0) {
+                    dp[i] = std::min(dp[i], 1 + dp[diff]);
                 }
             }
         }
