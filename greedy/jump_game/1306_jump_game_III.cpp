@@ -1,3 +1,4 @@
+#include <array>
 #include <queue>
 #include <vector>
 
@@ -16,33 +17,39 @@
 class Solution
 {
 public:
-    // BFS, time O(N), space O(N)
     bool canReach(std::vector<int>& arr, int start)
     {
+        // our goal is to reach any "destination" such that arr[destination] = 0
         const int n = arr.size();
-        std::vector<int> visited(n, false);
+        std::vector<bool> visited(n, false);
         visited[start] = true;
         std::queue<int> queue;
         queue.push(start);
-        const std::vector<int> factors{1, -1};
         while (!queue.empty()) {
             const int size = queue.size();
             for (int k = 0; k < size; ++k) {
-                const auto v = queue.front();
+                const int index = queue.front();
                 queue.pop();
-                if (arr[v] == 0)
+                if (arr[index] == 0)
                     return true;
 
-                for (const auto& f : factors) {
-                    const int adj = v + f * arr[v];
-                    if (adj < 0 || adj >= n || visited[adj])
+                for (const auto& factor : kFactors) {
+                    const int x = index + factor * arr[index];
+                    if (x < 0 || x >= n)
                         continue;
 
-                    visited[adj] = true;
-                    queue.push(adj);
+                    if (!visited[x]) {
+                        visited[x] = true;
+                        queue.push(x);
+                    }
                 }
             }
         }
         return false;
     }
+
+private:
+    static const std::array<int, 2> kFactors;
 };
+
+const std::array<int, 2> Solution::kFactors{-1, 1};
