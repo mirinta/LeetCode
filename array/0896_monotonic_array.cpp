@@ -7,53 +7,55 @@
  * monotone decreasing if for all i <= j, nums[i] >= nums[j].
  *
  * Given an integer array "nums", return true if the given array is monotonic, or false otherwise.
+ *
+ * ! 1 <= nums.length <= 10^5
+ * ! -10^5 <= nums[i] <= 10^5
  */
 
 class Solution
 {
 public:
-    bool isMonotonic(std::vector<int>& nums)
-    {
-        if (nums.empty())
-            return false;
+    bool isMonotonic(std::vector<int>& nums) { return approach2(nums); }
 
+private:
+    // one-pass, time O(N), space O(1)
+    bool approach2(const std::vector<int>& nums)
+    {
         if (nums.size() == 1)
             return true;
 
-        // approach 1:
-        // sign = -1, 0, or 1
-        // -1 for unknown, 1 for increasing, 0 for decreasing
-        // int sign = -1;
-        // for (size_t i = 1; i < nums.size(); ++i) {
-        //     if (nums[i] == nums[i - 1])
-        //         continue;
+        bool isIncreasing = true;
+        bool isDecreasing = true;
+        for (int i = 1; i < nums.size(); ++i) {
+            if (nums[i] < nums[i - 1]) {
+                isIncreasing = false;
+            } else if (nums[i] > nums[i - 1]) {
+                isDecreasing = false;
+            }
+        }
+        return isIncreasing || isDecreasing;
+    }
 
-        //     if (sign == -1) {
-        //         sign = nums[i] > nums[0];
-        //     } else if ((nums[i] > nums[i - 1]) ^ sign)
-        //         return false;
-        // }
-        // return true;
-        // approach 2:
+    // two-pass, time O(N), space O(1)
+    bool approach1(const std::vector<int>& nums)
+    {
+        if (nums.size() == 1)
+            return true;
+
+        auto isIncreasing = [](const std::vector<int>& nums) {
+            for (int i = 1; i < nums.size(); ++i) {
+                if (nums[i] < nums[i - 1])
+                    return false;
+            }
+            return true;
+        };
+        auto isDecreasing = [](const std::vector<int>& nums) {
+            for (int i = 1; i < nums.size(); ++i) {
+                if (nums[i] > nums[i - 1])
+                    return false;
+            }
+            return true;
+        };
         return isIncreasing(nums) || isDecreasing(nums);
-    }
-
-private:
-    bool isIncreasing(const std::vector<int>& nums)
-    {
-        for (size_t i = 1; i < nums.size(); ++i) {
-            if (nums[i] < nums[i - 1])
-                return false;
-        }
-        return true;
-    }
-
-    bool isDecreasing(const std::vector<int>& nums)
-    {
-        for (size_t i = 1; i < nums.size(); ++i) {
-            if (nums[i] > nums[i - 1])
-                return false;
-        }
-        return true;
     }
 };
