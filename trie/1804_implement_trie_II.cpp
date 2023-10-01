@@ -1,77 +1,86 @@
 #include <algorithm>
-#include <array>
-#include <memory>
 #include <string>
+#include <unordered_map>
 
 struct TrieNode
 {
-    static constexpr int R = 26;
-    int countPass = 0; // num of words that pass through this character
-    int countWord = 0; // num of words that end with this character
-    std::array<std::unique_ptr<TrieNode>, 26> next;
+    std::unordered_map<char, TrieNode*> next{};
+    int countPass = 0; // num of words passing this node
+    int countWord = 0; // num of words ending at this node
+
+    ~TrieNode()
+    {
+        auto iter = next.begin();
+        while (iter != next.end()) {
+            delete iter->second;
+            ++iter;
+        }
+    }
 };
 
 class Trie
 {
 public:
-    Trie() : root(std::make_unique<TrieNode>()) {}
+    Trie() : root(new TrieNode()) {}
+
+    ~Trie() { delete root; }
 
     void insert(const std::string& word)
     {
-        auto* node = root.get();
+        auto* node = root;
         for (const auto& c : word) {
-            const int index = c - 'a';
-            if (!node->next[index]) {
-                node->next[index] = std::make_unique<TrieNode>();
+            if (!node->next.count(c)) {
+                node->next[c] = new TrieNode();
             }
-            node->next[index]->countPass++;
-            node = node->next[index].get();
+            node->next[c]->countPass++;
+            node = node->next[c];
         }
         node->countWord++;
     }
 
     int countWordsEqualTo(const std::string& word)
     {
-        auto* node = root.get();
+        auto* node = root;
         for (const auto& c : word) {
-            const int index = c - 'a';
-            if (!node->next[index])
+            if (!node->next.count(c))
                 return 0;
 
-            node = node->next[index].get();
+            node = node->next[c];
         }
         return node->countWord;
     }
 
     int countWordsStartingWith(const std::string& prefix)
     {
-        auto* node = root.get();
+        auto* node = root;
         for (const auto& c : prefix) {
-            const int index = c - 'a';
-            if (!node->next[index])
+            if (!node->next.count(c))
                 return 0;
 
-            node = node->next[index].get();
+            node = node->next[c];
         }
         return node->countPass;
     }
 
     void erase(const std::string& word)
     {
-        auto* node = root.get();
+        // it is guaranteed that the given word exists in the trie
+        auto* node = root;
         for (const auto& c : word) {
-            const int index = c - 'a';
-            if (node->next[index] && --node->next[index]->countPass == 0) {
-                node->next[index].reset();
+            if (!node->next.count(c))
+                return;
+
+            if (--node->next[c]->countPass == 0) {
+                node->next.erase(c);
                 return;
             }
-            node = node->next[index].get();
+            node = node->next[c];
         }
-        node->countWord--;
+        --node->countWord;
     }
 
 private:
-    std::unique_ptr<TrieNode> root;
+    TrieNode* root;
 };
 
 /**
