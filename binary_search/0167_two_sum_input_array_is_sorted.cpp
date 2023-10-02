@@ -24,23 +24,18 @@ class Solution
 public:
     std::vector<int> twoSum(std::vector<int>& numbers, int target)
     {
-        // two pointers: forward and backward
-        // check sum = nums[forward] + nums[backward]
-        // - if sum = target, done;
-        // - if sum < target, forward++ (because the array is sorted in non-decreasing order), next
-        // loop;
-        // - if sum > target, backward--, next loop;
-        int forward = 0;
-        int backward = numbers.size() - 1;
-        while (forward < backward) {
-            const auto sum = numbers[forward] + numbers[backward];
+        // the input array is sorted in non-decreasing order
+        int left = 0;
+        int right = numbers.size() - 1;
+        while (left < right) {
+            const int sum = numbers[left] + numbers[right];
             if (sum == target)
-                return {forward + 1, backward + 1};
+                return {left + 1, right + 1};
 
             if (sum < target) {
-                forward++;
+                left++;
             } else {
-                backward--;
+                right--;
             }
         }
         return {};
