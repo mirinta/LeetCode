@@ -17,26 +17,23 @@ public:
         if (nums.size() < 3)
             return {};
 
+        // given nums[i], our goal is to find nums[j] and nums[k],
+        // where i < j, i < k, j != k, and nums[j] + nums[k] = -nums[i]
         const int n = nums.size();
+        std::sort(nums.begin(), nums.end());
         std::vector<std::vector<int>> result;
-        std::sort(nums.begin(), nums.end()); // arrange duplicates together
-        // given nums[i], we are going to find nums[j] and nums[k],
-        // s.t., nums[i] + nums[j] + nums[k] = 0, where
-        // j != k, and both j and k are in the range [i+1, n)
-        for (int i = 0; i <= n - 3; ++i) {
-            if (i - 1 >= 0 && nums[i] == nums[i - 1])
-                continue; // skip duplicates
+        for (int i = 0; i < n - 2; ++i) {
+            if (i >= 1 && nums[i] == nums[i - 1])
+                continue; // skip same nums[i]
 
-            // optimization1:
             if (nums[i] + nums[i + 1] + nums[i + 2] > 0)
-                break;
+                break; // no way to find nums[j] and nums[k]
 
-            // optimization2:
-            if (nums[i] + nums[n - 2] + nums[n - 1] < 0)
-                continue;
+            if (nums[i] + nums[n - 1] + nums[n - 2] < 0)
+                continue; // try larger nums[i]
 
+            // find "two-sum" in sorted array:
             const int target = -nums[i];
-            // apply two-sum algorithm:
             int left = i + 1;
             int right = n - 1;
             while (left < right) {
@@ -49,11 +46,11 @@ public:
                     result.push_back({nums[i], nums[left], nums[right]});
                     left++;
                     while (left < right && nums[left] == nums[left - 1]) {
-                        left++;
+                        left++; // skip same value pointed by left
                     }
                     right--;
                     while (left < right && nums[right] == nums[right + 1]) {
-                        right--;
+                        right--; // skip same value pointed by right
                     }
                 }
             }
