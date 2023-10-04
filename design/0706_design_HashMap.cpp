@@ -24,51 +24,47 @@
 class MyHashMap
 {
 public:
-    MyHashMap() : _buckets(k_size, std::list<std::pair<int, int>>{}) {}
+    MyHashMap() : data(k_base) {}
 
     void put(int key, int value)
     {
-        auto& bucket = getBucket(key);
-        auto iter = find(key);
-        if (iter != bucket.end()) {
-            (*iter).second = value;
-        } else {
-            bucket.emplace_back(key, value);
+        const int h = hash(key);
+        for (auto iter = data[h].begin(); iter != data[h].end(); ++iter) {
+            if (iter->first == key) {
+                iter->second = value;
+                return;
+            }
         }
+        data[h].emplace_back(key, value);
     }
 
     int get(int key)
     {
-        const auto& bucket = getBucket(key);
-        auto iter = find(key);
-        if (iter != bucket.end())
-            return (*iter).second;
-
+        const int h = hash(key);
+        for (auto iter = data[h].begin(); iter != data[h].end(); ++iter) {
+            if (iter->first == key)
+                return iter->second;
+        }
         return -1;
     }
 
     void remove(int key)
     {
-        auto& bucket = getBucket(key);
-        auto iter = find(key);
-        if (iter != bucket.end()) {
-            bucket.erase(iter);
+        const int h = hash(key);
+        for (auto iter = data[h].begin(); iter != data[h].end(); ++iter) {
+            if (iter->first == key) {
+                data[h].erase(iter);
+                return;
+            }
         }
     }
 
 private:
-    std::list<std::pair<int, int>>::iterator find(int key)
-    {
-        auto& bucket = getBucket(key);
-        return std::find_if(bucket.begin(), bucket.end(),
-                            [&key](const auto& pair) { return pair.first == key; });
-    }
-
-    std::list<std::pair<int, int>>& getBucket(int key) { return _buckets[key % k_size]; }
+    static int hash(int key) { return key % k_base; }
 
 private:
-    static constexpr size_t k_size = 2048;
-    std::vector<std::list<std::pair<int, int>>> _buckets;
+    static constexpr int k_base = 2048;
+    std::vector<std::list<std::pair<int, int>>> data;
 };
 
 /**
