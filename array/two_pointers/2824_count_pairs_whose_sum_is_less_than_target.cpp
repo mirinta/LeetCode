@@ -24,7 +24,7 @@ public:
         int right = n - 1;
         while (left < right) {
             if (nums[left] + nums[right] < target) {
-                result += right - left;
+                result += right - left; // (left,right),...,(left,left+1) are valid pairs
                 left++;
             } else {
                 right--;
