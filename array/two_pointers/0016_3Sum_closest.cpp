@@ -21,29 +21,26 @@ public:
     {
         const int n = nums.size();
         std::sort(nums.begin(), nums.end());
-        int minAbsDiff = INT_MAX;
         int result = 0;
-        auto update = [&minAbsDiff, &result](int sum, int target) {
+        int minAbsDiff = INT_MAX;
+        auto update = [&result, &minAbsDiff](int sum, int target) {
             if (const int diff = std::abs(sum - target); diff < minAbsDiff) {
-                minAbsDiff = diff;
                 result = sum;
+                minAbsDiff = diff;
             }
         };
         for (int i = 0; i < n - 2; ++i) {
             if (i >= 1 && nums[i] == nums[i - 1])
-                continue; // skip same nums[i]
+                continue;
 
-            // optimization 1
             if (const int sum = nums[i] + nums[i + 1] + nums[i + 2]; sum > target) {
                 update(sum, target);
                 break;
             }
-            // optimization 2
             if (const int sum = nums[i] + nums[n - 1] + nums[n - 2]; sum < target) {
                 update(sum, target);
                 continue;
             }
-            // two-pointers:
             int left = i + 1;
             int right = n - 1;
             while (left < right) {
