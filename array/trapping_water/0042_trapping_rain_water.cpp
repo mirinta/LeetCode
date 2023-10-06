@@ -18,19 +18,20 @@ private:
     // time O(N), space O(1)
     int approach2(const std::vector<int>& height)
     {
-        int result = 0;
+        const int n = height.size();
+        int leftMax = 0;
+        int rightMax = 0;
         int left = 0;
-        int right = height.size() - 1;
-        int prefixMax = 0;
-        int suffixMax = 0;
+        int right = n - 1;
+        int result = 0;
         while (left <= right) {
-            prefixMax = std::max(prefixMax, height[left]);
-            suffixMax = std::max(suffixMax, height[right]);
-            if (prefixMax < suffixMax) {
-                result += prefixMax - height[left];
+            leftMax = std::max(leftMax, height[left]);
+            rightMax = std::max(rightMax, height[right]);
+            if (leftMax < rightMax) {
+                result += leftMax - height[left];
                 left++;
             } else {
-                result += suffixMax - height[right];
+                result += rightMax - height[right];
                 right--;
             }
         }
@@ -41,15 +42,15 @@ private:
     int approach1(const std::vector<int>& height)
     {
         const int n = height.size();
-        std::vector<int> prefixMax(height);
-        std::vector<int> suffixMax(height);
+        std::vector<int> leftMax(n, height[0]);      // max height of height[0],...,height[i]
+        std::vector<int> rightMax(n, height[n - 1]); // max height of height[i],...,height[n-1]
         for (int i = 1; i < n; ++i) {
-            prefixMax[i] = std::max(prefixMax[i - 1], height[i]);
-            suffixMax[n - i - 1] = std::max(suffixMax[n - i], height[n - i - 1]);
+            leftMax[i] = std::max(leftMax[i - 1], height[i]);
+            rightMax[n - i - 1] = std::max(rightMax[n - i], height[n - i - 1]);
         }
         int result = 0;
         for (int i = 0; i < n; ++i) {
-            result += std::min(prefixMax[i], suffixMax[i]) - height[i];
+            result += std::min(leftMax[i], rightMax[i]) - height[i];
         }
         return result;
     }

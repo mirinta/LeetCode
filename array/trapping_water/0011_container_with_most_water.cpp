@@ -21,6 +21,7 @@ class Solution
 public:
     int maxArea(std::vector<int>& height)
     {
+        // the amount of water depends on the line with lower height
         int left = 0;
         int right = height.size() - 1;
         int result = 0;
@@ -28,7 +29,10 @@ public:
             result = std::max(result, (right - left) * std::min(height[left], height[right]));
             if (height[left] < height[right]) {
                 left++;
+            } else if (height[left] > height[right]) {
+                right--;
             } else {
+                left++;
                 right--;
             }
         }

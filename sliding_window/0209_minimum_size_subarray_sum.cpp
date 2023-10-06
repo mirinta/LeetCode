@@ -13,52 +13,52 @@
 class Solution
 {
 public:
-    int minSubArrayLen(int target, std::vector<int>& nums) { return approach1(target, nums); }
+    int minSubArrayLen(int target, std::vector<int>& nums) { return approach2(target, nums); }
 
 private:
-    // binary search, time O(NlogN), space O(N)
+    // sliding window, time O(N), space O(1)
     int approach2(int target, const std::vector<int>& nums)
     {
-        if (nums.empty())
-            return 0;
-
-        // prefix[j] = sum(nums[0]...nums[i]...nums[j])
-        // prefix[i-1] = sum(nums[0]...nums[i-1])
-        // if sum(nums[i]...nums[j]) >= target
-        // then prefix[j] - prefix[i-1] >= target
-        // prefix[i] is strictly increasing, because all elements are positive numbers
         const int n = nums.size();
-        std::vector<int> prefix(n + 1, 0);
-        for (int i = 1; i <= n; ++i) {
-            prefix[i] = prefix[i - 1] + nums[i - 1];
-        }
-        int result = INT_MAX;
-        for (int i = 1; i <= n; ++i) {
-            auto iter = std::lower_bound(prefix.begin(), prefix.end(), prefix[i - 1] + target);
-            if (iter != prefix.end()) {
-                result = std::min<int>(result, std::distance(prefix.begin(), iter) - i + 1);
+        int minLength = INT_MAX;
+        int windowSum = 0;
+        // ... LEFT ... RIGHT ...
+        //     |<----sum--->|
+        // all nums[i] are positive
+        // - when moving "right", the window sum is monotonic increasing
+        // - when moving "left", the window sum is monotonic decreasing
+        // each element will be visited at most two times
+        for (int left = 0, right = 0; right < n; ++right) {
+            windowSum += nums[right];
+            while (windowSum >= target) {
+                minLength = std::min(minLength, right - left + 1);
+                windowSum -= nums[left++];
             }
         }
-        return result == INT_MAX ? 0 : result;
+        return minLength == INT_MAX ? 0 : minLength;
     }
 
-    // sliding window, time O(N), O(1)
+    // prefix sum + binary search, time O(NlogN), space O(N)
     int approach1(int target, const std::vector<int>& nums)
     {
-        if (nums.empty())
-            return 0;
-
-        // X X L X X X X R R+1
-        //     |<--sum-->|
-        int left = 0;
-        int right = 0;
-        int sum = 0;
+        const int n = nums.size();
+        // let prefix[i] = nums[0]+...+nums[i]
+        // if nums[i]+...+nums[j] >= target,
+        // then prefix[j] - prefix[i-1] >= target
+        // since nums[i] are positive integers,
+        // then prefix[i] is monotonic increasing
+        // thus, given prefix[i-1], we can apply binary search to find prefix[j]
+        std::vector<int> prefixSum(n + 1, 0);
+        for (int i = 1; i <= n; ++i) {
+            prefixSum[i] = prefixSum[i - 1] + nums[i - 1];
+        }
         int result = INT_MAX;
-        while (right < nums.size()) {
-            sum += nums[right++];
-            while (sum >= target) {
-                result = std::min(result, right - left);
-                sum -= nums[left++];
+        for (int i = 1; i <= n; ++i) {
+            const int findingTarget = prefixSum[i - 1] + target;
+            auto iter = std::lower_bound(prefixSum.begin(), prefixSum.end(), findingTarget);
+            if (iter != prefixSum.end()) {
+                const int j = std::distance(prefixSum.begin(), iter);
+                result = std::min(result, j - i + 1);
             }
         }
         return result == INT_MAX ? 0 : result;
