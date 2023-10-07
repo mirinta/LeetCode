@@ -25,30 +25,27 @@
 class Solution
 {
 public:
-    int findMin(const std::vector<int>& nums)
+    int findMin(std::vector<int>& nums)
     {
-        const auto n = nums.size();
-        if (n <= 1)
-            return n == 1 ? nums[0] : 0;
+        if (nums.size() == 1)
+            return nums.front();
 
-        // NOTE: the array may contain duplicates
-        // no way to early return
-        // | 1 1 | 0 1 |
+        // nums may contain duplicates
+        // [LEFT...MAX][MIN...RIGHT]
         int left = 0;
-        int right = n - 1;
+        int right = nums.size() - 1;
         while (left < right) {
-            int mid = left + (right - left) / 2;
+            const int mid = left + (right - left) / 2;
             if (nums[mid] > nums[right]) {
-                // nums[left:mid] are in the right part, skip them
+                // nums[mid] is in the left part, skip nums[LEFT:MID]
                 left = mid + 1;
             } else if (nums[mid] < nums[right]) {
-                // nums[mid] is in the left part, shrink its size
-                right = mid;
+                // nums[mid] is in the right part
+                right = mid; // not mid - 1, because nums[mid] may be the minimum element
             } else {
-                // nums[mid] == nums[right],
-                // no way to determine which part contains nums[mid],
-                // we can simply skip nums[right]
-                right -= 1;
+                // nums[mid] == nums[right], we can't determine which part contains nums[mid]
+                // so we simply skip nums[right]
+                right--;
             }
         }
         return nums[left];

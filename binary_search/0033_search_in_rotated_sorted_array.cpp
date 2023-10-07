@@ -26,8 +26,11 @@ public:
     int search(std::vector<int>& nums, int target)
     {
         if (nums.empty())
-            return false;
+            return -1;
 
+        // nums[i] are unique
+        // if nums is rotated, it becomes
+        // [LEFT...MAX MIN...RIGHT]
         int left = 0;
         int right = nums.size() - 1;
         while (left <= right) {
@@ -36,20 +39,18 @@ public:
                 return mid;
 
             if (nums[mid] >= nums[left]) {
-                // target is in part1
-                // |      part1        ||  part2  |
-                // [LEFT...MID MID+1...][... RIGHT]
-                // |<-case1->| |<-----case2------>|
+                // mid is in the left part
+                // [LEFT...MID-1 MID MID+1...MAX][MIN...RIGHT]
+                //  |<--case1->|     |<--------case2------->|
                 if (target >= nums[left] && target < nums[mid]) {
                     right = mid - 1;
                 } else {
                     left = mid + 1;
                 }
             } else {
-                // target is in part1
-                // | part2 ||       part1        |
-                // [LEFT...][...MID-1 MID...RIGHT]
-                // |<-----case2---->| |<-case1-->|
+                // mid is in the right part
+                // [LEFT...MAX][MIN...MID-1 MID MID+1...RIGHT]
+                //  |<-------case2------->|     |<--case1-->|
                 if (target <= nums[right] && target > nums[mid]) {
                     left = mid + 1;
                 } else {
