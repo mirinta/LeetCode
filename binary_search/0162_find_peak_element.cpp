@@ -19,7 +19,11 @@
 class Solution
 {
 public:
-    int findPeakElement(std::vector<int>& nums) { return approach2(nums); }
+    int findPeakElement(std::vector<int>& nums) { 
+        // nums[i] != nums[i + 1] for all valid i
+        // thus, the problem definitely has a solution 
+        return approach2(nums); 
+    }
 
 private:
     int approach2(const std::vector<int>& nums)
