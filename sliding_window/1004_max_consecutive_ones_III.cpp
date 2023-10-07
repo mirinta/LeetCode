@@ -12,18 +12,23 @@
 class Solution
 {
 public:
+    // sliding window, time O(N), space O(1)
     int longestOnes(std::vector<int>& nums, int k)
     {
-        int left = 0;
-        int right = 0;
-        for (; right < nums.size(); ++right) {
+        const int n = nums.size();
+        int result = 0;
+        for (int left = 0, right = 0; right < n; ++right) {
             if (nums[right] == 0) {
                 k--;
             }
-            if (k < 0 && nums[left++] == 0) {
-                k++;
+            while (k < 0) {
+                if (nums[left] == 0) {
+                    k++;
+                }
+                left++;
             }
+            result = std::max(result, right - left + 1);
         }
-        return right - left;
+        return result;
     }
 };
