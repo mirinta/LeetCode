@@ -27,35 +27,30 @@ class Solution
 public:
     int findMin(std::vector<int>& nums)
     {
-        // at least one element, and all elements are unique
-        // [LEFT...][...RIGHT]
-        // if nums[left] < nums[right],
-        // it means the given array is not rotated or rotation times % n = 0
-        // thus, nums[left] is the minimum element
-        int left = 0;
-        int right = nums.size() - 1;
-        if (nums[left] < nums[right])
-            return nums[left];
+        // #NOTE# nums[i] are unique
+        const int n = nums.size();
+        if (n == 1 || nums.back() > nums.front())
+            return nums.front();
 
-        // the minimum element is always in the right part
-        // [LEFT...][MIN...RIGHT]
-        // thus, we need to locate the right part,
-        // and try to shrink its size until there's only one element
+        // if nums is rotated,
+        // it becomes [LEFT...MAX MIN...RIGHT]
+        //             |<-left->| |<-right->|
+        // left part is increasing, and right part is increasing
+        // the minimum element is in the right part
+        int left = 0;
+        int right = n - 1;
         while (left < right) {
             const int mid = left + (right - left) / 2;
             if (nums[mid] < nums[right]) {
+                // [LEFT...MAX MIN...MID...RIGHT]
                 // mid is in the right part
-                // [LEFT...][MIN...MID...RIGHT]
-                right = mid; // NOTE, not mid-1, because we don't know whether nums[mid] is the
-                             // minimum element
+                right = mid; // not mid - 1, because nums[mid] may be the minimum element
             } else {
-                // mid is in the left part
-                // [LEFT...MID...][MIN...RIGHT]
-                // since we're only interested in the right part,
-                // we skip all elements in the range [LEFT,MID]
+                // [LEFT...MID...MAX MIN...RIGHT]
+                // mid is in the left part, skip nums[LEFT:MID]
                 left = mid + 1;
             }
-        } // the loop ends when left = right
+        }
         return nums[left];
     }
 };
