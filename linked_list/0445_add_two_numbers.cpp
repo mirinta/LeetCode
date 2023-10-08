@@ -1,5 +1,3 @@
-#include <stack>
-
 /**
  * Definition for singly-linked list.
  */
