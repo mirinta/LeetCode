@@ -32,33 +32,41 @@ public:
         if (!head)
             return nullptr;
 
-        auto* newTail = head;
-        auto* afterNewTail = head;
-        for (int i = 0; i < k; ++i) {
-            if (!afterNewTail)
-                return head; // not enough nodes, remain as it is
-
-            afterNewTail = afterNewTail->next;
+        // before: p0->[n1->...->nk]->nk+1
+        //  after: ->[nk->...->n1]->nk+1, n1 becomes p0
+        int n = numOfNodes(head);
+        ListNode vHead(-1);
+        vHead.next = head;
+        auto* p0 = &vHead;
+        ListNode* prev = nullptr;
+        auto* curr = head;
+        while (n >= k) {
+            n -= k;
+            for (int i = 0; i < k; ++i) {
+                auto* next = curr->next;
+                curr->next = prev;
+                prev = curr;
+                curr = next;
+            } // when the loop ends, prev = nk, curr = nk+1
+            auto* next = p0->next;
+            p0->next->next = curr;
+            p0->next = prev;
+            p0 = next;
         }
-        auto* newHead = reverseBetween(head, afterNewTail);
-        newTail->next = reverseKGroup(afterNewTail, k);
-        return newHead;
+        return vHead.next;
     }
 
 private:
-    // ...->[1->...->k]->k+1 => ...->[k->...->1]->k+1
-    // ...->prev->i->{X...X} => ...->i->prev->{X...X}
-    // reverse nodes in range [node1,node_k+1)
-    ListNode* reverseBetween(ListNode* node1, ListNode* nodeKPlus1)
+    int numOfNodes(ListNode* head)
     {
-        ListNode* prev = nullptr;
-        auto* current = node1;
-        while (current != nodeKPlus1) {
-            auto* next = current->next;
-            current->next = prev;
-            prev = current;
-            current = next;
+        if (!head)
+            return 0;
+
+        int result = 0;
+        while (head) {
+            result++;
+            head = head->next;
         }
-        return prev;
+        return result;
     }
 };
