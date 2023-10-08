@@ -25,29 +25,26 @@ public:
     ListNode* reverseList(ListNode* head) { return approach3(head); }
 
 private:
-    // Iterative, time O(N), space O(1)
+    // iterative, time O(N), space O(1)
     ListNode* approach3(ListNode* head)
     {
-        if (!head || !head->next)
-            return head;
+        if (!head)
+            return nullptr;
 
         ListNode* prev = nullptr;
-        auto* node = head;
-        while (node) {
-            auto* next = node->next;
-            node->next = prev;
-            prev = node;
-            node = next;
+        auto* curr = head;
+        while (curr) {
+            auto* next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
         }
         return prev;
     }
 
-    // Recursive, time O(N), space O(N)
+    // recursive, time O(N), space O(N)
     ListNode* approach2(ListNode* head)
     {
-        // HEAD->X1->X2->...->TAIL
-        // =>
-        // HEAD->[X1<-X2<-...<-TAIL]
         if (!head || !head->next)
             return head;
 
@@ -57,11 +54,11 @@ private:
         return newHead;
     }
 
-    // Stack, time O(N), space O(N)
+    // stack, time O(N), space O(N)
     ListNode* approach1(ListNode* head)
     {
-        if (!head || !head->next)
-            return head;
+        if (!head)
+            return nullptr;
 
         std::stack<ListNode*> stack;
         while (head) {
@@ -71,11 +68,11 @@ private:
             head = next;
         }
         ListNode vHead(-1);
-        auto* node = &vHead;
+        auto* curr = &vHead;
         while (!stack.empty()) {
-            node->next = stack.top();
+            curr->next = stack.top();
             stack.pop();
-            node = node->next;
+            curr = curr->next;
         }
         return vHead.next;
     }
