@@ -1,4 +1,3 @@
-#include <unordered_map>
 /**
  * Definition for singly-linked list.
  */
@@ -14,7 +13,10 @@ struct ListNode
 /**
  * Given the "head" of a singly linked list, return the "middle" node of the linked list.
  *
- * If there are two middle nodes, return the second middle node;
+ * If there are two middle nodes, return the second middle node.
+ *
+ * ! The number of nodes in the list is in the range [1, 100].
+ * ! 1 <= Node.val <= 100
  */
 
 class Solution
@@ -22,15 +24,9 @@ class Solution
 public:
     ListNode* middleNode(ListNode* head)
     {
-        // approach 1: hash map
-        // std::unordered_map<int, ListNode*> map;
-        // auto* iter = head;
-        // for (int i = 0; iter; iter = iter->next, ++i) {
-        //     map[i] = iter;
-        // }
-        // return map[map.size() / 2];
-        // ------------------------------
-        // approach 2:
+        if (!head)
+            return nullptr;
+        
         auto* slow = head;
         auto* fast = head;
         while (fast && fast->next) {
