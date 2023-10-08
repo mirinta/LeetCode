@@ -27,23 +27,22 @@ public:
         if (!head)
             return nullptr;
 
-        // sliding window, nodes in range [i,j)
         ListNode vHead(-1);
-        auto* i = head;
-        auto* k = &vHead;
-        while (i) {
-            auto* j = i;
+        auto* node = &vHead;
+        auto* curr = head;
+        while (curr) {
+            auto* check = curr;
             int count = 0;
-            while (j && j->val == i->val) {
-                j = j->next;
+            while (check && check->val == curr->val) {
+                check = check->next;
                 count++;
             }
             if (count == 1) {
-                k->next = i;
-                i->next = nullptr;
-                k = k->next;
+                node->next = curr;
+                curr->next = nullptr;
+                node = node->next;
             }
-            i = j;
+            curr = check;
         }
         return vHead.next;
     }

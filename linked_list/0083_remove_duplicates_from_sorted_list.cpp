@@ -11,10 +11,12 @@ struct ListNode
 };
 
 /**
- * Given the "head" of a sorted linked list, delete all duplicates such that each element appears
- * only once.
+ * Given the head of a sorted linked list, delete all duplicates such that each element appears only
+ * once. Return the linked list sorted as well.
  *
- * Return the linked list sorted as well.
+ * ! The number of nodes in the list is in the range [0, 300].
+ * ! -100 <= Node.val <= 100
+ * ! The list is guaranteed to be sorted in ascending order.
  */
 
 class Solution
@@ -25,12 +27,15 @@ public:
         if (!head)
             return nullptr;
 
+        // duplicates are adjacent
         auto* keep = head;
-        for (auto* iter = head; iter; iter = iter->next) {
-            if (iter->val != keep->val) {
-                keep->next = iter;
+        auto* curr = head;
+        while (curr) {
+            if (curr->val != keep->val) {
+                keep->next = curr;
                 keep = keep->next;
             }
+            curr = curr->next;
         }
         keep->next = nullptr;
         return head;

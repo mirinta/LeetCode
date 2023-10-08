@@ -25,9 +25,6 @@ class Solution
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n)
     {
-        if (!head)
-            return nullptr;
-
         ListNode vHead(-1);
         vHead.next = head;
         auto* node = getKthNodeFromEnd(&vHead, n + 1);
@@ -38,7 +35,9 @@ public:
 private:
     ListNode* getKthNodeFromEnd(ListNode* head, int k)
     {
-        // 0->...->n-k->...->n-1->NULL
+        // index of the target node is n-k
+        // 0->...->k->...->n-1->NULL
+        // |<-k+1->|<-----n-k----->|
         auto* fast = head;
         for (int i = 0; i < k; ++i) {
             fast = fast->next;
