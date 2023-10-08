@@ -27,30 +27,36 @@ public:
         if (!head)
             return nullptr;
 
-        // start from O, cycle at X, meet at A
-        // O ... X---->A
-        //       |<----|
-        // moving distance: fast = 2D = OX + XA + AX + XA (1)
-        // moving distance: slow = D = OX + XA (2)
-        // (1)-(2): D = AX + XA (3)
-        // (3)-(2): AX = OX
         auto* slow = head;
         auto* fast = head;
+        bool hasCycle = false;
         while (fast && fast->next) {
             fast = fast->next->next;
             slow = slow->next;
-            if (fast == slow)
+            if (slow == fast) {
+                hasCycle = true;
                 break;
+            }
         }
-        // no cycle
-        if (!fast || !fast->next)
+        if (!hasCycle)
             return nullptr;
 
+        // both slow and fast start at O,
+        // cycle begins at X,
+        // slow and fast meet at A
+        // O->...->X->...->A
+        //         |<-...<-|
+        // moving distance of slow = D
+        // moving distance of fast = 2D
+        // 2D = OX + XA + AX + XA (1)
+        //  D = OX + XA (2)
+        // (1)-(2): D = AX + XA (3)
+        // (2)-(3): OX = AX
         slow = head;
-        while (fast != slow) {
-            fast = fast->next;
+        while (slow != fast) {
             slow = slow->next;
+            fast = fast->next;
         }
-        return fast;
+        return slow;
     }
 };
