@@ -29,47 +29,41 @@ class Solution
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2)
     {
-        if (!l1 || !l2)
-            return nullptr;
-
-        auto stack1 = traverse(l1);
-        auto stack2 = traverse(l2);
+        auto* head1 = reverse(l1);
+        auto* head2 = reverse(l2);
         ListNode vHead(-1);
+        auto* node = &vHead;
         int carry = 0;
-        while (!stack1.empty() || !stack2.empty()) {
-            const auto v1 = stack1.empty() ? 0 : stack1.top();
-            const auto v2 = stack2.empty() ? 0 : stack2.top();
-            const auto sum = v1 + v2 + carry;
+        while (head1 || head2) {
+            const int val1 = head1 ? head1->val : 0;
+            const int val2 = head2 ? head2->val : 0;
+            const int sum = val1 + val2 + carry;
+            node->next = new ListNode(sum % 10);
             carry = sum / 10;
-            auto* node = new ListNode(sum % 10);
-            node->next = vHead.next;
-            vHead.next = node;
-            if (!stack1.empty()) {
-                stack1.pop();
-            }
-            if (!stack2.empty()) {
-                stack2.pop();
-            }
+            node = node->next;
+            head1 = head1 ? head1->next : nullptr;
+            head2 = head2 ? head2->next : nullptr;
         }
         if (carry > 0) {
-            auto* node = new ListNode(carry);
-            node->next = vHead.next;
-            vHead.next = node;
+            node->next = new ListNode(carry);
         }
-        return vHead.next;
+        return reverse(vHead.next);
     }
 
 private:
-    std::stack<int> traverse(ListNode* head)
+    ListNode* reverse(ListNode* head)
     {
         if (!head)
-            return {};
+            return nullptr;
 
-        std::stack<int> stack;
-        while (head) {
-            stack.push(head->val);
-            head = head->next;
+        ListNode* prev = nullptr;
+        auto* curr = head;
+        while (curr) {
+            auto* next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
         }
-        return stack;
+        return prev;
     }
 };
