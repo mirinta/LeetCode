@@ -34,7 +34,7 @@ public:
             return;
 
         // before: HEAD->NEXT->...->MID<-...<-PREV<-TAIL
-        //  after: HEAD->TAIL->NEXT->...->MID<-PREV
+        //  after: HEAD->TAIL->NEXT->...->MID<-...<-PREV
         auto* middle = getMiddleNode(head);
         auto* tail = reverse(middle); // MID->next = nullptr
         while (tail->next) {
