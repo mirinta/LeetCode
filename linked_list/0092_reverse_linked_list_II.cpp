@@ -41,30 +41,30 @@ private:
         ListNode vHead(-1);
         vHead.next = head;
         auto* prev = &vHead;
-        for (int i = 1; i < left; ++i) {
+        for (int i = 0; i < left - 1; ++i) {
             prev = prev->next;
         }
         auto* beforeLeft = prev;
-        auto* leftNode = prev->next;
-        auto* node = leftNode;
+        auto* leftNode = beforeLeft->next;
+        auto* curr = prev->next;
         for (int i = left; i <= right; ++i) {
-            auto* next = node->next;
-            node->next = prev;
-            prev = node;
-            node = next;
-        } // when the loop ends, prev=rightNode, node=rightNode->next
+            auto* next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        } // when the loop ends, prev = rightNode, curr = rightNode->next
+        leftNode->next = curr;
         beforeLeft->next = prev;
-        leftNode->next = node;
         return vHead.next;
     }
 
-    // time O(N), space O(N)
+    // stack, time O(N), space O(N)
     ListNode* approach1(ListNode* head, int left, int right)
     {
         if (!head)
             return nullptr;
 
-        // ...prev->[LEFT->...->RIGHT]->next...
+        // ...->prev->[LEFT->...->RIGHT]->next...
         ListNode vHead(-1);
         vHead.next = head;
         auto* prev = &vHead;
