@@ -25,37 +25,37 @@ public:
     ListNode* swapPairs(ListNode* head) { return approach2(head); }
 
 private:
-    // Iteration
+    // time O(N), space O(1)
     ListNode* approach2(ListNode* head)
     {
-        // prev_i->[i]->next_i->{X...X} => prev_i->next_i->[i]->{X...X}
         if (!head)
             return nullptr;
 
         ListNode vHead(-1);
         vHead.next = head;
         auto* prev = &vHead;
-        auto* i = head;
-        while (i && i->next) {
-            auto* next = i->next;
-            i->next = next->next;
-            next->next = i;
+        auto* curr = head;
+        while (curr && curr->next) {
+            auto* next = curr->next;
+            curr->next = next->next;
+            next->next = curr;
             prev->next = next;
-            prev = i;
-            i = i->next;
+            prev = curr;
+            curr = curr->next;
         }
         return vHead.next;
     }
 
-    // Recursion
+    // time O(N), space O(N)
     ListNode* approach1(ListNode* head)
     {
         if (!head || !head->next)
             return head;
 
-        // A->B->{X...X} => B->A->{X...X}
+        // before: A->B->[...]
+        //  after: B->A->[...]
         auto* newHead = head->next;
-        head->next = approach1(newHead->next);
+        head->next = approach1(head->next->next);
         newHead->next = head;
         return newHead;
     }
