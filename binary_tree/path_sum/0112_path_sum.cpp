@@ -30,12 +30,10 @@ public:
         if (!root)
             return false;
 
-        // check the value is matched, and
-        // check the current node is a leaf node
-        const auto diff = targetSum - root->val;
-        if (diff == 0 && !root->left && !root->right)
-            return true;
+        targetSum -= root->val;
+        if (!root->left && !root->right)
+            return targetSum == 0;
 
-        return hasPathSum(root->left, diff) || hasPathSum(root->right, diff);
+        return hasPathSum(root->left, targetSum) || hasPathSum(root->right, targetSum);
     }
 };
