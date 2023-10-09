@@ -1,5 +1,3 @@
-#include <string>
-
 /**
  Definition for a binary tree node.
  */
@@ -33,48 +31,27 @@ struct TreeNode
 class Solution
 {
 public:
-    int sumNumbers(TreeNode* root) { return approach2(root); }
+    int sumNumbers(TreeNode* root)
+    {
+        if (!root)
+            return 0;
+
+        int result = 0;
+        dfs(result, 0, root);
+        return result;
+    }
 
 private:
-    int approach2(TreeNode* root)
+    void dfs(int& result, int num, TreeNode* root)
     {
-        int result = 0;
-        traverse(result, 0, root);
-        return result;
-    }
-
-    void traverse(int& result, int num, TreeNode* node)
-    {
-        if (!node)
+        if (!root)
             return;
 
-        num = num * 10 + node->val;
-        if (!node->left && !node->right) {
+        num = num * 10 + root->val;
+        if (!root->left && !root->right) {
             result += num;
         }
-        traverse(result, num, node->left);
-        traverse(result, num, node->right);
-    }
-
-    int approach1(TreeNode* root)
-    {
-        std::string path;
-        int result = 0;
-        backtrack(path, result, root);
-        return result;
-    }
-
-    void backtrack(std::string& path, int& result, TreeNode* node)
-    {
-        if (!node)
-            return;
-
-        path.push_back(node->val + '0');
-        if (!node->left && !node->right) {
-            result += std::stoi(path);
-        }
-        backtrack(path, result, node->left);
-        backtrack(path, result, node->right);
-        path.pop_back();
+        dfs(result, num, root->left);
+        dfs(result, num, root->right);
     }
 };
