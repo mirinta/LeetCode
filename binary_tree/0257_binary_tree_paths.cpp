@@ -14,6 +14,15 @@ struct TreeNode
     TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
 };
 
+/**
+ * Given the root of a binary tree, return all root-to-leaf paths in any order.
+ *
+ * A leaf is a node with no children.
+ *
+ * ! The number of nodes in the tree is in the range [1, 100].
+ * ! -100 <= Node.val <= 100
+ */
+
 class Solution
 {
 public:
@@ -23,30 +32,29 @@ public:
             return {};
 
         std::vector<std::string> result;
-        std::vector<int> values;
-        traverse(root, values, result);
+        std::vector<std::string> path;
+        dfs(result, path, root);
         return result;
     }
 
 private:
-    void traverse(TreeNode* node, std::vector<int>& values, std::vector<std::string>& result)
+    void dfs(std::vector<std::string>& result, std::vector<std::string>& path, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        if (!node->left && !node->right) {
-            std::string concat;
-            for (const auto& value : values) {
-                concat.append(std::to_string(value));
-                concat.append("->");
+        if (!root->left && !root->right) {
+            std::string concatenation;
+            for (const auto& s : path) {
+                concatenation.append(s);
+                concatenation.append("->");
             }
-            concat.append(std::to_string(node->val));
-            result.push_back(std::move(concat));
-            return;
+            concatenation.append(std::to_string(root->val));
+            result.push_back(concatenation);
         }
-        values.push_back(node->val);
-        traverse(node->left, values, result);
-        traverse(node->right, values, result);
-        values.pop_back(); // process finished, pop the current value
+        path.push_back(std::to_string(root->val));
+        dfs(result, path, root->left);
+        dfs(result, path, root->right);
+        path.pop_back();
     }
 };
