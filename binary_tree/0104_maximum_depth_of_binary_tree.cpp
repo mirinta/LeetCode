@@ -29,7 +29,7 @@ public:
     int maxDepth(TreeNode* root) { return approach2(root); }
 
 private:
-    // BFS
+    // BFS, time O(N), space O(N)
     int approach2(TreeNode* root)
     {
         if (!root)
@@ -39,8 +39,7 @@ private:
         std::queue<TreeNode*> queue;
         queue.push(root);
         while (!queue.empty()) {
-            const int size = queue.size();
-            for (int k = 0; k < size; ++k) {
+            for (int size = queue.size(); size > 0; --size) {
                 auto* node = queue.front();
                 queue.pop();
                 if (node->left) {
@@ -55,12 +54,15 @@ private:
         return result;
     }
 
-    // DFS
+    // DFS, time O(N), worst space O(N), best space O(logN)
     int approach1(TreeNode* root)
     {
         if (!root)
             return 0;
 
-        return 1 + std::max(approach1(root->left), approach1(root->right));
+        const int leftDepth = approach1(root->left);
+        const int rightDepth = approach1(root->right);
+        return 1 + std::max(leftDepth, rightDepth);
     }
 };
+
