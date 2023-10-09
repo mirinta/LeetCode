@@ -28,6 +28,8 @@ class Solution
 public:
     int goodNodes(TreeNode* root)
     {
+        // assume the max value along a path from root to node X-1 is MAX,
+        // we are at node X, if X.val >= MAX, then X is a good node.
         if (!root)
             return 0;
 
@@ -37,16 +39,16 @@ public:
     }
 
 private:
-    void dfs(int& result, int prevMax, TreeNode* node)
+    void dfs(int& result, int prevMax, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        const int currentMax = std::max(node->val, prevMax);
-        if (node->val == currentMax) {
+        const int currMax = std::max(root->val, prevMax);
+        if (currMax == root->val) {
             result++;
         }
-        dfs(result, currentMax, node->left);
-        dfs(result, currentMax, node->right);
+        dfs(result, currMax, root->left);
+        dfs(result, currMax, root->right);
     }
 };

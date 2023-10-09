@@ -28,55 +28,55 @@ public:
     bool isSymmetric(TreeNode* root) { return approach2(root); }
 
 private:
-    // DFS
+    // BFS, time O(N), space O(N)
     bool approach2(TreeNode* root)
     {
         if (!root)
-            return false;
-
-        return dfs(root->left, root->right);
-    }
-
-    bool dfs(TreeNode* root1, TreeNode* root2)
-    {
-        // similar to checking whether two binary trees are exactly the same
-        if (!root1 && !root2)
             return true;
-
-        if (!root1 || !root2)
-            return false;
-
-        if (root1->val != root2->val)
-            return false;
-
-        return dfs(root1->left, root2->right) && dfs(root1->right, root2->left);
-    }
-
-    // BFS
-    bool approach1(TreeNode* root)
-    {
-        if (!root)
-            return false;
 
         std::queue<TreeNode*> queue;
         queue.push(root);
         while (!queue.empty()) {
-            const int size = queue.size();
-            std::vector<int> values(size);
-            for (int k = 0; k < size; ++k) {
+            const int n = queue.size();
+            std::vector<int> nums(n);
+            for (int i = 0; i < n; ++i) {
                 auto* node = queue.front();
                 queue.pop();
-                values[k] = node ? node->val : INT_MIN; // Node.val is in the range [-100,100]
+                nums[i] = node ? node->val : INT_MIN; // Node.val is in the range [-100,100]
                 if (node) {
                     queue.push(node->left);
                     queue.push(node->right);
                 }
             }
-            for (int i = 0, j = size - 1; i <= j; ++i, --j) {
-                if (values[i] != values[j])
+            for (int i = 0, j = n - 1; i <= j; ++i, --j) {
+                if (nums[i] != nums[j])
                     return false;
             }
         }
         return true;
+    }
+
+    // DFS, time O(N), space O(N)
+    bool approach1(TreeNode* root)
+    {
+        if (!root)
+            return true;
+
+        return dfs(root->left, root->right);
+    }
+
+    bool dfs(TreeNode* p, TreeNode* q)
+    {
+        if (!p && !q)
+            return true;
+
+        if (!p || !q)
+            return false;
+
+        if (p->val != q->val)
+            return false;
+
+        // symmetric: p->left is the same as q->right, and p->right is the same as q->left
+        return dfs(p->left, q->right) && dfs(p->right, q->left);
     }
 };

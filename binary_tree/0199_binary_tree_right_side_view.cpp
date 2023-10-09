@@ -28,36 +28,37 @@ public:
     std::vector<int> rightSideView(TreeNode* root) { return approach2(root); }
 
 private:
-    // Pre-order traversal (right subtree first)
+    // DFS, time O(N), space O(N)
     std::vector<int> approach2(TreeNode* root)
     {
         if (!root)
             return {};
 
+        /**
+         *    1     <= level 0
+         *   / \
+         *  2   3   <= level 1
+         *   \   \
+         *    5   4 <= level 2
+         */
         std::vector<int> result;
         dfs(result, 0, root);
         return result;
     }
 
-    void dfs(std::vector<int>& result, int level, TreeNode* node)
+    void dfs(std::vector<int>& result, int level, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        /**   1 <= level 0
-         *    / \
-         *   2   3 <= level 1
-         *    \   \
-         *     5   4 <= level 2
-         */
         if (level == result.size()) {
-            result.push_back(node->val);
+            result.push_back(root->val);
         }
-        dfs(result, level + 1, node->right);
-        dfs(result, level + 1, node->left);
+        dfs(result, level + 1, root->right); // traverse right subtree first
+        dfs(result, level + 1, root->left);
     }
 
-    // Level order traversal
+    // BFS, time O(N), space O(N)
     std::vector<int> approach1(TreeNode* root)
     {
         if (!root)
@@ -67,11 +68,10 @@ private:
         queue.push(root);
         std::vector<int> result;
         while (!queue.empty()) {
-            const int size = queue.size();
-            for (int i = 0; i < size; ++i) {
+            for (int i = queue.size(); i > 0; --i) {
                 auto* node = queue.front();
                 queue.pop();
-                if (i == size - 1) {
+                if (i == 1) {
                     result.push_back(node->val);
                 }
                 if (node->left) {

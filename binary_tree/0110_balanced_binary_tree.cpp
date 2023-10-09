@@ -18,36 +18,35 @@ struct TreeNode
  *
  * A height-balanced binary tree is a binary tree in which the depth of the subtrees of every node
  * never differs by more than one.
+ *
+ * ! The number of nodes in the tree is in the range [0, 5000].
+ * ! -10^4 <= Node.val <= 10^4
  */
 
 class Solution
 {
 public:
-    bool isBalanced(TreeNode* root)
-    {
-        if (!root)
-            return true;
-
-        return check(root) != -1;
-    }
+    bool isBalanced(TreeNode* root) { return dfs(root) >= 0; }
 
 private:
-    int check(TreeNode* node)
+    // if the given binary tree is balanced, return its max depth
+    // otherwise, return -1
+    int dfs(TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return 0;
 
-        // -1 means the tree is not balanced
-        // if one of the subtrees is not balanced,
-        // we no longer need to calculate the height
-        const auto left = check(node->left);
-        if (left == -1)
+        const int leftMaxDepth = dfs(root->left);
+        if (leftMaxDepth < 0)
             return -1;
 
-        const auto right = check(node->right);
-        if (right == -1)
+        const int rightMaxDepth = dfs(root->right);
+        if (rightMaxDepth < -1)
             return -1;
 
-        return std::abs(left - right) > 1 ? -1 : 1 + std::max(left, right);
+        if (std::abs(leftMaxDepth - rightMaxDepth) > 1)
+            return -1;
+
+        return 1 + std::max(leftMaxDepth, rightMaxDepth);
     }
 };
