@@ -1,7 +1,7 @@
 #include <utility>
 
 /**
- Definition for a binary tree node.
+ * Definition for a binary tree node.
  */
 struct TreeNode
 {
@@ -29,14 +29,11 @@ class Solution
 public:
     int maxAncestorDiff(TreeNode* root)
     {
-        if (!root)
-            return -1;
-
-        // assume a path is A1->...->An->B, {A1,...,An} are ancestors of B
-        // standing at B, we want max(|Ai.val - B.val|)
-        // since B.val is fixed, we only need the max_val = max(Ai.val) and min_val = min(Ai.val),
-        // then max(|Ai.val - B.val|) = max(|max_val - B.val|, |min_val - B.val|)
-        int result = 0;
+        // assume we are standing at node B,
+        // and A0->A1->...->An are ancestors of B
+        // we want to maximize |Ai.val - B.val|,
+        // it is either |Ai_max - B.val| or |Ai_min - B.val|
+        int result = INT_MIN;
         dfs(result, root->val, root->val, root);
         return result;
     }
