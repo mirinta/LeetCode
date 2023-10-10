@@ -2,7 +2,7 @@
 #include <vector>
 
 /**
- Definition for a binary tree node.
+ * Definition for a binary tree node.
  */
 struct TreeNode
 {

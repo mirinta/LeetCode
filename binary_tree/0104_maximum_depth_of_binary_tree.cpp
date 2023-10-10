@@ -1,7 +1,7 @@
 #include <queue>
 
 /**
- Definition for a binary tree node.
+ * Definition for a binary tree node.
  */
 struct TreeNode
 {
@@ -65,4 +65,3 @@ private:
         return 1 + std::max(leftDepth, rightDepth);
     }
 };
-
