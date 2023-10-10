@@ -49,13 +49,13 @@ public:
     }
 
 private:
-    void dfs(int& result, int pathFromLeft, int pathFromRight, TreeNode* node)
+    void dfs(int& result, int lengthFromLeft, int lengthFromRight, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        result = std::max({result, pathFromLeft, pathFromRight});
-        dfs(result, 0, pathFromLeft + 1, node->left);
-        dfs(result, pathFromRight + 1, 0, node->right);
+        result = std::max({result, lengthFromLeft, lengthFromRight});
+        dfs(result, 0, lengthFromLeft + 1, root->left);
+        dfs(result, lengthFromRight + 1, 0, root->right);
     }
 };

@@ -38,28 +38,33 @@ public:
 
         std::unordered_set<int> toDelete(to_delete.begin(), to_delete.end());
         std::vector<TreeNode*> result;
-        dfs(result, toDelete, root, true);
+        if (dfs(result, toDelete, root)) {
+            result.push_back(root);
+        }
         return result;
     }
 
 private:
-    TreeNode* dfs(std::vector<TreeNode*>& result, std::unordered_set<int>& toDelete, TreeNode* node,
-                  bool isRoot)
+    TreeNode* dfs(std::vector<TreeNode*>& result, std::unordered_set<int>& toDelete, TreeNode* node)
     {
         if (!node)
             return nullptr;
 
-        // if this node is a root node (i.e, has no parent node),
-        // and it is not going to be deleted, then we add it to the result
-        const bool deleted = toDelete.count(node->val);
-        if (isRoot && !deleted) {
-            result.push_back(node);
+        // if this node is deleted, return nullptr
+        // otherwise, update its left and right subtrees, and check:
+        // if the left subtree is not deleted, add it to the forest
+        // if the right subtree is not deleted, add it to the forest
+        node->left = dfs(result, toDelete, node->left);
+        node->right = dfs(result, toDelete, node->right);
+        if (!toDelete.count(node->val))
+            return node;
+
+        if (node->left) {
+            result.push_back(node->left);
         }
-        // if this node needs to be deleted,
-        // then both node->left and node->right will become two separate trees
-        // i.e., each of them becomes a root node
-        node->left = dfs(result, toDelete, node->left, deleted);
-        node->right = dfs(result, toDelete, node->right, deleted);
-        return deleted ? nullptr : node;
+        if (node->right) {
+            result.push_back(node->right);
+        }
+        return nullptr;
     }
 };

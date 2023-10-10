@@ -32,53 +32,39 @@ struct TreeNode
 class Solution
 {
 public:
-    bool isValidBST(TreeNode* root) { return approach1(root); }
-
-private:
-    bool approach2(TreeNode* root)
+    bool isValidBST(TreeNode* root)
     {
-        if (!root)
-            return false;
-
-        return check(root, nullptr, nullptr);
+        // return approach1(root, LONG_MIN, LONG_MAX);
+        return approach2(root);
     }
 
-    bool check(TreeNode* root, TreeNode* min, TreeNode* max)
+private:
+    // pre-order traversal
+    bool approach1(TreeNode* root, long min, long max)
     {
         if (!root)
             return true;
 
-        if (min && root->val <= min->val)
+        if (root->val <= min || root->val >= max)
             return false;
 
-        if (max && root->val >= max->val)
-            return false;
-
-        return check(root->left, min, root) && check(root->right, root, max);
+        return approach1(root->left, min, root->val) && approach1(root->right, root->val, max);
     }
 
-    bool approach1(TreeNode* root)
+    // in-order traversal
+    long prev{LONG_MIN};
+    bool approach2(TreeNode* root)
     {
         if (!root)
+            return true;
+
+        if (!approach2(root->left))
             return false;
 
-        // inorder traversal of a BST gives nodes in ascending order
-        auto* node = root;
-        std::stack<TreeNode*> stack;
-        std::vector<int> values;
-        while (node || !stack.empty()) {
-            while (node) {
-                stack.push(node);
-                node = node->left;
-            }
-            auto* top = stack.top();
-            stack.pop();
-            if (!values.empty() && top->val <= values.back())
-                return false;
+        if (root->val <= prev)
+            return false;
 
-            values.push_back(top->val);
-            node = top->right;
-        }
-        return true;
+        prev = root->val;
+        return approach2(root->right);
     }
 };

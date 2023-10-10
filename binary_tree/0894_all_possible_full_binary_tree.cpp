@@ -42,6 +42,9 @@ private:
 
     std::vector<TreeNode*> dp(int n)
     {
+        if (n < 0)
+            return {};
+
         if (!memo[n].empty())
             return memo[n];
 
