@@ -1,4 +1,3 @@
-#include <stack>
 #include <vector>
 
 /**
@@ -35,10 +34,27 @@ public:
     bool isValidBST(TreeNode* root)
     {
         // return approach1(root, LONG_MIN, LONG_MAX);
-        return approach2(root);
+        // return approach2(root);
+        return approach3(root).first != LONG_MIN;
     }
 
 private:
+    // post-order traversal
+    std::pair<long, long> approach3(TreeNode* root)
+    {
+        if (!root)
+            return {LONG_MAX, LONG_MIN}; // make the following condition return true
+
+        auto [leftMin, leftMax] = approach3(root->left);
+        auto [rightMin, rightMax] = approach3(root->right);
+        // a valid BST: leftMax < root.val < rightMin
+        if (leftMax >= root->val || root->val >= rightMin)
+            return {LONG_MIN, LONG_MAX}; // this makes the condition return false
+
+        // we want {leftMin, rightMax}, but leftMin may be INT_MAX, and rightMax may be INT_MIN
+        return {std::min<long>(root->val, leftMin), std::max<long>(root->val, rightMax)};
+    }
+
     // pre-order traversal
     bool approach1(TreeNode* root, long min, long max)
     {
