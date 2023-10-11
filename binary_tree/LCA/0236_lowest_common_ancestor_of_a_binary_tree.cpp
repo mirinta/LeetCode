@@ -28,6 +28,9 @@ class Solution
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
     {
+        if (!root || !p || !q)
+            return nullptr;
+
         dfs(root, p->val, q->val);
         return result;
     }
@@ -35,16 +38,18 @@ public:
 private:
     TreeNode* result = nullptr;
 
-    // count the number of values that the given "node" contains
-    // NOTE, make sure val1 != val2
+    // return 0 if the given tree doesn't contain val1 and val2
+    // return 1 if the given tree only contains one of val1 and val2
+    // return 2 if the given tree contains both val1 and val2
+    // #NOTE# val1 != val2
     int dfs(TreeNode* root, int val1, int val2)
     {
         if (!root)
             return 0;
 
         int count = root->val == val1 || root->val == val2 ? 1 : 0;
-        count += dfs(root->left, val1, val2) + dfs(root->right, val1, val2);
-        // the first node that contains both val1 and val2 is the answer
+        count += dfs(root->left, val1, val2);
+        count += dfs(root->right, val1, val2);
         if (count == 2 && !result) {
             result = root;
         }

@@ -39,7 +39,7 @@ public:
         if (!root || nodes.empty())
             return nullptr;
 
-        // all Node.val are unique
+        // #NOTE# Node.val are unique
         std::unordered_set<int> values;
         for (auto* node : nodes) {
             values.insert(node->val);
@@ -51,17 +51,18 @@ public:
 private:
     TreeNode* result = nullptr;
 
-    // num of target nodes exist in "root"
+    // return the num of target nodes exist in "root"
     int dfs(TreeNode* root, const std::unordered_set<int>& values)
     {
         if (!root)
             return 0;
 
-        const int self = values.count(root->val) ? 1 : 0;
-        const int sum = self + dfs(root->left, values) + dfs(root->right, values);
-        if (sum == values.size() && !result) {
+        int count = values.count(root->val) ? 1 : 0;
+        count += dfs(root->left, values);
+        count += dfs(root->right, values);
+        if (count == values.size() && !result) {
             result = root;
         }
-        return sum;
+        return count;
     }
 };

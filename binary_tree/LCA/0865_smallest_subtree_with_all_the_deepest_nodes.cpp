@@ -39,45 +39,44 @@ public:
         if (!root)
             return nullptr;
 
-        // step1: Preprocess
-        // - max depth
-        // - depth of each node (since all Node.val are unique, we use their values as keys)
-        // - num of deepest leaves
-        preorderDFS(root, 0);
-        // step2: For each node from bottom to top, count the number of deepest leaves it contains.
-        // The first node that contains all the deepest leaves is the final answer
-        postorderDFS(root);
+        preorder(root, 0);
+        for (const auto& [val, depth] : map) {
+            if (depth == maxDepth) {
+                numOfDeepestLeaves++;
+            }
+        }
+        postorder(root);
         return result;
     }
 
 private:
     TreeNode* result = nullptr;
     int maxDepth = 0;
-    std::unordered_map<int, int> valueToDepth;
-    std::unordered_map<int, int> depthToCount;
+    int numOfDeepestLeaves = 0;
+    std::unordered_map<int, int> map; // val to depth, use vals as keys because Node.val are unique
 
-    void preorderDFS(TreeNode* node, int currentDepth)
+    void preorder(TreeNode* root, int depth)
     {
-        if (!node)
+        if (!root)
             return;
 
-        valueToDepth[node->val] = currentDepth;
-        depthToCount[currentDepth]++;
-        maxDepth = std::max(maxDepth, currentDepth);
-        preorderDFS(node->left, currentDepth + 1);
-        preorderDFS(node->right, currentDepth + 1);
+        map[root->val] = depth;
+        maxDepth = std::max(maxDepth, depth);
+        preorder(root->left, depth + 1);
+        preorder(root->right, depth + 1);
     }
 
-    int postorderDFS(TreeNode* node)
+    int postorder(TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return 0;
 
-        const int self = valueToDepth[node->val] == maxDepth ? 1 : 0;
-        const int numOfDeepestLeaves = self + postorderDFS(node->left) + postorderDFS(node->right);
-        if (numOfDeepestLeaves == depthToCount[maxDepth] && !result) {
-            result = node;
+        int count = map[root->val] == maxDepth ? 1 : 0;
+        count += postorder(root->left);
+        count += postorder(root->right);
+        if (count == numOfDeepestLeaves && !result) {
+            result = root;
         }
-        return numOfDeepestLeaves;
+        return count;
     }
 };

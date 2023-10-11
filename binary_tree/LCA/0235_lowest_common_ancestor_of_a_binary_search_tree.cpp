@@ -34,16 +34,14 @@ public:
         if (!root || !p || !q)
             return nullptr;
 
-        // ! it is guaranteed that both p and q exist in the tree
-        // ! all Node.val are unique
-        // if p and q are in different subtrees of the root,
-        // i.e., min < root < max, then root is the LCA
-        const auto min = std::min(p->val, q->val);
-        const auto max = std::max(p->val, q->val);
-        if (min > root->val)
+        // if p.val and q.val < root.val, then the LCA is in the left subtree of "root"
+        // if p.val and q.val > root.val, then the LCA is in the right subtree of "root"
+        // otherwise, p and q are in the different subtrees of "root", then "root" is the LCA
+        // #NOTE#, p and q are guaranteed to be in the BST
+        if (std::min(p->val, q->val) > root->val)
             return lowestCommonAncestor(root->right, p, q);
 
-        if (max < root->val)
+        if (std::max(p->val, q->val) < root->val)
             return lowestCommonAncestor(root->left, p, q);
 
         return root;

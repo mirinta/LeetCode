@@ -28,12 +28,11 @@ class Solution
 public:
     int findDistance(TreeNode* root, int p, int q)
     {
-        // all Node.val are unique
-        // distance of p and q = depth of p + depth of q - 2*depth of LCA
+        // distance of p and q = depth of p + depth of q - 2 * depth of LCA
         if (!root)
             return -1;
 
-        // our dfs function can't handle this case, so check it first
+        // our dfs function can't handle the case of p == q, so check it first
         // it is guaranteed that both p and q exist in "root"
         if (p == q)
             return 0;
@@ -56,9 +55,9 @@ private:
 
         depthP = root->val == p ? depth : depthP;
         depthQ = root->val == q ? depth : depthQ;
-        const int self = root->val == p || root->val == q ? 1 : 0;
-        const int count =
-            self + dfs(root->left, p, q, depth + 1) + dfs(root->right, p, q, depth + 1);
+        int count = root->val == p || root->val == q ? 1 : 0;
+        count += dfs(root->left, p, q, depth + 1);
+        count += dfs(root->right, p, q, depth + 1);
         if (count == 2 && depthLCA == -1) {
             depthLCA = depth;
         }

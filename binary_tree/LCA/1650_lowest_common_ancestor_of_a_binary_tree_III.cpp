@@ -34,8 +34,8 @@ public:
         if (!p || !q)
             return nullptr;
 
-        // ! it is guaranteed that both p and q exist in the tree
-        // ! all Node.val are unique
+        // it is guaranteed that both p and q exist in the tree
+        // all Node.val are unique
         // the problem is equivalent to finding the intersection of two linked lists
         auto* iterP = p;
         auto* iterQ = q;
