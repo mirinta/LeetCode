@@ -25,39 +25,32 @@ struct TreeNode
 class Solution
 {
 public:
-    int kthSmallest(TreeNode* root, int k)
-    {
-        // the in-order traversal of a BST gives nodes in ascending order
-        return approach2(root, k);
-    }
+    int kthSmallest(TreeNode* root, int k) { return approach2(root, k); }
 
 private:
-    // Recursion
-    int approach2(TreeNode* root, int k)
+    // in-order traversal, recursive, time O(N), space O(N)
+    int approach1(TreeNode* root, int k)
     {
         int result = -1;
-        traverse(result, k, root);
+        dfs(result, k, root);
         return result;
     }
 
-    void traverse(int& result, int& k, TreeNode* node)
+    void dfs(int& result, int& k, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        traverse(result, k, node->left);
-        if (result != -1)
-            return;
-
+        dfs(result, k, root->left);
         if (--k == 0) {
-            result = node->val;
+            result = root->val;
             return;
         }
-        traverse(result, k, node->right);
+        dfs(result, k, root->right);
     }
 
-    // Iteration
-    int approach1(TreeNode* root, int k)
+    // in-order traversal, iterative, time O(N), space O(N)
+    int approach2(TreeNode* root, int k)
     {
         if (!root)
             return -1;
@@ -69,12 +62,11 @@ private:
                 stack.push(node);
                 node = node->left;
             }
-            auto* top = stack.top();
-            stack.pop();
             if (--k == 0)
-                return top->val;
+                return stack.top()->val;
 
-            node = top->right;
+            node = stack.top()->right;
+            stack.pop();
         }
         return -1;
     }
