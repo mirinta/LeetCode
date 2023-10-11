@@ -29,23 +29,25 @@ public:
     TreeNode* searchBST(TreeNode* root, int val) { return approach2(root, val); }
 
 private:
-    // iteration
     TreeNode* approach2(TreeNode* root, int val)
     {
-        auto* i = root;
-        while (i) {
-            if (i->val > val) {
-                i = i->left;
-            } else if (i->val < val) {
-                i = i->right;
+        if (!root)
+            return nullptr;
+
+        auto* node = root;
+        while (node) {
+            if (node->val == val)
+                return node;
+
+            if (node->val > val) {
+                node = node->left;
             } else {
-                return i;
+                node = node->right;
             }
         }
         return nullptr;
     }
 
-    // recursion
     TreeNode* approach1(TreeNode* root, int val)
     {
         if (!root)
