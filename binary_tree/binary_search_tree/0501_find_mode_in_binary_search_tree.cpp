@@ -40,35 +40,35 @@ public:
         if (!root)
             return {};
 
-        std::vector<int> result;
-        traverse(root, result);
+        dfs(root);
         return result;
     }
 
 private:
-    int count = 0; // record frequency of current value
+    std::vector<int> result;
+    int currVal = INT_MIN; // Node.val >= -10^5
+    int currFreq = 0;
     int maxFreq = 0;
-    TreeNode* prev = nullptr; // record previous node
-    void traverse(TreeNode* node, std::vector<int>& result)
+
+    void dfs(TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        traverse(node->left, result);
-        if (prev && prev->val == node->val) {
-            count++;
+        dfs(root->left);
+        if (root->val == currVal) {
+            currFreq++;
         } else {
-            count = 0;
+            currVal = root->val;
+            currFreq = 1;
         }
-        prev = node;
-        if (count == maxFreq) {
-            result.push_back(node->val);
-        }
-        if (count > maxFreq) {
-            maxFreq = count;
+        if (currFreq == maxFreq) {
+            result.push_back(root->val);
+        } else if (currFreq > maxFreq) {
             result.clear();
-            result.push_back(node->val);
+            result.push_back(root->val);
+            maxFreq = currFreq;
         }
-        traverse(node->right, result);
+        dfs(root->right);
     }
 };
