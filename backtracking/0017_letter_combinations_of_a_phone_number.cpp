@@ -16,34 +16,32 @@
 class Solution
 {
 public:
-    std::vector<std::string> letterCombinations(std::string digits)
+    std::vector<std::string> letterCombinations(const std::string& digits)
     {
         if (digits.empty())
             return {};
 
-        std::vector<std::string> result;
         std::string combination;
-        backtrack(result, combination, 0, digits);
+        backtrack(combination, 0, digits);
         return result;
     }
 
 private:
-    static const std::unordered_map<char, std::string> map;
-    void backtrack(std::vector<std::string>& result, std::string& combination, int i,
-                   const std::string& digits)
+    std::vector<std::string> result;
+
+    void backtrack(std::string& combination, int i, const std::string& digits)
     {
-        if (combination.size() == digits.size()) {
+        if (i == digits.size()) {
             result.push_back(combination);
             return;
         }
-        for (const auto& c : map.at(digits[i])) {
-            combination.push_back(c);
-            backtrack(result, combination, i + 1, digits);
+        static const std::unordered_map<char, std::string> map{
+            {'2', "abc"}, {'3', "def"},  {'4', "ghi"}, {'5', "jkl"},
+            {'6', "mno"}, {'7', "pqrs"}, {'8', "tuv"}, {'9', "wxyz"}};
+        for (const auto& letter : map.at(digits[i])) {
+            combination.push_back(letter);
+            backtrack(combination, i + 1, digits);
             combination.pop_back();
         }
     }
 };
-
-const std::unordered_map<char, std::string> Solution::map{{'2', "abc"}, {'3', "def"}, {'4', "ghi"},
-                                                          {'5', "jkl"}, {'6', "mno"}, {'7', "pqrs"},
-                                                          {'8', "tuv"}, {'9', "wxyz"}};
