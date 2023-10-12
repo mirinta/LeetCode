@@ -35,18 +35,20 @@ public:
         queue.push(root);
         bool reverse = false;
         while (!queue.empty()) {
-            const int n = queue.size();
-            std::vector<int> level(n, 0);
-            for (int i = reverse ? n - 1 : 0; reverse ? i >= 0 : i < n; reverse ? --i : ++i) {
+            std::vector<int> level(queue.size());
+            for (auto& val : level) {
                 auto* node = queue.front();
                 queue.pop();
-                level[i] = node->val;
+                val = node->val;
                 if (node->left) {
                     queue.push(node->left);
                 }
                 if (node->right) {
                     queue.push(node->right);
                 }
+            }
+            if (reverse) {
+                std::reverse(level.begin(), level.end());
             }
             result.push_back(std::move(level));
             reverse = !reverse;
