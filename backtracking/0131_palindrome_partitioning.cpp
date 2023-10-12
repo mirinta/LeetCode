@@ -12,57 +12,35 @@
 class Solution
 {
 public:
-    std::vector<std::vector<std::string>> partition(std::string s)
+    std::vector<std::vector<std::string>> partition(const std::string& s)
     {
-        const int n = s.size();
-        // dynamic programming: memo[i][j] = whether s[i:j] is palindrome
-        Vec2D<bool> memo(n, Vec1D<bool>(n, false));
-        for (int i = n - 1; i >= 0; --i) {
-            for (int j = i; j < n; ++j) {
-                // i i+1 X X X X X X X j-1 j
-                //   |<---dp[i+1][j-1]-->|
-                // |<-------dp[i][j]------>|
-                if (i == j) {
-                    memo[i][j] = true;
-                } else if (j - i == 1) {
-                    memo[i][j] = s[i] == s[j];
-                } else {
-                    memo[i][j] = s[i] == s[j] && memo[i + 1][j - 1];
-                }
-            }
-        }
-        Vec2D<std::string> result;
-        Vec1D<std::string> substring;
-        backtrack(result, substring, 0, s, memo);
+        std::vector<std::string> substrings;
+        backtrack(substrings, 0, s);
         return result;
     }
 
 private:
-    template <typename T>
-    using Vec2D = std::vector<std::vector<T>>;
+    std::vector<std::vector<std::string>> result;
 
-    template <typename T>
-    using Vec1D = std::vector<T>;
-
-    void backtrack(Vec2D<std::string>& result, Vec1D<std::string>& substring, int start,
-                   const std::string& s, const Vec2D<bool>& memo)
+    void backtrack(std::vector<std::string>& substrings, int i, const std::string& s)
     {
-        if (start == s.size()) {
-            result.push_back(substring);
+        if (i == s.size()) {
+            result.push_back(substrings);
             return;
         }
-        for (int end = start; end < s.size(); ++end) {
-            if (memo[start][end]) { // or isPalindrome(start, end, s)
-                substring.push_back(s.substr(start, end - start + 1));
-                backtrack(result, substring, end + 1, s, memo);
-                substring.pop_back();
-            }
+        for (int j = i; j < s.size(); ++j) {
+            if (!isPalindrome(i, j, s))
+                continue;
+
+            substrings.push_back(s.substr(i, j - i + 1));
+            backtrack(substrings, j + 1, s);
+            substrings.pop_back();
         }
     }
 
-    bool isPalindrome(int start, int end, const std::string& s)
+    bool isPalindrome(int left, int right, const std::string& s)
     {
-        for (int i = start, j = end; i < end; ++i, --j) {
+        for (int i = left, j = right; i <= j; ++i, --j) {
             if (s[i] != s[j])
                 return false;
         }
