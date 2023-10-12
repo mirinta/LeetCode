@@ -26,11 +26,24 @@ struct TreeNode
 class Solution
 {
 public:
-    int maxDepth(TreeNode* root) { return approach2(root); }
+    int maxDepth(TreeNode* root)
+    {
+        // return bfs(root);
+        return dfs(root);
+    }
 
 private:
-    // BFS, time O(N), space O(N)
-    int approach2(TreeNode* root)
+    // approach1, post-order traversal
+    int dfs(TreeNode* root)
+    {
+        if (!root)
+            return 0;
+
+        return 1 + std::max(dfs(root->left), dfs(root->right));
+    }
+
+    // approach2, level-order traversal
+    int bfs(TreeNode* root)
     {
         if (!root)
             return 0;
@@ -39,7 +52,7 @@ private:
         std::queue<TreeNode*> queue;
         queue.push(root);
         while (!queue.empty()) {
-            for (int size = queue.size(); size > 0; --size) {
+            for (int i = queue.size(); i > 0; --i) {
                 auto* node = queue.front();
                 queue.pop();
                 if (node->left) {
@@ -52,16 +65,5 @@ private:
             result++;
         }
         return result;
-    }
-
-    // DFS, time O(N), worst space O(N), best space O(logN)
-    int approach1(TreeNode* root)
-    {
-        if (!root)
-            return 0;
-
-        const int leftDepth = approach1(root->left);
-        const int rightDepth = approach1(root->right);
-        return 1 + std::max(leftDepth, rightDepth);
     }
 };
