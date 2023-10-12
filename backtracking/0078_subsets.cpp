@@ -17,25 +17,20 @@ class Solution
 public:
     std::vector<std::vector<int>> subsets(std::vector<int>& nums)
     {
-        Vec2D<int> result;
-        Vec1D<int> subset;
-        backtrack(result, subset, 0, nums);
+        std::vector<int> subset;
+        backtrack(subset, 0, nums);
         return result;
     }
 
 private:
-    template <typename T>
-    using Vec2D = std::vector<std::vector<T>>;
+    std::vector<std::vector<int>> result;
 
-    template <typename T>
-    using Vec1D = std::vector<T>;
-
-    void backtrack(Vec2D<int>& result, Vec1D<int>& subset, int index, const Vec1D<int>& nums)
+    void backtrack(std::vector<int>& subset, int i, const std::vector<int>& nums)
     {
         result.push_back(subset);
-        for (int i = index; i < nums.size(); ++i) {
-            subset.push_back(nums[i]);
-            backtrack(result, subset, i + 1, nums);
+        for (int j = i; j < nums.size(); ++j) {
+            subset.push_back(nums[j]);
+            backtrack(subset, j + 1, nums);
             subset.pop_back();
         }
     }
