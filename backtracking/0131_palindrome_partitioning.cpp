@@ -14,35 +14,38 @@ class Solution
 public:
     std::vector<std::vector<std::string>> partition(const std::string& s)
     {
-        std::vector<std::string> substrings;
-        backtrack(substrings, 0, s);
+        std::vector<std::string> palindromes;
+        backtrack(palindromes, 0, s);
         return result;
     }
 
 private:
     std::vector<std::vector<std::string>> result;
 
-    void backtrack(std::vector<std::string>& substrings, int i, const std::string& s)
+    void backtrack(std::vector<std::string>& palindromes, int start, const std::string& s)
     {
-        if (i == s.size()) {
-            result.push_back(substrings);
+        if (start == s.size()) {
+            result.push_back(palindromes);
             return;
         }
-        for (int j = i; j < s.size(); ++j) {
-            if (!isPalindrome(i, j, s))
-                continue;
-
-            substrings.push_back(s.substr(i, j - i + 1));
-            backtrack(substrings, j + 1, s);
-            substrings.pop_back();
+        // substring: s[start:end]
+        for (int end = start; end < s.size(); ++end) {
+            if (isPalindrome(start, end, s)) {
+                palindromes.push_back(s.substr(start, end - start + 1));
+                backtrack(palindromes, end + 1, s);
+                palindromes.pop_back();
+            }
         }
     }
 
-    bool isPalindrome(int left, int right, const std::string& s)
+    bool isPalindrome(int start, int end, const std::string& s)
     {
-        for (int i = left, j = right; i <= j; ++i, --j) {
-            if (s[i] != s[j])
+        while (start <= end) {
+            if (s[start] != s[end])
                 return false;
+
+            start++;
+            end--;
         }
         return true;
     }
