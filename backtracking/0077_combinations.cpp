@@ -16,8 +16,8 @@ public:
     std::vector<std::vector<int>> combine(int n, int k)
     {
         std::vector<int> path;
-        // backtrack1(path, 1, n, k);
-        backtrack2(path, 1, n, k);
+        backtrack1(path, 1, n, k);
+        // backtrack2(path, 1, n, k);
         return result;
     }
 
@@ -25,7 +25,8 @@ private:
     std::vector<std::vector<int>> result;
 
     // approach1:
-    // enumerate the ith number of the final answer (i is 1-indexed)
+    // enumerate each number of the final answer,
+    // options are in the range [i, n]
     void backtrack1(std::vector<int>& path, int i, int n, int k)
     {
         if (path.size() == k) {
@@ -40,7 +41,7 @@ private:
     }
 
     // approach2:
-    // choose/ignore value i, i is in the range [1,n]
+    // choose/ignore option i, i is in the range [1,n]
     void backtrack2(std::vector<int>& path, int i, int n, int k)
     {
         if (path.size() == k) {
