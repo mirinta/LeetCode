@@ -20,39 +20,44 @@ class Solution
 public:
     std::vector<std::vector<int>> combinationSum3(int k, int n)
     {
-        if (!isSolvable(k, n))
-            return {};
-
-        std::vector<std::vector<int>> result;
-        std::vector<int> combination;
-        backtrack(result, combination, 1, k, n);
+        std::vector<int> path;
+        // backtrack1(path, n, 1, k);
+        backtrack2(path, n, 1, k);
         return result;
     }
 
 private:
-    bool isSolvable(int k, int n)
-    {
-        if (k > 9 || k < 1)
-            return false;
+    std::vector<std::vector<int>> result;
 
-        const int max = (9 + 9 - k + 1) * k / 2;
-        return max >= n;
-    }
-
-    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& combination,
-                   int current, int limit, int target)
+    // approach1:
+    // enumerate the ith number of the final answer (i is 1-indexed)
+    void backtrack1(std::vector<int>& path, int targetSum, int i, int k)
     {
-        if (combination.size() == limit && target == 0) {
-            result.push_back(combination);
+        if (targetSum == 0 && path.size() == k) {
+            result.push_back(path);
             return;
         }
-        for (int i = current; i <= 9; ++i) {
-            if (target - i < 0)
-                continue;
-
-            combination.push_back(i);
-            backtrack(result, combination, i + 1, limit, target - i);
-            combination.pop_back();
+        for (int j = i; j <= 9; ++j) {
+            path.push_back(j);
+            backtrack1(path, targetSum - j, j + 1, k);
+            path.pop_back();
         }
+    }
+
+    // approach2:
+    // choose/ignore value i, i is in the range [1,9]
+    void backtrack2(std::vector<int>& path, int targetSum, int i, int k)
+    {
+        if (targetSum == 0 && path.size() == k) {
+            result.push_back(path);
+            return;
+        }
+        if (i > 9)
+            return;
+
+        path.push_back(i);
+        backtrack2(path, targetSum - i, i + 1, k);
+        path.pop_back();
+        backtrack2(path, targetSum, i + 1, k);
     }
 };
