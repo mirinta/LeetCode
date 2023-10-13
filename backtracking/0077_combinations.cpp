@@ -16,6 +16,7 @@ public:
     std::vector<std::vector<int>> combine(int n, int k)
     {
         std::vector<int> path;
+        // backtrack1(path, 1, n, k);
         backtrack2(path, 1, n, k);
         return result;
     }
