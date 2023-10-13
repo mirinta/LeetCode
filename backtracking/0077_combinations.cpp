@@ -15,24 +15,43 @@ class Solution
 public:
     std::vector<std::vector<int>> combine(int n, int k)
     {
-        std::vector<std::vector<int>> result;
-        std::vector<int> combination;
-        backtrack(result, combination, 1, n, k);
+        std::vector<int> path;
+        backtrack2(path, 1, n, k);
         return result;
     }
 
 private:
-    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& combination, int start,
-                   int n, int k)
+    std::vector<std::vector<int>> result;
+
+    // approach1:
+    // enumerate the ith number of the final answer (i is 1-indexed)
+    void backtrack1(std::vector<int>& path, int i, int n, int k)
     {
-        if (combination.size() == k) {
-            result.push_back(combination);
+        if (path.size() == k) {
+            result.push_back(path);
             return;
         }
-        for (int i = start; i <= n; ++i) {
-            combination.push_back(i);
-            backtrack(result, combination, i + 1, n, k);
-            combination.pop_back();
+        for (int j = i; j <= n; ++j) {
+            path.push_back(j);
+            backtrack1(path, j + 1, n, k);
+            path.pop_back();
         }
+    }
+
+    // approach2:
+    // choose/ignore value i, i is in the range [1,n]
+    void backtrack2(std::vector<int>& path, int i, int n, int k)
+    {
+        if (path.size() == k) {
+            result.push_back(path);
+            return;
+        }
+        if (i > n)
+            return;
+
+        path.push_back(i);
+        backtrack2(path, i + 1, n, k);
+        path.pop_back();
+        backtrack2(path, i + 1, n, k);
     }
 };
