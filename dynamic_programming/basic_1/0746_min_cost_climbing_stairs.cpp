@@ -8,19 +8,8 @@
  *
  * Return the minimum cost to reach the top of the floor.
  *
- * ! cost[i] >= 0
- *
- * Example:
- * Input: cost = [#1#, 100, #1#, 1, #1#, 100, #1#, #1#, 100, #1#]
- * Output: 6
- * Explanation: You will start at index 0.
- * - Pay 1 and climb two steps to reach index 2.
- * - Pay 1 and climb two steps to reach index 4.
- * - Pay 1 and climb two steps to reach index 6.
- * - Pay 1 and climb one step to reach index 7.
- * - Pay 1 and climb two steps to reach index 9.
- * - Pay 1 and climb one step to reach the top.
- * The total cost is 6.
+ * ! 2 <= cost.length <= 1000
+ * ! 0 <= cost[i] <= 999
  */
 
 class Solution
@@ -29,25 +18,33 @@ public:
     int minCostClimbingStairs(std::vector<int>& cost) { return approach2(cost); }
 
 private:
-    int approach2(std::vector<int>& cost)
+    // DP with space optimization, time O(N), space O(1)
+    int approach2(const std::vector<int>& cost)
     {
-        // DP with space optimization
+        if (cost.empty())
+            return -1;
+
         const int n = cost.size();
-        int oneStepToTop = cost[n - 1];
-        int twoStepsToTop = cost[n - 2];
+        int iPlus2 = cost[n - 1];
+        int iPlus1 = cost[n - 2];
         for (int i = n - 3; i >= 0; --i) {
-            const int temp = std::min(oneStepToTop, twoStepsToTop) + cost[i];
-            oneStepToTop = twoStepsToTop;
-            twoStepsToTop = temp;
+            const int dp = std::min(iPlus1, iPlus2) + cost[i];
+            iPlus2 = iPlus1;
+            iPlus1 = dp;
         }
-        return std::min(oneStepToTop, twoStepsToTop);
+        return std::min(iPlus1, iPlus2);
     }
 
-    int approach1(std::vector<int>& cost)
+    // DP, time O(N), space O(N)
+    int approach1(const std::vector<int>& cost)
     {
+        if (cost.empty())
+            return -1;
+
+        // stairs are [0,n-1], n is the target to reach
+        // dp[i] = min cost of climbing from i to n
         const int n = cost.size();
-        // dp[i] = min cost from staircase i (0-indexed) to n-1
-        std::vector<int> dp(n, 0);
+        std::vector<int> dp(n, INT_MAX);
         dp[n - 1] = cost[n - 1];
         dp[n - 2] = cost[n - 2];
         for (int i = n - 3; i >= 0; --i) {
