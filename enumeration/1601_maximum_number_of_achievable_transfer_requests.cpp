@@ -30,26 +30,30 @@ public:
     }
 
 private:
-    // approach 2: bit mask
-    int approach2(int n, std::vector<std::vector<int>>& requests)
+    // bitmask
+    int approach2(int n, const std::vector<std::vector<int>>& requests)
     {
         int result = 0;
-        for (int state = (1 << requests.size()) - 1; state >= 0; --state) {
+        for (int state = (1 << requests.size()) - 1; state > 0; --state) {
             if (isValid(state, n, requests)) {
-                result = std::max(result, numOfBinaryOnes(state));
+                result = std::max(result, binaryOnes(state));
             }
         }
         return result;
     }
 
-    bool isValid(int state, const int n, const std::vector<std::vector<int>>& requests)
+    bool isValid(int state, int n, const std::vector<std::vector<int>>& requests)
     {
-        std::vector<int> netChange(n, 0);
-        for (int i = 0; state; state >>= 1, ++i) {
+        int netChange[n];
+        std::memset(netChange, 0, sizeof(netChange));
+        int i = 0;
+        while (state) {
             if (state & 1) {
                 netChange[requests[i][0]]--;
                 netChange[requests[i][1]]++;
             }
+            state >>= 1;
+            i++;
         }
         for (const auto& val : netChange) {
             if (val != 0)
@@ -58,26 +62,26 @@ private:
         return true;
     }
 
-    int numOfBinaryOnes(int n)
+    int binaryOnes(int num)
     {
-        int num = 0;
-        while (n) {
-            num++;
-            n &= n - 1;
-        }
-        return num;
-    }
-
-    // approach 1 : backtracking
-    int approach1(int n, std::vector<std::vector<int>>& requests)
-    {
-        std::vector<int> netChange(n, 0);
         int result = 0;
-        backtrack(netChange, result, 0, 0, requests);
+        while (num) {
+            num &= num - 1;
+            result++;
+        }
         return result;
     }
 
-    void backtrack(std::vector<int>& netChange, int& result, int count, int requestID,
+    // backtrack
+    int approach1(int n, const std::vector<std::vector<int>>& requests)
+    {
+        std::vector<int> netChange(n, 0);
+        int result = 0;
+        backtrack(result, netChange, 0, 0, requests);
+        return result;
+    }
+
+    void backtrack(int& result, std::vector<int>& netChange, int requestID, int count,
                    const std::vector<std::vector<int>>& requests)
     {
         if (requestID == requests.size()) {
@@ -88,13 +92,15 @@ private:
             result = std::max(result, count);
             return;
         }
-        const int from = requests[requestID][0];
-        const int to = requests[requestID][1];
-        netChange[to]++;
+        const auto& from = requests[requestID][0];
+        const auto& to = requests[requestID][1];
+        // case 1: execute this request
         netChange[from]--;
-        backtrack(netChange, result, count + 1, requestID + 1, requests);
-        netChange[to]--;
-        netChange[from]++;
-        backtrack(netChange, result, count, requestID + 1, requests);
+        netChange[to]++;
+        backtrack(result, netChange, requestID + 1, count + 1, requests);
+        netChange[from]++; // restore
+        netChange[to]--;   // restore
+        // case 2: ignore this request
+        backtrack(result, netChange, requestID + 1, count, requests);
     }
 };
