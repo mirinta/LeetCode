@@ -21,8 +21,8 @@ public:
     std::vector<std::vector<int>> combinationSum3(int k, int n)
     {
         std::vector<int> path;
-        // backtrack1(path, n, 1, k);
-        backtrack2(path, n, 1, k);
+        backtrack1(path, n, 1, k);
+        // backtrack2(path, n, 1, k);
         return result;
     }
 
@@ -30,7 +30,8 @@ private:
     std::vector<std::vector<int>> result;
 
     // approach1:
-    // enumerate the ith number of the final answer (i is 1-indexed)
+    // enumerate each number of the final answer,
+    // options are in the range [i, 9]
     void backtrack1(std::vector<int>& path, int targetSum, int i, int k)
     {
         if (targetSum == 0 && path.size() == k) {
@@ -45,7 +46,7 @@ private:
     }
 
     // approach2:
-    // choose/ignore value i, i is in the range [1,9]
+    // choose/ignore option i, i is in the range [1,9]
     void backtrack2(std::vector<int>& path, int targetSum, int i, int k)
     {
         if (targetSum == 0 && path.size() == k) {
