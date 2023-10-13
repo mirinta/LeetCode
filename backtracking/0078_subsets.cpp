@@ -15,23 +15,43 @@
 class Solution
 {
 public:
-    std::vector<std::vector<int>> subsets(std::vector<int>& nums)
+    std::vector<std::vector<int>> subsets(const std::vector<int>& nums)
     {
-        std::vector<int> subset;
-        backtrack(subset, 0, nums);
+        std::vector<int> path;
+        // backtrack1(path, 0, nums);
+        backtrack2(path, 0, nums);
         return result;
     }
 
 private:
     std::vector<std::vector<int>> result;
 
-    void backtrack(std::vector<int>& subset, int i, const std::vector<int>& nums)
+    // approach1:
+    // enumerate a new value and add it to the path,
+    // value = nums[j], j is in the range [i,n)
+    void backtrack1(std::vector<int>& path, int i, const std::vector<int>& nums)
     {
-        result.push_back(subset);
+        result.push_back(path);
+        if (i == nums.size())
+            return;
+
         for (int j = i; j < nums.size(); ++j) {
-            subset.push_back(nums[j]);
-            backtrack(subset, j + 1, nums);
-            subset.pop_back();
+            path.push_back(nums[j]);
+            backtrack1(path, j + 1, nums);
+            path.pop_back();
         }
+    }
+
+    // approach2: choose/ignore nums[i]
+    void backtrack2(std::vector<int>& path, int i, const std::vector<int>& nums)
+    {
+        if (i == nums.size()) {
+            result.push_back(path);
+            return;
+        }
+        path.push_back(nums[i]);
+        backtrack2(path, i + 1, nums);
+        path.pop_back();
+        backtrack2(path, i + 1, nums);
     }
 };

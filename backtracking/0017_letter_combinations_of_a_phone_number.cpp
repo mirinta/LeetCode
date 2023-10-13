@@ -21,27 +21,27 @@ public:
         if (digits.empty())
             return {};
 
-        std::string combination;
-        backtrack(combination, 0, digits);
+        std::string path;
+        backtrack(path, 0, digits);
         return result;
     }
 
 private:
     std::vector<std::string> result;
 
-    void backtrack(std::string& combination, int i, const std::string& digits)
+    void backtrack(std::string& path, int i, const std::string& digits)
     {
         if (i == digits.size()) {
-            result.push_back(combination);
+            result.push_back(path);
             return;
         }
         static const std::unordered_map<char, std::string> map{
             {'2', "abc"}, {'3', "def"},  {'4', "ghi"}, {'5', "jkl"},
             {'6', "mno"}, {'7', "pqrs"}, {'8', "tuv"}, {'9', "wxyz"}};
-        for (const auto& letter : map.at(digits[i])) {
-            combination.push_back(letter);
-            backtrack(combination, i + 1, digits);
-            combination.pop_back();
+        for (const auto& c : map.at(digits[i])) {
+            path.push_back(c);
+            backtrack(path, i + 1, digits);
+            path.pop_back();
         }
     }
 };
