@@ -45,7 +45,7 @@ private:
     int approach1(int amount, const std::vector<int>& coins)
     {
         const int n = coins.size();
-        // dp[i][j] = num of combinations to make up amount i using coins[0:i)
+        // dp[i][j] = num of combinations to make up amount j using coins[0:i)
         std::vector<std::vector<int>> dp(n + 1, std::vector<int>(amount + 1, 0));
         // base cases:
         // - dp[0][0] = 1, only one way to make up zero amount with empty coin list: choose nothing

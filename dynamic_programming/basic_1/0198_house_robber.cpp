@@ -32,6 +32,7 @@ private:
         }
         return std::max(robbed, notRobbed);
     }
+
     // DP, time O(N), space O(N)
     int approach1(const std::vector<int>& nums)
     {
