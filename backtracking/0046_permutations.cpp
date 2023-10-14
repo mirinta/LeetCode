@@ -14,36 +14,30 @@ class Solution
 public:
     std::vector<std::vector<int>> permute(std::vector<int>& nums)
     {
-        Vec2D<int> result;
-        Vec1D<int> permutation;
-        Vec1D<bool> visited(nums.size(), false);
-        backtrack(result, permutation, visited, nums);
+        std::vector<int> path;
+        std::vector<bool> used(nums.size(), false);
+        backtrack(path, used, nums);
         return result;
     }
 
 private:
-    template <typename T>
-    using Vec1D = std::vector<T>;
+    std::vector<std::vector<int>> result;
 
-    template <typename T>
-    using Vec2D = std::vector<std::vector<T>>;
-
-    void backtrack(Vec2D<int>& result, Vec1D<int>& permutation, Vec1D<bool>& visited,
-                   const Vec1D<int>& nums)
+    void backtrack(std::vector<int>& path, std::vector<bool>& used, const std::vector<int>& nums)
     {
-        if (permutation.size() == nums.size()) {
-            result.push_back(permutation);
+        if (path.size() == nums.size()) {
+            result.push_back(path);
             return;
         }
         for (int i = 0; i < nums.size(); ++i) {
-            if (visited[i])
+            if (used[i])
                 continue;
 
-            visited[i] = true;
-            permutation.push_back(nums[i]);
-            backtrack(result, permutation, visited, nums);
-            permutation.pop_back();
-            visited[i] = false;
+            used[i] = true;
+            path.push_back(nums[i]);
+            backtrack(path, used, nums);
+            used[i] = false;
+            path.pop_back();
         }
     }
 };

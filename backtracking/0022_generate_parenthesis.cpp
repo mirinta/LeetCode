@@ -13,30 +13,30 @@ class Solution
 public:
     std::vector<std::string> generateParenthesis(int n)
     {
-        // the num of remaining '(' must be less than or equal to the num of remaining ')'
-        std::vector<std::string> result;
-        std::string combination;
-        backtrack(result, combination, n, n);
+        std::string path;
+        backtrack(path, 0, 0, n);
         return result;
     }
 
 private:
-    void backtrack(std::vector<std::string>& result, std::string& combination, int remainingLeft,
-                   int remainingRight)
+    std::vector<std::string> result;
+
+    // enumerate the ith character of a well-formed parentheses
+    // only two choices: ( or )
+    // num of left parenthesis >= num of right parenthesis
+    void backtrack(std::string& path, int leftParenthesis, int rightParenthesis, int n)
     {
-        if (remainingLeft == 0 && remainingRight == 0) {
-            result.push_back(combination);
+        if (leftParenthesis < rightParenthesis || leftParenthesis > n || rightParenthesis > n)
             return;
+
+        if (leftParenthesis == n && rightParenthesis == n) {
+            result.push_back(path);
         }
-        if (remainingLeft < 0 || remainingRight < 0 || remainingLeft > remainingRight)
-            return;
-
-        combination.push_back('(');
-        backtrack(result, combination, remainingLeft - 1, remainingRight);
-        combination.pop_back();
-
-        combination.push_back(')');
-        backtrack(result, combination, remainingLeft, remainingRight - 1);
-        combination.pop_back();
+        path.push_back('(');
+        backtrack(path, leftParenthesis + 1, rightParenthesis, n);
+        path.pop_back();
+        path.push_back(')');
+        backtrack(path, leftParenthesis, rightParenthesis + 1, n);
+        path.pop_back();
     }
 };

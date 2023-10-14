@@ -26,7 +26,7 @@ private:
 
     // approach1:
     // enumerate each number of the final answer,
-    // options are in the range [i, n]
+    // options of the current number are in the range [i, n]
     void backtrack1(std::vector<int>& path, int i, int n, int k)
     {
         if (path.size() == k) {

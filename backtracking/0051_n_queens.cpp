@@ -19,23 +19,17 @@ class Solution
 public:
     std::vector<std::vector<std::string>> solveNQueens(int n)
     {
-        Vec2D<std::string> result;
-        Vec1D<std::string> board(n, std::string(n, kEmpty));
-        backtrack(result, board, 0, n);
+        std::vector<std::string> board(n, std::string(n, kEmpty));
+        backtrack(board, 0, n);
         return result;
     }
 
 private:
-    template <typename T>
-    using Vec1D = std::vector<T>;
-
-    template <typename T>
-    using Vec2D = std::vector<std::vector<T>>;
-
     static constexpr char kQueen = 'Q';
     static constexpr char kEmpty = '.';
+    std::vector<std::vector<std::string>> result;
 
-    void backtrack(Vec2D<std::string>& result, Vec1D<std::string>& board, int row, int n)
+    void backtrack(std::vector<std::string>& board, int row, int n)
     {
         if (row == n) {
             result.push_back(board);
@@ -46,12 +40,12 @@ private:
                 continue;
 
             board[row][col] = kQueen;
-            backtrack(result, board, row + 1, n);
+            backtrack(board, row + 1, n);
             board[row][col] = kEmpty;
         }
     }
 
-    bool isValid(int x, int y, const Vec1D<std::string>& board)
+    bool isValid(int x, int y, const std::vector<std::string>& board)
     {
         // X   X   X
         //   X X X

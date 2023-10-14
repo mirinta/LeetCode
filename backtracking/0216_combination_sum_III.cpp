@@ -31,7 +31,7 @@ private:
 
     // approach1:
     // enumerate each number of the final answer,
-    // options are in the range [i, 9]
+    // options of the current number are in the range [i, 9]
     void backtrack1(std::vector<int>& path, int targetSum, int i, int k)
     {
         if (targetSum == 0 && path.size() == k) {
