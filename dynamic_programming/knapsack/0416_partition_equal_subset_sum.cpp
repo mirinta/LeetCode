@@ -15,61 +15,61 @@ public:
     bool canPartition(std::vector<int>& nums) { return approach2(nums); }
 
 private:
-    // DP with space optimization, time O(MN), space O(M)
-    // - N is the number of nums, and M is the half sum of nums
+    // DP with space optimization
     bool approach2(const std::vector<int>& nums)
     {
-        const int totalSum = std::accumulate(nums.begin(), nums.end(), 0);
-        if (totalSum % 2 != 0)
+        const int total = std::accumulate(nums.begin(), nums.end(), 0);
+        if (total % 2 != 0)
             return false;
 
-        const int target = totalSum / 2;
         const int n = nums.size();
-        std::vector<bool> dp(target + 1, false);
+        const int amount = total / 2;
+        std::vector<bool> dp(amount + 1, false);
         dp[0] = true;
         for (int i = 1; i <= n; ++i) {
-            for (int j = target; j >= 1; --j) {
-                const int diff = j - nums[i - 1];
-                if (diff >= 0) {
-                    dp[j] = dp[j] || dp[diff];
+            // iterate j in reverse order,
+            // then we don't need a "prev" array
+            for (int j = amount; j >= 1; --j) {
+                if (j - nums[i - 1] >= 0) {
+                    dp[j] = dp[j] || dp[j - nums[i - 1]];
                 }
             }
         }
-        return dp[target];
+        return dp[amount];
     }
 
-    // DP, time O(MN), space O(MN)
-    // - N is the number of nums, and M is the half sum of nums
+    // DP
     bool approach1(const std::vector<int>& nums)
     {
-        const int totalSum = std::accumulate(nums.begin(), nums.end(), 0);
-        if (totalSum % 2 != 0)
+        const int total = std::accumulate(nums.begin(), nums.end(), 0);
+        if (total % 2 != 0)
             return false;
 
-        const int target = totalSum / 2;
-        const int n = nums.size();
-        // dp[i][j] = is it possible to make up amount j using nums[0:i)
-        // base case:
+        // 0-1 knapsack
+        // dp[i][j] = whether we can make up amount j using nums[0:i)
+        // base cases:
         // - dp[0][0] = true
-        // - dp[i][0] = true
-        // - dp[0][j] = false
-        std::vector<std::vector<bool>> dp(n + 1, std::vector<bool>(target + 1, false));
+        // - dp[0][j>0] = false, no numbers, no way to make up a positive j
+        // - dp[i>0][0] = true
+        const int n = nums.size();
+        const int amount = total / 2;
+        std::vector<std::vector<bool>> dp(n + 1, std::vector<bool>(amount + 1, false));
         for (int i = 0; i <= n; ++i) {
             dp[i][0] = true;
         }
         for (int i = 1; i <= n; ++i) {
-            for (int j = 1; j <= target; ++j) {
-                const int diff = j - nums[i - 1]; // nums[i] > 0, it means diff < j
-                if (diff < 0) {
-                    dp[i][j] =
-                        dp[i - 1][j]; // the ith num can't be used, use nums[0:i-1) to make up j
+            for (int j = 1; j <= amount; ++j) {
+                if (j - nums[i - 1] < 0) {
+                    // the ith value can't be used, use nums[0:i-1) to make up j
+                    dp[i][j] = dp[i - 1][j];
                 } else {
-                    // case1: the ith num is not used, use nums[0:i-1) to make up j
-                    // case2: the ith num is used, use nums[0:i-1) to make up the remaining amount
-                    dp[i][j] = dp[i - 1][j] || dp[i - 1][diff];
+                    // option1: the ith value is not used, use nums[0:i-1) to make up j
+                    // option2: the ith value is used, use nums[0:i-1) to make up the remaining
+                    // amount
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]];
                 }
             }
         }
-        return dp[n][target];
+        return dp[n][amount];
     }
 };
