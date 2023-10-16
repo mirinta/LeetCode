@@ -2,46 +2,74 @@
 #include <vector>
 
 /**
- * Given two strings "word1" and "word2", return the minimum number of steps required to make
- * "word1" and "word2" the same.
+ * Given two strings word1 and word2, return the minimum number of steps required to make word1 and
+ * word2 the same.
  *
- * In one step, you can delete exactly one charater in either string.
+ * In one step, you can delete exactly one character in either string.
  *
- * Example:
- * Input: word1 = "sea", word2 = "eat"
- * Output: 2
- * Explanation: You need one step to make "sea" to "ea" and another step to make "eat" to "ea".
+ * ! 1 <= word1.length, word2.length <= 500
+ * ! word1 and word2 consist of only lowercase English letters.
  */
 
 class Solution
 {
 public:
-    int minDistance(std::string word1, std::string word2)
+    int minDistance(const std::string& word1, const std::string& word2)
     {
-        // word1 = "sea", word2 = "eat"
-        // after N deletions: word1 = word2 = "ea"
-        // "ea" is the longest common subsequence of "sea" and "eat"!
-        const auto n = longestCommonSubsequence(word1, word2);
-        return word1.size() - n + word2.size() - n;
+        return approach2(word1, word2);
+        // approach3: let L = length of the longest common sequence of word1 and word2
+        // answer = word1.size() - L + word2.size() - L
     }
 
 private:
-    // same as LC 1143
-    int longestCommonSubsequence(const std::string& word1, const std::string& word2)
+    // DP with space optimization
+    int approach2(const std::string& s1, const std::string& s2)
     {
-        const auto m = word1.size();
-        const auto n = word2.size();
-        // dp[i][j] = length of longest common subsequence of word1[0:i) and word2[0:j)
+        const int m = s1.size();
+        const int n = s2.size();
+        std::vector<int> dp(1 + n);
+        for (int j = 0; j <= n; ++j) {
+            dp[j] = j;
+        }
+        auto prev = dp;
+        for (int i = 1; i <= m; ++i) {
+            prev = dp;
+            dp[0] = i;
+            for (int j = 1; j <= n; ++j) {
+                if (s1[i - 1] == s2[j - 1]) {
+                    dp[j] = prev[j - 1];
+                } else {
+                    dp[j] = 1 + std::min(prev[j], dp[j - 1]);
+                }
+            }
+        }
+        return dp[n];
+    }
+
+    // DP
+    int approach1(const std::string& s1, const std::string& s2)
+    {
+        const int m = s1.size();
+        const int n = s2.size();
+        // dp[i][j] = min num of steps to make s1[0:i) and s2[0:j) the same
         // base cases:
-        // dp[i][0] = 0, word2 is empty, no common subsequence
-        // dp[0][j] = 0, word1 is empty, no common subsequence
-        std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));
+        // - dp[0][0] = 0
+        // - dp[i>0][0] = i, delete all characters of s1[0:i)
+        // - dp[0][j>0] = j, delete all characters of s2[0:j)
+        std::vector<std::vector<int>> dp(1 + m, std::vector<int>(1 + n, INT_MAX));
+        dp[0][0] = 0;
+        for (int i = 1; i <= m; ++i) {
+            dp[i][0] = i;
+        }
+        for (int j = 1; j <= n; ++j) {
+            dp[0][j] = j;
+        }
         for (int i = 1; i <= m; ++i) {
             for (int j = 1; j <= n; ++j) {
-                if (word1[i - 1] == word2[j - 1]) {
-                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                if (s1[i - 1] == s2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1];
                 } else {
-                    dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);
+                    dp[i][j] = 1 + std::min(dp[i - 1][j], dp[i][j - 1]);
                 }
             }
         }
