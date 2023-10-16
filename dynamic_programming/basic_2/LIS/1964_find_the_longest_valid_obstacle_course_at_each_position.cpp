@@ -19,76 +19,36 @@
  *
  * Return an array "ans" of length n, where ans[i] is the length of the longest obstacle course for
  * index i as described above.
+ *
+ * ! n == obstacles.length
+ * ! 1 <= n <= 10^5
+ * ! 1 <= obstacles[i] <= 10^7
  */
 
 class Solution
 {
 public:
-    // similar to LC 300, this problem is to find the longest non-decreasing subsequence
-    // initialize a non-decreasing array with the same size, arr = [X, ..., X], where X = INT_MAX
-    // for each nums[i]
-    // - find the first position j in arr s.t. arr[j] > nums[i]
-    // - update arr[j] = nums[i]
-    // - record subsequence length = j + 1
-    // Example: let input nums = [3, 1, 5, 6, 4, 2], arr = [X, X, X, X, X, X]
-    // - nums[0] = 3, find j = 0, arr = [3, X, X, X, X, X], subsequence length = 1;
-    // - nums[1] = 1, find j = 0, arr = [1, X, X, X, X, X], subsequence length = 1;
-    // - nums[2] = 5, find j = 1, arr = [1, 5, X, X, X, X], subsequence length = 2;
-    // - nums[3] = 6, find j = 2, arr = [1, 5, 6, X, X, X], subsequence length = 3;
-    // - nums[4] = 4, find j = 1, arr = [1, 4, 6, X, X, X], subsequence length = 2;
-    // - nums[5] = 2, find j = 1, arr = [1, 2, 6, X, X, X], subsequence length = 2;
-    // - put all subsequence length above in a vector and return, [1, 1, 2, 3, 2, 2]
     std::vector<int> longestObstacleCourseAtEachPosition(std::vector<int>& obstacles)
     {
-        if (obstacles.empty())
-            return {};
-
-        std::vector<int> result;
-        // disadvantage: waste of space in arr
-        // std::vector<int> arr(obstacles.size(), INT_MAX);
-        // for (const auto& val : obstacles) {
-        //     const auto j = upperBound(arr, val);
-        //     if (j < 0)
-        //         continue;
-
-        //     result.push_back(j + 1);
-        //     arr[j] = val;
-        // }
-        std::vector<int> arr; // maintain in non-decreasing order
-        for (const auto& val : obstacles) {
-            if (arr.empty() || val >= arr.back()) {
-                arr.push_back(val);
-                result.push_back(arr.size());
+        // it is similar to the LIS problem (No.300)
+        // our goal is to find the length of the longest non-decreasing subsequence ending at
+        // obstacles[i] traditional DP with O(N^2) time complexity is not accepted (TLE)
+        const int n = obstacles.size();
+        std::vector<int> vec; // non-decreasing
+        std::vector<int> result(n);
+        for (int i = 0; i < n; ++i) {
+            if (vec.empty() || vec.back() <= obstacles[i]) {
+                vec.push_back(obstacles[i]);
+                result[i] = vec.size();
             } else {
-                auto iter = std::upper_bound(arr.begin(), arr.end(), val);
-                if (iter == arr.end())
-                    continue;
-
-                *iter = val;
-                result.push_back(iter - arr.begin() + 1);
+                auto iter = std::upper_bound(vec.begin(), vec.end(), obstacles[i]);
+                // iter != vec.end() is guaranteed,
+                // if not, it means all elements of vec <= obstacles[i]
+                // this case is handled in the above branch
+                *iter = obstacles[i];
+                result[i] = std::distance(vec.begin(), iter) + 1;
             }
         }
         return result;
-    }
-
-private:
-    // return the first position j s.t. arr[j] > val
-    // the input array is sorted in non-decreasing order
-    int upperBound(std::vector<int>& arr, int val)
-    {
-        if (arr.empty())
-            return -1;
-
-        int left = 0;
-        int right = arr.size() - 1;
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (arr[mid] <= val) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-        return left == arr.size() ? -1 : left;
     }
 };

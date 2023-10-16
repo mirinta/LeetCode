@@ -13,44 +13,41 @@
 class Solution
 {
 public:
-    int lengthOfLIS(std::vector<int>& nums) { return approach2(nums); }
+    int lengthOfLIS(const std::vector<int>& nums) { return approach2(nums); }
 
 private:
     // Binary search, time O(NlogN), space O(N)
     int approach2(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        std::vector<int> vec; // strictly increasing
+        std::vector<int> v; // strictly increasing
         for (const auto& val : nums) {
-            if (vec.empty() || val > vec.back()) {
-                vec.push_back(val);
+            if (v.empty() || val > v.back()) {
+                v.push_back(val);
                 continue;
             }
-            // val >= vec.back()
-            // find the first index i s.t., vec[i] >= val and replace with val
-            auto iter = std::lower_bound(vec.begin(), vec.end(), val);
-            if (iter != vec.end()) {
+            auto iter = std::lower_bound(v.begin(), v.end(), val);
+            if (iter != v.end()) {
                 *iter = val;
             }
         }
-        return vec.size();
+        return v.size();
     }
 
-    // DP, time O(N^2), space O(N)
+    // DP, time O(N), space O(N)
     int approach1(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        // dp[i] = length of the LIS that ends with nums[i]
-        // base case: dp[i] = 1
+        // dp[i] = length of LIS ending at nums[i]
         // X X X X X j X i
         // |<-dp[j]->|
         // |<---dp[i]--->|
-        std::vector<int> dp(n, 1);
+        std::vector<int> dp(n, 1); // each character itself is a strictly increasing subsequence
         int result = 1;
         for (int i = 1; i < n; ++i) {
             for (int j = i - 1; j >= 0; --j) {
                 if (nums[i] > nums[j]) {
-                    dp[i] = std::max(dp[i], dp[j] + 1);
+                    dp[i] = std::max(dp[i], 1 + dp[j]);
                 }
             }
             result = std::max(result, dp[i]);

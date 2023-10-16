@@ -13,36 +13,34 @@
 class Solution
 {
 public:
-    int findNumberOfLIS(std::vector<int>& nums)
+    int findNumberOfLIS(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        // dp[i] = length of LIS that ends with nums[i]
-        // count[i] = num of LIS that ends with nums[i]
+        // dp[i] = length of LIS ending at nums[i]
+        // X X X X X j X i
+        // |<-dp[j]->|
+        // |<---dp[i]--->|, if nums[i] > nums[j], dp[i] = 1 + dp[j]
+        // count[i] = num of LIS ending at nums[i]
         std::vector<int> dp(n, 1);
         std::vector<int> count(n, 1);
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < i; ++j) {
-                if (nums[j] >= nums[i])
-                    continue;
+        int lengthOfLIS = 1;
+        for (int i = 1; i < n; ++i) {
+            for (int j = i - 1; j >= 0; --j) {
+                if (nums[i] <= nums[j])
+                    continue; // {...,nums[j],nums[i]} is not a strictly increasing subsequence
 
-                // X X j X X i
-                // dp[i] = std::max(dp[i], dp[j] + 1)
-                if (dp[j] + 1 > dp[i]) {
-                    // new list of LIS = add nums[i] to the end of each LIS that ends with nums[j],
-                    // length is increased, but count is the same
-                    dp[i] = dp[j] + 1;
+                if (dp[i] < 1 + dp[j]) {
+                    dp[i] = 1 + dp[j];
                     count[i] = count[j];
-                } else if (dp[j] + 1 == dp[i]) {
-                    // new list of LIS = list of LIS that ends with nums[i] + list of LIS that ends
-                    // with nums[j] length is the same, but count is increased
+                } else if (dp[i] == 1 + dp[j]) {
                     count[i] += count[j];
                 }
             }
+            lengthOfLIS = std::max(lengthOfLIS, dp[i]);
         }
-        const int maxLength = *std::max_element(dp.begin(), dp.end());
         int result = 0;
         for (int i = 0; i < n; ++i) {
-            if (dp[i] == maxLength) {
+            if (dp[i] == lengthOfLIS) {
                 result += count[i];
             }
         }
