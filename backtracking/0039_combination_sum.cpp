@@ -22,36 +22,30 @@ class Solution
 public:
     std::vector<std::vector<int>> combinationSum(std::vector<int>& candidates, int target)
     {
-        Vec2D<int> result;
-        Vec1D<int> combination;
-        backtrack(result, combination, 0, target, candidates);
+        std::vector<int> path; // sum of path[i] = target
+        backtrack(path, 0, target, candidates);
         return result;
     }
 
 private:
-    template <typename T>
-    using Vec1D = std::vector<T>;
+    std::vector<std::vector<int>> result;
 
-    template <typename T>
-    using Vec2D = std::vector<std::vector<T>>;
-
-    void backtrack(Vec2D<int>& result, Vec1D<int>& combination, int index, int target,
-                   const Vec1D<int>& candidates)
+    // enumerate a new value nums[j] where j is in the range [i,n)
+    void backtrack(std::vector<int>& path, int i, int target, const std::vector<int>& candidates)
     {
         if (target == 0) {
-            result.push_back(combination);
+            result.push_back(path);
             return;
         }
-
-        for (int i = index; i < candidates.size(); ++i) {
-            if (target - candidates[i] < 0)
+        for (int j = i; j < candidates.size(); ++j) {
+            if (target - candidates[j] < 0)
                 continue;
 
-            combination.push_back(candidates[i]);
-            // the same number can be chosen infinite times,
-            // so the next round still starts from index "i"
-            backtrack(result, combination, i, target - candidates[i], candidates);
-            combination.pop_back();
+            path.push_back(candidates[j]);
+            // the same number can be chosen unlimited number of times
+            // thus, the range of the next round is still [j,n)
+            backtrack(path, j, target - candidates[j], candidates);
+            path.pop_back();
         }
     }
 };
