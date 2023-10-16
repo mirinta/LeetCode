@@ -7,7 +7,7 @@
  * product of some integer with itself. For example, 1, 4, 9, and 16 are perfect squares while 3 and
  * 11 are not.
  *
- * ! 1 <= n <= 104
+ * ! 1 <= n <= 10^4
  */
 
 class Solution
@@ -15,12 +15,11 @@ class Solution
 public:
     int numSquares(int n)
     {
-        // dp[i] = least num of perfect square numbers that sum to i
+        // dp[i] = min num of perfect square numbers that sum to i
         // base case:
         // - dp[0] = 0
-        // - if i is a perfect square, then dp[i] = 1 is already the optimal answer
-        // - otherwise, let dp[i] = i, because i is the sum of i 1's
-        std::vector<int> dp(n + 1, INT_MAX);
+        // - dp[X] = 1, X is a perfect square number <= n, and it is the optimal answer
+        std::vector<int> dp(1 + n, INT_MAX);
         dp[0] = 0;
         for (int i = 1; i * i <= n; ++i) {
             dp[i * i] = 1;
