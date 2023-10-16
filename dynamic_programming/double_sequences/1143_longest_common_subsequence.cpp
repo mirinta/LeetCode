@@ -32,8 +32,9 @@ private:
         const int m = s1.size();
         const int n = s2.size();
         std::vector<int> dp(n + 1, 0);
+        auto prev = dp;
         for (int i = 1; i <= m; ++i) {
-            auto prev = dp;
+            prev = dp;
             for (int j = 1; j <= n; ++j) {
                 if (s1[i - 1] == s2[j - 1]) {
                     dp[j] = 1 + prev[j - 1];
