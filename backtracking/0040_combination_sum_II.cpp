@@ -19,37 +19,33 @@ class Solution
 public:
     std::vector<std::vector<int>> combinationSum2(std::vector<int>& candidates, int target)
     {
-        if (candidates.empty())
-            return {};
-
-        // arrange duplicates together
         std::sort(candidates.begin(), candidates.end());
-        std::vector<std::vector<int>> result;
-        std::vector<int> combination;
-        backtrack(result, combination, 0, target, candidates);
+        std::vector<int> path;
+        backtrack(path, 0, target, candidates);
         return result;
     }
 
 private:
-    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& combination, int start,
-                   int target, const std::vector<int>& candidates)
+    std::vector<std::vector<int>> result;
+
+    void backtrack(std::vector<int>& path, int i, int target, const std::vector<int>& candidates)
     {
         if (target == 0) {
-            result.push_back(combination);
+            result.push_back(path);
             return;
         }
-        for (int i = start; i < candidates.size(); ++i) {
-            const int diff = target - candidates[i];
-            if (diff < 0)
+        for (int j = i; j < candidates.size(); ++j) {
+            if (j > i && candidates[j] == candidates[j - 1])
                 continue;
 
-            if (i > start && candidates[i] == candidates[i - 1])
-                continue;
+            // candidates is sorted in non-decreasing order
+            // if candidates[j] is too large, we can skip the remaining numbers
+            if (target - candidates[j] < 0)
+                break;
 
-            combination.push_back(candidates[i]);
-            // next round starts from i+1, because each number can only be used once
-            backtrack(result, combination, i + 1, diff, candidates);
-            combination.pop_back();
+            path.push_back(candidates[j]);
+            backtrack(path, j + 1, target - candidates[j], candidates);
+            path.pop_back();
         }
     }
 };
