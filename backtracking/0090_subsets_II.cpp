@@ -16,33 +16,25 @@ class Solution
 public:
     std::vector<std::vector<int>> subsetsWithDup(std::vector<int>& nums)
     {
-        if (nums.empty())
-            return {};
-
-        std::sort(nums.begin(), nums.end()); // arrange the duplicate values together
-        Vec2D<int> result;
-        Vec1D<int> subset;
-        backtrack(result, subset, 0, nums);
+        std::sort(nums.begin(), nums.end()); // arrange duplicates together
+        std::vector<int> path;
+        backtrack(path, 0, nums);
         return result;
     }
 
 private:
-    template <typename T>
-    using Vec2D = std::vector<std::vector<T>>;
+    std::vector<std::vector<int>> result;
 
-    template <typename T>
-    using Vec1D = std::vector<T>;
-
-    void backtrack(Vec2D<int>& result, Vec1D<int>& subset, int index, const Vec1D<int>& nums)
+    void backtrack(std::vector<int>& path, int i, const std::vector<int>& nums)
     {
-        result.push_back(subset);
-        for (int i = index; i < nums.size(); ++i) {
-            if (i > index && nums[i] == nums[i - 1])
+        result.push_back(path);
+        for (int j = i; j < nums.size(); ++j) {
+            if (j - 1 >= i && nums[j] == nums[j - 1])
                 continue;
 
-            subset.push_back(nums[i]);
-            backtrack(result, subset, i + 1, nums);
-            subset.pop_back();
+            path.push_back(nums[j]);
+            backtrack(path, j + 1, nums);
+            path.pop_back();
         }
     }
 };
