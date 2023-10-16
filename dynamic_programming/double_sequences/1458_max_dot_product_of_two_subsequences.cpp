@@ -23,45 +23,47 @@ public:
     }
 
 private:
-    // DP with space optimization, time O(MN), space O(N)
+    // DP with space optimization
     int approach2(const std::vector<int>& nums1, const std::vector<int>& nums2)
     {
         const int m = nums1.size();
         const int n = nums2.size();
-        std::vector<int> dp(1 + n, INT_MIN);
-        std::vector<int> prev(1 + n, INT_MIN);
+        std::vector<long> dp(1 + n, INT_MIN);
+        auto prev = dp;
         for (int i = 1; i <= m; ++i) {
-            prev.assign(dp.begin(), dp.end());
-            dp[0] = INT_MIN;
+            prev = dp;
             for (int j = 1; j <= n; ++j) {
-                const int case1 = std::max(0, prev[j - 1]) + nums1[i - 1] * nums2[j - 1];
-                const int case2 = std::max(prev[j], dp[j - 1]);
+                const long x1 = nums1[i - 1];
+                const long x2 = nums2[j - 1];
+                const auto case1 = std::max(x1 * x2, prev[j - 1] + x1 * x2);
+                const auto case2 = std::max(prev[j], dp[j - 1]);
                 dp[j] = std::max(case1, case2);
             }
         }
         return dp[n];
     }
 
-    // DP, time O(MN), space O(MN)
+    // DP
     int approach1(const std::vector<int>& nums1, const std::vector<int>& nums2)
     {
         const int m = nums1.size();
         const int n = nums2.size();
-        // dp[i][j] = max product between non-empty subsequences of nums1[0:i) and nums2[0:j)
-        // base cases
-        // - dp[i][0] = INT_MIN
-        // - dp[0][j] = INT_MIN
-        std::vector<std::vector<int>> dp(1 + m, std::vector<int>(1 + n, INT_MIN));
+        // dp[i][j] = max dot product between non-empty subsequences of
+        // nums1[0:i) and nums2[0:j) with the same length
+        // base cases:
+        // - dp[0][0] = INT_MIN, no way to calculate dot product
+        // - dp[i>0][0] = INT_MIN
+        // - dp[0][j>0] = INT_MIN
+        std::vector<std::vector<long>> dp(1 + m, std::vector<long>(1 + n, INT_MIN));
         for (int i = 1; i <= m; ++i) {
             for (int j = 1; j <= n; ++j) {
-                // X X X X i
-                // Y Y Y j
-                // case1: both nums[i-1] and nums[j-1] are picked
-                // #NOTE# we want non-empty subsequences, if the rest part < 0, we only keep
-                // nums[i-1] and nums[j-1]
-                const int case1 = std::max(0, dp[i - 1][j - 1]) + nums1[i - 1] * nums2[j - 1];
-                // case2: only nums[i-1] is picked, or only nums[j-1] is picked
-                const int case2 = std::max(dp[i - 1][j], dp[i][j - 1]);
+                // let x1 = nums1[i-1] and x2 = nums2[j-1]
+                // case1: both x1 and x2 are selected
+                // case2: only one of x1 and x2 is selected
+                const long x1 = nums1[i - 1];
+                const long x2 = nums2[j - 1];
+                const auto case1 = std::max(x1 * x2, dp[i - 1][j - 1] + x1 * x2);
+                const auto case2 = std::max(dp[i - 1][j], dp[i][j - 1]);
                 dp[i][j] = std::max(case1, case2);
             }
         }
