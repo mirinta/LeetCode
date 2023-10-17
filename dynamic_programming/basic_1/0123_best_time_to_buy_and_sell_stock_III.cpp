@@ -31,12 +31,9 @@ private:
             for (int j = 1; j <= k; ++j) {
                 dp[j][0] = std::max(prev[j][0], prev[j][1] + prices[i - 1]);
                 dp[j][1] = std::max(prev[j][1], prev[j - 1][0] - prices[i - 1]);
-                if (i == n) {
-                    result = std::max({result, dp[j][0], dp[j][1]});
-                }
             }
         }
-        return result;
+        return dp[k][0];
     }
 
     // DP
@@ -62,10 +59,6 @@ private:
                 dp[i][j][1] = std::max(dp[i - 1][j][1], dp[i - 1][j - 1][0] - prices[i - 1]);
             }
         }
-        int result = INT_MIN;
-        for (int j = 1; j <= k; ++j) {
-            result = std::max({result, dp[n][j][0], dp[n][j][1]});
-        }
-        return result;
+        return dp[n][k][0];
     }
 };
