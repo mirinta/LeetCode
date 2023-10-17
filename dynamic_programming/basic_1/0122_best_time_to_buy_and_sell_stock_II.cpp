@@ -19,27 +19,30 @@ public:
     int maxProfit(std::vector<int>& prices) { return approach2(prices); }
 
 private:
-    // 1D-DP, time O(N), space O(1)
+    // DP with space optimization
     int approach2(const std::vector<int>& prices)
     {
         const int n = prices.size();
-        int withStock = INT_MIN;
         int withoutStock = 0;
-        for (int i = 0; i < n; ++i) {
+        int withStock = INT_MIN;
+        for (int i = 1; i <= n; ++i) {
             const int backup = withStock;
-            withStock = std::max(withStock, withoutStock - prices[i]);
-            withoutStock = std::max(withoutStock, backup + prices[i]);
+            withStock = std::max(withStock, withoutStock - prices[i - 1]);
+            withoutStock = std::max(withoutStock, backup + prices[i - 1]);
         }
         return withoutStock;
     }
 
-    // 2D-DP, time O(N), space O(N)
+    // DP
     int approach1(const std::vector<int>& prices)
     {
         const int n = prices.size();
-        // dp[i][0] = max profit at the end of ith day without any stock in-hand
-        // dp[i][1] = max profit at the end of ith day with one stock in-had
-        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(2, 0));
+        // dp[i][0] = max profit at the end of the ith day without holding any stock
+        // dp[i][1] = max profit at the end of the ith day holding one stock
+        // base cases:
+        // - dp[0][0] = 0
+        // - dp[0][1] = INT_MIN
+        std::vector<std::vector<int>> dp(1 + n, std::vector<int>(2, 0));
         dp[0][1] = INT_MIN;
         for (int i = 1; i <= n; ++i) {
             dp[i][0] = std::max(dp[i - 1][0], dp[i - 1][1] + prices[i - 1]);
