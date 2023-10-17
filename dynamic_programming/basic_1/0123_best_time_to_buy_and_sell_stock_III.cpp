@@ -25,7 +25,6 @@ private:
         const int k = 2;
         std::vector<std::array<int, 2>> dp(1 + k, std::array<int, 2>{0, INT_MIN});
         auto prev = dp;
-        int result = INT_MIN;
         for (int i = 1; i <= n; ++i) {
             prev = dp;
             for (int j = 1; j <= k; ++j) {
