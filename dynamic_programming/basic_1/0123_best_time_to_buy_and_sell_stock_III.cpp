@@ -18,45 +18,54 @@ public:
     int maxProfit(std::vector<int>& prices) { return approach2(prices); }
 
 private:
-    // DP with space optimization, time O(NK), space O(K)
+    // DP with space optimization
     int approach2(const std::vector<int>& prices)
     {
         const int n = prices.size();
         const int k = 2;
-        std::vector<std::vector<int>> dp(k + 1, std::vector<int>(2, 0));
-        for (int j = 0; j <= k; ++j) {
-            dp[j][1] = INT_MIN;
-        }
-        for (int i = 0; i < n; ++i) {
+        std::vector<std::array<int, 2>> dp(1 + k, std::array<int, 2>{0, INT_MIN});
+        auto prev = dp;
+        int result = INT_MIN;
+        for (int i = 1; i <= n; ++i) {
+            prev = dp;
             for (int j = 1; j <= k; ++j) {
-                dp[j][0] = std::max(dp[j][0], dp[j][1] + prices[i]);
-                dp[j][1] = std::max(dp[j][1], dp[j - 1][0] - prices[i]);
+                dp[j][0] = std::max(prev[j][0], prev[j][1] + prices[i - 1]);
+                dp[j][1] = std::max(prev[j][1], prev[j - 1][0] - prices[i - 1]);
+                if (i == n) {
+                    result = std::max({result, dp[j][0], dp[j][1]});
+                }
             }
         }
-        return dp[k][0];
+        return result;
     }
 
-    // DP, time O(NK), space O(NK)
+    // DP
     int approach1(const std::vector<int>& prices)
     {
         const int n = prices.size();
         const int k = 2;
-        // each transaction starts with a buy-in and ends with a sell-out,
-        // so limiting the num of transactions is equivalent to limiting the num of buy-in's
-        // dp[i][j][0] = max profit at the end of ith day without any stock in hand, and with at
-        // most j buy-in's dp[i][j][1] = max profit at the end of ith day with one stock in hand,
-        // and with at most j buy-in's
+        // dp[i][j][0] = max profit at the end of the ith day without holding any stock by
+        // completing at most j transactions
+        // dp[i][j][1] = max profit at the end of the ith day holding one stock by completing at most j
+        // transactions
+        // base cases: dp[0][j>=0][0] = 0, dp[0][j>=0][1] = INT_MIN
         std::vector<std::vector<std::vector<int>>> dp(
-            n + 1, std::vector<std::vector<int>>(k + 1, std::vector<int>(2, 0)));
+            1 + n, std::vector<std::vector<int>>(1 + k, std::vector<int>(2, 0)));
         for (int j = 0; j <= k; ++j) {
             dp[0][j][1] = INT_MIN;
         }
         for (int i = 1; i <= n; ++i) {
             for (int j = 1; j <= k; ++j) {
+                // limiting the number of transactions is equivalent to limiting the number of
+                // buy-ins
                 dp[i][j][0] = std::max(dp[i - 1][j][0], dp[i - 1][j][1] + prices[i - 1]);
                 dp[i][j][1] = std::max(dp[i - 1][j][1], dp[i - 1][j - 1][0] - prices[i - 1]);
             }
         }
-        return dp[n][k][0];
+        int result = INT_MIN;
+        for (int j = 1; j <= k; ++j) {
+            result = std::max({result, dp[n][j][0], dp[n][j][1]});
+        }
+        return result;
     }
 };
