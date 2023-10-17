@@ -1,3 +1,4 @@
+#include <array>
 #include <vector>
 
 /**
@@ -21,33 +22,39 @@ public:
     int maxProfit(std::vector<int>& prices) { return approach2(prices); }
 
 private:
-    // DP with space optimization, time O(N), space O(1)
+    // DP with space optimization
     int approach2(const std::vector<int>& prices)
     {
         const int n = prices.size();
-        int withStock = INT_MIN;
+        int prevWithoutStock = 0;
+        int withStock = -prices[0];
         int withoutStock = 0;
-        int withoutStockPrev = 0;
-        for (int i = 0; i < n; ++i) {
+        for (int i = 2; i <= n; ++i) {
             const int backup = withoutStock;
-            withoutStock = std::max(withoutStock, withStock + prices[i]);
-            withStock = std::max(withStock, withoutStockPrev - prices[i]);
-            withoutStockPrev = backup;
+            withoutStock = std::max(withoutStock, withStock + prices[i - 1]);
+            withStock = std::max(withStock, prevWithoutStock - prices[i - 1]);
+            prevWithoutStock = backup;
         }
         return withoutStock;
     }
 
-    // DP, time O(N), space O(N)
+    // DP
     int approach1(const std::vector<int>& prices)
     {
         const int n = prices.size();
-        // dp[i][0] = max profit at the end of ith day withou any stock in-hand
-        // dp[i][1] = max profit at the end of ith day with one stock in-hand
-        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(2, 0));
+        // dp[i][0] = max profit at the end of the ith day without holding any stock
+        // dp[i][1] = max profit at the end of the ith day holding one stock
+        // base cases:
+        // - dp[0][0] = 0
+        // - dp[0][1] = INT_MIN
+        // - dp[1][0] = 0
+        // - dp[1][1] = -prices[0]
+        std::vector<std::array<int, 2>> dp(1 + n, {0, 0});
         dp[0][1] = INT_MIN;
-        for (int i = 1; i <= n; ++i) {
+        dp[1][1] = -prices[0];
+        for (int i = 2; i <= n; ++i) {
             dp[i][0] = std::max(dp[i - 1][0], dp[i - 1][1] + prices[i - 1]);
-            dp[i][1] = std::max(dp[i - 1][1], (i >= 2 ? dp[i - 2][0] : 0) - prices[i - 1]);
+            dp[i][1] = std::max(dp[i - 1][1], dp[i - 2][0] - prices[i - 1]);
         }
         return dp[n][0];
     }
