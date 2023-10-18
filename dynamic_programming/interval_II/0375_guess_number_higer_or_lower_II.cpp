@@ -26,8 +26,8 @@ class Solution
 public:
     int getMoneyAmount(int n)
     {
-        // dp[i][j] = min amount of money to guarantee a win game of guessing a number in the range
-        // [i,j] i X X X X X X X k-1 k k+1 X X X X X X X j
+        // dp[i][j] = min amount of money to guarantee a win game of guessing a number in [i,j]
+        // i X X X X X X X k-1 k k+1 X X X X X X X j
         // |<----dp[i][k]--->|   |<----dp[k][j]--->|
         // |<---------------dp[i][j]-------------->|
         //
@@ -37,8 +37,7 @@ public:
         //
         // if k is the target, cost = 0
         //
-        // if k is wrong, we pay k and then guess a new number in the range [i,k-1] or in the range
-        // [k+1,j]
+        // if k is wrong, we pay k and then guess a new number in [i,k-1] or in [k+1,j]
         // - cost = k + max(dp[i][k-1], dp[k+1][j])
         // - if k-1<i, dp[i][k-1] = 0, because the left part doesn't exist
         // - if k+1>j, dp[k+1][j-1] = 0, because the right part doesn't exist
