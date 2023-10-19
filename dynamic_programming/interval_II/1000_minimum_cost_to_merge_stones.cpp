@@ -20,12 +20,12 @@ class Solution
 public:
     int mergeStones(std::vector<int>& stones, int k)
     {
-        // dp[i][j][p] = min cost to merge stones[i:j] into p piles
-        // i X X X X X X X X X X q q+1 X X X X X X X X X X X j
-        // |<-merge into 1 pile->| |<--merge into p-1 piles->|
-        // |<----dp[i][q][1]---->| |<----dp[q+1][j][p-1]---->|
-        // |<---------------merge into p piles-------------->|
-        // then, merge these p piles into 1 pile
+        // each time we merge k piles into 1 pile,
+        // the total num of piles decreases by k-1
+        // assume we have N piles at the beginning,
+        // and we finally can merge them into 1 pile
+        // then, the total decrement is N-1
+        // thus, the problem is solvable if and only if (N-1) % (k-1) == 0
         const int n = stones.size();
         if ((n - 1) % (k - 1) != 0)
             return -1;
@@ -34,6 +34,12 @@ public:
         for (int i = 1; i <= n; ++i) {
             sum[i] = sum[i - 1] + stones[i - 1];
         }
+        // dp[i][j][p] = min cost to merge stones[i:j] into p piles
+        // i X X X X X X X X X X q q+1 X X X X X X X X X X X j
+        // |<-merge into 1 pile->| |<--merge into p-1 piles->|
+        // |<----dp[i][q][1]---->| |<----dp[q+1][j][p-1]---->|
+        // |<---------------merge into p piles-------------->|
+        // then, merge these p piles into 1 pile
         std::vector<std::vector<std::vector<int>>> dp(
             n, std::vector<std::vector<int>>(n, std::vector<int>(1 + k, INT_MAX)));
         for (int i = 0; i < n; ++i) {

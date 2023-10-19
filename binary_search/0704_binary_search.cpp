@@ -6,12 +6,17 @@
  * Otherwise, return -1.
  *
  * You must write an algorithm with O(log n) runtime complexity.
+ *
+ * ! 1 <= nums.length <= 10^4
+ * ! -10^4 < nums[i], target < 10^4
+ * ! All the integers in nums are unique.
+ * ! nums is sorted in ascending order.
  */
 
 class Solution
 {
 public:
-    // time complexity: O(n), space complexity: O(1)
+    // time complexity: O(logN), space complexity: O(1)
     int search(const std::vector<int>& nums, int target)
     {
         if (nums.empty())
