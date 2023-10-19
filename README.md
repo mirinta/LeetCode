@@ -26,7 +26,7 @@ TODO:
 - [ ] No.0174 (DP), rethink
 - [ ] No.0514 (DP), rethink
 - [ ] No.0837 (DP)
-- [x] No.1547 (DP)
+- [ ] No.1547 (DP)
 - [ ] No.2763 (weekly contest 352)
 - [ ] No.0042
 - [ ] No.1024
