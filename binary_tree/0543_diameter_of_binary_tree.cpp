@@ -36,15 +36,14 @@ public:
     }
 
 private:
-    // return the max depth of the given node
     int dfs(int& result, TreeNode* root)
     {
         if (!root)
             return 0;
 
-        const int left = dfs(result, root->left);
-        const int right = dfs(result, root->right);
-        result = std::max(result, left + right);
-        return 1 + std::max(left, right);
+        const int maxDepthOfLeftSubtree = dfs(result, root->left);
+        const int maxDepthOfRightSubtree = dfs(result, root->right);
+        result = std::max(result, maxDepthOfLeftSubtree + maxDepthOfRightSubtree);
+        return 1 + std::max(maxDepthOfLeftSubtree, maxDepthOfRightSubtree);
     }
 };
