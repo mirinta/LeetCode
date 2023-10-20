@@ -31,23 +31,24 @@ class Solution
 public:
     int maxPathSum(TreeNode* root)
     {
-        if (!root)
-            return INT_MIN;
-
         int result = INT_MIN;
         dfs(result, root);
         return result;
     }
 
 private:
+    // max path sum of the given tree
+    // - the path must pass through the root node
+    // - #NOTE#, Node.val may be < 0
+    // thus, the return value of this function needs to be >= root.val
     int dfs(int& result, TreeNode* root)
     {
         if (!root)
             return 0;
 
-        const int left = dfs(result, root->left);   // no benefit to the result if it is < 0
-        const int right = dfs(result, root->right); // no benefit to the result if it is < 0
-        result = std::max(result, root->val + std::max(0, left) + std::max(0, right));
-        return root->val + std::max({0, left, right});
+        const int leftMaxPathSum = std::max(0, dfs(result, root->left));
+        const int rightMaxPathSum = std::max(0, dfs(result, root->right));
+        result = std::max(result, root->val + leftMaxPathSum + rightMaxPathSum);
+        return root->val + std::max(leftMaxPathSum, rightMaxPathSum);
     }
 };
