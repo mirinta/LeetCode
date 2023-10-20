@@ -1,9 +1,8 @@
-#include <list>
 #include <vector>
 
 /**
  * This is the interface that allows for creating nested lists.
- * ! You should not implement it, or speculate about its implementation
+ * You should not implement it, or speculate about its implementation
  */
 class NestedInteger
 {
@@ -21,10 +20,10 @@ public:
 };
 
 /**
- * You are given a nested list of integers "nestedList". Each element is either an integer or a list
- * whose elements may also be integers or other lists. Implement an interator to flatten it.
+ * You are given a nested list of integers nestedList. Each element is either an integer or a list
+ * whose elements may also be integers or other lists. Implement an iterator to flatten it.
  *
- * Implement the "NestedIterator" class:
+ * Implement the NestedIterator class:
  *
  * - NestedIterator(List<NestedInteger> nestedList) Initializes the iterator with the nested list
  * nestedList.
@@ -33,40 +32,51 @@ public:
  *
  * - boolean hasNext() Returns true if there are still some integers in the nested list and false
  * otherwise.
+ *
+ * Your code will be tested with the following pseudocode:
+ *
+ * initialize iterator with nestedList
+ * res = []
+ * while iterator.hasNext()
+ *     append iterator.next() to the end of res
+ * return res
+ *
+ * If res matches the expected flattened list, then your code will be judged as correct.
+ *
+ * ! 1 <= nestedList.length <= 500
+ * ! The values of the integers in the nested list is in the range [-10^6, 10^6].
  */
 
 class NestedIterator
 {
 public:
-    explicit NestedIterator(std::vector<NestedInteger>& nestedList)
-        : list(nestedList.begin(), nestedList.end())
-    {
-    }
+    NestedIterator(std::vector<NestedInteger>& nestedList) { helper(nestedList); }
 
     int next()
     {
-        // call hasNext() first
-        const int result = list.front().getInteger();
-        list.pop_front();
-        return result;
+        if (hasNext())
+            return data[idx++];
+
+        return INT_MIN;
     }
 
-    bool hasNext()
+    bool hasNext() { return idx < data.size(); }
+
+private:
+    void helper(const std::vector<NestedInteger>& nestedList)
     {
-        // if the first element is a list,
-        // expand it and add all its elements at head of the list
-        while (!list.empty() && !list.front().isInteger()) {
-            const auto nestedList = list.front().getList();
-            list.pop_front();
-            for (long long i = nestedList.size() - 1; i >= 0; i--) {
-                list.push_front(nestedList[i]);
+        for (const auto& e : nestedList) {
+            if (e.isInteger()) {
+                data.push_back(e.getInteger());
+            } else {
+                helper(e.getList());
             }
         }
-        return !list.empty();
     }
 
 private:
-    std::list<NestedInteger> list; // constant time removal, more effective than vector
+    size_t idx = 0;
+    std::vector<int> data;
 };
 
 /**
