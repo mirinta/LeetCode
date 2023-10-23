@@ -24,7 +24,7 @@ struct TreeNode
  * Given the "root" of the binary tree, return the maximum amount of money the thief can rob without
  * altering the police.
  *
- * ! 0 <= Node.val <= 104
+ * ! 0 <= Node.val <= 10^4
  */
 
 class Solution
@@ -35,26 +35,22 @@ public:
         if (!root)
             return 0;
 
-        const auto [notRobTheFirst, robTheFirst] = dp(root);
-        return std::max(notRobTheFirst, robTheFirst);
+        const auto [rootRobbed, rootNotRobbed] = dfs(root);
+        return std::max(rootRobbed, rootNotRobbed);
     }
 
 private:
-    // <v1, v2>
-    // - v1 = max amount of money, start from the current house and the current house is not robbed
-    // - v2 = max amount of money, start from the current house and the current house is robbed
-    std::pair<int, int> dp(TreeNode* root)
+    // return values = <max gain if root node is robbed, max gain if root node is not robbed>
+    std::pair<int, int> dfs(TreeNode* root)
     {
         if (!root)
             return {0, 0};
 
-        // solve subproblems:
-        const auto [notRobLeft, robLeft] = dp(root->left);
-        const auto [notRobRight, robRight] = dp(root->right);
-        // make choice: rob or not rob the current house
-        // - if rob, both left and right house can't be robbed
-        const auto rob = root->val + notRobLeft + notRobRight;
-        const auto notRob = std::max(notRobLeft, robLeft) + std::max(notRobRight, robRight);
-        return {notRob, rob};
+        const auto [leftRobbed, leftNotRobbed] = dfs(root->left);
+        const auto [rightRobbed, rightNotRobbed] = dfs(root->right);
+        const auto rootRobbed = root->val + leftNotRobbed + rightNotRobbed;
+        const auto rootNotRobbed =
+            std::max(leftRobbed, leftNotRobbed) + std::max(rightRobbed, rightNotRobbed);
+        return {rootRobbed, rootNotRobbed};
     }
 };
