@@ -15,18 +15,16 @@ class Solution
 public:
     std::vector<int> dailyTemperatures(std::vector<int>& temperatures)
     {
-        // given nums[i],
-        // find the next greater element, i.e., nums[j] > nums[i]
-        // then j-i is the num of days we have to wait after the ith day to get a warmer temperature
+        // find the next greater element of temperatures[i]
         const int n = temperatures.size();
-        std::stack<std::pair<int, int>> stack; // <value, index>
         std::vector<int> result(n, 0);
+        std::stack<int> stack;
         for (int i = n - 1; i >= 0; --i) {
-            while (!stack.empty() && temperatures[i] >= stack.top().first) {
+            while (!stack.empty() && temperatures[i] >= temperatures[stack.top()]) {
                 stack.pop();
             }
-            result[i] = stack.empty() ? 0 : stack.top().second - i;
-            stack.emplace(temperatures[i], i);
+            result[i] = stack.empty() ? 0 : stack.top() - i;
+            stack.push(i);
         }
         return result;
     }
