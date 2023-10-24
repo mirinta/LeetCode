@@ -15,14 +15,17 @@ struct TreeNode
 };
 
 /**
- * Given the "root" of a binary tree, return an array of the largest value in each row of the tree
- * (0-indexed);
+ * Given the root of a binary tree, return an array of the largest value in each row of the tree
+ * (0-indexed).
+ *
+ * ! The number of nodes in the tree will be in the range [0, 10^4].
+ * ! -2^31 <= Node.val <= 2^31 - 1
  */
 
 class Solution
 {
 public:
-    std::vector<int> largestValue(TreeNode* root)
+    std::vector<int> largestValues(TreeNode* root)
     {
         if (!root)
             return {};
@@ -31,12 +34,11 @@ public:
         queue.push(root);
         std::vector<int> result;
         while (!queue.empty()) {
-            const auto size = queue.size(); // this level
-            int maxVal = INT_MIN;           // this level
-            for (size_t i = 0; i < size; ++i) {
+            int max = INT_MIN;
+            for (int i = queue.size(); i > 0; --i) {
                 auto* node = queue.front();
                 queue.pop();
-                maxVal = std::max(maxVal, node->val);
+                max = std::max(max, node->val);
                 if (node->left) {
                     queue.push(node->left);
                 }
@@ -44,7 +46,7 @@ public:
                     queue.push(node->right);
                 }
             }
-            result.push_back(maxVal);
+            result.push_back(max);
         }
         return result;
     }
