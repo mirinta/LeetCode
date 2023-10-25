@@ -16,6 +16,8 @@
  * - For example, after rotating 8000, we have 0008 which is considered as just 8.
  *
  * Given an integer n, return true if it is a confusing number, or false otherwise.
+ *
+ * ! 0 <= n <= 10^9
  */
 
 class Solution
@@ -23,25 +25,16 @@ class Solution
 public:
     bool confusingNumber(int n)
     {
-        // n = 1 or 0, is not confusing number
-        if (n <= 1)
-            return false;
-
-        std::unordered_map<char, char> map;
-        map['0'] = '0';
-        map['1'] = '1';
-        map['6'] = '9';
-        map['8'] = '8';
-        map['9'] = '6';
-        const auto before = std::to_string(n);
-        std::string after;
-        for (const auto& digit : before) {
-            if (!map.count(digit))
+        static const std::unordered_map<char, char> map{
+            {'0', '0'}, {'1', '1'}, {'6', '9'}, {'8', '8'}, {'9', '6'}};
+        auto str = std::to_string(n);
+        for (auto& c : str) {
+            if (!map.count(c))
                 return false;
 
-            after.push_back(map[digit]);
+            c = map.at(c);
         }
-        std::reverse(after.begin(), after.end());
-        return std::stoi(after) != n;
+        std::reverse(str.begin(), str.end());
+        return std::stoi(str) != n;
     }
 };
