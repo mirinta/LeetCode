@@ -19,32 +19,25 @@
 class Solution
 {
 public:
-    std::vector<std::vector<int>> findMissingRanges(const std::vector<int>& nums, int lower,
-                                                    int upper)
+    std::vector<std::vector<int>> findMissingRanges(std::vector<int>& nums, int lower, int upper)
     {
         if (lower > upper)
             return {};
 
-        if (nums.empty())
+        const int n = nums.size();
+        if (n == 0)
             return {{lower, upper}};
 
-        // lower = 0 [0, 1, 3, 50, 75] upper = 99
-        // - check lower and 0, no missing numbers
-        // - check 0 and 1, no missing numbers
-        // - check 1 and 3, missing [2, 2]
-        // - check 3 and 50, missing [4, 49]
-        // - check 50 and 75, missing [51, 74]
-        // - check 75 and upper, missing [76, 99]
         std::vector<std::vector<int>> result;
-        if (lower < nums.front()) {
+        if (nums.front() > lower) {
             result.push_back({lower, nums.front() - 1});
         }
-        for (int i = 1; i < nums.size(); ++i) {
+        for (int i = 1; i < n; ++i) {
             if (nums[i] - nums[i - 1] > 1) {
                 result.push_back({nums[i - 1] + 1, nums[i] - 1});
             }
         }
-        if (upper > nums.back()) {
+        if (nums.back() < upper) {
             result.push_back({nums.back() + 1, upper});
         }
         return result;
