@@ -18,23 +18,23 @@
 class MovingAverage
 {
 public:
-    explicit MovingAverage(int size) : _capacity(size) {}
+    explicit MovingAverage(int size) : capacity(size) {}
 
     double next(int val)
     {
-        if (_queue.size() == _capacity) {
-            _sum -= _queue.front();
-            _queue.pop();
+        sum += val;
+        deque.push_back(val);
+        if (!deque.empty() && deque.size() > capacity) {
+            sum -= deque.front();
+            deque.pop_front();
         }
-        _queue.push(val);
-        _sum += val;
-        return 1.0 * _sum / _queue.size();
+        return sum * 1.0 / deque.size();
     }
 
 private:
-    std::queue<int> _queue;
-    const int _capacity;
-    int _sum{0};
+    int capacity;
+    int sum{0};
+    std::deque<int> deque;
 };
 
 /**
