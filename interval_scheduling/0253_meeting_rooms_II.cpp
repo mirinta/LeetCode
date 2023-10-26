@@ -15,26 +15,17 @@ public:
     int minMeetingRooms(std::vector<std::vector<int>>& intervals)
     {
         const int n = intervals.size();
-        std::vector<int> startPoints(n, 0);
-        std::vector<int> endPoints(n, 0);
-        for (int i = 0; i < n; ++i) {
-            startPoints[i] = intervals[i][0];
-            endPoints[i] = intervals[i][1];
+        std::vector<std::pair<int, int>> timestamps(n);
+        timestamps.reserve(2 * n);
+        for (const auto& interval : intervals) {
+            timestamps.emplace_back(interval[0], 1);
+            timestamps.emplace_back(interval[1], -1);
         }
-        std::sort(startPoints.begin(), startPoints.end());
-        std::sort(endPoints.begin(), endPoints.end());
-        int count = 0;
+        std::sort(timestamps.begin(), timestamps.end());
         int result = 0;
-        int i = 0; // loop start points
-        int j = 0; // loop end points
-        while (i < n && j < n) {
-            if (startPoints[i] < endPoints[j]) {
-                i++;
-                count++;
-            } else {
-                j++;
-                count--;
-            }
+        int count = 0;
+        for (const auto& [time, flag] : timestamps) {
+            count += flag;
             result = std::max(result, count);
         }
         return result;
