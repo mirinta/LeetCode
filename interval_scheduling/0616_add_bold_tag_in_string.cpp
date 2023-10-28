@@ -29,6 +29,39 @@ class Solution
 public:
     std::string addBoldTag(std::string s, std::vector<std::string>& words)
     {
+        return approach2(s, words);
+    }
+
+private:
+    const std::string kBoldTagBegin{"<b>"};
+    const std::string kBoldTagEnd{"</b>"};
+
+    std::string approach2(const std::string& s, const std::vector<std::string>& words)
+    {
+        const int n = s.size();
+        std::vector<bool> isBold(n, false);
+        for (const auto& word : words) {
+            int start = s.find(word);
+            while (start != std::string::npos) {
+                std::fill(isBold.begin() + start, isBold.begin() + start + word.size(), true);
+                start = s.find(word, start + 1);
+            }
+        }
+        std::string result;
+        for (int i = 0; i < n; ++i) {
+            if (isBold[i] && (i == 0 || !isBold[i - 1])) {
+                result.append(kBoldTagBegin);
+            }
+            result.push_back(s[i]);
+            if (isBold[i] && (i == n - 1 || !isBold[i + 1])) {
+                result.append(kBoldTagEnd);
+            }
+        }
+        return result;
+    }
+
+    std::string approach1(std::string& s, const std::vector<std::string>& words)
+    {
         std::vector<std::pair<int, int>> intervals;
         for (const auto& word : words) {
             int start = s.find(word);
@@ -47,10 +80,6 @@ public:
         }
         return s;
     }
-
-private:
-    const std::string kBoldTagBegin{"<b>"};
-    const std::string kBoldTagEnd{"</b>"};
 
     void mergeIntervals(std::vector<std::pair<int, int>>& intervals)
     {
