@@ -30,7 +30,7 @@ TODO:
 - [ ] No.2763 (weekly contest 352)
 - [ ] No.0042
 - [ ] No.1024
-- [ ] No.0218 (Sweeping line)
+- [ ] No.0218 (Sweep line)
 - [ ] No.0929 (DP)
 - [ ] No.0269 (Topological sorting)
 - [ ] No.787 (Graph, Shortest path)

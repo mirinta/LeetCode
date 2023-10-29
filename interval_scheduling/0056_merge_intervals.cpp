@@ -20,7 +20,7 @@ public:
     }
 
 private:
-    // sweeping line, time O(NlogN), space O(N)
+    // sweep line, time O(NlogN), space O(N)
     std::vector<std::vector<int>> approach2(const std::vector<std::vector<int>>& intervals)
     {
         std::vector<std::pair<int, int>>
