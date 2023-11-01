@@ -1,4 +1,3 @@
-#include <cstddef>
 #include <deque>
 #include <vector>
 
@@ -19,30 +18,31 @@ class Solution
 public:
     std::vector<int> maxSlidingWindow(std::vector<int>& nums, int k)
     {
-        std::vector<int> result;
-        std::deque<int> dq; // monotonic queue, non-increasing from front() to back()
+        const int n = nums.size();
+        std::deque<int> deque; // monotonic queue, store index
         for (int i = 0; i < k; ++i) {
-            addToDeque(dq, nums[i]);
+            addToDeque(deque, i, nums);
         }
-        result.push_back(dq.front());
-        for (int i = k; i < nums.size(); ++i) {
-            const auto& in = nums[i];
-            const auto& out = nums[i - k];
-            if (out == dq.front()) {
-                dq.pop_front();
+        if (deque.empty())
+            return {};
+
+        std::vector<int> result{nums[deque.front()]};
+        for (int i = k; i < n; ++i) {
+            if (deque.front() == i - k) {
+                deque.pop_front();
             }
-            addToDeque(dq, in);
-            result.push_back(dq.front());
+            addToDeque(deque, i, nums);
+            result.push_back(nums[deque.front()]);
         }
         return result;
     }
 
 private:
-    void addToDeque(std::deque<int>& dq, int val)
+    void addToDeque(std::deque<int>& deque, int index, const std::vector<int>& nums)
     {
-        while (!dq.empty() && val > dq.back()) {
-            dq.pop_back();
+        while (!deque.empty() && nums[index] >= nums[deque.back()]) {
+            deque.pop_back();
         }
-        dq.push_back(val);
+        deque.push_back(index);
     }
 };
