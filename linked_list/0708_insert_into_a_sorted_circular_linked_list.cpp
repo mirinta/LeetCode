@@ -1,6 +1,5 @@
 /**
  * Definition for a Node.
- *
  */
 class Node
 {
@@ -25,10 +24,9 @@ public:
 
 /**
  * Given a Circular Linked List node, which is sorted in non-descending order, write a function to
- * insert a value "insertVal" into the list such that it remains a sorted circular list.
- *
- * The given node can be a reference to any single node in the list and may not necessarily be the
- * smallest value in the circular list.
+ * insert a value insertVal into the list such that it remains a sorted circular list. The given
+ * node can be a reference to any single node in the list and may not necessarily be the smallest
+ * value in the circular list.
  *
  * If there are multiple suitable places for insertion, you may choose any place to insert the new
  * value. After the insertion, the circular list should remain sorted.
@@ -37,6 +35,8 @@ public:
  * and return the reference to that single node. Otherwise, you should return the originally given
  * node.
  *
+ * ! The number of nodes in the list is in the range [0, 5 * 10^4].
+ * ! -10^6 <= Node.val, insertVal <= 10^6
  */
 
 class Solution
@@ -45,40 +45,40 @@ public:
     Node* insert(Node* head, int insertVal)
     {
         if (!head) {
-            auto* head = new Node(insertVal);
-            head->next = head;
-            return head;
+            auto* node = new Node(insertVal);
+            node->next = node; // to make sure it is a circular linked list
+            return node;
         }
-        // step 1: find min and max node
+        // find the min and max node
         // - [1]->2->[3], [3]->3->[3], [1]->1->[3]
         // - if there're duplicate max values, we want the last one
         // - if there're duplicate min values, we want the first one
-        auto* min = head;
-        auto* max = head;
-        auto* p = head->next;
-        while (p != head) {
-            if (p->val < min->val) {
-                min = p;
-            } else if (p->val >= max->val) {
-                max = p;
+        Node* min = head;
+        Node* max = head;
+        for (auto* i = head->next; i != head; i = i->next) {
+            if (i->val < min->val) {
+                min = i;
+            } else if (i->val >= max->val) {
+                max = i;
             }
-            p = p->next;
         }
-        // step 2: insertVal < min or insertVal > max
+        // check if "insertVal" is out of range
+        // 1->2->3  insert 4: 1->2->3->4   insert 0: 1->2->3->0
+        // |<----|            |<-------|             |<-------|
         if (insertVal < min->val || insertVal > max->val) {
-            auto* node = new Node(insertVal, min);
+            auto* node = new Node(insertVal);
+            node->next = min;
             max->next = node;
             return head;
         }
-        // step 3: insertVal in [min, max]
-        p = min;
-        while (true) {
-            if (p->val <= insertVal && insertVal <= p->next->val) {
-                auto* node = new Node(insertVal, p->next);
-                p->next = node;
+        // insert new node at the last valid position
+        for (auto* i = min; i; i = i->next) {
+            if (i->val <= insertVal && insertVal <= i->next->val) {
+                auto* node = new Node(insertVal);
+                node->next = i->next;
+                i->next = node;
                 break;
             }
-            p = p->next;
         }
         return head;
     }
