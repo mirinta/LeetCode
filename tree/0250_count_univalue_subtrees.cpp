@@ -11,39 +11,38 @@ struct TreeNode
     TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
 };
 
-/**
- * Given the root of a binary tree, return the number of uni-value subtrees.
- *
- * A uni-value subtree means all nodes of the subtree have the same value.
- *
- * ! The number of the node in the tree will be in the range [0, 1000].
- * ! -1000 <= Node.val <= 1000
- */
-
 class Solution
 {
 public:
     int countUnivalSubtrees(TreeNode* root)
     {
         int result = 0;
-        traverse(result, root);
+        dfs(result, root);
         return result;
     }
 
 private:
-    // return true if all values of the given tree are the same
-    bool traverse(int& result, TreeNode* node)
+    // return true is all values in the given tree are the same
+    bool dfs(int& result, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return true;
 
-        const bool leftAllSame = traverse(result, node->left);
-        const bool rightAllSame = traverse(result, node->right);
+        const auto leftAllSame = dfs(result, root->left);
+        const auto rightAllSame = dfs(result, root->right);
         if (!leftAllSame || !rightAllSame)
             return false;
 
-        if ((!node->left || node->left->val == node->val) &&
-            (!node->right || node->right->val == node->val)) {
+        // both subtrees are empty
+        const auto case1 = !root->left && !root->right;
+        // left subtree is emtpy, right subtree is the same as the root
+        const auto case2 = !root->left && (root->right && root->right->val == root->val);
+        // left subtree is the same as the root, right subtree is empty
+        const auto case3 = (root->left && root->left->val == root->val) && !root->right;
+        // both subtrees are the same as the root
+        const auto case4 = (root->left && root->left->val == root->val) &&
+                           (root->right && root->right->val == root->val);
+        if (case1 || case2 || case3 || case4) {
             result++;
             return true;
         }
