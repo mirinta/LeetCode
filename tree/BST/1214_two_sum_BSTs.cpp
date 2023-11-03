@@ -1,3 +1,4 @@
+#include <unordered_set>
 #include <vector>
 
 /**
@@ -31,60 +32,51 @@ public:
     }
 
 private:
+    bool search(int target, TreeNode* root)
+    {
+        if (!root)
+            return false;
+
+        if (root->val == target)
+            return true;
+
+        if (root->val > target)
+            return search(target, root->left);
+
+        return search(target, root->right);
+    }
+
     bool approach2(TreeNode* root1, TreeNode* root2, int target)
     {
         if (!root1)
             return false;
 
-        if (binarySearch(root2, target - root1->val))
+        if (search(target - root1->val, root2))
             return true;
 
-        return approach2(root1->left, root2, target) || approach2(root1->right, root2, target);
+        return twoSumBSTs(root1->left, root2, target) || twoSumBSTs(root1->right, root2, target);
     }
 
-    bool binarySearch(TreeNode* root, int target)
-    {
-        if (!root)
-            return false;
-
-        if (root->val < target)
-            return binarySearch(root->right, target);
-
-        if (root->val > target)
-            return binarySearch(root->left, target);
-
-        return true;
-    }
-
-    bool approach1(TreeNode* root1, TreeNode* root2, int target)
-    {
-        std::vector<int> values1;
-        std::vector<int> values2;
-        // in-order traversal of BST gets an ascending order array
-        traverse(values1, root1);
-        traverse(values2, root2);
-        int i = 0;
-        int j = values2.size() - 1;
-        while (i < values1.size() && j >= 0) {
-            const int sum = values1[i] + values2[j];
-            if (sum > target) {
-                j--;
-            } else if (sum < target) {
-                i++;
-            } else {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void traverse(std::vector<int>& values, TreeNode* root)
+    void traverse(std::unordered_set<int>& nums, TreeNode* root)
     {
         if (!root)
             return;
 
-        traverse(values, root->left);
-        values.push_back(root->val);
-        traverse(values, root->right);
+        nums.emplace(root->val);
+        traverse(nums, root->left);
+        traverse(nums, root->right);
+    }
+
+    bool approach1(TreeNode* root1, TreeNode* root2, int target)
+    {
+        std::unordered_set<int> nums1;
+        std::unordered_set<int> nums2;
+        traverse(nums1, root1);
+        traverse(nums2, root2);
+        for (const auto& val1 : nums1) {
+            if (nums2.count(target - val1))
+                return true;
+        }
+        return false;
     }
 };
