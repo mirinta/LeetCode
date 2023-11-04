@@ -5,51 +5,58 @@
  * [ai, bi] indicates that there is an edge between ai and bi in the graph.
  *
  * Return the number of connected components in the graph.
+ *
+ * ! 1 <= n <= 2000
+ * ! 1 <= edges.length <= 5000
+ * ! edges[i].length == 2
+ * ! 0 <= ai <= bi < n
+ * ! ai != bi
+ * ! There are no repeated edges.
  */
 
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
+    explicit UnionFind(int n) : count(n), root(n), rank(n)
     {
         for (int i = 0; i < n; ++i) {
-            _root[i] = i;
-            _rank[i] = 1;
+            root[i] = i;
+            rank[i] = 1;
         }
     }
 
-    int count() const { return _count; }
-
     int find(int x)
     {
-        if (x != _root[x]) {
-            _root[x] = find(_root[x]);
+        if (root[x] != x) {
+            root[x] = find(root[x]);
         }
-        return _root[x];
+        return root[x];
     }
 
     void connect(int p, int q)
     {
-        const int rootP = find(p);
-        const int rootQ = find(q);
+        const auto rootP = find(p);
+        const auto rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        if (_rank[rootP] > _rank[rootQ]) {
-            _root[rootQ] = rootP;
-        } else if (_rank[rootP] < _rank[rootQ]) {
-            _root[rootP] = rootQ;
+        if (rank[rootP] > rank[rootQ]) {
+            root[rootQ] = rootP;
+        } else if (rank[rootP] < rank[rootQ]) {
+            root[rootP] = rootQ;
         } else {
-            _root[rootQ] = rootP;
-            _rank[rootP] += 1;
+            root[rootQ] = rootP;
+            rank[rootP]++;
         }
-        _count -= 1;
+        count--;
     }
 
+    int numOfConnectedComponents() const { return count; }
+
 private:
-    std::vector<int> _root;
-    std::vector<int> _rank;
-    int _count;
+    int count;
+    std::vector<int> root;
+    std::vector<int> rank;
 };
 
 class Solution
@@ -59,10 +66,8 @@ public:
     {
         UnionFind uf(n);
         for (const auto& edge : edges) {
-            const int& p = edge[0];
-            const int& q = edge[1];
-            uf.connect(p, q);
+            uf.connect(edge[0], edge[1]);
         }
-        return uf.count();
+        return uf.numOfConnectedComponents();
     }
 };
