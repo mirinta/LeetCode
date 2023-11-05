@@ -43,3 +43,4 @@ TODO:
 - [ ] No.1000 (DP)
 - [ ] No.255 (BST)
 - [ ] No.2916 (Segment tree)
+- [ ] No.2926 (DP)

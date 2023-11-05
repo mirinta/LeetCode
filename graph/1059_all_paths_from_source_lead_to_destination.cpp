@@ -29,69 +29,35 @@ public:
     bool leadsToDestination(int n, std::vector<std::vector<int>>& edges, int source,
                             int destination)
     {
-        std::vector<std::vector<int>> graph(n, std::vector<int>());
+        std::vector<std::vector<int>> graph(n);
         for (const auto& edge : edges) {
             graph[edge[0]].push_back(edge[1]);
         }
-        std::vector<Color> colors(
-            n, White); // -1 for not processed, 0 for being processed, 1 for process finished
-        return dfs2(colors, source, destination, graph);
+        std::vector<Color> colors(n, White);
+        return dfs(colors, source, destination, graph);
     }
 
 private:
+    // White = not processed
+    // Gray = being processed
+    // Black = fully processed
     enum Color { White, Gray, Black };
-    bool dfs2(std::vector<Color>& colors, int source, int destination,
-              const std::vector<std::vector<int>>& graph)
+
+    bool dfs(std::vector<Color>& colors, int current, int target,
+             const std::vector<std::vector<int>>& graph)
     {
-        if (colors[source] != White)
-            return colors[source] == Black;
+        if (graph[current].empty())
+            return current == target;
 
-        if (graph[source].empty())
-            return source == destination;
-
-        colors[source] = Gray;
-        for (const auto& adj : graph[source]) {
-            if (!dfs2(colors, adj, destination, graph))
-                return false;
-        }
-        colors[source] = Black;
-        return true;
-    }
-
-    bool approach1(int n, std::vector<std::vector<int>>& edges, int source, int destination)
-    {
-        std::vector<std::vector<int>> graph(n, std::vector<int>());
-        for (const auto& edge : edges) {
-            graph[edge[0]].push_back(edge[1]);
-        }
-        std::unordered_set<int> visited;
-        visited.insert(source);
-        std::unordered_set<int> path;
-        return dfs1(visited, path, source, destination, graph);
-    }
-
-    bool dfs1(std::unordered_set<int>& visited, std::unordered_set<int>& path, int source,
-              int destination, const std::vector<std::vector<int>>& graph)
-    {
-        if (source == destination)
-            return graph[destination].empty();
-
-        if (graph[source].empty())
-            return source == destination;
-
-        path.insert(source);
-        for (const auto& adj : graph[source]) {
-            if (path.count(adj))
+        colors[current] = Gray;
+        for (const auto& adj : graph[current]) {
+            if (colors[adj] == Gray)
                 return false;
 
-            if (visited.count(adj))
-                continue;
-
-            visited.insert(adj);
-            if (!dfs1(visited, path, adj, destination, graph))
+            if (colors[adj] == White && !dfs(colors, adj, target, graph))
                 return false;
         }
-        path.erase(source);
+        colors[current] = Black;
         return true;
     }
 };
