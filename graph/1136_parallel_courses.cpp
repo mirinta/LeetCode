@@ -26,7 +26,7 @@ class Solution
 public:
     int minimumSemesters(int n, std::vector<std::vector<int>>& relations)
     {
-        // topological sorting, Kahn's algorithm
+        // topological sorting, kahn's algorithm
         std::vector<std::vector<int>> graph(n);
         std::vector<int> indegrees(n, 0);
         for (const auto& relation : relations) {
@@ -36,25 +36,24 @@ public:
         std::queue<int> queue;
         for (int i = 0; i < n; ++i) {
             if (indegrees[i] == 0) {
-                queue.push(i);
+                queue.emplace(i);
             }
         }
         int courses = 0;
-        int semesters = 0;
+        int result = 0;
         while (!queue.empty()) {
-            const int size = queue.size();
-            for (int k = 0; k < size; ++k) {
-                const int v = queue.front();
+            for (int i = queue.size(); i > 0; --i) {
+                const auto v = queue.front();
                 queue.pop();
                 courses++;
-                for (const auto& adj : graph[v]) {
-                    if (--indegrees[adj] == 0) {
-                        queue.push(adj);
+                for (const auto& w : graph[v]) {
+                    if (--indegrees[w] == 0) {
+                        queue.emplace(w);
                     }
                 }
             }
-            semesters++;
+            result++;
         }
-        return courses == n ? semesters : -1;
+        return courses == n ? result : -1;
     }
 };

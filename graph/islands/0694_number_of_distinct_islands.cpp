@@ -22,58 +22,47 @@ class Solution
 public:
     int numDistinctIslands(std::vector<std::vector<int>>& grid)
     {
-        if (grid.empty() || grid[0].empty())
-            return 0;
-
         const int m = grid.size();
         const int n = grid[0].size();
-        std::unordered_set<std::string> set;
+        visited.resize(m, std::vector<bool>(n, false));
+        uniqueSignatures.clear();
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] != kLand)
-                    continue;
-
-                std::string encode;
-                dfs(encode, i, j, grid);
-                set.insert(std::move(encode));
+                if (grid[i][j] == kLand && !visited[i][j]) {
+                    visited[i][j] = true;
+                    std::string signature;
+                    dfs(signature, i, j, grid);
+                    uniqueSignatures.insert(std::move(signature));
+                }
             }
         }
-        return set.size();
+        return uniqueSignatures.size();
     }
 
 private:
     static constexpr int kLand = 1;
-    static constexpr int kWater = 0;
-    static constexpr char kUp = 'U';
-    static constexpr char kDown = 'D';
-    static constexpr char kLeft = 'L';
-    static constexpr char kRight = 'R';
-    static constexpr char kEnd = '0';
+    const std::vector<std::pair<int, int>> kDirections{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    std::vector<std::vector<bool>> visited;
+    std::unordered_set<std::string> uniqueSignatures;
 
-    void dfs(std::string& encode, int x, int y, std::vector<std::vector<int>>& grid)
+    void dfs(std::string& signature, int x, int y, const std::vector<std::vector<int>>& grid)
     {
         const int m = grid.size();
         const int n = grid[0].size();
-        if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != kLand) {
-            if (!encode.empty()) {
-                encode.pop_back();
-            }
-            return;
+        for (int d = 0; d < kDirections.size(); ++d) {
+            const auto& [dx, dy] = kDirections[d];
+            const int i = x + dx;
+            const int j = y + dy;
+            if (i < 0 || i >= m || j < 0 || j >= n)
+                continue;
+
+            if (visited[i][j] || grid[i][j] != kLand)
+                continue;
+
+            visited[i][j] = true;
+            signature.push_back('0' + d); // 0 for up, 1 for down, 2 for left, 3 for right
+            dfs(signature, i, j, grid);
         }
-        grid[x][y] = kWater;
-        // go up:
-        encode.push_back(kUp);
-        dfs(encode, x - 1, y, grid);
-        // go down:
-        encode.push_back(kDown);
-        dfs(encode, x + 1, y, grid);
-        // go left:
-        encode.push_back(kLeft);
-        dfs(encode, x, y - 1, grid);
-        // go right:
-        encode.push_back(kRight);
-        dfs(encode, x, y + 1, grid);
-        // end of search:
-        encode.push_back(kEnd);
+        signature.push_back('|');
     }
 };
