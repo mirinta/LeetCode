@@ -46,24 +46,21 @@ public:
         const int n = maze[0].size();
         std::vector<std::vector<int>> distTo(m, std::vector<int>(n, INT_MAX));
         distTo[ball[0]][ball[1]] = 0;
-        using Tuple = std::tuple<int, int, int, std::string>; // <dist, x, y, path>
         auto comparator = [](const auto& t1, const auto& t2) {
-            const auto& [dist1, x1, y1, path1] = t1;
-            const auto& [dist2, x2, y2, path2] = t2;
-            return dist1 == dist2 ? path1 > path2 : dist1 > dist2;
+            const auto& [dist1, x1, y1, instruction1] = t1;
+            const auto& [dist2, x2, y2, instruction2] = t2;
+            return dist1 == dist2 ? instruction1 > instruction2 : dist1 > dist2;
         };
         std::priority_queue<Tuple, std::vector<Tuple>, decltype(comparator)> pq(
             comparator); // min heap
-        pq.push({0, ball[0], ball[1], ""});
-        const std::vector<std::tuple<int, int, std::string>> kDirections{
-            {-1, 0, "u"}, {1, 0, "d"}, {0, -1, "l"}, {0, 1, "r"}};
+        pq.emplace(0, ball[0], ball[1], "");
         while (!pq.empty()) {
-            const auto [dist, x, y, path] = pq.top();
+            const auto [dist, x, y, instruction] = pq.top();
             pq.pop();
             if (x == hole[0] && y == hole[1])
-                return path;
+                return instruction;
 
-            for (const auto& [dx, dy, instruction] : kDirections) {
+            for (const auto& [dx, dy, direction] : kDirections) {
                 int i = x + dx;
                 int j = y + dy;
                 int count = 0;
@@ -84,10 +81,15 @@ public:
                 }
                 if (distTo[i][j] >= dist + count) {
                     distTo[i][j] = dist + count;
-                    pq.push({distTo[i][j], i, j, path + instruction});
+                    pq.emplace(distTo[i][j], i, j, instruction + direction);
                 }
             }
         }
         return "impossible";
     }
+
+private:
+    using Tuple = std::tuple<int, int, int, std::string>; // <dist, x, y, instruction>
+    const std::vector<std::tuple<int, int, std::string>> kDirections{
+        {-1, 0, "u"}, {1, 0, "d"}, {0, -1, "l"}, {0, 1, "r"}};
 };
