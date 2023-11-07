@@ -28,7 +28,6 @@
 class Solution
 {
 public:
-    // BFS, time O(MN(M+N)), space O(MN)
     bool hasPath(std::vector<std::vector<int>>& maze, std::vector<int>& start,
                  std::vector<int>& destination)
     {
@@ -36,30 +35,34 @@ public:
         const int n = maze[0].size();
         std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         visited[start[0]][start[1]] = true;
-        std::queue<std::pair<int, int>> queue;
+        std::queue<std::pair<int, int>> queue; // <x, y>
         queue.emplace(start[0], start[1]);
-        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         while (!queue.empty()) {
-            const auto [x, y] = queue.front();
-            queue.pop();
-            if (x == destination[0] && y == destination[1])
-                return true;
+            for (int k = queue.size(); k > 0; --k) {
+                const auto [x, y] = queue.front();
+                queue.pop();
+                if (x == destination[0] && y == destination[1])
+                    return true;
 
-            for (const auto& [dx, dy] : kDirections) {
-                int i = x + dx;
-                int j = y + dy;
-                bool updated = false;
-                while (i >= 0 && i < m && j >= 0 && j < n && maze[i][j] == 0) {
-                    updated |= true;
-                    i += dx;
-                    j += dy;
-                }
-                if (updated && !visited[i - dx][j - dy]) {
-                    visited[i - dx][j - dy] = true;
-                    queue.emplace(i - dx, j - dy);
+                for (const auto& [dx, dy] : kDirections) {
+                    int i = x + dx;
+                    int j = y + dy;
+                    bool updated = false;
+                    while (i >= 0 && i < m && j >= 0 && j < n && maze[i][j] == 0) {
+                        i += dx;
+                        j += dy;
+                        updated = true;
+                    }
+                    if (updated && !visited[i - dx][j - dy]) {
+                        visited[i - dx][j - dy] = true;
+                        queue.emplace(i - dx, j - dy);
+                    }
                 }
             }
         }
         return false;
     }
+
+private:
+    const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 };
