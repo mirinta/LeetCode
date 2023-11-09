@@ -22,10 +22,12 @@ public:
         if (sticks.size() < 2)
             return 0;
 
-        // min heap
-        std::priority_queue<int, std::vector<int>, std::greater<>> pq(sticks.begin(), sticks.end());
         int result = 0;
-        while (pq.size() > 1) {
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq; // min heap
+        for (const auto& length : sticks) {
+            pq.push(length);
+        }
+        while (pq.size() >= 2) {
             int cost = pq.top();
             pq.pop();
             cost += pq.top();
