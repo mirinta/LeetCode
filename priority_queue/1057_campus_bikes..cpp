@@ -1,5 +1,5 @@
 #include <queue>
-#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 /**
@@ -40,41 +40,31 @@ public:
     {
         const int n = workers.size();
         const int m = bikes.size();
-        std::priority_queue<Tuple, std::vector<Tuple>, std::greater<>> pq; // min heap
+        std::priority_queue<Tuple, std::vector<Tuple>, std::greater<>> pq;
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < m; ++j) {
                 pq.emplace(manhattan(workers[i], bikes[j]), i, j);
             }
         }
-        std::vector<bool> usedBikes(m, false);
-        std::unordered_map<int, int> map; // worker to bike
-        while (map.size() != n) {
-            while (!pq.empty()) {
-                const auto [dist, worker, bike] = pq.top();
-                if (!map.count(worker) && !usedBikes[bike])
-                    break;
-
-                pq.pop();
-            }
+        std::vector<int> result(n, -1);
+        std::unordered_set<int> usedBikes;
+        while (!pq.empty()) {
             const auto [dist, worker, bike] = pq.top();
             pq.pop();
-            map[worker] = bike;
-            usedBikes[bike] = true;
-            ;
-        }
-        std::vector<int> result(n);
-        for (int i = 0; i < n; ++i) {
-            result[i] = map[i];
+            if (result[worker] != -1 || usedBikes.count(bike))
+                continue;
+
+            usedBikes.insert(bike);
+            result[worker] = bike;
         }
         return result;
     }
 
 private:
-    using Tuple = std::tuple<int, int, int>;
+    using Tuple = std::tuple<int, int, int>; // <dist, worker, bike>
 
-    int manhattan(const std::vector<int>& workerCoords, const std::vector<int>& bikeCoords)
+    int manhattan(const std::vector<int>& worker, const std::vector<int>& bike)
     {
-        return std::abs(workerCoords[0] - bikeCoords[0]) +
-               std::abs(workerCoords[1] - bikeCoords[1]);
+        return std::abs(worker[0] - bike[0]) + std::abs(worker[1] - bike[1]);
     }
 };
