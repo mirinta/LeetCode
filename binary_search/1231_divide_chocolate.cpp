@@ -1,3 +1,4 @@
+#include <numeric>
 #include <vector>
 
 /**
@@ -19,42 +20,30 @@
 class Solution
 {
 public:
-    int maximizeSweetness(const std::vector<int>& sweetness, int k)
+    int maximizeSweetness(std::vector<int>& sweetness, int k)
     {
-        // k+1 subarrays, sum of each subarray >= x
-        // we want to maximize x
-        int lo = INT_MAX;
-        int hi = 0;
-        for (const auto& val : sweetness) {
-            lo = std::min(val, lo);
-            hi += val;
-        }
-        while (lo <= hi) {
-            const int mid = lo + (hi - lo) / 2;
+        int lo = 1;
+        int hi = std::accumulate(sweetness.begin(), sweetness.end(), 0);
+        while (lo < hi) {
+            const int mid = hi - (hi - lo) / 2;
             if (isValid(mid, sweetness, k + 1)) {
-                lo = mid + 1;
+                lo = mid;
             } else {
                 hi = mid - 1;
             }
         }
-        return hi;
+        return lo;
     }
 
 private:
-    bool isValid(int minSum, const std::vector<int>& nums, int minGroups)
+    bool isValid(int minGain, const std::vector<int>& sweetness, int minGroups)
     {
-        // minSum=7, nums=[1,2,3,4,5,6,7,8,9], minGroups=6
-        // group1: 1,2,3,4
-        // group2: 5,6
-        // group3: 7
-        // group4: 8
-        // group5: 9
-        // therefore, the function should return false
-        int sum = 0;
+        // everyone takes >= minGain, then I can always choose the minimum gain
         int count = 0;
-        for (const auto& val : nums) {
+        int sum = 0;
+        for (const auto& val : sweetness) {
             sum += val;
-            if (sum >= minSum) {
+            if (sum >= minGain) {
                 sum = 0;
                 count++;
             }

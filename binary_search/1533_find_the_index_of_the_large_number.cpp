@@ -48,25 +48,25 @@ class Solution
 public:
     int getIndex(ArrayReader& reader)
     {
-        // split the array into two parts with the same size:
-        // even length: [L...M][M+1...R]
-        // odd length:  [L...M-1]M[M+1...R]
+        // assume L is the length of the array
+        // split it into two parts with the same size:
+        // - even length, [left...mid][mid+1...right]
+        // - odd length, [left...mid-1]mid[mid+1...right]
+        const int n = reader.length();
         int left = 0;
-        int right = reader.length() - 1;
+        int right = n - 1;
         while (left < right) {
             const int mid = left + (right - left) / 2;
-            int leftEnd = mid;
-            int rightStart = mid + 1;
-            if ((right - left + 1) % 2 != 0) {
-                leftEnd--;
-            }
-            const int state = reader.compareSub(left, leftEnd, rightStart, right);
-            if (state > 0) {
-                right = leftEnd;
-            } else if (state < 0) {
-                left = rightStart;
-            } else {
+            const int leftEnd = (right - left + 1) % 2 == 0 ? mid : mid - 1;
+            const int rightStart = mid + 1;
+            const int compare = reader.compareSub(left, leftEnd, rightStart, right);
+            if (compare == 0)
                 return mid;
+
+            if (compare > 0) {
+                right = leftEnd;
+            } else {
+                left = rightStart;
             }
         }
         return left;
