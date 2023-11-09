@@ -24,20 +24,19 @@ class Solution
 public:
     std::string alienOrder(std::vector<std::string>& words)
     {
-        std::unordered_map<char, std::vector<char>> graph;
+        std::unordered_map<char, std::string> graph;
         std::unordered_map<char, int> indegrees;
         for (const auto& word : words) {
             for (const auto& c : word) {
+                graph[c] = "";
                 indegrees[c] = 0;
-                graph[c] = std::vector<char>{};
             }
         }
         for (int i = 0; i < words.size() - 1; ++i) {
             const auto& word1 = words[i];
             const auto& word2 = words[i + 1];
-            // ! check word1 starts with word2, i.e., word2 is a prefix of word1
             if (word1.size() > word2.size() && word1.substr(0, word2.size()) == word2)
-                return {};
+                return {}; // word2 is the prefix of word1, wrong order
 
             for (int j = 0; j < std::min(word1.size(), word2.size()); ++j) {
                 if (word1[j] != word2[j]) {
@@ -47,27 +46,23 @@ public:
                 }
             }
         }
-        // topological sorting, Kahn's algorithm
         std::queue<char> queue;
-        for (const auto& [letter, indegree] : indegrees) {
+        for (const auto& [c, indegree] : indegrees) {
             if (indegree == 0) {
-                queue.push(letter);
+                queue.push(c);
             }
         }
         std::string result;
         while (!queue.empty()) {
-            const auto letter = queue.front();
+            const auto v = queue.front();
             queue.pop();
-            result.push_back(letter);
-            for (const auto& next : graph[letter]) {
-                if (--indegrees[next] == 0) {
-                    queue.push(next);
+            result.push_back(v);
+            for (const auto& w : graph[v]) {
+                if (--indegrees[w] == 0) {
+                    queue.push(w);
                 }
             }
         }
-        if (result.size() != indegrees.size())
-            return {};
-
-        return result;
+        return result.size() == graph.size() ? result : "";
     }
 };
