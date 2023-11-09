@@ -20,37 +20,37 @@ public:
         if (k == 0)
             return s;
 
-        using Pair = std::pair<char, int>; // character and frequency
-        // pick the most k frequent characters,
-        // if there's a tie, pick the smaller one
-        auto comparator = [](const auto& p1, const auto& p2) {
-            return p1.second == p2.second ? p1.first > p2.first : p1.second < p2.second;
-        };
-        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator);
-        std::unordered_map<char, int> map;
+        std::unordered_map<char, int> map; // letter to frequency
         for (const auto& c : s) {
             map[c]++;
         }
+        auto comparator = [](const auto& p1, const auto& p2) {
+            // sort frequencies in descending order
+            // if there's a tie, sort letters in ascending order
+            return p1.second == p2.second ? p1.first > p2.first : p1.second < p2.second;
+        };
+        using Pair = std::pair<char, int>; // letter to frequency
+        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator);
         for (const auto& pair : map) {
             pq.emplace(pair);
         }
         std::string result;
         while (!pq.empty()) {
-            // fewer than k characters,
-            // the only valid case is when the frequency of each character is exactly 1
-            // e.g. k=3, but we have three a's and two b's left, it is impossible to rearrange these
-            // characters
+            // less than k characters
+            // - if there's only one letter left and its frequency is 1, ok
+            // - otherwise, it is not possible to rearrange the string
             if (pq.size() < k && pq.top().second > 1)
                 return {};
 
-            std::vector<Pair> pairs(std::min<int>(k, pq.size()));
-            for (auto& pair : pairs) {
+            // pick the top k frequent characters
+            std::vector<Pair> vec(std::min<size_t>(k, pq.size()));
+            for (auto& pair : vec) {
                 pair = pq.top();
                 pq.pop();
                 result.push_back(pair.first);
                 pair.second--;
             }
-            for (const auto& pair : pairs) {
+            for (const auto& pair : vec) {
                 if (pair.second > 0) {
                     pq.emplace(pair);
                 }
