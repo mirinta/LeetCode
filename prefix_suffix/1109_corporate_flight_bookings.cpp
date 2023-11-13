@@ -1,14 +1,20 @@
 #include <vector>
 
 /**
- * There are "n" flights that are labeled from "1" to "n".
+ * There are n flights that are labeled from 1 to n.
  *
- * You are given an array of flight bookings "bookings", where "bookings[i] = [first_i, last_i,
- * seats_i]" represents a booking for flights "first_i" through "last_i" (inclusive) with "seats_i"
- * seats reserved for each flight in the range.
+ * You are given an array of flight bookings bookings, where bookings[i] = [firsti, lasti, seatsi]
+ * represents a booking for flights firsti through lasti (inclusive) with seatsi seats reserved for
+ * each flight in the range.
  *
- * Return an array "answer" of length "n", where "answer[i]" is the total number of seats reserved
- * for flight i.
+ * Return an array answer of length n, where answer[i] is the total number of seats reserved for
+ * flight i.
+ *
+ * ! 1 <= n <= 2 * 10^4
+ * ! 1 <= bookings.length <= 2 * 10^4
+ * ! bookings[i].length == 3
+ * ! 1 <= firsti <= lasti <= n
+ * ! 1 <= seatsi <= 10^4
  */
 
 class Solution
@@ -16,23 +22,19 @@ class Solution
 public:
     std::vector<int> corpFlightBookings(std::vector<std::vector<int>>& bookings, int n)
     {
-        // let diffs = [d0, d1, ..., d(n-1)]
-        // where di = fi - f(i-1), fi is the total number of seats reserved for flight i
-        // - if add "val" to [fi, fj], then diffs[i] += val and diffs[j+1] -= val (if j+1 < n)
-        // - to get the output, let diffs[i] += diffs[i - 1]
-        if (n <= 0)
-            return {};
-
-        std::vector<int> diffs(n, 0);
+        // let diff[i] = seats[i]-seats[i-1]
+        // when we add add value x to seats[i:j],
+        // we need seats[j+1] -= x and seats[i] += x
+        std::vector<int> diff(n, 0); // diff[i] = seats[i]-seats[i-1]
         for (const auto& booking : bookings) {
-            diffs[booking[0] - 1] += booking[2]; // booking[0] and booking[1] are 1-indexed
-            if (booking[1] < diffs.size()) {
-                diffs[booking[1]] -= booking[2];
+            diff[booking[0] - 1] += booking[2];
+            if (booking[1] < n) {
+                diff[booking[1]] -= booking[2];
             }
         }
-        for (size_t i = 1; i < diffs.size(); ++i) {
-            diffs[i] += diffs[i - 1];
+        for (int i = 1; i < n; ++i) {
+            diff[i] += diff[i - 1];
         }
-        return diffs;
+        return diff;
     }
 };
