@@ -24,10 +24,10 @@ class Solution
 public:
     int calculate(std::string s)
     {
-        s.push_back('#'); // to make sure the last digit is handled
-        std::stack<int> stack;
-        char lastOperator = '+'; // all values are non-negative
+        char prevOperator = '+'; // all values are non-negative
+        s.push_back('+');        // "dummy" operator, just to make sure the last operator is handled
         int num = 0;
+        std::stack<int> stack;
         for (const auto& c : s) {
             if (c == ' ')
                 continue;
@@ -36,30 +36,21 @@ public:
                 num = num * 10 + (c - '0');
                 continue;
             }
-            switch (lastOperator) {
-            case '+':
+            if (prevOperator == '+') {
                 stack.push(num);
-                break;
-            case '-':
+            } else if (prevOperator == '-') {
                 stack.push(-num);
-                break;
-            case '*':
-            {
+            } else if (prevOperator == '*') {
                 const auto top = stack.top();
                 stack.pop();
                 stack.push(top * num);
-                break;
-            }
-            case '/':
-            {
+            } else if (prevOperator == '/') {
                 const auto top = stack.top();
                 stack.pop();
                 stack.push(top / num);
-                break;
-            }
             }
             num = 0;
-            lastOperator = c;
+            prevOperator = c;
         }
         int result = 0;
         while (!stack.empty()) {
