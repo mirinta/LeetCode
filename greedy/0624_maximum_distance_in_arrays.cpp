@@ -23,16 +23,15 @@ class Solution
 public:
     int maxDistance(std::vector<std::vector<int>>& arrays)
     {
-        const int m = arrays.size();
+        const int n = arrays.size();
         int min = arrays[0].front();
         int max = arrays[0].back();
         int result = 0;
-        for (int i = 1; i < m; ++i) {
-            const auto& front = arrays[i].front();
-            const auto& back = arrays[i].back();
-            result = std::max({result, std::abs(max - front), std::abs(back - min)});
-            min = std::min(min, front);
-            max = std::max(max, back);
+        for (int i = 1; i < n; ++i) {
+            result = std::max(
+                {result, std::abs(max - arrays[i].front()), std::abs(arrays[i].back() - min)});
+            min = std::min(min, arrays[i].front());
+            max = std::max(max, arrays[i].back());
         }
         return result;
     }
