@@ -1,5 +1,7 @@
+#include <numeric>
 #include <stack>
 #include <string>
+#include <vector>
 
 /**
  * Given a string s which represents an expression, evaluate this expression and return its value.
@@ -22,7 +24,49 @@
 class Solution
 {
 public:
-    int calculate(std::string s)
+    int calculate(std::string s) { return approach2(s); }
+
+private:
+    bool isOperator(char c) { return c == '+' || c == '-' || c == '*' || c == '/'; }
+
+    int approach2(const std::string& s)
+    {
+        std::string expression;
+        expression.push_back('+');
+        for (const auto& c : s) {
+            if (c == ' ')
+                continue;
+
+            expression.push_back(c);
+        }
+        const int n = expression.size();
+        std::vector<int> values;
+        int i = 0;
+        while (i < n) {
+            if (!isOperator(expression[i]))
+                continue;
+
+            int j = i + 1;
+            int val = 0;
+            while (j < n && std::isdigit(expression[j])) {
+                val = val * 10 + (expression[j] - '0');
+                j++;
+            }
+            if (expression[i] == '+') {
+                values.push_back(val);
+            } else if (expression[i] == '-') {
+                values.push_back(-val);
+            } else if (expression[i] == '*') {
+                values.back() *= val;
+            } else {
+                values.back() /= val;
+            }
+            i = j;
+        }
+        return std::accumulate(values.begin(), values.end(), 0);
+    }
+
+    int approach1(std::string s)
     {
         char prevOperator = '+'; // all values are non-negative
         s.push_back('+');        // "dummy" operator, just to make sure the last operator is handled
