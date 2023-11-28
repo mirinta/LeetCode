@@ -24,13 +24,9 @@
 class Solution
 {
 public:
-    int calculate(std::string s) { return approach2(s); }
-
-private:
-    bool isOperator(char c) { return c == '+' || c == '-' || c == '*' || c == '/'; }
-
-    int approach2(const std::string& s)
+    int calculate(std::string s)
     {
+        // all values in s are non-negative integers
         std::string expression;
         expression.push_back('+');
         for (const auto& c : s) {
@@ -66,41 +62,6 @@ private:
         return std::accumulate(values.begin(), values.end(), 0);
     }
 
-    int approach1(std::string s)
-    {
-        char prevOperator = '+'; // all values are non-negative
-        s.push_back('+');        // "dummy" operator, just to make sure the last operator is handled
-        int num = 0;
-        std::stack<int> stack;
-        for (const auto& c : s) {
-            if (c == ' ')
-                continue;
-
-            if (std::isdigit(c)) {
-                num = num * 10 + (c - '0');
-                continue;
-            }
-            if (prevOperator == '+') {
-                stack.push(num);
-            } else if (prevOperator == '-') {
-                stack.push(-num);
-            } else if (prevOperator == '*') {
-                const auto top = stack.top();
-                stack.pop();
-                stack.push(top * num);
-            } else if (prevOperator == '/') {
-                const auto top = stack.top();
-                stack.pop();
-                stack.push(top / num);
-            }
-            num = 0;
-            prevOperator = c;
-        }
-        int result = 0;
-        while (!stack.empty()) {
-            result += stack.top();
-            stack.pop();
-        }
-        return result;
-    }
+private:
+    bool isOperator(char c) { return c == '+' || c == '-' || c == '*' || c == '/'; }
 };

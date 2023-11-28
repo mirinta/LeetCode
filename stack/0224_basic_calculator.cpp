@@ -22,34 +22,50 @@ class Solution
 public:
     int calculate(std::string s)
     {
-        std::stack<int> stack;
-        int num = 0;
-        int sign = 1;
-        int sum = 0;
-        for (const auto& i : s) {
-            if (std::isdigit(i)) {
-                num = num * 10 + (i - '0');
-            } else if (i == '-' || i == '+') {
-                sum += sign * num;
-                sign = i == '-' ? -1 : 1;
-                num = 0;
-            } else if (i == '(') {
-                // SUM operator (...)
-                stack.push(sum);  // store current sum
-                stack.push(sign); // store sign before parenthesis
-                sum = 0;
-                num = 0;
-                sign = 1;
-            } else if (i == ')') {
-                // PREV_SUM operator CURRENT_SUM
-                sum += sign * num; // last operation in parenthesis
-                sum *= stack.top();
+        std::string expression;
+        std::stack<std::string> stack;
+        for (const auto& c : s) {
+            if (c == '+' || c == '-' || std::isdigit(c)) {
+                expression.push_back(c);
+            } else if (c == '(') {
+                stack.push(expression);
+                expression.clear();
+            } else if (c == ')') {
+                expression = stack.top() + std::to_string(solve(expression));
                 stack.pop();
-                sum += stack.top();
-                stack.pop();
-                num = 0;
             }
         }
-        return sum + sign * num;
+        return solve(expression);
+    }
+
+private:
+    int solve(std::string& expression)
+    {
+        // --5 should be treated as 5
+        // +-2 should be treated as -2
+        if (std::isdigit(expression.front())) {
+            expression.insert(expression.begin(), '+');
+        }
+        const int n = expression.size();
+        int result = 0;
+        int i = 0;
+        while (i < n) {
+            // - [- 5]
+            // ^ |<->|
+            // i  val
+            const int sign = expression[i] == '+' ? 1 : -1;
+            int j = std::isdigit(expression[i + 1]) ? i + 1 : i + 2;
+            int val = 0;
+            while (j < n && std::isdigit(expression[j])) {
+                val = val * 10 + (expression[j] - '0');
+                j++;
+            }
+            if (expression[i + 1] == '-') {
+                val *= -1;
+            }
+            result += sign * val;
+            i = j;
+        }
+        return result;
     }
 };

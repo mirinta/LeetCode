@@ -46,7 +46,9 @@ private:
 
     int solve(std::string& expression)
     {
-        expression.insert(expression.begin(), '+');
+        if (std::isdigit(expression.front())) {
+            expression.insert(expression.begin(), '+');
+        }
         const int n = expression.size();
         std::vector<int> values;
         int i = 0;
