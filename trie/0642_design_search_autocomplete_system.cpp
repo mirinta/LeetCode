@@ -1,5 +1,4 @@
-#include <algorithm>
-#include <memory>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -52,80 +51,83 @@
 
 struct TrieNode
 {
-    int count = 0;
-    std::unordered_map<char, std::unique_ptr<TrieNode>> next;
+    int times{0};
+    std::unordered_map<char, TrieNode*> next;
 };
 
 class Trie
 {
 public:
-    explicit Trie() : root(std::make_unique<TrieNode>()) {}
+    explicit Trie() : root(new TrieNode()){};
 
-    void insert(const std::string& sentence, int times)
+    void insert(const std::string& sentence, int times = 1)
     {
-        if (sentence.empty() || times < 1)
-            return;
-
-        auto* node = root.get();
+        auto* node = root;
         for (const auto& c : sentence) {
             if (!node->next.count(c)) {
-                node->next[c] = std::make_unique<TrieNode>();
+                node->next[c] = new TrieNode();
             }
-            node = node->next[c].get();
+            node = node->next[c];
         }
-        node->count += times;
+        node->times += times;
     }
 
-    std::vector<std::string> getSentencesWithPrefix(const std::string& prefix, size_t numLimit)
+    std::vector<std::string> top3HotSentences(const std::string& prefix)
     {
-        auto* node = root.get();
         std::string sentence;
+        auto* node = root;
         for (const auto& c : prefix) {
             if (!node->next.count(c))
                 return {};
 
             sentence.push_back(c);
-            node = node->next[c].get();
+            node = node->next[c];
         }
-        std::vector<std::pair<std::string, int>> sentences;
-        dfs(sentences, sentence, node);
-        std::sort(sentences.begin(), sentences.end(), [](const auto& p1, const auto& p2) {
-            return p1.second == p2.second ? p1.first < p2.first : p1.second > p2.second;
-        });
-        std::vector<std::string> result(std::min(sentences.size(), numLimit));
-        for (int i = 0; i < result.size(); ++i) {
-            result[i] = sentences[i].first;
+        backtrack(sentence, node);
+        std::vector<std::string> result(pq.size());
+        for (int i = result.size() - 1; i >= 0; --i) {
+            result[i] = pq.top().first;
+            pq.pop();
         }
         return result;
     }
 
 private:
-    void dfs(std::vector<std::pair<std::string, int>>& sentences, std::string& sentence,
-             TrieNode* node)
+    void backtrack(std::string& sentence, TrieNode* node)
     {
-        if (!node)
-            return;
-
-        if (node->count > 0) {
-            sentences.push_back({sentence, node->count});
-        }
-        for (const auto& [c, ptr] : node->next) {
-            if (node->next[c]) {
-                sentence.push_back(c);
-                dfs(sentences, sentence, ptr.get());
-                sentence.pop_back();
+        if (node->times > 0) {
+            pq.emplace(sentence, node->times);
+            if (pq.size() > 3) {
+                pq.pop();
             }
+        }
+        for (const auto& [c, child] : node->next) {
+            sentence.push_back(c);
+            backtrack(sentence, child);
+            sentence.pop_back();
         }
     }
 
 private:
-    std::unique_ptr<TrieNode> root;
+    TrieNode* root;
+
+    using Pair = std::pair<std::string, int>; // <sentence, times>
+    struct Compare
+    {
+        bool operator()(const Pair& p1, const Pair& p2)
+        {
+            return p1.second == p2.second ? p1.first < p2.first : p1.second > p2.second;
+            ;
+        }
+    };
+    using PQ = std::priority_queue<Pair, std::vector<Pair>, Compare>;
+    PQ pq;
 };
 
 class AutocompleteSystem
 {
 public:
-    AutocompleteSystem(const std::vector<std::string>& sentences, const std::vector<int>& times)
+    AutocompleteSystem(std::vector<std::string>& sentences, std::vector<int>& times)
     {
         for (int i = 0; i < sentences.size(); ++i) {
             trie.insert(sentences[i], times[i]);
@@ -135,17 +137,17 @@ public:
     std::vector<std::string> input(char c)
     {
         if (c == '#') {
-            trie.insert(prefix, 1);
+            trie.insert(prefix);
             prefix.clear();
             return {};
         }
         prefix.push_back(c);
-        return trie.getSentencesWithPrefix(prefix, 3);
+        return trie.top3HotSentences(prefix);
     }
 
 private:
-    std::string prefix;
     Trie trie;
+    std::string prefix;
 };
 
 /**
