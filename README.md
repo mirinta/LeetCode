@@ -49,4 +49,4 @@ TODO:
 - [ ] Biweekly 118
 - [ ] No.2954
 - [ ] Biweekly 119
-- [ ] weekly 375
+- [x] weekly 375
