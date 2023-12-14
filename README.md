@@ -1,5 +1,22 @@
 # LeetCode
 
+Contests:
+
+- [ ] Biweekly 115
+- [ ] Weekly 367
+- [ ] Weekly 368
+- [ ] Biweekly 116
+- [ ] Weekly 369
+- [ ] Weekly 370
+- [ ] Biweekly 117
+- [x] Weekly 371 (2932~2935)
+- [x] Weekly 372 (2937~2940)
+- [ ] Biweekly 118
+- [x] Weekly 373 (2946~2950)
+- [ ] Weekly 374 (2951~2954)
+- [x] Biweekly 119 (2956~2959)
+- [x] Weekly 375 (2960~2963)
+
 TODO:
 
 - [ ] No.0028 (string), KMP/Rabin-Karp?
@@ -44,9 +61,5 @@ TODO:
 - [ ] No.255 (BST)
 - [ ] No.2916 (Segment tree)
 - [ ] No.2926 (DP)
-- [ ] Biweekly 117
 - [ ] No.2949
-- [ ] Biweekly 118
 - [ ] No.2954
-- [ ] Biweekly 119
-- [x] weekly 375
