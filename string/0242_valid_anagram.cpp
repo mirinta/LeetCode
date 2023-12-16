@@ -6,22 +6,25 @@
  *
  * An anagram is a word or phrase formed by rearranging the letters of a different word or phrase,
  * typically using all the original letters exactly once.
+ *
+ * ! 1 <= s.length, t.length <= 5 * 10^4
+ * ! s and t consist of lowercase English letters.
  */
 
 class Solution
 {
 public:
-    bool isAnagram(const std::string& s, const std::string& t)
+    bool isAnagram(std::string s, std::string t)
     {
         if (s.size() != t.size())
             return false;
 
-        std::unordered_map<char, int> freq;
+        std::unordered_map<char, int> map;
         for (const auto& c : s) {
-            freq[c]++;
+            map[c]++;
         }
         for (const auto& c : t) {
-            if (--freq[c] < 0)
+            if (!map.count(c) || --map[c] < 0)
                 return false;
         }
         return true;
