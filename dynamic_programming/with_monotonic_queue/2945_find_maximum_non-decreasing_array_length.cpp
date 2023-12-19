@@ -35,17 +35,13 @@ public:
         std::vector<int> dp(n + 1, 0);
         std::vector<int> last(n + 1, 0);
         std::deque<std::pair<int, long long>> deque; // <j, presum[j] + last[j]>
-        for (int i = 1, k = 0; i <= n; ++i) {
-            while (k < deque.size() && presum[i] >= deque[k].second) {
-                k++;
+        for (int i = 1, j = 0; i <= n; ++i) {
+            while (!deque.empty() && presum[i] >= deque.front().second) {
+                j = deque.front().first;
+                deque.pop_front();
             }
-            if (k >= 1) {
-                dp[i] = dp[deque[k - 1].first] + 1;
-                last[i] = presum[i] - presum[deque[k - 1].first];
-            } else {
-                dp[i] = 1;
-                last[i] = presum[i];
-            }
+            dp[i] = dp[j] + 1;
+            last[i] = presum[i] - presum[j];
             while (!deque.empty() && deque.back().second >= presum[i] + last[i]) {
                 deque.pop_back();
             }
