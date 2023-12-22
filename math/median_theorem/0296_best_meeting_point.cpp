@@ -26,6 +26,7 @@ public:
         // given a sequence {x1, x2, ..., xn}
         // we need to find xk to minimize |x1-xk| + |x2-xk| + ... + |xn-xk|
         // xk >= x1, ..., xk-1 and xk <= xk+1, ..., xn
+        // xk is the median of the given sequence
         const int m = grid.size();
         const int n = grid[0].size();
         std::vector<int> rows;

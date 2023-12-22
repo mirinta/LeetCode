@@ -21,19 +21,19 @@ public:
     {
         const int n = nums.size();
         std::sort(nums.begin(), nums.end());
-        long long count = 0;
-        int result = 1; // frequency >= 1
-        for (int i = 1, j = 0; i < n; ++i) {
-            // X X j X X X i-1 i
-            //     |<------->|
-            // nums[j:i-1] is already increased to nums[i-1]
-            // increase nums[j:i-1] to nums[i]
-            count += (i - j) * static_cast<long long>(nums[i] - nums[i - 1]);
-            while (count > k) {
-                count -= nums[i] - nums[j];
-                j++;
+        // find a subarray nums[i:j] and increase nums[i:j-1] to nums[j]
+        // check #operations <= k
+        // let x = nums[j]
+        // #operations = (x-nums[i]) + ... + (x-nums[j]) = (j-i+1)x - (nums[i] + ... + nums[j])
+        int result = 0;
+        long long sum = 0;
+        for (int left = 0, right = 0; right < n; ++right) {
+            sum += nums[right];
+            while (static_cast<long long>(right - left + 1) * nums[right] - sum > k) {
+                sum -= nums[left];
+                left++;
             }
-            result = std::max(result, i - j + 1);
+            result = std::max(result, right - left + 1);
         }
         return result;
     }
