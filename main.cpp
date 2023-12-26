@@ -7,4 +7,8 @@
 #include <unordered_set>
 #include <vector>
 
-int main() { return 0; }
+int main()
+{
+    std::cout << "LeetCode" << '\n';
+    return 0;
+}
