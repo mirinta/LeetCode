@@ -15,7 +15,7 @@ Contests:
 - [ ] Biweekly 116 (2913~2916): 2916 NOT DONE! 
 - [x] Weekly 369 (2917~2920)
 - [x] Weekly 370 (2923~2926)
-- [ ] Biweekly 117 
+- [x] Biweekly 117 (2928~2931)
 - [x] Weekly 371 (2932~2935)
 - [x] Weekly 372 (2937~2940)
 - [x] Biweekly 118 (2942~2945): 2945 GREAT!
