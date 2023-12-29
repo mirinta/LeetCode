@@ -25,7 +25,8 @@ Contests:
 - [x] Weekly 375 (2960~2963)
 - [x] Weekly 376 (2965~2968)
 - [ ] Biweekly 120
-- [ ] Biweekly 377
+- [ ] Weekly 377
+- [ ] Weekly 378
 
 TODO:
 
