@@ -23,6 +23,7 @@ class Solution
 public:
     long long incremovableSubarrayCount(std::vector<int>& nums)
     {
+        // similar to LC 1574
         const int n = nums.size();
         int i = 0;
         while (i + 1 < n && nums[i] < nums[i + 1]) {
