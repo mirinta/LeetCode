@@ -6,7 +6,6 @@ Contests:
 - [x] Weekly 351 (2748~2751)
 - [x] Weekly 352 (2760~2763)
 - [x] Biweekly 108 (2765~2768)
-...
 - [ ] Weekly 365 
 - [ ] Weekly 366 
 - [ ] Biweekly 115
@@ -25,7 +24,7 @@ Contests:
 - [x] Weekly 375 (2960~2963)
 - [x] Weekly 376 (2965~2968)
 - [x] Biweekly 120 (2970~2973)
-- [ ] Weekly 377
+- [ ] Weekly 377 (2974~2977)
 - [ ] Weekly 378
 
 TODO:
