@@ -30,6 +30,10 @@ Contests:
   - [x] 2976: Floyd-Warshall
   - [x] 2977: DP + Trie + Floyd-Warshall
 - [ ] Weekly 378
+  - [x] 2980: check if there exists at least two even numbers
+  - [ ] 2981
+  - [ ] 2982
+  - [ ] 2983
 
 TODO:
 
