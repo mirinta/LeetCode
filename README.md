@@ -24,16 +24,8 @@ Contests:
 - [x] Weekly 375 (2960~2963)
 - [x] Weekly 376 (2965~2968)
 - [x] Biweekly 120 (2970~2973)
-- [x] Weekly 377
-  - [x] 2974: sorting
-  - [x] 2975: 2D => 2x1D, sorting
-  - [x] 2976: Floyd-Warshall
-  - [x] 2977: DP + Trie + Floyd-Warshall
-- [ ] Weekly 378
-  - [x] 2980: check if there exists at least two even numbers
-  - [ ] 2981
-  - [ ] 2982
-  - [ ] 2983
+- [x] Weekly 377 (2974~2977)
+- [ ] Weekly 378 (2980~2983): 2983 NOT DONE
 
 TODO:
 
