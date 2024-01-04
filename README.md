@@ -25,7 +25,7 @@ Contests:
 - [x] Weekly 376 (2965~2968)
 - [x] Biweekly 120 (2970~2973)
 - [x] Weekly 377 (2974~2977)
-- [ ] Weekly 378 (2980~2983): 2983 NOT DONE
+- [x] Weekly 378 (2980~2983): 2983 GREAT!
 
 TODO:
 
