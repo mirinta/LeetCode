@@ -36,20 +36,20 @@ public:
             minFreq = std::min(minFreq, freq);
         }
         // if freqA = 10 and freqB = 32, let sz = 10:
-        // - #groupsOfA = 1, reminder = 0 => 1 group, group.size = 10
-        // - #groupsOfB = 3, reminder = 2 => 3 groups, two of size 11, one of size 10, OK
+        // - #groupsOfA = 1, remainder = 0 => 1 group, group.size = 10
+        // - #groupsOfB = 3, remainder = 2 => 3 groups, two of size 11, one of size 10, OK
         // if freqA = 10 and freqB = 33, let sz = 10:
-        // - #groupsOfA = 1, reminder = 0 => 1 group, group.size = 10
-        // - #groupsOfB = 3, reminder = 3 => 3 groups, all of size 11, OK
+        // - #groupsOfA = 1, remainder = 0 => 1 group, group.size = 10
+        // - #groupsOfB = 3, remainder = 3 => 3 groups, all of size 11, OK
         // if freqA = 10 and freqB = 34, let sz = 10:
-        // - #groupsOfA = 1, reminder = 0 => 1 group, group.size = 10
-        // - #groupsOfB = 3, reminder = 4 => 4 groups, three of size 11, one of size 1, WRONG!
+        // - #groupsOfA = 1, remainder = 0 => 1 group, group.size = 10
+        // - #groupsOfB = 3, remainder = 4 => 4 groups, three of size 11, one of size 1, WRONG!
         for (int sz = minFreq; sz >= 1; --sz) {
             int result = 0;
             for (const auto& [_, freq] : map) {
-                const int reminder = freq % sz;
+                const int remainder = freq % sz;
                 const int groups = freq / sz;
-                if (reminder > groups) {
+                if (remainder > groups) {
                     result = 0;
                     break;
                 }

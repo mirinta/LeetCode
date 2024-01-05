@@ -35,8 +35,8 @@ public:
         while (true) {
             long long sum = 0;
             while (num) {
-                const long long reminder = n % 10;
-                sum += reminder * reminder;
+                const long long remainder = n % 10;
+                sum += remainder * remainder;
                 num /= 10;
             }
             if (sum == 1)

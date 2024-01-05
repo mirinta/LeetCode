@@ -77,8 +77,8 @@ private:
 
         for (const auto& d : divisors[length]) {
             int count = 0;
-            for (int reminder = 0; reminder < d; ++reminder) {
-                int left = start + reminder;
+            for (int remainder = 0; remainder < d; ++remainder) {
+                int left = start + remainder;
                 int right = left + length - d;
                 while (left < right) {
                     if (s[left] != s[right]) {
