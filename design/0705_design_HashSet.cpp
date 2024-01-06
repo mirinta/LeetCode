@@ -19,19 +19,26 @@
 class MyHashSet
 {
 public:
-    MyHashSet() : _container(1e6 + 1, false)
+    MyHashSet() {}
+
+    void add(int key) { data[hash(key)] = true; }
+
+    void remove(int key)
     {
-        // key in range [0, 1e6]
+        if (!contains(key))
+            return;
+
+        data[hash(key)] = false;
     }
 
-    void add(int key) { _container[key] = true; }
-
-    void remove(int key) { _container[key] = false; }
-
-    bool contains(int key) { return _container[key]; }
+    bool contains(int key) { return data[hash(key)]; }
 
 private:
-    std::vector<bool> _container;
+    static constexpr int kSize = 1e6 + 1;
+
+    int hash(int n) { return n % kSize; }
+
+    bool data[kSize] = {false};
 };
 
 /**

@@ -24,48 +24,29 @@
 class MyHashMap
 {
 public:
-    MyHashMap() : data(k_base) {}
+    MyHashMap() { std::memset(&data, -1, sizeof(data)); }
 
-    void put(int key, int value)
-    {
-        const int h = hash(key);
-        for (auto iter = data[h].begin(); iter != data[h].end(); ++iter) {
-            if (iter->first == key) {
-                iter->second = value;
-                return;
-            }
-        }
-        data[h].emplace_back(key, value);
-    }
+    void put(int key, int value) { data[hash(key)] = value; }
 
-    int get(int key)
-    {
-        const int h = hash(key);
-        for (auto iter = data[h].begin(); iter != data[h].end(); ++iter) {
-            if (iter->first == key)
-                return iter->second;
-        }
-        return -1;
-    }
+    int get(int key) { return data[hash(key)]; }
 
-    void remove(int key)
-    {
-        const int h = hash(key);
-        for (auto iter = data[h].begin(); iter != data[h].end(); ++iter) {
-            if (iter->first == key) {
-                data[h].erase(iter);
-                return;
-            }
-        }
-    }
+    void remove(int key) { data[hash(key)] = -1; }
 
 private:
-    static int hash(int key) { return key % k_base; }
+    static constexpr int kSize = 1e6 + 1;
 
-private:
-    static constexpr int k_base = 2048;
-    std::vector<std::list<std::pair<int, int>>> data;
+    int hash(int n) { return n % kSize; }
+
+    int data[kSize];
 };
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap* obj = new MyHashMap();
+ * obj->put(key,value);
+ * int param_2 = obj->get(key);
+ * obj->remove(key);
+ */
 
 /**
  * Your MyHashMap object will be instantiated and called as such:

@@ -1,38 +1,27 @@
-#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 /**
- * Given two integer arrays "nums1" and "nums2", return an array of their intersection. Each element
- * in the result must be unique and you may return the result in any order.
+ * Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in
+ * the result must be unique and you may return the result in any order.
+ *
+ * ! 1 <= nums1.length, nums2.length <= 1000
+ * ! 0 <= nums1[i], nums2[i] <= 1000
  */
 
 class Solution
 {
 public:
-    std::vector<int> intersection(const std::vector<int>& nums1, const std::vector<int>& nums2)
+    std::vector<int> intersection(std::vector<int>& nums1, std::vector<int>& nums2)
     {
-        if (nums1.empty() || nums2.empty())
-            return {};
-
+        std::unordered_set<int> set1(nums1.begin(), nums1.end());
+        std::unordered_set<int> set2(nums2.begin(), nums2.end());
         std::vector<int> result;
-        // approach 1: hash set
-        std::unordered_set<int> set(nums1.begin(), nums1.end());
-        for (const auto& i : nums2) {
-            if (set.erase(i)) {
-                result.push_back(i);
+        for (const auto& val : set2) {
+            if (set1.count(val)) {
+                result.push_back(val);
             }
         }
-        // approach 2: hash map
-        // std::unordered_map<int, int> map;
-        // for (const auto& i : nums1) {
-        //     map[i] = 1;
-        // }
-        // for (const auto& i : nums2) {
-        //     if (--map[i] == 0) {
-        //         result.push_back(i);
-        //     }
-        // }
         return result;
     }
 };
