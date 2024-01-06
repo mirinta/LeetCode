@@ -7,8 +7,8 @@ Contests:
 - [x] Weekly 352 (2760~2763)
 - [x] Biweekly 108 (2765~2768)
 - [x] Weekly 365 (2873~2876)
-- [ ] Weekly 366 (2894~2897)
-- [ ] Biweekly 115
+- [ ] Weekly 366 (2894~2897): 2896 and 2897 NOT DONE!
+- [ ] Biweekly 115 (2899~2902): 2902 NOT DONE!
 - [x] Weekly 367 (2903~2906)
 - [x] Weekly 368 (2908~2911)
 - [ ] Biweekly 116 (2913~2916): 2916 NOT DONE! 
