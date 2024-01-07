@@ -24,18 +24,14 @@ class Solution
 public:
     int removeElement(std::vector<int>& nums, int val)
     {
-        // two pointers:
-        // - keep: store elements that are not equal to "val"
-        // - scan: scan all elements
-        if (nums.empty())
-            return 0;
-
-        int keep = 0;
-        for (size_t scan = 0; scan < nums.size(); ++scan) {
-            if (nums[scan] != val) {
-                nums[keep++] = nums[scan];
+        const int n = nums.size();
+        int i = 0;
+        for (int j = 0; j < n; ++j) {
+            if (nums[j] != val) {
+                std::swap(nums[i], nums[j]);
+                i++;
             }
         }
-        return keep;
+        return i;
     }
 };

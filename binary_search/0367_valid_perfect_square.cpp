@@ -16,23 +16,23 @@ class Solution
 public:
     bool isPerfectSquare(int num)
     {
-        if (num < 2)
-            return true; // the constraint tells us 1 <= num <= INT_MAX
+        if (num == 1)
+            return true;
 
-        long long left = 2;
-        long long right = num / 2;
-        while (left <= right) {
-            long long mid = left + (right - left) / 2;
-            const long long product = mid * mid;
-            if (product == num)
+        int lo = 2;
+        int hi = num / 2;
+        while (lo <= hi) {
+            const long long mid = lo + (hi - lo) / 2;
+            const long long square = mid * mid;
+            if (square == num)
                 return true;
 
-            if (product > num) {
-                right = mid - 1;
+            if (square > num) {
+                hi = mid - 1;
             } else {
-                left = mid + 1;
+                lo = mid + 1;
             }
-        } // the loop is terminated when mid = right = left - 1
+        }
         return false;
     }
 };

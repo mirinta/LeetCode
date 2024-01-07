@@ -15,14 +15,11 @@ class Solution
 public:
     void moveZeroes(std::vector<int>& nums)
     {
-        int nonZero = 0;
-        for (const auto& val : nums) {
-            if (val != 0) {
-                nums[nonZero++] = val;
+        for (int i = 0, j = 0; j < nums.size(); ++j) {
+            if (nums[j] != 0) {
+                std::swap(nums[i], nums[j]);
+                i++;
             }
-        }
-        while (nonZero < nums.size()) {
-            nums[nonZero++] = 0;
         }
     }
 };

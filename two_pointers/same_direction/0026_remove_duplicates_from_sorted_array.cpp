@@ -21,17 +21,23 @@
 
 class Solution
 {
+public:
     int removeDuplicates(std::vector<int>& nums)
     {
-        if (nums.empty())
-            return 0;
+        if (nums.size() < 2)
+            return nums.size();
 
-        size_t slow = 0;
-        for (size_t fast = 0; fast < nums.size(); ++fast) {
-            if (nums[slow] != nums[fast]) {
-                nums[++slow] = nums[fast];
+        // duplicates are adjacent because the input array is sorted
+        const int n = nums.size();
+        int i = 0;
+        int j = 0;
+        while (j < n) {
+            nums[i] = nums[j];
+            while (j < n && nums[j] == nums[i]) {
+                j++;
             }
+            i++;
         }
-        return slow + 1;
+        return i;
     }
 };

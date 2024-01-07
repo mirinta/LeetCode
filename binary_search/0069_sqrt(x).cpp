@@ -19,8 +19,8 @@ public:
         int lo = 0;
         int hi = INT_MAX;
         while (lo <= hi) {
-            const long mid = lo + (hi - lo) / 2;
-            const long square = mid * mid;
+            const long long mid = lo + (hi - lo) / 2;
+            const long long square = mid * mid;
             if (square == x)
                 return mid;
 
