@@ -24,38 +24,36 @@ class Solution
 public:
     ListNode* detectCycle(ListNode* head)
     {
-        if (!head)
+        if (!head || !head->next)
             return nullptr;
 
         auto* slow = head;
         auto* fast = head;
-        bool hasCycle = false;
         while (fast && fast->next) {
             fast = fast->next->next;
             slow = slow->next;
-            if (slow == fast) {
-                hasCycle = true;
+            if (fast == slow)
                 break;
-            }
         }
-        if (!hasCycle)
-            return nullptr;
+        if (!fast || !fast->next)
+            return nullptr; // no cycle
 
-        // both slow and fast start at O,
-        // cycle begins at X,
-        // slow and fast meet at A
-        // O->...->X->...->A
-        //         |<-...<-|
-        // moving distance of slow = D
-        // moving distance of fast = 2D
-        // 2D = OX + XA + AX + XA (1)
-        //  D = OX + XA (2)
-        // (1)-(2): D = AX + XA (3)
-        // (2)-(3): OX = AX
+        // O is the head node
+        // X is the node where the cycle begins
+        // slow and fast meet at node M
+        //
+        // O -----> X ----> M
+        //          |       |
+        //          |       |
+        //          B <---- A
+        //
+        // dist_fast = OX + XM + MA + AB + BX + XM = 2 * dist_slow
+        // dist_slow = OX + XM
+        // MA + AB + BX + XM = OX + XM => OX = MA + MA + BX
         slow = head;
-        while (slow != fast) {
-            slow = slow->next;
+        while (fast != slow) {
             fast = fast->next;
+            slow = slow->next;
         }
         return slow;
     }

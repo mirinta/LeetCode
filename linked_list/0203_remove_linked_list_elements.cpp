@@ -13,46 +13,46 @@ struct ListNode
 /**
  * Given the "head" of a linked list and an integer "val", remove all the nodes of the linked list
  * that has "Node.val == val", and return the new head.
+ *
+ * ! The number of nodes in the list is in the range [0, 104].
+ * ! 1 <= Node.val <= 50
+ * ! 0 <= val <= 50
  */
 
 class Solution
 {
 public:
-    ListNode* removeElements(ListNode* head, int val)
-    {
-        // return removeElements_v2(head, val);
-        return removeElements_v1(head, val);
-    }
+    ListNode* removeElements(ListNode* head, int val) { return approach2(head, val); }
 
 private:
-    ListNode* removeElements_v1(ListNode* head, int val)
+    ListNode* approach2(ListNode* head, int val)
     {
-        if (!head)
-            return nullptr;
-
-        auto* node = removeElements(head->next, val);
-        if (head->val == val)
-            return node;
-
-        head->next = node;
-        return head;
+        ListNode vHead(-1);
+        auto* node = &vHead;
+        for (auto* i = head; i; i = i->next) {
+            if (i->val != val) {
+                node->next = i;
+                node = node->next;
+            }
+        }
+        node->next = nullptr;
+        return vHead.next;
     }
 
-    ListNode* removeElements_v2(ListNode* head, int val)
+    ListNode* approach1(ListNode* head, int val)
     {
-        if (!head)
-            return nullptr;
-
-        ListNode virtualHead(-1);
-        auto* current = &virtualHead;
-        for (auto* i = head; i; i = i->next) {
-            if (i->val == val)
-                continue;
-
-            current->next = i;
-            current = current->next;
+        while (head && head->val == val) {
+            head = head->next;
         }
-        current->next = nullptr; // this is important
-        return virtualHead.next;
+        auto* node = head;
+        while (node) {
+            auto* next = node->next;
+            while (next && next->val == val) {
+                next = next->next;
+            }
+            node->next = next;
+            node = node->next;
+        }
+        return head;
     }
 };

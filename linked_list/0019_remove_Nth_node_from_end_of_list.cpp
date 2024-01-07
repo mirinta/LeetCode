@@ -27,26 +27,23 @@ public:
     {
         ListNode vHead(-1);
         vHead.next = head;
-        auto* node = getKthNodeFromEnd(&vHead, n + 1);
-        node->next = node->next->next;
+        auto* prev = getKthNodeFromEnd(&vHead, n + 1);
+        prev->next = prev->next->next;
         return vHead.next;
     }
 
 private:
     ListNode* getKthNodeFromEnd(ListNode* head, int k)
     {
-        // index of the target node is n-k
-        // 0->...->k->...->n-1->NULL
-        // |<-k+1->|<-----n-k----->|
         auto* fast = head;
         for (int i = 0; i < k; ++i) {
             fast = fast->next;
-        } // fast is at index k
+        }
         auto* slow = head;
         while (fast) {
             fast = fast->next;
             slow = slow->next;
-        } // slow is at index n-k
+        }
         return slow;
     }
 };

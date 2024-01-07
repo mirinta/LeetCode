@@ -1,5 +1,3 @@
-#include <unordered_set>
-
 /**
  * Definition for singly-linked list.
  */
@@ -34,40 +32,15 @@ class Solution
 public:
     ListNode* getIntersectionNode(ListNode* headA, ListNode* headB)
     {
-        return approach2(headA, headB);
-    }
-
-private:
-    ListNode* approach2(ListNode* headA, ListNode* headB)
-    {
         if (!headA || !headB)
             return nullptr;
 
-        auto* iterA = headA;
-        auto* iterB = headB;
-        while (iterA != iterB) {
-            iterA = iterA ? iterA->next : headB;
-            iterB = iterB ? iterB->next : headA;
+        auto* a = headA;
+        auto* b = headB;
+        while (a != b) {
+            a = a ? a->next : headB;
+            b = b ? b->next : headA;
         }
-        return iterA;
-    }
-
-    ListNode* approach1(ListNode* headA, ListNode* headB)
-    {
-        if (!headA || !headB)
-            return nullptr;
-
-        std::unordered_set<ListNode*> set;
-        while (headA) {
-            set.insert(headA);
-            headA = headA->next;
-        }
-        while (headB) {
-            if (set.count(headB))
-                return headB;
-
-            headB = headB->next;
-        }
-        return nullptr;
+        return a;
     }
 };

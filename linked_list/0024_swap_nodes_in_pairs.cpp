@@ -22,41 +22,37 @@ struct ListNode
 class Solution
 {
 public:
-    ListNode* swapPairs(ListNode* head) { return approach2(head); }
+    ListNode* swapPairs(ListNode* head) { return approach1(head); }
 
 private:
-    // time O(N), space O(1)
     ListNode* approach2(ListNode* head)
     {
-        if (!head)
-            return nullptr;
+        if (!head || !head->next)
+            return head;
 
-        ListNode vHead(-1);
-        vHead.next = head;
-        auto* prev = &vHead;
-        auto* curr = head;
-        while (curr && curr->next) {
-            auto* next = curr->next;
-            curr->next = next->next;
-            next->next = curr;
-            prev->next = next;
-            prev = curr;
-            curr = curr->next;
-        }
-        return vHead.next;
+        auto* next = head->next;
+        head->next = swapPairs(next->next);
+        next->next = head;
+        return next;
     }
 
-    // time O(N), space O(N)
     ListNode* approach1(ListNode* head)
     {
         if (!head || !head->next)
             return head;
 
-        // before: A->B->[...]
-        //  after: B->A->[...]
-        auto* newHead = head->next;
-        head->next = approach1(head->next->next);
-        newHead->next = head;
-        return newHead;
+        ListNode vHead(-1);
+        auto* node = &vHead;
+        auto* curr = head;
+        while (curr && curr->next) {
+            auto* next = curr->next;
+            auto* nextNext = next->next;
+            node->next = next;
+            next->next = curr;
+            curr->next = nextNext;
+            node = curr;
+            curr = nextNext;
+        }
+        return vHead.next;
     }
 };

@@ -1,5 +1,3 @@
-#include <stack>
-
 /**
  * Definition for singly-linked list.
  */
@@ -22,11 +20,10 @@ struct ListNode
 class Solution
 {
 public:
-    ListNode* reverseList(ListNode* head) { return approach3(head); }
+    ListNode* reverseList(ListNode* head) { return approach2(head); }
 
 private:
-    // iterative, time O(N), space O(1)
-    ListNode* approach3(ListNode* head)
+    ListNode* approach2(ListNode* head)
     {
         if (!head)
             return nullptr;
@@ -42,38 +39,14 @@ private:
         return prev;
     }
 
-    // recursive, time O(N), space O(N)
-    ListNode* approach2(ListNode* head)
+    ListNode* approach1(ListNode* head)
     {
         if (!head || !head->next)
             return head;
 
-        auto* newHead = approach2(head->next);
+        auto* newHead = reverseList(head->next);
         head->next->next = head;
         head->next = nullptr;
         return newHead;
-    }
-
-    // stack, time O(N), space O(N)
-    ListNode* approach1(ListNode* head)
-    {
-        if (!head)
-            return nullptr;
-
-        std::stack<ListNode*> stack;
-        while (head) {
-            auto* next = head->next;
-            head->next = nullptr;
-            stack.push(head);
-            head = next;
-        }
-        ListNode vHead(-1);
-        auto* curr = &vHead;
-        while (!stack.empty()) {
-            curr->next = stack.top();
-            stack.pop();
-            curr = curr->next;
-        }
-        return vHead.next;
     }
 };
