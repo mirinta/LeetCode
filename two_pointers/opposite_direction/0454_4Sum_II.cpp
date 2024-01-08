@@ -8,27 +8,32 @@
  * - 0 <= i, j, k, l < n
  *
  * - nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0
+ *
+ * ! n == nums1.length
+ * ! n == nums2.length
+ * ! n == nums3.length
+ * ! n == nums4.length
+ * ! 1 <= n <= 200
+ * ! -2^28 <= nums1[i], nums2[i], nums3[i], nums4[i] <= 2^28
  */
 
 class Solution
 {
 public:
-    int fourSumCount(const std::vector<int>& nums1, const std::vector<int>& nums2,
-                     const std::vector<int>& nums3, const std::vector<int>& nums4)
+    int fourSumCount(std::vector<int>& nums1, std::vector<int>& nums2, std::vector<int>& nums3,
+                     std::vector<int>& nums4)
     {
-        int result = 0;
-        std::unordered_map<int, int> map; // key = sum in nums1 and nums2, value = frequency
-        for (const auto& i : nums1) {
-            for (const auto& j : nums2) {
-                map[i + j]++;
+        std::unordered_map<long long, int> map; // key = nums1[i]+nums2[j], value = frequency
+        for (int i = 0; i < nums1.size(); ++i) {
+            for (int j = 0; j < nums2.size(); ++j) {
+                map[(long long)nums1[i] + nums2[j]]++;
             }
         }
-        for (const auto& k : nums3) {
-            for (const auto& l : nums4) {
-                const auto target = -k - l;
-                if (map.count(target)) {
-                    result += map[target];
-                }
+        int result = 0;
+        for (int k = 0; k < nums3.size(); ++k) {
+            for (int l = 0; l < nums4.size(); ++l) {
+                const long long sum = (long long)nums3[k] + nums4[l];
+                result += map[-sum];
             }
         }
         return result;

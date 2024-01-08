@@ -18,27 +18,28 @@ class Solution
 public:
     std::vector<int> findAnagrams(std::string s, std::string p)
     {
-        std::unordered_map<char, int> map; // char of p, frequency
+        if (s.size() < p.size())
+            return {};
+
+        const int n = s.size();
+        std::unordered_map<char, int> map;
         for (const auto& c : p) {
             map[c]++;
         }
-        int count = 0;
-        int left = 0;
-        int right = 0;
         std::vector<int> result;
-        while (right < s.size()) {
-            while (right - left + 1 <= p.size()) {
-                const auto& charRight = s[right++];
-                if (map.count(charRight) && --map[charRight] == 0) {
-                    count++;
+        for (int left = 0, right = 0, unique = 0; right < n; ++right) {
+            if (map.count(s[right]) && --map[s[right]] == 0) {
+                unique++;
+            }
+            while (unique == map.size()) {
+                if (right - left + 1 == p.size()) {
+                    result.push_back(left);
                 }
-            }
-            if (count == map.size()) {
-                result.push_back(left);
-            }
-            const auto& charLeft = s[left++];
-            if (map.count(charLeft) && map[charLeft]++ == 0) {
-                count--;
+                if (map.count(s[left])) {
+                    unique += map[s[left]] == 0 ? -1 : 0;
+                    map[s[left]]++;
+                }
+                left++;
             }
         }
         return result;
