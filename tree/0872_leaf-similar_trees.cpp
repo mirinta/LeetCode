@@ -30,24 +30,24 @@ class Solution
 public:
     bool leafSimilar(TreeNode* root1, TreeNode* root2)
     {
-        std::vector<int> nodes1;
-        traverse(nodes1, root1);
-        std::vector<int> nodes2;
-        traverse(nodes2, root2);
-        return nodes1 == nodes2;
+        std::vector<int> leaves1;
+        preorder(leaves1, root1);
+        std::vector<int> leaves2;
+        preorder(leaves2, root2);
+        return leaves1 == leaves2;
     }
 
 private:
-    void traverse(std::vector<int>& nodes, TreeNode* node)
+    void preorder(std::vector<int>& leaves, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        if (!node->left && !node->right) {
-            nodes.push_back(node->val);
+        if (!root->left && !root->right) {
+            leaves.push_back(root->val);
             return;
         }
-        traverse(nodes, node->left);
-        traverse(nodes, node->right);
+        preorder(leaves, root->left);
+        preorder(leaves, root->right);
     }
 };
