@@ -29,25 +29,26 @@ class Solution
 public:
     int maxAncestorDiff(TreeNode* root)
     {
-        // assume we are standing at node B,
-        // and A0->A1->...->An are ancestors of B
-        // we want to maximize |Ai.val - B.val|,
-        // it is either |Ai_max - B.val| or |Ai_min - B.val|
         int result = INT_MIN;
-        dfs(result, root->val, root->val, root);
+        dfs(result, root);
         return result;
     }
 
 private:
-    void dfs(int& result, int min, int max, TreeNode* root)
+    // find <min, max> value of the given tree
+    std::pair<int, int> dfs(int& result, TreeNode* root)
     {
         if (!root)
-            return;
+            return {INT_MAX, INT_MIN};
 
+        if (!root->left && !root->right)
+            return {root->val, root->val};
+
+        const auto [leftMin, leftMax] = dfs(result, root->left);
+        const auto [rightMin, rightMax] = dfs(result, root->right);
+        const int min = std::min(leftMin, rightMin);
+        const int max = std::max(leftMax, rightMax);
         result = std::max({result, std::abs(root->val - min), std::abs(root->val - max)});
-        min = std::min(min, root->val);
-        max = std::max(max, root->val);
-        dfs(result, min, max, root->left);
-        dfs(result, min, max, root->right);
+        return {std::min(root->val, min), std::max(root->val, max)};
     }
 };
