@@ -7,17 +7,17 @@ Contests:
 - [x] Weekly 352 (2760~2763)
 - [x] Biweekly 108 (2765~2768)
 - [x] Weekly 365 (2873~2876)
-- [ ] Weekly 366 (2894~2897): 2896 and 2897 NOT DONE!
-- [ ] Biweekly 115 (2899~2902): 2902 NOT DONE!
+- [ ] Weekly 366 (2894~2897): 2896 and 2897 are NOT DONE!
+- [ ] Biweekly 115 (2899~2902): 2902 is NOT DONE!
 - [x] Weekly 367 (2903~2906)
 - [x] Weekly 368 (2908~2911)
-- [ ] Biweekly 116 (2913~2916): 2916 NOT DONE! 
+- [ ] Biweekly 116 (2913~2916): 2916 is NOT DONE! 
 - [x] Weekly 369 (2917~2920)
 - [x] Weekly 370 (2923~2926)
 - [x] Biweekly 117 (2928~2931)
 - [x] Weekly 371 (2932~2935)
 - [x] Weekly 372 (2937~2940)
-- [x] Biweekly 118 (2942~2945): 2945 GREAT!
+- [x] Biweekly 118 (2942~2945): 2945 is GREAT!
 - [x] Weekly 373 (2946~2950)
 - [x] Weekly 374 (2951~2954)
 - [x] Biweekly 119 (2956~2959)
@@ -25,13 +25,14 @@ Contests:
 - [x] Weekly 376 (2965~2968)
 - [x] Biweekly 120 (2970~2973)
 - [x] Weekly 377 (2974~2977)
-- [x] Weekly 378 (2980~2983): 2983 GREAT!
-- [ ] Biweekly 121
-- [ ] Weekly 379
+- [x] Weekly 378 (2980~2983): 2983 is GREAT!
+- [ ] Biweekly 121 (2996~2999): 2999 is NOT DONE!
+- [ ] Weekly 379 (3000~3003): 3003 is NOT DONE!
+- [ ] Weekly 380
 
 TODO:
 
-- [ ] No.0028 (string), KMP/Rabin-Karp?
+- [x] No.0028 (string), KMP
 - [ ] No.0370 (array)
 - [ ] No.1094 (array)
 - [ ] No.1089 (array)
