@@ -17,8 +17,8 @@
  * that at least one element exists when this method is called). Each element must have the same
  * probability of being returned.
  *
- * ! You must implement the functions of the class such that each function works in average O(1)
- * ! time complexity.
+ * You must implement the functions of the class such that each function works in average O(1) time
+ * complexity.
  *
  * ! -2^31 <= val <= 2^31 - 1
  * ! At most 2 * 10^5 calls will be made to insert, remove, and getRandom.
@@ -28,44 +28,42 @@
 class RandomizedSet
 {
 public:
-    RandomizedSet()
-    {
-        std::random_device rd;
-        gen = std::mt19937(rd());
-    }
+    RandomizedSet() : gen(rd()) {}
 
     bool insert(int val)
     {
-        if (valToIndex.count(val))
+        if (map.count(val))
             return false;
 
+        map[val] = data.size();
         data.push_back(val);
-        valToIndex[val] = data.size() - 1;
         return true;
     }
 
     bool remove(int val)
     {
-        if (!valToIndex.count(val))
+        if (!map.count(val))
             return false;
 
-        valToIndex[data.back()] = valToIndex[val];
-        std::swap(data.back(), data[valToIndex[val]]);
+        const int index = map[val];
+        map[data.back()] = index;
+        map.erase(val);
+        std::swap(data.back(), data[index]);
         data.pop_back();
-        valToIndex.erase(val);
         return true;
     }
 
     int getRandom()
     {
-        std::uniform_int_distribution<int> dist(0, data.size() - 1);
-        return data[dist(gen)];
+        std::uniform_int_distribution<> distrib(0, data.size() - 1);
+        return data[distrib(gen)];
     }
 
 private:
-    std::vector<int> data;
-    std::unordered_map<int, int> valToIndex;
+    std::random_device rd;
     std::mt19937 gen;
+    std::vector<int> data;
+    std::unordered_map<int, int> map; // value to index
 };
 
 /**
