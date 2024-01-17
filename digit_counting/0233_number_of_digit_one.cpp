@@ -13,27 +13,34 @@ class Solution
 public:
     int countDigitOne(int n)
     {
-        // n = X X X X X, in decimal form
-        // - f(i, n) = amount of numbers in range [1, n], and the ith digit of them are 1
-        // - the final result = sum(f(1,n), f(2,n), ..., f(n,n))
-        // - #NOTICE#, i is 1-indexed and it is counted from right to left
-        // for example, consider f(3, 23?47):
-        // 2 3 ? 4 7
-        // Y Y 1 X X
-        // - YY in range [0~22] and XX in range [0~99] are valid, 23*100
-        // - if YY = 23:
-        //   if ? = 0, no valid XX
-        //   if ? = 1, XX in range [0~47] are valid, 48
-        //   if ? > 1, XX in range [0~99] are valid, 100
-        const std::string str = std::to_string(n);
+        // given the ith digit of n = n[i]
+        // count the num of x such that x <= n and x[i] = 1
+        // n (decimal): |<--LEFT-->| i |<--RIGHT-->|
+        // x (decimal): |<-x_left->| 1 |<-x_right->|
+        // if n[i] >= 2,
+        // - x_left can be [0,LEFT], x_right can be any number with digits(RIGHT)
+        // - e.g. digits of RIGHT = 3, then x_right can be [0,999]
+        // - count = (LEFT+1) * 10^(digits of RIGHT)
+        // if n[i] = 1,
+        // - x_left can be [0,LEFT-1], x_right can be any number with digits(RIGHT)
+        // - x_left can be LEFT, x_right can be [0,RIGHT]
+        // - count = LEFT * 10^(digits of RIGHT) + (RIGHT+1)
+        // if n[i] = 0,
+        // - x_left can be [0,LEFT-1], x_right can be any number with digits(RIGHT)
+        // - count = LEFT * 10^(digits of RIGHT)
+        const auto s = std::to_string(n);
         int result = 0;
-        for (int i = 1; i <= str.size(); ++i) {
-            const int yy = n / std::pow(10, i);
-            result += yy * std::pow(10, i - 1);
-            if (str[str.size() - i] - '0' == 1) {
-                result += n % static_cast<int>(std::pow(10, i - 1)) + 1;
-            } else if (str[str.size() - i] - '0' > 1) {
-                result += std::pow(10, i - 1);
+        long long powerOf10 = 1;
+        for (int i = 0; i < s.size(); ++i, powerOf10 *= 10) {
+            const int left = i == s.size() - 1 ? 0 : n / (powerOf10 * 10);
+            const int right = i == 0 ? 0 : n % powerOf10;
+            const int digit = s[s.size() - 1 - i] - '0';
+            if (digit >= 2) {
+                result += (left + 1) * powerOf10;
+            } else if (digit == 1) {
+                result += left * powerOf10 + right + 1;
+            } else {
+                result += left * powerOf10;
             }
         }
         return result;
