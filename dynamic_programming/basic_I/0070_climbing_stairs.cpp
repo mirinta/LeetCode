@@ -14,28 +14,23 @@ public:
     int climbStairs(int n) { return approach2(n); }
 
 private:
-    // Fibonacci, time O(N), space O(1)
+    // DP with space optimization, TC = O(N), SC = O(1)
     int approach2(int n)
     {
-        if (n <= 1)
-            return 1;
-
-        int iMinus2 = 1;
         int iMinus1 = 1;
-        int result = 0;
+        int iMinus2 = 1;
         for (int i = 2; i <= n; ++i) {
-            result = iMinus1 + iMinus2;
+            const int dp = iMinus1 + iMinus2;
             iMinus2 = iMinus1;
-            iMinus1 = result;
+            iMinus1 = dp;
         }
-        return result;
+        return iMinus1;
     }
 
-    // DP, time O(N), space O(N)
+    // DP, TC = O(N), SC = O(N)
     int approach1(int n)
     {
-        // 0 1 2 ... X ... n
-        // dp[i] = num of ways to climb a staircase with n steps
+        // dp[i] = distinct ways to climb to the top of a staircase with i steps
         std::vector<int> dp(n + 1, 0);
         dp[0] = 1;
         dp[1] = 1;
