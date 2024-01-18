@@ -27,7 +27,7 @@ Contests:
 - [x] Weekly 377 (2974~2977)
 - [x] Weekly 378 (2980~2983): 2983 is GREAT!
 - [ ] Biweekly 121 (2996~2999): 2999 is NOT DONE!
-- [ ] Weekly 379 (3000~3003): 3003 is NOT DONE!
+- [x] Weekly 379 (3000~3003)
 - [x] Weekly 380 (3005~3008): 3007 is GREAT!
 
 TODO:
