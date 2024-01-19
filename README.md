@@ -26,15 +26,15 @@ Contests:
 - [x] Biweekly 120 (2970~2973)
 - [x] Weekly 377 (2974~2977)
 - [x] Weekly 378 (2980~2983): 2983 is GREAT!
-- [ ] Biweekly 121 (2996~2999): 2999 is NOT DONE!
+- [x] Biweekly 121 (2996~2999)
 - [x] Weekly 379 (3000~3003)
 - [x] Weekly 380 (3005~3008): 3007 is GREAT!
 
 TODO:
 
 - [x] No.0028 (string), KMP
-- [ ] No.0370 (array)
-- [ ] No.1094 (array)
+- [x] No.0370 (array)
+- [x] No.1094 (array)
 - [ ] No.1089 (array)
 - [ ] No.0124 (binary tree)
 - [ ] No.0297 (binary tree), try other methods
