@@ -29,6 +29,8 @@ Contests:
 - [x] Biweekly 121 (2996~2999)
 - [x] Weekly 379 (3000~3003)
 - [x] Weekly 380 (3005~3008): 3007 is GREAT!
+- [ ] Biweekly 122
+- [ ] Weekly 381
 
 TODO:
 
