@@ -19,21 +19,15 @@ class Solution
 public:
     int connectSticks(std::vector<int>& sticks)
     {
-        if (sticks.size() < 2)
-            return 0;
-
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq(sticks.begin(), sticks.end());
         int result = 0;
-        std::priority_queue<int, std::vector<int>, std::greater<>> pq; // min heap
-        for (const auto& length : sticks) {
-            pq.push(length);
-        }
         while (pq.size() >= 2) {
-            int cost = pq.top();
+            const int x = pq.top();
             pq.pop();
-            cost += pq.top();
+            const int y = pq.top();
             pq.pop();
-            result += cost;
-            pq.push(cost);
+            result += x + y;
+            pq.push(x + y);
         }
         return result;
     }
