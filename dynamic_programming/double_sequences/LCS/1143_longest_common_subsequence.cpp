@@ -32,14 +32,14 @@ private:
         const int m = s1.size();
         const int n = s2.size();
         std::vector<int> dp(n + 1, 0);
-        auto prev = dp;
+        std::vector<int> prev(n + 1, 0);
         for (int i = 1; i <= m; ++i) {
-            prev = dp;
+            prev.assign(dp.begin(), dp.end());
             for (int j = 1; j <= n; ++j) {
                 if (s1[i - 1] == s2[j - 1]) {
                     dp[j] = 1 + prev[j - 1];
                 } else {
-                    dp[j] = std::max(prev[j], dp[j - 1]);
+                    dp[j] = std::max({prev[j], dp[j - 1], prev[j - 1]});
                 }
             }
         }
@@ -59,7 +59,7 @@ private:
                 if (s1[i - 1] == s2[j - 1]) {
                     dp[i][j] = 1 + dp[i - 1][j - 1];
                 } else {
-                    dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);
+                    dp[i][j] = std::max({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]});
                 }
             }
         }
