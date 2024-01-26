@@ -50,7 +50,7 @@ private:
     {
         long long result = 1;
         long long base = a;
-        while (b) {
+        while (b > 0) {
             if (b & 1) {
                 result = result * base % mod;
             }
