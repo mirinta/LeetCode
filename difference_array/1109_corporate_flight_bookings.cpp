@@ -22,14 +22,16 @@ class Solution
 public:
     std::vector<int> corpFlightBookings(std::vector<std::vector<int>>& bookings, int n)
     {
-        // let diff[i] = seats[i]-seats[i-1]
-        // when we add add value x to seats[i:j],
-        // we need seats[j+1] -= x and seats[i] += x
-        std::vector<int> diff(n, 0); // diff[i] = seats[i]-seats[i-1]
+        // seats[i] = total num of seats reserved for flight i
+        // diff[i] = seats[i] - seats[i-1], diff[0] = seats[i]
+        std::vector<int> diff(n, 0);
         for (const auto& booking : bookings) {
-            diff[booking[0] - 1] += booking[2];
-            if (booking[1] < n) {
-                diff[booking[1]] -= booking[2];
+            const int from = booking[0] - 1; // to 0-indexed
+            const int to = booking[1] - 1;   // to 0-indexed
+            const int seats = booking[2];
+            diff[from] += seats;
+            if (to + 1 < n) {
+                diff[to + 1] -= seats;
             }
         }
         for (int i = 1; i < n; ++i) {

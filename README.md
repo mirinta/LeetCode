@@ -11,7 +11,7 @@ Contests:
 - [ ] Biweekly 115 (2899~2902): 2902 is NOT DONE!
 - [x] Weekly 367 (2903~2906)
 - [x] Weekly 368 (2908~2911)
-- [ ] Biweekly 116 (2913~2916): 2916 is NOT DONE! 
+- [x] Biweekly 116 (2913~2916)
 - [x] Weekly 369 (2917~2920)
 - [x] Weekly 370 (2923~2926)
 - [x] Biweekly 117 (2928~2931)
@@ -31,6 +31,7 @@ Contests:
 - [x] Weekly 380 (3005~3008): 3007 is GREAT!
 - [x] Biweekly 122 (3010~3013)
 - [ ] Weekly 381 (3014~3017): 3017 is NOT DONE!
+- [ ] Weekly 382 (3019~3022)
 
 TODO:
 
@@ -49,7 +50,7 @@ TODO:
 - [x] No.0146 (LRU Cache)
 - [ ] No.0460 (LFU Cache)
 - [x] No.1143 (LCS)
-- [x] No.1035 (LCS, DP)
+- [x] No.1035 (LCS, DP) 
 - [x] No.0518 (DP), turn into a Knapsack problem
 - [x] No.2140 (DP, iterate in reverse order)
 - [x] No.2466 (DP)

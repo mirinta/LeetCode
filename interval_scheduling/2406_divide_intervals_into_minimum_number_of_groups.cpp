@@ -23,18 +23,23 @@ class Solution
 public:
     int minGroups(std::vector<std::vector<int>>& intervals)
     {
-        std::vector<std::pair<int, int>> stamps;
-        stamps.reserve(intervals.size() * 2);
+        // min num of groups = max num of overlapping intervals at the same time
+        const int n = intervals.size();
+        std::vector<std::pair<int, int>> timestamps; // <time, +1/-1 flag>
+        timestamps.reserve(2 * n);
         for (const auto& interval : intervals) {
-            stamps.emplace_back(interval[0], 1);
-            stamps.emplace_back(interval[1], -1);
+            timestamps.emplace_back(interval[0], 1);
+            timestamps.emplace_back(interval[1], -1);
         }
-        std::sort(stamps.begin(), stamps.end(), [](const auto& p1, const auto& p2) {
-            return p1.first == p2.first ? p1.second > p2.second : p1.first < p2.first;
+        std::sort(timestamps.begin(), timestamps.end(), [](const auto& t1, const auto& t2) {
+            if (t1.first == t2.first)
+                return t1.second > t2.second; // process +1 flag first
+
+            return t1.first < t2.first;
         });
         int result = 0;
         int count = 0;
-        for (const auto& [pos, flag] : stamps) {
+        for (const auto& [time, flag] : timestamps) {
             count += flag;
             result = std::max(result, count);
         }
