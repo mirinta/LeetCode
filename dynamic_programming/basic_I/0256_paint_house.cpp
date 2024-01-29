@@ -26,7 +26,7 @@ public:
     int minCost(std::vector<std::vector<int>>& costs) { return approach2(costs); }
 
 private:
-    // DP with space optimization, time O(N), space O(1)
+    // DP with space optimization, TC = O(N), SC = O(1)
     int approach2(const std::vector<std::vector<int>>& costs)
     {
         const int n = costs.size();
@@ -44,15 +44,14 @@ private:
         return std::min({red, blue, green});
     }
 
-    // DP, time O(N), space O(N)
+    // DP, TC = O(N), SC = O(N)
     int approach1(const std::vector<std::vector<int>>& costs)
     {
+        // dp[i][0] = min cost to paint houses[0:i-1] and house[i-1] is painted with red
+        // dp[i][1] = min cost to paint houses[0:i-1] and house[i-1] is painted with blue
+        // dp[i][2] = min cost to paint houses[0:i-1] and house[i-1] is painted with green
         const int n = costs.size();
-        // dp[i][0] = min cost to paint house[0:i) while the last house is painted with red
-        // dp[i][1] = min cost to paint house[0:i) while the last house is painted with blue
-        // dp[i][2] = min cost to paint house[0:i) while the last house is painted with green
-        std::vector<std::array<int, 3>> dp(1 + n, {INT_MAX, INT_MAX, INT_MAX});
-        dp[0] = {0, 0, 0};
+        std::vector<std::array<int, 3>> dp(n + 1, {0, 0, 0});
         for (int i = 1; i <= n; ++i) {
             dp[i][0] = costs[i - 1][0] + std::min(dp[i - 1][1], dp[i - 1][2]);
             dp[i][1] = costs[i - 1][1] + std::min(dp[i - 1][0], dp[i - 1][2]);

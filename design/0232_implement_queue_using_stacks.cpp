@@ -21,40 +21,65 @@
  *
  * - Depending on your language, the stack may not be supported natively. You may simulate a stack
  * using a list or deque as long as you use only a stack's standard operations.
+ *
+ * ! 1 <= x <= 9
+ * ! At most 100 calls will be made to push, pop, peek, and empty.
+ * ! All the calls to pop and peek are valid.
  */
 
 class MyQueue
 {
 public:
-    MyQueue() = default;
+    MyQueue() {}
 
     void push(int x) { in.push(x); }
 
     int pop()
     {
-        if (out.empty()) {
-            for (; !in.empty(); in.pop()) {
-                out.push(in.top());
-            }
-        }
-        const auto val = out.top();
+        if (empty())
+            return -1;
+
+        const int result = peek();
         out.pop();
-        return val;
+        return result;
     }
 
     int peek()
     {
-        const auto val = pop();
-        out.push(val);
-        return val;
+        if (empty())
+            return -1;
+
+        process();
+        return out.top();
     }
 
     bool empty() { return in.empty() && out.empty(); }
 
 private:
+    void process()
+    {
+        if (!out.empty())
+            return;
+
+        while (!in.empty()) {
+            out.push(in.top());
+            in.pop();
+        }
+    }
+
+private:
     std::stack<int> in;
     std::stack<int> out;
 };
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->peek();
+ * bool param_4 = obj->empty();
+ */
 
 /**
  * Your MyQueue object will be instantiated and called as such:
