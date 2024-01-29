@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <vector>
 
 /**
@@ -33,12 +34,48 @@ class Solution
 public:
     long long maxPower(std::vector<int>& stations, int r, int k)
     {
-        // guess the final answer: min power of each city
+        return approach2(stations, r, k);
+    }
+
+private:
+    // binary search + sliding window, TC = O(NlogK), SC = O(N)
+    long long approach2(const std::vector<int>& stations, int r, int k)
+    {
+        auto isValid = [](long long min, int r, int k, std::vector<int> stations) {
+            // ... i-r i-r+1 ... i i+1 ... i+r i+r+1...
+            //     |<----------------------->|
+            //         |<------------------------->|
+            // power[i] = sum of stations[i-r:i+r]
+            const int n = stations.size();
+            long long power = 0;
+            for (int i = 0; i < std::min(n, r); ++i) {
+                power += stations[i];
+            }
+            for (int i = 0; i < n; ++i) {
+                if (i + r < n) {
+                    power += stations[i + r];
+                }
+                if (i - r - 1 >= 0) {
+                    power -= stations[i - r - 1];
+                }
+                if (power >= min)
+                    continue;
+
+                const long long extra = min - power;
+                if (extra > k)
+                    return false;
+
+                power += extra;
+                stations[std::min(n - 1, i + r)] += extra;
+                k -= extra;
+            }
+            return true;
+        };
         long long lo = 0;
         long long hi = LLONG_MAX;
         while (lo < hi) {
-            const auto mid = hi - (hi - lo) / 2;
-            if (isValid(stations, r, k, mid)) {
+            const long long mid = hi - (hi - lo) / 2;
+            if (isValid(mid, r, k, stations)) {
                 lo = mid;
             } else {
                 hi = mid - 1;
@@ -47,36 +84,60 @@ public:
         return lo;
     }
 
-private:
-    bool isValid(std::vector<int> stations, int r, int k, long long minLimit)
+    // binary search + prefix sum + difference array, TC = O(NlogK), SC = O(N)
+    long long approach1(const std::vector<int>& stations, int r, int k)
     {
-        // check if power[i] >= minLimit
-        // if power[i] < min, use the k additional power stations to make power[i+r] = minLimit
         const int n = stations.size();
-        // i-r-1 i-r X X X i X X X i+r
-        //       |<------window----->|
-        long long sum = 0;
-        for (int i = 0; i < std::min(n, r); ++i) {
-            sum += stations[i];
+        std::vector<long long> presum(n + 1, 0);
+        for (int i = 1; i <= n; ++i) {
+            presum[i] = presum[i - 1] + stations[i - 1];
         }
+        std::vector<long long> power(n, 0);
         for (int i = 0; i < n; ++i) {
-            if (i + r < n) {
-                sum += stations[i + r];
-            }
-            if (i - r - 1 >= 0) {
-                sum -= stations[i - r - 1];
-            }
-            if (sum >= minLimit)
-                continue;
-
-            const auto delta = minLimit - sum;
-            if (delta > k)
-                return false;
-
-            stations[std::min(n - 1, i + r)] += delta;
-            k -= delta;
-            sum = minLimit;
+            // power[i] = sum of stations[i-r:i+r]
+            power[i] = presum[std::min(n - 1, i + r) + 1] - presum[std::max(0, i - r)];
         }
-        return true;
+        std::vector<long long> diff(n, 0); // diff[i] = power[i] - power[i-1]
+        diff[0] = power[0];
+        for (int i = 1; i < n; ++i) {
+            diff[i] = power[i] - power[i - 1];
+        }
+        // check the min power of a city >= min, after building k more stations
+        auto isValid = [](long long min, int r, int k, std::vector<long long> diff) {
+            const int n = diff.size();
+            for (int i = 0; i < n; ++i) {
+                diff[i] += i > 0 ? diff[i - 1] : 0; // diff[i] = power[i]
+                if (diff[i] >= min)
+                    continue;
+
+                const long long extra = min - diff[i];
+                if (extra > k)
+                    return false;
+
+                // build extra stations at city j
+                // we don't want city j covers city[0:i-1],
+                // because power[0:i-1] are already >= min
+                const int j = std::min(n - 1, i + r);
+                diff[i] += extra;
+                const int hi = std::min(n - 1, j + r);
+                if (hi + 1 < n) {
+                    diff[hi + 1] -= extra;
+                }
+                k -= extra;
+            }
+            return true;
+        };
+        // guess the final answer
+        long long lo = *std::min_element(power.begin(), power.end());
+        long long hi = lo + k;
+        while (lo < hi) {
+            const long long mid = hi - (hi - lo) / 2;
+            if (isValid(mid, r, k, diff)) {
+                lo = mid;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        return lo;
     }
 };
