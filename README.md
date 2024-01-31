@@ -31,7 +31,7 @@ Contests:
 - [x] Weekly 380 (3005~3008): 3007 is GREAT!
 - [x] Biweekly 122 (3010~3013)
 - [ ] Weekly 381 (3014~3017): 3017 is NOT DONE!
-- [ ] Weekly 382 (3019~3022)
+- [ ] Weekly 382 (3019~3022): 3022 is NOT DONE!
 
 TODO:
 

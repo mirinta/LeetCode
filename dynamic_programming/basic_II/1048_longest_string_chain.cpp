@@ -28,23 +28,23 @@ class Solution
 public:
     int longestStrChain(std::vector<std::string>& words)
     {
+        // dp[word] = length of the longest word chain ending at word
         std::sort(words.begin(), words.end(),
                   [](const auto& s1, const auto& s2) { return s1.size() < s2.size(); });
-        // dp[word] = longest length of word chain that ends with "word"
-        int result = 1;
         std::unordered_map<std::string, int> dp;
+        int result = 0;
         for (const auto& word : words) {
             if (!dp.count(word)) {
-                dp[word] = 1;
+                dp[word] = 1; // single word is a valid word chain with length = 1
             }
             for (int i = 0; i < word.size(); ++i) {
-                std::string predecessor(word);
-                predecessor.erase(i, 1);
-                if (dp.count(predecessor)) {
-                    dp[word] = std::max(dp[predecessor] + 1, dp[word]);
-                    result = std::max(result, dp[word]);
+                auto expectedPredecessor = word;
+                expectedPredecessor.erase(i, 1);
+                if (dp.count(expectedPredecessor)) {
+                    dp[word] = std::max(dp[expectedPredecessor] + 1, dp[word]);
                 }
             }
+            result = std::max(result, dp[word]);
         }
         return result;
     }
