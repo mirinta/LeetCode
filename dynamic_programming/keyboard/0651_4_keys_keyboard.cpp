@@ -22,14 +22,16 @@ class Solution
 public:
     int maxA(int n)
     {
-        // dp[i] = max num of 'A' we can print on the screen by pressing i keys
-        std::vector<int> dp(1 + n, 0);
+        // dp[i] = max num of 'A' we can print with at most i presses
+        // X X X j-3 Ctrl+A Ctrl+C j X X X X X X X i
+        //                         |<--all Ctrl+V->|
+        // dp[i] = dp[j-3] + dp[j-3] * (i-j+1) = dp[j-3] * (i-j+2)
+        std::vector<int> dp(n + 1, 0);
+        for (int i = 0; i <= n; ++i) {
+            dp[i] = i; // base case, we can print at least i 'A''s with i presses
+        }
         for (int i = 1; i <= n; ++i) {
-            dp[i] = i; // press A
-            for (int j = i - 1; j - 3 >= 1; --j) {
-                // X X X j-3 CtrlA CtrlC j X X X X i
-                //                       |<-CtrlV->|
-                // #A = dp[j-3] + (i-j+1) * dp[j-3]
+            for (int j = i - 1; j - 3 >= 0; --j) {
                 dp[i] = std::max(dp[i], dp[j - 3] * (i - j + 2));
             }
         }

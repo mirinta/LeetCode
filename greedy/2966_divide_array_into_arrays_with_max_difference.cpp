@@ -26,16 +26,13 @@ public:
     std::vector<std::vector<int>> divideArray(std::vector<int>& nums, int k)
     {
         const int n = nums.size();
-        if (n % 3 != 0)
-            return {};
-
         std::sort(nums.begin(), nums.end());
         std::vector<std::vector<int>> result;
-        for (int i = 1; i + 1 < n; i += 3) {
-            if (nums[i + 1] - nums[i - 1] > k)
+        for (int i = 0; i + 2 < n; i += 3) {
+            if (nums[i + 2] - nums[i] > k)
                 return {};
 
-            result.push_back({nums[i - 1], nums[i], nums[i + 1]});
+            result.emplace_back(nums.begin() + i, nums.begin() + i + 3);
         }
         return result;
     }
