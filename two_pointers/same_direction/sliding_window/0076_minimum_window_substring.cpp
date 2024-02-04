@@ -17,28 +17,32 @@ class Solution
 public:
     std::string minWindow(std::string s, std::string t)
     {
+        if (t.size() > s.size())
+            return {};
+
         std::unordered_map<char, int> map;
         for (const auto& c : t) {
             map[c]++;
         }
+        const int m = s.size();
+        int unique = 0;
         int minLength = INT_MAX;
-        int start = -1;
-        for (int left = 0, right = 0, unique = 0; right < s.size(); ++right) {
+        int minStart = -1;
+        for (int left = 0, right = 0; right < m; ++right) {
             if (map.count(s[right]) && --map[s[right]] == 0) {
                 unique++;
             }
             while (unique == map.size()) {
-                if (right - left + 1 < minLength) {
+                if (minLength > right - left + 1) {
                     minLength = right - left + 1;
-                    start = left;
+                    minStart = left;
                 }
-                if (map.count(s[left])) {
-                    unique += map[s[left]] == 0 ? -1 : 0;
-                    map[s[left]]++;
+                if (map.count(s[left]) && ++map[s[left]] > 0) {
+                    unique--;
                 }
                 left++;
             }
         }
-        return minLength == INT_MAX ? "" : s.substr(start, minLength);
+        return minLength == INT_MAX ? "" : s.substr(minStart, minLength);
     }
 };
