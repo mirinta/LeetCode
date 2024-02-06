@@ -42,17 +42,15 @@ private:
 
     std::string encode(const std::string& s)
     {
-        // counting sort
-        constexpr int R = 26;
-        std::array<int, R> count{0};
+        std::array<int, 26> count{0};
         for (const auto& c : s) {
             count[c - 'a']++;
         }
         std::string result;
-        for (int i = 0; i < R; ++i) {
+        for (int i = 0; i < 26; ++i) {
             if (count[i] > 0) {
                 result.push_back(i + 'a');
-                result.push_back(count[i]);
+                result.append(std::to_string(count[i]));
             }
         }
         return result;

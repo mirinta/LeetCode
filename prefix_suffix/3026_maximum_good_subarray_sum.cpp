@@ -19,26 +19,30 @@ class Solution
 public:
     long long maximumSubarraySum(std::vector<int>& nums, int k)
     {
+        // given index j, we need to find index i
+        // such that i <= j and nums[i] = nums[j] +/- k
+        // let presum[i] = sum of nums[0:i-1]
+        // score = sum of nums[i:j] = presum[j+1] - presum[i]
+        // since j is fixed, we need min of presum[i] to maximize score
         const int n = nums.size();
-        // presum[i] = sum of nums[0:i-1]
         std::vector<long long> presum(n + 1, 0);
         for (int i = 1; i <= n; ++i) {
             presum[i] = presum[i - 1] + nums[i - 1];
         }
-        std::unordered_map<int, long long> map; // nums[i] to min presum[i]
+        std::unordered_map<int, long long> map; // <nums[i], min of presum[i]>
         long long result = LLONG_MIN;
-        // given nums[j], nums[i] = nums[j] + k or nums[j] - k
-        // to maximize the sum of nums[i:j] = presum[j+1] - presum[i]
-        // we want the min value of presum[i]
         for (int j = 0; j < n; ++j) {
-            if (map.find(nums[j] + k) != map.end()) {
-                result = std::max(result, presum[j + 1] - map[nums[j] + k]);
+            for (const auto& val : {nums[j] + k, nums[j] - k}) {
+                if (map.find(val) == map.end())
+                    continue;
+
+                result = std::max(result, presum[j + 1] - map[val]);
             }
-            if (map.find(nums[j] - k) != map.end()) {
-                result = std::max(result, presum[j + 1] - map[nums[j] - k]);
+            if (map.find(nums[j]) == map.end()) {
+                map[nums[j]] = presum[j];
+            } else {
+                map[nums[j]] = std::min(map[nums[j]], presum[j]);
             }
-            map[nums[j]] =
-                map.find(nums[j]) == map.end() ? presum[j] : std::min(map[nums[j]], presum[j]);
         }
         return result == LLONG_MIN ? 0 : result;
     }
