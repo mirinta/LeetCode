@@ -73,17 +73,13 @@ private:
     {
         const int n = s.size();
         std::vector<int> next(n, 0);
+        next[0] = 0;
         for (int i = 1; i < n; ++i) {
-            if (s[i] == s[next[i - 1]]) {
-                next[i] = next[i - 1] + 1;
-                continue;
+            int L = next[i - 1];
+            while (L >= 1 && s[i] != s[L]) {
+                L = next[L - 1];
             }
-            for (int j = next[i - 1] - 1; j >= 0; --j) {
-                if (s[i] == s[next[j]]) {
-                    next[i] = next[j] + 1;
-                    break;
-                }
-            }
+            next[i] = L + (s[i] == s[L]);
         }
         return next;
     }
