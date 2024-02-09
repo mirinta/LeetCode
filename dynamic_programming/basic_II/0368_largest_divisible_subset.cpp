@@ -22,50 +22,48 @@ public:
     std::vector<int> largestDivisibleSubset(std::vector<int>& nums) { return approach2(nums); }
 
 private:
-    // space optimization of approach1
+    // DP with space optimization, TC = O(N^2), SC = O(N)
     std::vector<int> approach2(std::vector<int>& nums)
     {
-        if (nums.empty())
-            return {};
-
-        std::sort(nums.begin(), nums.end());
         const int n = nums.size();
-        // dp[i] = length of largest divisible subset that ends with nums[i]
-        std::vector<int> dp(n, 1);
-        int largestIndex = 0;
-        int largestSize = 0;
+        std::sort(nums.begin(), nums.end());
+        // dp[i] = length of the largest valid subset of nums[0:i] ending at nums[i]
+        std::vector<int> dp(n, 1); // single element is a valid subset
+        int maxLength = 0;
+        int maxIndex = 0;
         for (int i = 0; i < n; ++i) {
             for (int j = i - 1; j >= 0; --j) {
                 if (nums[i] % nums[j] != 0)
                     continue;
 
-                dp[i] = std::max(dp[i], dp[j] + 1);
+                dp[i] = std::max(dp[i], 1 + dp[j]);
             }
-            if (dp[i] > largestSize) {
-                largestSize = dp[i];
-                largestIndex = i;
+            if (dp[i] > maxLength) {
+                maxLength = dp[i];
+                maxIndex = i;
             }
         }
-        // reconstruct the largest subset
+        // reconstruct the result (in any order)
         std::vector<int> result;
-        int prev = nums[largestIndex];
-        for (int i = largestIndex, size = largestSize; i >= 0 && size > 0; --i) {
-            if (prev % nums[i] == 0 && size == dp[i]) {
-                size--;
+        result.reserve(maxLength);
+        for (int i = maxIndex, len = maxLength; i >= 0; --i) {
+            if (result.empty() || (dp[i] == len && result.back() % nums[i] == 0)) {
                 result.push_back(nums[i]);
-                prev = nums[i];
+                len--;
             }
         }
         return result;
     }
-
+    // DP, TC = O(N^2), SC = O(N^2)
     std::vector<int> approach1(std::vector<int>& nums)
     {
+        const int n = nums.size();
         std::sort(nums.begin(), nums.end());
-        const auto n = nums.size();
-        // dp[i][j] = largest divisible subset that ends with nums[i]
-        // X X X i
+        // dp[i] = largest valid subset of nums[0:i] ending at nums[i]
+        // #NOTE# subset with single element is valid
         std::vector<std::vector<int>> dp(n);
+        int maxIndex = 0;
+        int maxLength = 0;
         for (int i = 0; i < n; ++i) {
             for (int j = i - 1; j >= 0; --j) {
                 if (nums[i] % nums[j] != 0)
@@ -76,15 +74,11 @@ private:
                 }
             }
             dp[i].push_back(nums[i]);
-        }
-        size_t index = 0;
-        size_t size = 0;
-        for (size_t i = 0; i < n; ++i) {
-            if (dp[i].size() > size) {
-                index = i;
-                size = dp[i].size();
+            if (dp[i].size() > maxLength) {
+                maxLength = dp[i].size();
+                maxIndex = i;
             }
         }
-        return dp[index];
+        return dp[maxIndex];
     }
 };
