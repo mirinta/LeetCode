@@ -17,20 +17,24 @@ class Solution
 public:
     int subarraySum(std::vector<int>& nums, int k)
     {
-        // START ... Z Z X X X X ... X
-        // |<-prefix'->| |<--target->|
-        // |<---------prefix-------->|
-        std::unordered_map<int, int> map;
-        map[0] = 1;
-        int prefix = 0;
+        // similar to LC 930
+        // but the sliding window doesn't work because
+        // there are negative number is nums that makes the sum
+        // doesn't grow monotonically with the window size
+        const int n = nums.size();
+        std::vector<int> presum(n + 1, 0);
+        for (int i = 1; i <= n; ++i) {
+            presum[i] = presum[i - 1] + nums[i - 1];
+        }
+        std::unordered_map<int, int> map; // frequency of presum[x]
+        map[0] = 1;                       // for cases that presum[i+1] - k = 0
         int result = 0;
-        for (const auto& val : nums) {
-            prefix += val;
-            const int diff = prefix - k;
-            if (map.count(diff)) {
-                result += map[diff];
+        for (int i = 0; i < n; ++i) {
+            const int target = presum[i + 1] - k;
+            if (map.find(target) != map.end()) {
+                result += map[target];
             }
-            map[prefix]++;
+            map[presum[i + 1]]++;
         }
         return result;
     }
