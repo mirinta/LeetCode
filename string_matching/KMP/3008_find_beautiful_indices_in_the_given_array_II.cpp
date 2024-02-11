@@ -64,6 +64,7 @@ private:
             }
             if (j == p.size()) {
                 result.push_back(i - p.size());
+                j = next[p.size() - 1];
             }
         }
         return result;
