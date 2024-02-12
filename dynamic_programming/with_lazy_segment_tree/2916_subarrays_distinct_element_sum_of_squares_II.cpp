@@ -10,7 +10,7 @@
  * <= j < nums.length. Then the number of distinct values in nums[i..j] is called the distinct count
  * of nums[i..j]. Return the sum of the squares of distinct counts of all subarrays of nums.
  *
- * Since the answer may be very large, return it modulo 109 + 7.
+ * Since the answer may be very large, return it modulo 10^9 + 7.
  *
  * A subarray is a contiguous non-empty sequence of elements within an array.
  *

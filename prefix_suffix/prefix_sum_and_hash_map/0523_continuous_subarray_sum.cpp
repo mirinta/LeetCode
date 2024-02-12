@@ -29,24 +29,26 @@ class Solution
 public:
     bool checkSubarraySum(std::vector<int>& nums, int k)
     {
-        // 0 X ... X X j-1 j X X ... X i
-        // |<--prefix'-->| |<--target->|
-        // |<---------prefix-------->|
-        // - Assume there is a subarray nums[j:i],
-        //   let prefix'=sum[0:j-1] and prefix=sum[j:i]
-        //   then the sum of this subarray is prefix-prefix'.
-        // - If the sum of this subarray is a multiple of k,
-        //   then prefix-prefix' is a multiple of k,
-        //   it means prefix % k = prefix' % k.
-        std::unordered_map<int, int> map; // remainder to index j
-        map[0] = 0;
-        int prefix = 0;
-        for (int i = 0; i < nums.size(); ++i) {
-            prefix += nums[i];
-            const int remainder = prefix % k;
+        // let sum[i] = sum of nums[0:i]
+        // given sum[i] % k = remainder,
+        // if map[remainder] = j, it means sum[j] % k = sum[i] % k
+        // then (sum[i] - sum[j]) % k = 0, the valid subarray is nums[j+1:i]
+        // it must have at least elements, i.e., i-j >= 2
+        // corner case:
+        // sum[i] % k = 0, the valid subarray is nums[0:i], length = i+1
+        // thus, we initialize map[0] = -1
+        const int n = nums.size();
+        std::unordered_map<int, int> map; // remainder to index
+        map[0] = -1;
+        int sum = 0;
+        for (int i = 0; i < n; ++i) {
+            sum += nums[i];
+            const int remainder = sum % k;
             if (!map.count(remainder)) {
-                map[remainder] = i + 1;
-            } else if (i - map[remainder] + 1 >= 2)
+                map[remainder] = i;
+                continue;
+            }
+            if (i - map[remainder] >= 2)
                 return true;
         }
         return false;

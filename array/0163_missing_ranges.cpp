@@ -10,7 +10,7 @@
  * no element of nums is included in any of the ranges, and each missing number is covered by one of
  * the ranges.
  *
- * ! -109 <= lower <= upper <= 109
+ * ! -10^9 <= lower <= upper <= 10^9
  * ! 0 <= nums.length <= 100
  * ! lower <= nums[i] <= upper
  * ! All the values of nums are unique.

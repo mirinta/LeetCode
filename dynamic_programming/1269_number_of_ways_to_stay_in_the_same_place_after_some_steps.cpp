@@ -6,7 +6,7 @@
  * not be placed outside the array at any time).
  *
  * Given two integers steps and arrLen, return the number of ways such that your pointer is still at
- * index 0 after exactly steps steps. Since the answer may be too large, return it modulo 109 + 7.
+ * index 0 after exactly steps steps. Since the answer may be too large, return it modulo 10^9 + 7.
  *
  * ! 1 <= steps <= 500
  * ! 1 <= arrLen <= 10^6

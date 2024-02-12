@@ -7,7 +7,7 @@
  * ball.
  *
  * Given the five integers m, n, maxMove, startRow, startColumn, return the number of paths to move
- * the ball out of the grid boundary. Since the answer can be very large, return it modulo 109 + 7.
+ * the ball out of the grid boundary. Since the answer can be very large, return it modulo 10^9 + 7.
  *
  * ! 1 <= m, n <= 50
  * ! 0 <= maxMove <= 50

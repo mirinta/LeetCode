@@ -10,7 +10,7 @@
  * Calculate the total area covered by all rectangles in the plane. Any area covered by two or more
  * rectangles should only be counted once.
  *
- * Return the total area. Since the answer may be too large, return it modulo 109 + 7.
+ * Return the total area. Since the answer may be too large, return it modulo 10^9 + 7.
  *
  * ! 1 <= rectangles.length <= 200
  * ! rectanges[i].length == 4

@@ -34,7 +34,7 @@ Contests:
 - [ ] Weekly 382 (3019~3022): 3022 is NOT DONE!
 - [x] Biweekly 123 (3024~3027)
 - [x] Weekly 383 (3028~3031)
-- [ ] Weekly 384 (3033~3037): 3036 is NOT DONE!
+- [x] Weekly 384 (3033~3037)
 
 TODO:
 
@@ -86,3 +86,4 @@ TODO:
 Great problems:
 
 - [x] No.1504 (DP + Monotonic stack)
+- [x] No.523 (Prefix sum + Hash map)
