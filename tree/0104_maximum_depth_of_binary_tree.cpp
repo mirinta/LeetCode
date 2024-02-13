@@ -1,4 +1,4 @@
-#include <queue>
+#include <utility>
 
 /**
  * Definition for a binary tree node.
@@ -26,44 +26,16 @@ struct TreeNode
 class Solution
 {
 public:
-    int maxDepth(TreeNode* root)
-    {
-        // return bfs(root);
-        return dfs(root);
-    }
+    int maxDepth(TreeNode* root) { return dfs(root); }
 
 private:
-    // approach1, post-order traversal
     int dfs(TreeNode* root)
     {
         if (!root)
             return 0;
 
-        return 1 + std::max(dfs(root->left), dfs(root->right));
-    }
-
-    // approach2, level-order traversal
-    int bfs(TreeNode* root)
-    {
-        if (!root)
-            return 0;
-
-        int result = 0;
-        std::queue<TreeNode*> queue;
-        queue.push(root);
-        while (!queue.empty()) {
-            for (int i = queue.size(); i > 0; --i) {
-                auto* node = queue.front();
-                queue.pop();
-                if (node->left) {
-                    queue.push(node->left);
-                }
-                if (node->right) {
-                    queue.push(node->right);
-                }
-            }
-            result++;
-        }
-        return result;
+        const int leftDepth = dfs(root->left);
+        const int rightDepth = dfs(root->right);
+        return 1 + std::max(leftDepth, rightDepth);
     }
 };

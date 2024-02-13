@@ -30,36 +30,40 @@
 class MyStack
 {
 public:
-    MyStack() = default;
+    MyStack() {}
 
-    // time O(N)
     void push(int x)
     {
-        const auto size = queue.size();
-        queue.push(x);
-        for (size_t i = 0; i < size; ++i) {
-            const auto val = queue.front();
-            queue.pop();
-            queue.push(val);
+        const int n = data.size();
+        data.push(x);
+        for (int i = 0; i < n; ++i) {
+            data.push(data.front());
+            data.pop();
         }
     }
 
-    // time O(1)
     int pop()
     {
-        const auto val = queue.front();
-        queue.pop();
-        return val;
+        if (empty())
+            return -1;
+
+        const int result = data.front();
+        data.pop();
+        return result;
     }
 
-    // time O(1)
-    int top() { return queue.front(); }
+    int top()
+    {
+        if (empty())
+            return -1;
 
-    // time O(1)
-    bool empty() { return queue.empty(); }
+        return data.front();
+    }
+
+    bool empty() { return data.empty(); }
 
 private:
-    std::queue<int> queue;
+    std::queue<int> data;
 };
 
 /**

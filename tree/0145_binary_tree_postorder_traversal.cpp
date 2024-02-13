@@ -1,3 +1,4 @@
+#include <stack>
 #include <vector>
 
 /**
@@ -14,30 +15,55 @@ struct TreeNode
 };
 
 /**
- * Given the "root" of a binary tree, return the postorder traversal of its nodes' values.
+ * Given the root of a binary tree, return the postorder traversal of its nodes' values.
+ *
+ * ! The number of the nodes in the tree is in the range [0, 100].
+ * ! -100 <= Node.val <= 100
  */
 
 class Solution
 {
 public:
-    std::vector<int> postorderTraversal(TreeNode* root)
+    std::vector<int> postorderTraversal(TreeNode* root) { return approach2(root); }
+
+private:
+    std::vector<int> approach2(TreeNode* root)
     {
         if (!root)
             return {};
 
         std::vector<int> result;
-        traverse(result, root);
+        std::stack<TreeNode*> stack;
+        stack.push(root);
+        while (!stack.empty()) {
+            auto* node = stack.top();
+            stack.pop();
+            result.push_back(node->val);
+            if (node->left) {
+                stack.push(node->left);
+            }
+            if (node->right) {
+                stack.push(node->right);
+            }
+        }
+        std::reverse(result.begin(), result.end());
         return result;
     }
 
-private:
-    void traverse(std::vector<int>& result, TreeNode* node)
+    std::vector<int> approach1(TreeNode* root)
+    {
+        std::vector<int> result;
+        postorder(result, root);
+        return result;
+    }
+
+    void postorder(std::vector<int>& values, TreeNode* node)
     {
         if (!node)
             return;
 
-        traverse(result, node->left);
-        traverse(result, node->right);
-        result.push_back(node->val);
+        postorder(values, node->left);
+        postorder(values, node->right);
+        values.push_back(node->val);
     }
 };

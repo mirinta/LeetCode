@@ -1,3 +1,4 @@
+#include <queue>
 #include <vector>
 
 /**
@@ -27,41 +28,52 @@ public:
  * farthest leaf node.
  *
  * Nary-Tree input serialization is represented in their level order traversal, each group of
- * children is separated by the null value.
+ * children is separated by the null value (See examples).
+ *
+ * ! The total number of nodes is in the range [0, 10^4].
+ * ! The depth of the n-ary tree is less than or equal to 1000.
  */
 
 class Solution
 {
 public:
-    int maxDepth(Node* root)
+    int maxDepth(Node* root) { return approach2(root); }
+
+private:
+    // BFS, TC = O(N), SC = O(N)
+    int approach2(Node* root)
     {
         if (!root)
             return 0;
 
-        // approach 2: recursion
-        int depth = 0;
-        for (auto* node : root->children) {
-            depth = std::max(depth, maxDepth(node));
+        std::queue<Node*> queue;
+        queue.push(root);
+        int result = 0;
+        while (!queue.empty()) {
+            for (int i = queue.size(); i > 0; --i) {
+                auto* node = queue.front();
+                queue.pop();
+                for (auto* child : node->children) {
+                    if (child) {
+                        queue.push(child);
+                    }
+                }
+            }
+            result++;
         }
-        return depth + 1;
+        return result;
+    }
 
-        // approach 1: level order traversal
-        // std::queue<Node*> queue;
-        // queue.push(root);
-        // int maxDepth = 0;
-        // while (!queue.empty()) {
-        //     const auto size = queue.size();
-        //     for (size_t i = 0; i < size; ++i) {
-        //         auto* node = queue.front();
-        //         queue.pop();
-        //         for (auto* child : node->children) {
-        //             if (child) {
-        //                 queue.push(child);
-        //             }
-        //         }
-        //     }
-        //     maxDepth++;
-        // }
-        // return maxDepth;
+    // DFS, TC = O(N), SC = O(N)
+    int approach1(Node* root)
+    {
+        if (!root)
+            return 0;
+
+        int result = 0;
+        for (auto* child : root->children) {
+            result = std::max(result, approach1(child));
+        }
+        return result + 1;
     }
 };

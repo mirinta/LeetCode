@@ -42,11 +42,10 @@ public:
         std::queue<Node*> queue;
         queue.push(root);
         while (!queue.empty()) {
-            const int size = queue.size();
-            for (int i = 0; i < size; ++i) {
+            for (int i = queue.size(); i > 0; --i) {
                 auto* node = queue.front();
                 queue.pop();
-                if (i < size - 1) {
+                if (i > 1) {
                     node->next = queue.front();
                 }
                 if (node->left) {

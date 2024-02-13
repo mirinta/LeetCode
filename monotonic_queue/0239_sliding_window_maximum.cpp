@@ -19,30 +19,21 @@ public:
     std::vector<int> maxSlidingWindow(std::vector<int>& nums, int k)
     {
         const int n = nums.size();
-        std::deque<int> deque; // monotonic queue, store index
-        for (int i = 0; i < k; ++i) {
-            addToDeque(deque, i, nums);
-        }
-        if (deque.empty())
-            return {};
-
-        std::vector<int> result{nums[deque.front()]};
-        for (int i = k; i < n; ++i) {
-            if (deque.front() == i - k) {
-                deque.pop_front();
+        std::vector<int> result;
+        result.reserve(n - k);
+        std::deque<int> dq; // dq.front() is the index of the max element
+        for (int i = 0; i < n; ++i) {
+            if (!dq.empty() && dq.front() == i - k) {
+                dq.pop_front();
             }
-            addToDeque(deque, i, nums);
-            result.push_back(nums[deque.front()]);
+            while (!dq.empty() && nums[dq.back()] <= nums[i]) {
+                dq.pop_back();
+            }
+            dq.push_back(i);
+            if (i >= k - 1) {
+                result.emplace_back(nums[dq.front()]);
+            }
         }
         return result;
-    }
-
-private:
-    void addToDeque(std::deque<int>& deque, int index, const std::vector<int>& nums)
-    {
-        while (!deque.empty() && nums[index] >= nums[deque.back()]) {
-            deque.pop_back();
-        }
-        deque.push_back(index);
     }
 };

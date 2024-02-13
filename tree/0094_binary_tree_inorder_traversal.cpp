@@ -34,16 +34,16 @@ private:
 
         std::vector<int> result;
         std::stack<TreeNode*> stack;
-        auto* node = root;
-        while (node || !stack.empty()) {
-            while (node) {
-                stack.push(node);
-                node = node->left;
+        auto* curr = root;
+        while (curr || !stack.empty()) {
+            while (curr) {
+                stack.push(curr);
+                curr = curr->left;
             }
-            auto* top = stack.top();
+            auto* node = stack.top();
             stack.pop();
-            result.push_back(top->val);
-            node = top->right;
+            result.push_back(node->val);
+            curr = node->right;
         }
         return result;
     }
@@ -51,17 +51,17 @@ private:
     std::vector<int> approach1(TreeNode* root)
     {
         std::vector<int> result;
-        traverse(result, root);
+        inorder(result, root);
         return result;
     }
 
-    void traverse(std::vector<int>& result, TreeNode* node)
+    void inorder(std::vector<int>& values, TreeNode* node)
     {
         if (!node)
             return;
 
-        traverse(result, node->left);
-        result.push_back(node->val);
-        traverse(result, node->right);
+        inorder(values, node->left);
+        values.push_back(node->val);
+        inorder(values, node->right);
     }
 };

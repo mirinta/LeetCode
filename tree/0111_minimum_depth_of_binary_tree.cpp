@@ -31,22 +31,27 @@ public:
     int minDepth(TreeNode* root) { return approach2(root); }
 
 private:
-    // DFS, time O(N), space O(N)
+    // DFS, TC = O(N), SC = O(N)
     int approach2(TreeNode* root)
     {
-        if (!root)
-            return 0;
-
-        if (!root->left)
-            return 1 + approach2(root->right);
-
-        if (!root->right)
-            return 1 + approach2(root->left);
-
-        return 1 + std::min(approach2(root->left), approach2(root->right));
+        int result = INT_MAX;
+        dfs(result, root, 1);
+        return result == INT_MAX ? 0 : result;
     }
 
-    // BFS, time O(N), space O(N)
+    void dfs(int& result, TreeNode* node, int count)
+    {
+        if (!node)
+            return;
+
+        if (!node->left && !node->right) {
+            result = std::min(result, count);
+        }
+        dfs(result, node->left, count + 1);
+        dfs(result, node->right, count + 1);
+    }
+
+    // BFS, TC = O(N), SC = O(N)
     int approach1(TreeNode* root)
     {
         if (!root)

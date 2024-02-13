@@ -28,55 +28,53 @@ public:
     bool isSymmetric(TreeNode* root) { return approach2(root); }
 
 private:
-    // BFS, time O(N), space O(N)
+    // BFS, TC = O(N), SC = O(N)
     bool approach2(TreeNode* root)
     {
         if (!root)
-            return true;
+            return false;
 
         std::queue<TreeNode*> queue;
         queue.push(root);
         while (!queue.empty()) {
-            const int n = queue.size();
-            std::vector<int> nums(n);
-            for (int i = 0; i < n; ++i) {
+            std::vector<int> values(queue.size());
+            for (auto& val : values) {
                 auto* node = queue.front();
                 queue.pop();
-                nums[i] = node ? node->val : INT_MIN; // Node.val is in the range [-100,100]
+                val = node ? node->val : INT_MIN;
                 if (node) {
                     queue.push(node->left);
                     queue.push(node->right);
                 }
             }
-            for (int i = 0, j = n - 1; i <= j; ++i, --j) {
-                if (nums[i] != nums[j])
+            for (int i = 0, j = values.size() - 1; i < j; ++i, --j) {
+                if (values[i] != values[j])
                     return false;
             }
         }
         return true;
     }
 
-    // DFS, time O(N), space O(N)
+    // DFS, TC = O(N), SC = O(N)
     bool approach1(TreeNode* root)
     {
         if (!root)
-            return true;
+            return false;
 
         return dfs(root->left, root->right);
     }
 
-    bool dfs(TreeNode* p, TreeNode* q)
+    bool dfs(TreeNode* node1, TreeNode* node2)
     {
-        if (!p && !q)
+        if (!node1 && !node2)
             return true;
 
-        if (!p || !q)
+        if (!node1 || !node2)
             return false;
 
-        if (p->val != q->val)
+        if (node1->val != node2->val)
             return false;
 
-        // symmetric: p->left is the same as q->right, and p->right is the same as q->left
-        return dfs(p->left, q->right) && dfs(p->right, q->left);
+        return dfs(node1->left, node2->right) && dfs(node1->right, node2->left);
     }
 };

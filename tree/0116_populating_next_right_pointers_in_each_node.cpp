@@ -37,56 +37,34 @@ public:
  * next pointer should be set to nullptr.
  *
  * Initially, all next pointers are set to nullptr.
+ *
+ * ! The number of nodes in the tree is in the range [0, 2^12 - 1].
+ * ! -1000 <= Node.val <= 1000
  */
 
 class Solution
 {
 public:
-    // approach 1: BFS
-    // Node* connect(Node* root)
-    // {
-    //     if (!root)
-    //         return nullptr;
-
-    //     std::queue<Node*> queue;
-    //     queue.push(root);
-    //     while (!queue.empty()) {
-    //         const auto size = queue.size();
-    //         // connect the nodes on the same level {X0, X1, ..., Xn}
-    //         // Xi->next = X(i+1), for the last node, Xn->next = nullptr
-    //         for (size_t i = 0; i < size; ++i) {
-    //             auto* node = queue.front();
-    //             queue.pop();
-    //             node->next = i == size - 1 ? nullptr : queue.front();
-    //             if (node->left) {
-    //                 queue.push(node->left);
-    //             }
-    //             if (node->right) {
-    //                 queue.push(node->right);
-    //             }
-    //         }
-    //     }
-    //     return root;
-    // }
-    // approach 2: "trinary" tree
     Node* connect(Node* root)
     {
         if (!root)
             return nullptr;
 
-        traverse(root->left, root->right);
+        std::queue<Node*> queue;
+        queue.push(root);
+        while (!queue.empty()) {
+            for (int i = queue.size(); i > 0; --i) {
+                auto* node = queue.front();
+                queue.pop();
+                node->next = i == 1 ? nullptr : queue.front();
+                if (node->left) {
+                    queue.push(node->left);
+                }
+                if (node->right) {
+                    queue.push(node->right);
+                }
+            }
+        }
         return root;
-    }
-
-private:
-    void traverse(Node* node1, Node* node2)
-    {
-        if (!node1 || !node2)
-            return;
-
-        node1->next = node2;
-        traverse(node1->left, node1->right); // connect the child nodes of the same parent
-        traverse(node2->left, node2->right); // connect the child nodes of the same parent
-        traverse(node1->right, node2->left); // connect the child nodes of different parent nodes
     }
 };

@@ -86,4 +86,4 @@ TODO:
 Great problems:
 
 - [x] No.1504 (DP + Monotonic stack)
-- [x] No.523 (Prefix sum + Hash map)
+- [x] No.1124 (Prefix sum + Monotonic stack)
