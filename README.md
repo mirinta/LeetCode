@@ -80,10 +80,10 @@ TODO:
 - [ ] No.255 (BST)
 - [ ] No.2916 (Segment tree)
 - [ ] No.2926 (DP)
-- [ ] No.2949
 - [ ] No.2954
 
 Great problems:
 
 - [x] No.1504 (DP + Monotonic stack)
 - [x] No.1124 (Prefix sum + Monotonic stack)
+- [x] No.2949 (Prefix sum + Hash table)
