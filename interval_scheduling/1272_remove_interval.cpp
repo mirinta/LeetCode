@@ -27,18 +27,22 @@ public:
         const auto start = toBeRemoved[0];
         const auto end = toBeRemoved[1];
         for (const auto& interval : intervals) {
-            // [a, b) and a < b
             const auto a = interval[0];
             const auto b = interval[1];
             if ((b <= start) || (a >= end)) {
-                // #NOTE# b == start or a == end is OK
+                //       start----end
+                // a1----b1        a2----b2
                 result.push_back(interval);
                 continue;
             }
             if (a < start) {
+                //    start----end
+                // a--------b
                 result.push_back({a, start});
             }
             if (b > end) {
+                //    start----end
+                //           a-------b
                 result.push_back({end, b});
             }
         }

@@ -27,12 +27,8 @@ public:
     long long largestPerimeter(std::vector<int>& nums)
     {
         const int n = nums.size();
-        std::sort(nums.begin(), nums.end());
-        // search i from right to left,
-        // if nums[0:i] is a valid polygon then it is the polygon which has the largest perimeter
-        // - condition 1: i >= 2
-        // - condition 2: sum[0:i-1] > nums[i] => sum[0:i] - nums[i] > nums[i]
         long long sum = std::accumulate(nums.begin(), nums.end(), 0LL);
+        std::sort(nums.begin(), nums.end());
         for (int i = n - 1; i >= 2; --i) {
             if (sum - nums[i] > nums[i])
                 return sum;
