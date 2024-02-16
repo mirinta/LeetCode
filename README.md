@@ -86,4 +86,5 @@ Great problems:
 
 - [x] No.1504 (DP + Monotonic stack)
 - [x] No.1124 (Prefix sum + Monotonic stack)
-- [x] No.2949 (Prefix sum + Hash table)
+- [x] No.2949 (Prefix sum + Hash map)
+- [x] No.1442 (Prefix XOR + Hash map) 
