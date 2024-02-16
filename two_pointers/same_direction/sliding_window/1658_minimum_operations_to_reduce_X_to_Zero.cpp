@@ -1,4 +1,5 @@
 #include <numeric>
+#include <unordered_map>
 #include <vector>
 
 /**
@@ -20,72 +21,65 @@ public:
     int minOperations(std::vector<int>& nums, int x) { return approach2(nums, x); }
 
 private:
-    // sliding window, time O(N), space O(1)
-    int approach2(const std::vector<int>& nums, int k)
+    // sliding window, TC = O(N), SC = O(1)
+    int approach2(const std::vector<int>& nums, int x)
     {
-        // 0 ... ... i i+1 ... j-1 j ... ... n-1
-        // |<-part1->| |<-part3->| |<--part2-->|
-        // part1 = nums[0] + ... + nums[i]
-        // part2 = nums[j] + ... + nums[n-1]
-        // part3 = nums[i+1] + ... + nums[j-1]
-        // total_sum = part1 + part2 + part3
-        // if part1 + part2 = x, then part3 = total_sum - x
-        // then num of operations to make up x = n - part3.size()
-        // thus, our goal is max(part3.size()) where sum of part3 is x
+        // 0 ... i-1 i ... j-1 j ... n-1
+        // |<--A-->| |<--B-->| |<--C-->|
+        // A = sum of nums[0:i-1]
+        // B = sum of nums[i:j-1]
+        // C = sum of nums[j:n-1]
+        // total = A + B + C = nums[0:n-1]
+        // if A + C = x, then B = total - x
+        // num of operations = i + j = L - length of B
+        // our goal is to find the longest subarray with sum = total - x
         const int n = nums.size();
-        const int target = std::accumulate(nums.begin(), nums.end(), 0) - k;
-        int maxWindowSize = -1;
-        int windowSum = 0;
+        const int total = std::accumulate(nums.begin(), nums.end(), 0);
+        int sum = 0;
+        int length = INT_MIN;
         for (int left = 0, right = 0; right < n; ++right) {
-            windowSum += nums[right];
-            while (left <= right && windowSum > target) {
-                windowSum -= nums[left++];
+            sum += nums[right];
+            while (left <= right && sum > total - x) {
+                sum -= nums[left];
+                left++;
             }
-            if (windowSum == target) {
-                maxWindowSize = std::max(maxWindowSize, right - left + 1);
+            if (sum == total - x) {
+                length = std::max(length, right - left + 1);
             }
         }
-        return maxWindowSize == -1 ? -1 : n - maxWindowSize;
+        return length == INT_MIN ? -1 : n - length;
     }
 
-    // prefix sum + binary search, time O(NlogN), space O(N)
+    // prefix and suffix sum + hash map, TC = O(N), SC = O(N)
     int approach1(const std::vector<int>& nums, int x)
     {
+        // let prefixSum[i] = sum of nums[0:i]
+        // let suffixSum[j] = sum of nums[j:n-1]
+        // if there exists i and j such that i < j
+        // prefixSum[i] + suffixSum[j] = x,
+        // then num of operations = i+1+n-j
         const int n = nums.size();
-        std::vector<int> prefix(1 + n, 0); // prefix[i]=nums[0]+...+nums[i-1]
-        std::vector<int> suffix(1 + n, 0); // suffix[i]=nums[n-1]+...+nums[n-i]
-        for (int i = 1; i <= n; ++i) {
-            prefix[i] = prefix[i - 1] + nums[i - 1];
-            suffix[i] = suffix[i - 1] + nums[n - i];
+        std::unordered_map<int, int> map;
+        int prefixSum = 0;
+        for (int i = 0; i < n; ++i) {
+            prefixSum += nums[i];
+            map[prefixSum] = i;
         }
-        // since nums[i] >=1, then both prefix and suffix are strictly increasing
+        // base case 1: prefixSum[p] = x, num of operations = i+1
         int result = INT_MAX;
-        for (int i = 0; i <= n; ++i) {
-            const int target = x - prefix[i];
-            if (target < 0)
-                break;
-
-            const int j = binarySearch(0, n - i, target, suffix);
-            if (j != -1) {
-                result = std::min(result, i + j);
+        if (map.count(x)) {
+            result = map[x] + 1;
+        }
+        // base case 2: suffixSum[q] = x, num of operations = n-q
+        map[0] = -1;
+        int suffixSum = 0;
+        for (int j = n - 1; j >= 0; --j) {
+            suffixSum += nums[j];
+            const int target = x - suffixSum;
+            if (map.count(target) && map[target] < j) {
+                result = std::min(result, map[target] + 1 + n - j);
             }
         }
         return result == INT_MAX ? -1 : result;
-    }
-
-    int binarySearch(int lo, int hi, int target, const std::vector<int>& nums)
-    {
-        while (lo <= hi) {
-            const int mid = lo + (hi - lo) / 2;
-            if (nums[mid] == target)
-                return mid;
-
-            if (nums[mid] > target) {
-                hi = mid - 1;
-            } else {
-                lo = mid + 1;
-            }
-        }
-        return -1;
     }
 };
