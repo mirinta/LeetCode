@@ -82,9 +82,12 @@ TODO:
 - [ ] No.2926 (DP)
 - [ ] No.2954
 
-Great problems:
+Good problems:
 
-- [x] No.1504 (DP + Monotonic stack)
-- [x] No.1124 (Prefix sum + Monotonic stack)
-- [x] No.2949 (Prefix sum + Hash map)
-- [x] No.1442 (Prefix XOR + Hash map) 
+- [x] No.1504, DP + Monotonic stack, :rocket:1845
+- [x] No.1124, Prefix sum + Monotonic stack, :rocket:1908
+- [x] No.2949, Prefix sum + Hash map, :rocket:2445
+- [x] No.1442, Prefix XOR + Hash map, :rocket:1525
+- [x] No.1642, Greedy + Priority queue, :rocket:1962
+- [x] No.0962, Monotonic stack | Binary search | Two pointers, :rocket:1608
+- [x] No.1371, Prefix counting + Hash map + State Compression, :rocket:2041

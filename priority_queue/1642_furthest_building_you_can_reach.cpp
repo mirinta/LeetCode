@@ -30,30 +30,27 @@ class Solution
 public:
     int furthestBuilding(std::vector<int>& heights, int bricks, int ladders)
     {
-        // min heap
-        std::priority_queue<int, std::vector<int>, std::greater<>> pq;
-        for (int i = 1; i < heights.size(); ++i) {
-            // we are standing at building i-1
-            const int diff = heights[i] - heights[i - 1];
+        const int n = heights.size();
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq; // min heap
+        for (int i = 0; i + 1 < n; ++i) {
+            const int diff = heights[i + 1] - heights[i];
             if (diff <= 0)
                 continue;
 
-            // store height difference to rearrange the usage of ladders and bricks
             pq.push(diff);
+            // case 1: use ladder first
             if (ladders > 0) {
-                // we have enough ladders, use ladder first
                 ladders--;
-            } else if (bricks < pq.top()) {
-                // not enough bricks and ladders, return the building we are standing at
-                return i - 1;
-            } else {
-                // we only have bricks
-                // find the min diff, replace that ladder with bricks
-                // then we have one ladder to move to building i
-                bricks -= pq.top();
-                pq.pop();
+                continue;
             }
+            // case 2: find the previous min diff, replace that ladder with bricks
+            // then we can move from heights[i] to heights[i+1] using that ladder
+            if (bricks < pq.top())
+                return i;
+
+            bricks -= pq.top();
+            pq.pop();
         }
-        return heights.size() - 1; // furthest building index
+        return n - 1;
     }
 };
