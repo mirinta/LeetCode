@@ -20,7 +20,7 @@ private:
     {
         // answer = total - #invalid cases
         // total = C(n+2, 2)
-        // #invalid cases = |A∪B∪C| = |A| + |B| + |C| - （|A∩B| + |A∩C| + |B∩C|) + |A∩B∩C|
+        // #invalid cases = |A∪B∪C| = |A| + |B| + |C| - (|A∩B| + |A∩C| + |B∩C|) + |A∩B∩C|
         // |A| = |B| = |C| = one child takes at least limit+1 candies, C(n-(limit+1)+2,2)
         // |A∩B| = |A∩C| = |B∩C| = two children takes at least limit+1 candies, C(n-2*(limit+1)+2,2)
         // |A∩B∩C| = three children takes at least limit+1 candies, C(n-3*(limit+1)+2, 2)

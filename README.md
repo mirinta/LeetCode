@@ -35,8 +35,8 @@ Contests:
 - [x] Biweekly 123 (3024~3027)
 - [x] Weekly 383 (3028~3031)
 - [x] Weekly 384 (3033~3037)
-- [ ] Biweekly 124 (3038~3041)
-- [ ] Weekly 385 (3042~3045)
+- [x] Biweekly 124 (3038~3041)
+- [x] Weekly 385 (3042~3045)
 
 TODO:
 
@@ -94,3 +94,4 @@ Good problems:
 - [x] No.0962, Monotonic stack | Binary search | Two pointers, :rocket:1608
 - [x] No.1371, Prefix counting + Hash map + State Compression, :rocket:2041
 - [x] No.2402, Priority queue + simulation, :rocket:2093
+- [x] No.3045, Trie + KMP
