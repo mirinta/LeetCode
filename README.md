@@ -17,7 +17,7 @@ Contests:
 - [x] Biweekly 117 (2928~2931)
 - [x] Weekly 371 (2932~2935)
 - [x] Weekly 372 (2937~2940)
-- [x] Biweekly 118 (2942~2945): 2945 is GREAT!
+- [x] Biweekly 118 (2942~2945)
 - [x] Weekly 373 (2946~2950)
 - [x] Weekly 374 (2951~2954)
 - [x] Biweekly 119 (2956~2959)
@@ -31,7 +31,7 @@ Contests:
 - [x] Weekly 380 (3005~3008): 3007 is GREAT!
 - [x] Biweekly 122 (3010~3013)
 - [ ] Weekly 381 (3014~3017): 3017 is NOT DONE!
-- [ ] Weekly 382 (3019~3022): 3022 is NOT DONE!
+- [x] Weekly 382 (3019~3022)
 - [x] Biweekly 123 (3024~3027)
 - [x] Weekly 383 (3028~3031)
 - [x] Weekly 384 (3033~3037)
@@ -86,12 +86,14 @@ TODO:
 
 Good problems:
 
-- [x] No.1504, DP + Monotonic stack, :rocket:1845
-- [x] No.1124, Prefix sum + Monotonic stack, :rocket:1908
-- [x] No.2949, Prefix sum + Hash map, :rocket:2445
-- [x] No.1442, Prefix XOR + Hash map, :rocket:1525
-- [x] No.1642, Greedy + Priority queue, :rocket:1962
-- [x] No.0962, Monotonic stack | Binary search | Two pointers, :rocket:1608
-- [x] No.1371, Prefix counting + Hash map + State Compression, :rocket:2041
-- [x] No.2402, Priority queue + simulation, :rocket:2093
-- [x] No.3045, Trie + KMP
+- [x] No.1504: DP, Monotonic stack, :rocket:1845
+- [x] No.1124: Prefix sum, Monotonic stack, :rocket:1908
+- [x] No.2949: Prefix sum, Hash map, :rocket:2445
+- [x] No.1442: Prefix XOR, Hash map, :rocket:1525
+- [x] No.1642: Greedy, Priority queue, :rocket:1962
+- [x] No.0962: Monotonic stack, Binary search, Two pointers, :rocket:1608
+- [x] No.1371: Prefix counting, Hash map, State Compression, :rocket:2041
+- [x] No.2402: Priority queue, Simulation, :rocket:2093
+- [x] No.2945: DP, Prefix sum, Monotonic queue, :rocket:2945:fire:
+- [x] No.3022: Greedy, Bitmask, :rocket:2918:fire:
+- [x] No.3045: Trie, KMP
