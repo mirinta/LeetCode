@@ -1,3 +1,4 @@
+#include <array>
 #include <vector>
 
 /**
@@ -22,32 +23,81 @@
 class Solution
 {
 public:
-    bool stoneGame(std::vector<int>& piles)
+    bool stoneGame(std::vector<int>& piles) { return approach3(piles); }
+
+private:
+    using Matrix = std::vector<std::vector<std::array<int, 2>>>;
+
+    // Math, TC = O(1), SC = O(1)
+    bool approach3(const std::vector<int>& piles)
     {
+        // The num of piles is an even number.
+        // piles: 0, 1, ..., n-1, n-1 is an odd number
+        // The 1st action player can always pick the piles he want.
+        return true;
+    }
+
+    // Bottom-up DP, TC = O(N^2), SC = O(N^2)
+    bool approach2(const std::vector<int>& piles)
+    {
+        // dp[i][j][0] = max num of piles the 1st action player can pick
+        // dp[i][j][1] = max num of piles the 2nd action player can pick
         const int n = piles.size();
-        // dp[i][j].first = a player's max score of playing with piles[i:j], and he plays first
-        // dp[i][j].second = a player's max score of playing with piles[i:j], and he plays second
-        std::vector<std::vector<std::pair<int, int>>> dp(
-            n, std::vector<std::pair<int, int>>(n, {0, 0}));
-        // base case: dp[i][i].first = piles[i], dp[i][i].second = 0
-        // - because there's only one pile to choose
-        for (int i = 0; i < n; ++i) {
-            dp[i][i].first = piles[i];
-            dp[i][i].second = 0;
-        }
-        for (int i = n - 2; i >= 0; --i) {
-            for (int j = i + 1; j < n; ++j) {
-                const int pickLeft = piles[i] + dp[i + 1][j].second;
-                const int pickRight = piles[j] + dp[i][j - 1].second;
-                if (pickLeft > pickRight) {
-                    dp[i][j].first = pickLeft;
-                    dp[i][j].second = dp[i + 1][j].first;
+        Matrix dp(n, std::vector<std::array<int, 2>>(n, {0, 0}));
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = 0; j < n; ++j) {
+                if (i > j)
+                    continue;
+
+                if (i == j) {
+                    dp[i][j] = {piles[i], 0};
+                    continue;
+                }
+                const auto [first1, second1] = dp[i + 1][j];
+                const auto [first2, second2] = dp[i][j - 1];
+                const int case1 = piles[i] + second1; // pick the left most pile
+                const int case2 = piles[j] + second2; // pick the rightmost pile
+                if (case1 > case2) {
+                    dp[i][j] = {case1, first1};
                 } else {
-                    dp[i][j].first = pickRight;
-                    dp[i][j].second = dp[i][j - 1].first;
+                    dp[i][j] = {case2, first2};
                 }
             }
         }
-        return dp[0][n - 1].first > dp[0][n - 1].second;
+        return dp[0][n - 1][0] > dp[0][n - 1][1];
+    }
+
+    // Top-down DP, TC = O(N^2), SC = O(N^2)
+    bool approach1(const std::vector<int>& piles)
+    {
+        const int n = piles.size();
+        Matrix memo(n, std::vector<std::array<int, 2>>(n, {-1, -1}));
+        const auto [Alice, Bob] = dp(memo, 0, n - 1, piles);
+        return Alice > Bob;
+    }
+
+    // The game starts with piles[lo:hi].
+    // return[0] = max num of piles the 1st action player can pick at the end of the game
+    // return[1] = max num of piles the 2nd action player can pick at the end of the game
+    std::array<int, 2> dp(Matrix& memo, int lo, int hi, const std::vector<int>& piles)
+    {
+        if (lo > hi)
+            return {0, 0};
+
+        if (memo[lo][hi][0] != -1 && memo[lo][hi][1] != -1)
+            return memo[lo][hi];
+
+        // case 1: the 1st action player picks the leftmost pile
+        // then he becomes the 2nd action player in the next round
+        const auto [first1, second1] = dp(memo, lo + 1, hi, piles);
+        const int case1 = piles[lo] + second1;
+        // case 2: the 1st action player picks the rightmost pile
+        // then he becomes the 2nd action player in the next round
+        const auto [first2, second2] = dp(memo, lo, hi - 1, piles);
+        const int case2 = piles[hi] + second2;
+        if (case1 > case2)
+            return memo[lo][hi] = {case1, first1};
+
+        return memo[lo][hi] = {case2, first2};
     }
 };

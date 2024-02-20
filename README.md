@@ -1,6 +1,6 @@
 # LeetCode
 
-Contests:
+## Contests
 
 - [x] Biweekly 107 (2744~2747)
 - [x] Weekly 351 (2748~2751)
@@ -84,16 +84,32 @@ TODO:
 - [ ] No.2926 (DP)
 - [ ] No.2954
 
-Good problems:
+## Liked Problems
 
-- [x] No.1504: DP, Monotonic stack, :rocket:1845
-- [x] No.1124: Prefix sum, Monotonic stack, :rocket:1908
-- [x] No.2949: Prefix sum, Hash map, :rocket:2445
-- [x] No.1442: Prefix XOR, Hash map, :rocket:1525
-- [x] No.1642: Greedy, Priority queue, :rocket:1962
-- [x] No.0962: Monotonic stack, Binary search, Two pointers, :rocket:1608
-- [x] No.1371: Prefix counting, Hash map, State Compression, :rocket:2041
-- [x] No.2402: Priority queue, Simulation, :rocket:2093
-- [x] No.2945: DP, Prefix sum, Monotonic queue, :rocket:2945:fire:
-- [x] No.3022: Greedy, Bitmask, :rocket:2918:fire:
-- [x] No.3045: Trie, KMP
+| ID | Tags | Rating |
+|----|------|------------|
+| [1504][link1504] | `DP`, `Monotonic Stack` | :fire:1845 |
+| [2945][link2945] | `DP`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
+| [3022][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
+| [1642][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
+| [0962][link0962] | `Monotonic Stack`, `Binary Search`, `Two Pointers` | :fire:1608 |
+| [1915][link1915] | `Prefix Counting`, `Hash Map`, `State Compression` | :fire:2235 |
+| [2949][link2949] | `Prefix Sum`, `Hash Map` | :fire:2445 |
+| [2025][link2025] | `Prefix Sum`, `Hash Map` | :fire:2218 |
+| [1124][link1124] | `Prefix Sum`, `Monotonic Stack` | :fire:1908 |
+| [1442][link1442] | `Prefix XOR`, `Hash Map` | :fire:1525 |
+| [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
+| [3045][link3045] | `Trie`, `KMP` | |
+
+[link1504]: https://leetcode.com/problems/count-submatrices-with-all-ones
+[link2945]: https://leetcode.com/problems/find-maximum-non-decreasing-array-length
+[link3022]: https://leetcode.com/problems/minimize-or-of-remaining-elements-using-operations
+[link1642]: https://leetcode.com/problems/furthest-building-you-can-reach
+[link0962]: https://leetcode.com/problems/maximum-width-ramp
+[link1915]: https://leetcode.com/problems/number-of-wonderful-substrings
+[link2949]: https://leetcode.com/problems/count-beautiful-substrings-ii
+[link2025]: https://leetcode.com/problems/maximum-number-of-ways-to-partition-an-array/
+[link1124]: https://leetcode.com/problems/longest-well-performing-interval
+[link1442]: https://leetcode.com/problems/count-triplets-that-can-form-two-arrays-of-equal-xor
+[link2402]: https://leetcode.com/problems/meeting-rooms-iii
+[link3045]: https://leetcode.com/problems/count-prefix-and-suffix-pairs-ii
