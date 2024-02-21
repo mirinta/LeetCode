@@ -21,38 +21,33 @@
 class Solution
 {
 public:
-    bool PredictTheWinner(std::vector<int>& nums)
+    bool predictTheWinner(std::vector<int>& nums)
     {
         const int n = nums.size();
-        // dp[i][j].first = a player's max score of playing with piles[i:j], and he plays first
-        // dp[i][j].second = a player's max score of playing with piles[i:j], and he plays second
-        // second
-        std::vector<std::vector<std::pair<int, int>>> dp(
-            n, std::vector<std::pair<int, int>>(n, {0, 0}));
-        // base case:
-        // - dp[i][i].first = nums[i], dp[i][i].second = 0,
-        // - because there's only one number to choose
-        for (int i = 0; i < n; ++i) {
-            dp[i][i].first = nums[i];
-            dp[i][i].second = 0;
+        std::vector<int> presum(n + 1, 0);
+        for (int i = 1; i <= n; ++i) {
+            presum[i] = presum[i - 1] + nums[i - 1];
         }
-        for (int i = n - 2; i >= 0; --i) {
-            for (int j = i + 1; j < n; ++j) {
-                // this player picks nums[i] in this round
-                // next round is nums[i + 1, j], and the other player plays first
-                const int pickLeft = nums[i] + dp[i + 1][j].second;
-                // this player picks nums[j] in this round
-                // next round is nums[i, j - 1], and the other player plays first
-                const int pickRight = nums[j] + dp[i][j - 1].second;
-                if (pickLeft > pickRight) {
-                    dp[i][j].first = pickLeft;
-                    dp[i][j].second = dp[i + 1][j].first;
-                } else {
-                    dp[i][j].first = pickRight;
-                    dp[i][j].second = dp[i][j - 1].first;
-                }
-            }
-        }
-        return dp[0][n - 1].first >= dp[0][n - 1].second;
+        std::vector<std::vector<int>> memo(n, std::vector<int>(n, -1));
+        const int player1 = dp(memo, 0, n - 1, presum);
+        const int player2 = presum[n] - player1;
+        return player1 >= player2;
+    }
+
+private:
+    // given the game nums[lo:hi], return the max score that the 1st action player finally get
+    int dp(std::vector<std::vector<int>>& memo, int lo, int hi, const std::vector<int>& presum)
+    {
+        if (lo > hi)
+            return 0;
+
+        if (memo[lo][hi] != -1)
+            return memo[lo][hi];
+
+        int case1 = presum[lo + 1] - presum[lo];
+        case1 += presum[hi + 1] - presum[lo + 1] - dp(memo, lo + 1, hi, presum);
+        int case2 = presum[hi + 1] - presum[hi];
+        case2 += presum[hi] - presum[lo] - dp(memo, lo, hi - 1, presum);
+        return memo[lo][hi] = std::max(case1, case2);
     }
 };

@@ -90,6 +90,7 @@ TODO:
 |----|------|------------|
 | [1504][link1504] | `DP`, `Monotonic Stack` | :fire:1845 |
 | [2945][link2945] | `DP`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
+| [1686][link1686] | `Greedy`, `Game Theory` | :fire:2001 |
 | [3022][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
 | [1642][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
 | [0962][link0962] | `Monotonic Stack`, `Binary Search`, `Two Pointers` | :fire:1608 |
@@ -103,6 +104,7 @@ TODO:
 
 [link1504]: https://leetcode.com/problems/count-submatrices-with-all-ones
 [link2945]: https://leetcode.com/problems/find-maximum-non-decreasing-array-length
+[link1686]: https://leetcode.com/problems/stone-game-vi/description/
 [link3022]: https://leetcode.com/problems/minimize-or-of-remaining-elements-using-operations
 [link1642]: https://leetcode.com/problems/furthest-building-you-can-reach
 [link0962]: https://leetcode.com/problems/maximum-width-ramp

@@ -10,19 +10,13 @@ class Solution
 public:
     int rangeBitwiseAnd(int left, int right)
     {
-        // find common prefix
-        // 4 = 0100
-        // 5 = 0101
-        // 6 = 0110
-        // 7 = 0111
-        // 4~7, common prefix is 01
-        // 6~7, common prefix is 011
-        int shift = 0;
+        // find the longest common prefix
+        int numOfShifts = 0;
         while (left != right) {
+            numOfShifts++;
             left >>= 1;
             right >>= 1;
-            shift++;
         }
-        return left << shift;
+        return left << numOfShifts;
     }
 };

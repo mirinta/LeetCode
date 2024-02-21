@@ -21,54 +21,42 @@
 class Solution
 {
 public:
-    int stoneGameII(const std::vector<int>& piles)
+    int stoneGameII(std::vector<int>& piles)
     {
-        if (piles.empty())
-            return 0;
-
-        if (piles.size() == 1)
-            return piles[0];
-
-        const auto n = piles.size();
-        std::vector<int> suffixSum(n + 1, 0);
-        for (int i = n - 1; i >= 0; --i) {
-            suffixSum[i] = piles[i] + suffixSum[i + 1];
+        // Given a game piles[lo:hi],
+        // let A = max num of piles the 1st action player finally get
+        // and B = max num of piles the 2nd action player finally get
+        // This is a zero-sum game, then A+B = sum of piles[lo:hi]
+        const int n = piles.size();
+        std::vector<int> presum(n + 1, 0);
+        for (int i = 1; i <= n; ++i) {
+            presum[i] = presum[i - 1] + piles[i - 1];
         }
-        std::vector<std::vector<int>> memo(n, std::vector<int>(n, -1)); // -1 means not calculated
-        return dp(0, 1, memo, suffixSum, piles);
+        // hi is always n-1 and the max value of M is N
+        std::vector<std::vector<int>> memo(n, std::vector<int>(n + 1, -1));
+        return dp(memo, 0, n, 1, presum);
     }
 
 private:
-    int dp(int i, int M, std::vector<std::vector<int>>& memo, const std::vector<int>& suffixSum,
-           const std::vector<int>& piles)
+    // Given a game piles[lo:n-1],
+    // return the max num of piles the 1st action player finally get
+    int dp(std::vector<std::vector<int>>& memo, int lo, int n, int M,
+           const std::vector<int>& presum)
     {
-        // standing at position i, this player needs to choose x, where x is in range [1, 2M]
-        // for any x:
-        // 1. this player takes x piles first, score1_x = sum(piles[i],...,piles[i+x-1])
-        // 2. then, this player considers his opponent's strategy for the remaining piles:
-        // - the opponent starts from position i+x with M = max(x,M)
-        // - the opponent's max score is opponent_score = dp(i+x, max(x,M), piles)
-        // - since this is a zero-sum game, and the total score in the remaining piles is
-        //   remaining_score = sum(piles[i+x],...,piles[end])
-        // - then, this player can take score2_x = remaining_score - opponent_score from the
-        // remaining piles
-        // 3. thus, given choice x, this player takes score_x = score1_x + score2_x
-        // Finally, the max score that this player can take is max(score_x,...)
-        if (i == piles.size())
-            return 0; // no piles, game over
+        if (lo >= n)
+            return 0;
 
-        if (memo[i][M] != -1)
-            return memo[i][M];
+        if (memo[lo][M] != -1)
+            return memo[lo][M];
 
-        int score = 0;
-        for (int x = 1; x <= 2 * M; ++x) {
-            if (i + x - 1 >= piles.size())
-                break;
-
-            score += piles[i + x - 1]; // takes x piles first, then considier oppenent's strategy
-            const auto opponent = dp(i + x, std::max(x, M), memo, suffixSum, piles);
-            memo[i][M] = std::max(memo[i][M], score + suffixSum[i + x] - opponent);
+        int result = 0;
+        for (int x = 1; x <= std::min(2 * M, n - lo); ++x) {
+            // The 1st action player picks piles[lo:lo+x-1].
+            int score = presum[lo + x] - presum[lo];
+            // He becomes the 2nd action player in the next game, i.e., piles[lo+x:n-1].
+            score += presum[n] - presum[lo + x] - dp(memo, lo + x, n, std::max(M, x), presum);
+            result = std::max(result, score);
         }
-        return memo[i][M];
+        return memo[lo][M] = result;
     }
 };
