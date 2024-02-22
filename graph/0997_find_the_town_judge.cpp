@@ -32,15 +32,13 @@ class Solution
 public:
     int findJudge(int n, std::vector<std::vector<int>>& trust)
     {
-        std::vector<int> degrees(n, 0); // in - out
+        std::vector<int> degree(n, 0); // in - out
         for (const auto& relationship : trust) {
-            const auto& from = relationship[0] - 1;
-            const auto& to = relationship[1] - 1;
-            degrees[from]--;
-            degrees[to]++;
+            degree[relationship[0] - 1]--;
+            degree[relationship[1] - 1]++;
         }
         for (int i = 0; i < n; ++i) {
-            if (degrees[i] == n - 1)
+            if (degree[i] == n - 1)
                 return i + 1;
         }
         return -1;

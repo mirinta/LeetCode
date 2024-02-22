@@ -29,34 +29,32 @@ public:
     }
 
 private:
-    const std::vector<std::pair<int, int>> kDirections{{1, 2}, {1, -2}, {-1, 2}, {-1, -2},
-                                                       {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
+    static constexpr double kProb = 1.0 / 8;
 
+    const std::vector<std::pair<int, int>> kDirections{{-1, -2}, {-2, -1}, {-2, 1}, {-1, 2},
+                                                       {1, 2},   {2, 1},   {2, -1}, {1, -2}};
+
+    // DP with space optimization, TC = O(KN^2), SC = O(N^2)
     double approach2(int n, int k, int row, int column)
     {
-        // DP with space optimization
-        // #NOTE# all values of dp is 0 at the beginning of each round
-        if (k == 0)
-            return 1;
-
         std::vector<std::vector<double>> dp(n, std::vector<double>(n, 0));
-        std::vector<std::vector<double>> prev(n, std::vector<double>(n, 0));
-        prev[row][column] = 1;
-        for (int t = 0; t < k; ++t) {
+        auto prev = dp;
+        dp[row][column] = 1;
+        for (int t = 1; t <= k; ++t) {
+            prev.assign(dp.begin(), dp.end());
+            std::fill(dp.begin(), dp.end(), std::vector<double>(n, 0));
             for (int i = 0; i < n; ++i) {
                 for (int j = 0; j < n; ++j) {
-                    dp[i][j] = 0;
                     for (const auto& [dx, dy] : kDirections) {
                         const int x = i + dx;
                         const int y = j + dy;
                         if (x < 0 || x >= n || y < 0 || y >= n)
                             continue;
 
-                        dp[i][j] += prev[x][y] / 8;
+                        dp[i][j] += prev[x][y] * kProb;
                     }
                 }
             }
-            prev = dp;
         }
         double result = 0;
         for (int i = 0; i < n; ++i) {
@@ -67,9 +65,10 @@ private:
         return result;
     }
 
+    // DP, TC = O(KN^2), SC = (KN^2)
     double approach1(int n, int k, int row, int column)
     {
-        // dp[t][i][j] = prob of standing at position (i,j) after t moves
+        // dp[t][i][j] = probability of the knight standing at (i,j) after exactly t moves
         std::vector<std::vector<std::vector<double>>> dp(
             k + 1, std::vector<std::vector<double>>(n, std::vector<double>(n, 0)));
         dp[0][row][column] = 1;
@@ -82,7 +81,7 @@ private:
                         if (x < 0 || x >= n || y < 0 || y >= n)
                             continue;
 
-                        dp[t][i][j] += dp[t - 1][x][y] / 8;
+                        dp[t][i][j] += dp[t - 1][x][y] * kProb;
                     }
                 }
             }
