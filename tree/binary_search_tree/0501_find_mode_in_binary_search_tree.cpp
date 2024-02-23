@@ -1,3 +1,4 @@
+#include <functional>
 #include <vector>
 
 /**
@@ -14,8 +15,8 @@ struct TreeNode
 };
 
 /**
- * Given the "root" of a binary search tree with duplicates, return all the mode(s) (i.e., the most
- * frequently occurred element in it).
+ * Given the root of a binary search tree (BST) with duplicates, return all the mode(s) (i.e., the
+ * most frequently occurred element) in it.
  *
  * If the tree has more than one mode, return them in any order.
  *
@@ -28,6 +29,9 @@ struct TreeNode
  *
  * - Both the left and right subtrees must also be binary search trees.
  *
+ * ! The number of nodes in the tree is in the range [1, 10^4].
+ * ! -10^5 <= Node.val <= 10^5
+ *
  * ! Could you do that without using any extra space?
  * ! Assume that the implicit stack space incurred due to recursion does not count.
  */
@@ -37,38 +41,31 @@ class Solution
 public:
     std::vector<int> findMode(TreeNode* root)
     {
-        if (!root)
-            return {};
+        std::vector<int> result;
+        int maxFreq = 0;
+        int currVal = INT_MIN;
+        int currFreq = 0;
+        std::function<void(TreeNode*)> dfs = [&](TreeNode* root) {
+            if (!root)
+                return;
 
+            dfs(root->left);
+            if (root->val == currVal) {
+                currFreq++;
+            } else {
+                currVal = root->val;
+                currFreq = 1;
+            }
+            if (currFreq > maxFreq) {
+                maxFreq = currFreq;
+                result.clear();
+                result.push_back(root->val);
+            } else if (currFreq == maxFreq) {
+                result.push_back(root->val);
+            }
+            dfs(root->right);
+        };
         dfs(root);
         return result;
-    }
-
-private:
-    std::vector<int> result;
-    int currVal = INT_MIN; // Node.val >= -10^5
-    int currFreq = 0;
-    int maxFreq = 0;
-
-    void dfs(TreeNode* root)
-    {
-        if (!root)
-            return;
-
-        dfs(root->left);
-        if (root->val == currVal) {
-            currFreq++;
-        } else {
-            currVal = root->val;
-            currFreq = 1;
-        }
-        if (currFreq == maxFreq) {
-            result.push_back(root->val);
-        } else if (currFreq > maxFreq) {
-            result.clear();
-            result.push_back(root->val);
-            maxFreq = currFreq;
-        }
-        dfs(root->right);
     }
 };

@@ -1,3 +1,4 @@
+#include <functional>
 #include <vector>
 
 /**
@@ -31,56 +32,63 @@ struct TreeNode
 class Solution
 {
 public:
-    bool isValidBST(TreeNode* root)
-    {
-        // return approach1(root, LONG_MIN, LONG_MAX);
-        // return approach2(root);
-        return approach3(root).first != LONG_MIN;
-    }
+    bool isValidBST(TreeNode* root) { return approach3(root); }
 
 private:
-    // post-order traversal
-    std::pair<long, long> approach3(TreeNode* root)
+    // post traversal
+    bool approach3(TreeNode* root)
     {
-        if (!root)
-            return {LONG_MAX, LONG_MIN}; // make the following condition return true
+        using LL = long long;
+        using Pair = std::pair<LL, LL>;
+        std::function<Pair(TreeNode*)> dfs = [&dfs](TreeNode* root) {
+            if (!root)
+                return std::make_pair(LLONG_MAX, LLONG_MIN);
 
-        auto [leftMin, leftMax] = approach3(root->left);
-        auto [rightMin, rightMax] = approach3(root->right);
-        // a valid BST: leftMax < root.val < rightMin
-        if (leftMax >= root->val || root->val >= rightMin)
-            return {LONG_MIN, LONG_MAX}; // this makes the condition return false
+            const auto [leftMin, leftMax] = dfs(root->left);
+            const auto [rightMin, rightMax] = dfs(root->right);
+            // we want leftMax < root.val < rightMin
+            if (leftMax >= root->val || rightMin <= root->val)
+                return std::make_pair(LLONG_MIN, LLONG_MAX); // invalid status
 
-        // we want {leftMin, rightMax}, but leftMin may be INT_MAX, and rightMax may be INT_MIN
-        return {std::min<long>(root->val, leftMin), std::max<long>(root->val, rightMax)};
+            return std::make_pair(std::min<LL>(leftMin, root->val),
+                                  std::max<LL>(rightMax, root->val));
+        };
+        return dfs(root).first != LLONG_MIN;
     }
 
-    // pre-order traversal
-    bool approach1(TreeNode* root, long min, long max)
-    {
-        if (!root)
-            return true;
-
-        if (root->val <= min || root->val >= max)
-            return false;
-
-        return approach1(root->left, min, root->val) && approach1(root->right, root->val, max);
-    }
-
-    // in-order traversal
-    long prev{LONG_MIN};
+    // preorder traversal
     bool approach2(TreeNode* root)
     {
-        if (!root)
-            return true;
+        using LL = long long;
+        std::function<bool(TreeNode*, LL, LL)> dfs = [&dfs](TreeNode* root, LL min, LL max) {
+            if (!root)
+                return true;
 
-        if (!approach2(root->left))
-            return false;
+            if (root->val <= min || root->val >= max)
+                return false;
 
-        if (root->val <= prev)
-            return false;
+            return dfs(root->left, min, root->val) && dfs(root->right, root->val, max);
+        };
+        return dfs(root, LLONG_MIN, LLONG_MAX);
+    }
 
-        prev = root->val;
-        return approach2(root->right);
+    // inorder traversal
+    bool approach1(TreeNode* root)
+    {
+        long long prev = LLONG_MIN;
+        std::function<bool(TreeNode*)> dfs = [&prev, &dfs](TreeNode* root) {
+            if (!root)
+                return true;
+
+            if (!dfs(root->left))
+                return false;
+
+            if (root->val <= prev)
+                return false;
+
+            prev = root->val;
+            return dfs(root->right);
+        };
+        return dfs(root);
     }
 };

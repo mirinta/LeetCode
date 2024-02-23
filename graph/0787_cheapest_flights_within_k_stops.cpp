@@ -1,6 +1,5 @@
-#include <array>
 #include <queue>
-#include <unordered_map>
+#include <tuple>
 #include <vector>
 
 /**
@@ -27,58 +26,53 @@ class Solution
 public:
     int findCheapestPrice(int n, std::vector<std::vector<int>>& flights, int src, int dst, int k)
     {
-        return approach2(n, flights, src, dst, k);
+        return approach3(n, flights, src, dst, k);
     }
 
 private:
-    int approach3(int n, std::vector<std::vector<int>>& flights, int src, int dst, int k)
+    // DP with space optimization (Bellman-Ford), TC = O(K(N+E)), SC = O(N)
+    int approach3(int n, const std::vector<std::vector<int>>& flights, int src, int dst, int k)
     {
-        // Bellman-Ford (DP with space optimization)
-        std::vector<int> iMinus1(n, INT_MAX);
-        iMinus1[src] = 0;
         std::vector<int> dp(n, INT_MAX);
+        dp[src] = 0;
+        std::vector<int> prev(n);
+        int result = INT_MAX;
         for (int i = 1; i <= k + 1; ++i) {
             bool update = false;
+            prev.assign(dp.begin(), dp.end());
+            std::fill(dp.begin(), dp.end(), INT_MAX);
             for (const auto& flight : flights) {
-                const auto& from = flight[0];
-                const auto& to = flight[1];
-                const auto& weight = flight[2];
-                if (iMinus1[from] == INT_MAX)
-                    continue;
-
-                if (iMinus1[from] + weight < dp[to]) {
-                    dp[to] = iMinus1[from] + weight;
+                const int from = flight[0];
+                const int to = flight[1];
+                const int price = flight[2];
+                if (prev[from] != INT_MAX && prev[from] + price < dp[to]) {
+                    dp[to] = prev[from] + price;
                     update = true;
                 }
             }
             if (!update)
                 break;
 
-            iMinus1 = dp;
+            result = std::min(result, dp[dst]);
         }
-        return dp[dst] == INT_MAX ? -1 : dp[dst];
+        return result == INT_MAX ? -1 : result;
     }
 
-    int approach2(int n, std::vector<std::vector<int>>& flights, int src, int dst, int k)
+    // DP, TC = O(KE), SC = O(KN)
+    int approach2(int n, const std::vector<std::vector<int>>& flights, int src, int dst, int k)
     {
-        // DP
-        // - all edges have positive weights, no need to check negative cycle
-        // - at most k stops means at most k+1 edges
-        // dp[i][j] = min distance from src to j using at most i edges
+        // dp[i][j] = min cost from src to j with at most i edges
         std::vector<std::vector<int>> dp(k + 2, std::vector<int>(n, INT_MAX));
         dp[0][src] = 0;
         int result = INT_MAX;
         for (int i = 1; i <= k + 1; ++i) {
             bool update = false;
             for (const auto& flight : flights) {
-                const auto& from = flight[0];
-                const auto& to = flight[1];
-                const auto& weight = flight[2];
-                if (dp[i - 1][from] == INT_MAX)
-                    continue;
-
-                if (dp[i - 1][from] + weight < dp[i][to]) {
-                    dp[i][to] = dp[i - 1][from] + weight;
+                const int from = flight[0];
+                const int to = flight[1];
+                const int price = flight[2];
+                if (dp[i - 1][from] != INT_MAX && dp[i - 1][from] + price < dp[i][to]) {
+                    dp[i][to] = dp[i - 1][from] + price;
                     update = true;
                 }
             }
@@ -90,31 +84,34 @@ private:
         return result == INT_MAX ? -1 : result;
     }
 
-    int approach1(int n, std::vector<std::vector<int>>& flights, int src, int dst, int k)
+    // similar to Dijkstra, TC = O(E + EKlog(EK)), SC = O(E + N + EK)
+    int approach1(int n, const std::vector<std::vector<int>>& flights, int src, int dst, int k)
     {
-        // Dijkstra
-        std::unordered_map<int, std::vector<std::pair<int, int>>> graph;
+        // at most k stops = at most edges from src to dst
+        std::vector<std::vector<std::pair<int, int>>> graph(n); // <to, price>
         for (const auto& flight : flights) {
-            graph[flight[0]].emplace_back(flight[1], flight[2]); // from:[<to,price>,...]
+            graph[flight[0]].emplace_back(flight[1], flight[2]);
         }
-        using Triple = std::array<int, 3>; // <cost, steps, vertex>
-        auto comp = [](const auto& t1, const auto& t2) -> bool { return t1[0] > t2[0]; };
-        std::priority_queue<Triple, std::vector<Triple>, decltype(comp)> pq(comp);
-        pq.push({0, 0, src});
-        std::vector<int> stepsTo(n, INT_MAX);
-        stepsTo[src] = 0;
+        std::vector<int> edgesTo(n, INT_MAX);
+        edgesTo[src] = 0;
+        using Triplets = std::tuple<int, int, int>; // <cost, edges, v>
+        auto comparator = [](const auto& t1, const auto& t2) {
+            return std::get<0>(t1) > std::get<0>(t2);
+        };
+        std::priority_queue<Triplets, std::vector<Triplets>, decltype(comparator)> pq(comparator);
+        pq.emplace(0, 0, src);
         while (!pq.empty()) {
-            const auto [cost, steps, v] = pq.top();
+            const auto [cost, edges, v] = pq.top();
             pq.pop();
-            if (steps > k + 1 || steps > stepsTo[v])
+            if (edges > k + 1 || edges > edgesTo[v])
                 continue;
 
             if (v == dst)
                 return cost;
 
-            stepsTo[v] = steps;
+            edgesTo[v] = edges;
             for (const auto& [w, price] : graph[v]) {
-                pq.push({cost + price, steps + 1, w});
+                pq.emplace(cost + price, edges + 1, w);
             }
         }
         return -1;

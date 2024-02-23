@@ -14,46 +14,48 @@ struct TreeNode
 };
 
 /**
- * You are given an integer array "nums" with no duplicates. A maximum binary tree can be built
- * recursively from "nums" using the following algorithm:
+ * You are given an integer array nums with no duplicates. A maximum binary tree can be built
+ * recursively from nums using the following algorithm:
  *
- * Great a root node whose value is the maximum in "nums".
+ * 1. Create a root node whose value is the maximum value in nums.
  *
- * Recursively build the left subtree on the sub-array prefix to the left of the maximum value.
+ * 2. Recursively build the left subtree on the subarray prefix to the left of the maximum value.
  *
- * Recursively build the right subtree on the sub-array suffix to the fight of the maximum value.
+ * 3. Recursively build the right subtree on the subarray suffix to the right of the maximum value.
  *
- * Return the maximum binary tree built from "nums".
+ * Return the maximum binary tree built from nums.
+ *
+ * ! 1 <= nums.length <= 1000
+ * ! 0 <= nums[i] <= 1000
+ * ! All integers in nums are unique.
  */
 
 class Solution
 {
 public:
-    TreeNode* constructMaximumBinaryTree(const std::vector<int>& nums)
+    TreeNode* constructMaximumBinaryTree(std::vector<int>& nums)
     {
-        if (nums.empty())
-            return nullptr;
-
-        return construct(nums, 0, nums.size() - 1);
+        const int n = nums.size();
+        return build(0, n - 1, nums);
     }
 
 private:
-    TreeNode* construct(const std::vector<int>& nums, int low, int high)
+    TreeNode* build(int lo, int hi, const std::vector<int>& nums)
     {
-        if (low > high)
+        if (lo > hi)
             return nullptr;
 
-        int max = INT_MIN;
-        int idx = low;
-        for (int i = low; i <= high; ++i) {
-            if (nums[i] > max) {
-                idx = i;
-                max = nums[i];
+        int maxIndex = -1;
+        int maxValue = INT_MIN;
+        for (int i = lo; i <= hi; ++i) {
+            if (nums[i] > maxValue) {
+                maxIndex = i;
+                maxValue = nums[i];
             }
         }
-        auto* node = new TreeNode(max);
-        node->left = construct(nums, low, idx - 1);
-        node->right = construct(nums, idx + 1, high);
-        return node;
+        auto* root = new TreeNode(maxValue);
+        root->left = build(lo, maxIndex - 1, nums);
+        root->right = build(maxIndex + 1, hi, nums);
+        return root;
     }
 };

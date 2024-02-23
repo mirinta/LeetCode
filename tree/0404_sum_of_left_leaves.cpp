@@ -12,9 +12,12 @@ struct TreeNode
 };
 
 /**
- * Given the "root" of a binary tree, return the sum of all left leaves.
+ * Given the root of a binary tree, return the sum of all left leaves.
  *
- * A leaf if a node with no children. A left leaf is a leaf that is the left child of another node.
+ * A leaf is a node with no children. A left leaf is a leaf that is the left child of another node.
+ *
+ * ! The number of nodes in the tree is in the range [1, 1000].
+ * ! -1000 <= Node.val <= 1000
  */
 
 class Solution
@@ -22,26 +25,22 @@ class Solution
 public:
     int sumOfLeftLeaves(TreeNode* root)
     {
-        if (!root)
-            return 0;
-
         int result = 0;
-        traverse(root, result);
+        dfs(result, root, false);
         return result;
     }
 
 private:
-    void traverse(TreeNode* node, int& result)
+    void dfs(int& result, TreeNode* root, bool isLeftChild)
     {
-        if (!node)
+        if (!root)
             return;
 
-        auto* leftChild = node->left;
-        // check the left child node is a leaf node:
-        if (leftChild && !leftChild->left && !leftChild->right) {
-            result += leftChild->val;
+        if (isLeftChild && !root->left && !root->right) {
+            result += root->val;
+            return;
         }
-        traverse(node->left, result);
-        traverse(node->right, result);
+        dfs(result, root->left, true);
+        dfs(result, root->right, false);
     }
 };

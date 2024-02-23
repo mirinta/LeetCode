@@ -26,27 +26,22 @@ struct TreeNode
 class Solution
 {
 public:
-    bool isBalanced(TreeNode* root) { return dfs(root) >= 0; }
+    bool isBalanced(TreeNode* root) { return dfs(root) != -1; }
 
 private:
-    // if the given binary tree is balanced, return its max depth
+    // return the max depth of the given binary tree
+    // if it is a complete binary tree
     // otherwise, return -1
     int dfs(TreeNode* root)
     {
         if (!root)
             return 0;
 
-        const int leftMaxDepth = dfs(root->left);
-        if (leftMaxDepth < 0)
+        const int left = dfs(root->left);
+        const int right = dfs(root->right);
+        if (left < 0 || right < 0 || std::abs(left - right) > 1)
             return -1;
 
-        const int rightMaxDepth = dfs(root->right);
-        if (rightMaxDepth < -1)
-            return -1;
-
-        if (std::abs(leftMaxDepth - rightMaxDepth) > 1)
-            return -1;
-
-        return 1 + std::max(leftMaxDepth, rightMaxDepth);
+        return 1 + std::max(left, right);
     }
 };

@@ -25,9 +25,9 @@ class Solution
 public:
     int findBottomLeftValue(TreeNode* root)
     {
-        int result = 0;
         std::queue<TreeNode*> queue;
         queue.push(root);
+        int result = -1;
         while (!queue.empty()) {
             result = queue.front()->val;
             for (int i = queue.size(); i > 0; --i) {

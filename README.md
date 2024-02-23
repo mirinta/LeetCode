@@ -88,9 +88,12 @@ TODO:
 
 | ID | Tags | Rating |
 |----|------|------------|
-| [1872][link1872] | `DP`, `Game Theory` | :fire:2440 |
-| [1504][link1504] | `DP`, `Monotonic Stack` | :fire:1845 |
-| [2945][link2945] | `DP`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
+| [0098][link0098] | `Binary Tree`, `Binary Search Tree` | |
+| [0222][link0222] | `Binary Tree`, `Complete Binary Tree` | |
+| [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
+| [1504][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
+| [2945][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
+| [0787][link0787] | `Graph`, `Shortest Path`, `Priority Queue`, `Dynamic Programming` | :fire:1786 |
 | [3022][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
 | [1686][link1686] | `Greedy`, `Game Theory` | :fire:2001 |
 | [2029][link2029] | `Greedy`, `Game Theory` | :fire:2277 |
@@ -104,9 +107,12 @@ TODO:
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
 | [3045][link3045] | `Trie`, `KMP` | |
 
+[link0098]: https://leetcode.com/problems/validate-binary-search-tree/
+[link0222]: https://leetcode.com/problems/count-complete-tree-nodes/description/
 [link1872]: https://leetcode.com/problems/stone-game-viii/
 [link1504]: https://leetcode.com/problems/count-submatrices-with-all-ones
 [link2945]: https://leetcode.com/problems/find-maximum-non-decreasing-array-length
+[link0787]: https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
 [link3022]: https://leetcode.com/problems/minimize-or-of-remaining-elements-using-operations
 [link1686]: https://leetcode.com/problems/stone-game-vi/description/
 [link2029]: https://leetcode.com/problems/stone-game-ix/description/

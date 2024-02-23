@@ -29,10 +29,7 @@ public:
     int getMinimumDifference(TreeNode* root)
     {
         std::vector<int> inorder;
-        traverse(inorder, root);
-        if (inorder.size() < 2)
-            return INT_MIN;
-
+        dfs(inorder, root);
         int result = INT_MAX;
         for (int i = 1; i < inorder.size(); ++i) {
             result = std::min(result, inorder[i] - inorder[i - 1]);
@@ -41,13 +38,13 @@ public:
     }
 
 private:
-    void traverse(std::vector<int>& inorder, TreeNode* node)
+    void dfs(std::vector<int>& inorder, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        traverse(inorder, node->left);
-        inorder.push_back(node->val);
-        traverse(inorder, node->right);
+        dfs(inorder, root->left);
+        inorder.push_back(root->val);
+        dfs(inorder, root->right);
     }
 };

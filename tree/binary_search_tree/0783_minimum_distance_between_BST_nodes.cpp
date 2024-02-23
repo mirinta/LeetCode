@@ -14,10 +14,13 @@ struct TreeNode
 };
 
 /**
- * Given the "root" of a BST, return the minimum difference between the values of any two different
- * nodes in the tree.
+ * Given the root of a Binary Search Tree (BST), return the minimum difference between the values of
+ * any two different nodes in the tree.
  *
  * ! This question is the same as 530.
+ *
+ * ! The number of nodes in the tree is in the range [2, 100].
+ * ! 0 <= Node.val <= 10^5
  */
 
 class Solution
@@ -26,29 +29,22 @@ public:
     int minDiffInBST(TreeNode* root)
     {
         std::vector<int> inorder;
-        traverse(root, inorder);
-        if (inorder.empty())
-            return -1;
-
-        if (inorder.size() == 1)
-            return inorder.front();
-
+        dfs(inorder, root);
         int result = INT_MAX;
-        for (size_t i = 1; i < inorder.size(); ++i) {
+        for (int i = 1; i < inorder.size(); ++i) {
             result = std::min(result, inorder[i] - inorder[i - 1]);
         }
         return result;
     }
 
 private:
-    // the inorder traversal of a BST is sorted in ascending order
-    void traverse(TreeNode* node, std::vector<int>& inorder)
+    void dfs(std::vector<int>& inorder, TreeNode* root)
     {
-        if (!node)
+        if (!root)
             return;
 
-        traverse(node->left, inorder);
-        inorder.push_back(node->val);
-        traverse(node->right, inorder);
+        dfs(inorder, root->left);
+        inorder.push_back(root->val);
+        dfs(inorder, root->right);
     }
 };

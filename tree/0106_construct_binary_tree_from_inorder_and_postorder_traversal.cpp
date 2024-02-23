@@ -33,9 +33,6 @@ class Solution
 public:
     TreeNode* buildTree(std::vector<int>& inorder, std::vector<int>& postorder)
     {
-        if (inorder.size() != postorder.size() || inorder.empty())
-            return nullptr;
-
         /**
          *        3
          *     /     \
@@ -60,22 +57,19 @@ public:
     }
 
 private:
-    std::unordered_map<int, int> map; // node value to index of "inorder"
+    std::unordered_map<int, int> map; // val to index of inorder
 
-    TreeNode* build(const std::vector<int>& inorder, int inStart, int inEnd,
-                    const std::vector<int>& postorder, int postStart, int postEnd)
+    TreeNode* build(const std::vector<int>& inorder, int lo1, int hi1,
+                    const std::vector<int>& postorder, int lo2, int hi2)
     {
-        if (inStart > inEnd)
+        if (lo1 > hi1)
             return nullptr;
 
-        const int rootValue = postorder[postEnd];
-        const int index = map[rootValue];
-        const int leftSubtreeNodes = index - inStart;
-        auto* root = new TreeNode(rootValue);
-        root->left = build(inorder, inStart, index - 1, postorder, postStart,
-                           postStart + leftSubtreeNodes - 1);
-        root->right =
-            build(inorder, index + 1, inEnd, postorder, postStart + leftSubtreeNodes, postEnd - 1);
+        auto* root = new TreeNode(postorder[hi2]);
+        const int rootIdx = map[root->val];
+        const int numOfLeft = rootIdx - lo1;
+        root->left = build(inorder, lo1, rootIdx - 1, postorder, lo2, lo2 + numOfLeft - 1);
+        root->right = build(inorder, rootIdx + 1, hi1, postorder, lo2 + numOfLeft, hi2 - 1);
         return root;
     }
 };

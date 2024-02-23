@@ -28,33 +28,28 @@ class Solution
 public:
     std::vector<std::string> binaryTreePaths(TreeNode* root)
     {
-        if (!root)
-            return {};
-
         std::vector<std::string> result;
-        std::vector<std::string> path;
+        std::string path;
         dfs(result, path, root);
         return result;
     }
 
 private:
-    void dfs(std::vector<std::string>& result, std::vector<std::string>& path, TreeNode* root)
+    void dfs(std::vector<std::string>& result, std::string& path, TreeNode* root)
     {
         if (!root)
             return;
 
         if (!root->left && !root->right) {
-            std::string concatenation;
-            for (const auto& s : path) {
-                concatenation.append(s);
-                concatenation.append("->");
-            }
-            concatenation.append(std::to_string(root->val));
-            result.push_back(concatenation);
+            result.push_back(path);
+            result.back().append(std::to_string(root->val));
+            return;
         }
-        path.push_back(std::to_string(root->val));
+        const int len = path.size();
+        path.append(std::to_string(root->val));
+        path.append("->");
         dfs(result, path, root->left);
         dfs(result, path, root->right);
-        path.pop_back();
+        path.erase(len);
     }
 };

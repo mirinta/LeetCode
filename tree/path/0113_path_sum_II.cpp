@@ -31,30 +31,28 @@ class Solution
 public:
     std::vector<std::vector<int>> pathSum(TreeNode* root, int targetSum)
     {
-        if (!root)
-            return {};
-
         std::vector<std::vector<int>> result;
         std::vector<int> path;
-        backtrack(result, path, targetSum, root);
+        dfs(result, path, root, targetSum);
         return result;
     }
 
 private:
-    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& path, int targetSum,
-                   TreeNode* root)
+    void dfs(std::vector<std::vector<int>>& result, std::vector<int>& path, TreeNode* root,
+             int target)
     {
         if (!root)
             return;
 
-        if (root->val == targetSum && !root->left && !root->right) {
+        target -= root->val;
+        if (target == 0 && !root->left && !root->right) {
             result.push_back(path);
             result.back().push_back(root->val);
             return;
         }
         path.push_back(root->val);
-        backtrack(result, path, targetSum - root->val, root->left);
-        backtrack(result, path, targetSum - root->val, root->right);
+        dfs(result, path, root->left, target);
+        dfs(result, path, root->right, target);
         path.pop_back();
     }
 };
