@@ -88,8 +88,10 @@ TODO:
 
 | ID | Tags | Rating |
 |----|------|------------|
-| [0098][link0098] | `Binary Tree`, `Binary Search Tree` | |
-| [0222][link0222] | `Binary Tree`, `Complete Binary Tree` | |
+| [0098][link0098] | `Binary Search Tree` | `Medium` |
+| [0450][link0450] | `Binary Search Tree` | `Medium` |
+| [0701][link0701] | `Binary Search Tree` | `Medium` |
+| [0222][link0222] | `Complete Binary Tree` | `Easy+` |
 | [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
 | [1504][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
 | [2945][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
@@ -108,6 +110,8 @@ TODO:
 | [3045][link3045] | `Trie`, `KMP` | |
 
 [link0098]: https://leetcode.com/problems/validate-binary-search-tree/
+[link0450]: https://leetcode.com/problems/delete-node-in-a-bst/description/
+[link0701]: https://leetcode.com/problems/insert-into-a-binary-search-tree/description/
 [link0222]: https://leetcode.com/problems/count-complete-tree-nodes/description/
 [link1872]: https://leetcode.com/problems/stone-game-viii/
 [link1504]: https://leetcode.com/problems/count-submatrices-with-all-ones

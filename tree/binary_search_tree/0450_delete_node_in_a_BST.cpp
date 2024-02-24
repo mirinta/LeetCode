@@ -36,32 +36,38 @@ public:
         if (!root)
             return nullptr;
 
-        if (root->val == key) {
-            // case 1: it is a leaf node (this case can be merged into case 2 or case 3)
-            if (!root->left && !root->right)
-                return nullptr;
-            // case 2: it only has right node (left node is nullptr)
-            if (!root->left)
-                return root->right;
-            // case 3: it only has left node (right node is nullptr)
-            if (!root->right)
-                return root->left;
-            // case 4: it has both left and right nodes
-            // replace with the min node in right subtree
-            auto* minNodeOfRight = root->right;
-            while (minNodeOfRight && minNodeOfRight->left) {
-                minNodeOfRight = minNodeOfRight->left;
-            }
-            root->right = deleteNode(root->right, minNodeOfRight->val);
-            minNodeOfRight->left = root->left;
-            minNodeOfRight->right = root->right;
-            return minNodeOfRight;
-        }
-        if (root->val > key) {
-            root->left = deleteNode(root->left, key);
-        } else {
+        // case 1: key node is in root.right
+        if (key > root->val) {
             root->right = deleteNode(root->right, key);
+            return root;
         }
-        return root;
+
+        // case 2: key node is in root.left
+        if (key < root->val) {
+            root->left = deleteNode(root->left, key);
+            return root;
+        }
+
+        // case 3: current node is the key node
+        // case 3.1: key node is a leaf node
+        if (!root->left && !root->right)
+            return nullptr;
+
+        // case 3.2: key node only has one subtree
+        if (!root->left || !root->right)
+            return !root->left ? root->right : root->left;
+
+        // case 3.3: replace the root node with a child node X such that
+        // X > all nodes of root.left and X < all nodes of root.right
+        // since root is a BST, then root.right > root.left
+        // thus, X is the min node of root.right
+        TreeNode* x = root->right;
+        while (x && x->left) {
+            x = x->left;
+        }
+        root->right = deleteNode(root->right, x->val);
+        x->left = root->left;
+        x->right = root->right;
+        return x;
     }
 };

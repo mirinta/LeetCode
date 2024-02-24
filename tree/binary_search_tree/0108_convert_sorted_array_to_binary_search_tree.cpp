@@ -30,10 +30,8 @@ class Solution
 public:
     TreeNode* sortedArrayToBST(std::vector<int>& nums)
     {
-        if (nums.empty())
-            return nullptr;
-
-        return build(0, nums.size() - 1, nums);
+        const int n = nums.size();
+        return build(0, n - 1, nums);
     }
 
 private:
@@ -42,10 +40,13 @@ private:
         if (lo > hi)
             return nullptr;
 
-        const int mid = lo + (hi - lo) / 2;
-        auto* root = new TreeNode(nums[mid]);
-        root->left = build(lo, mid - 1, nums);
-        root->right = build(mid + 1, hi, nums);
+        // if nums[X] is the root node of a balanced BST, then
+        // nums[lo:X) < nums[X], nums(X:hi] > nums[X]
+        // and |(X-lo) - (hi-root)| = |2*root - (hi+lo)| <= 1
+        const int x = lo + (hi - lo) / 2;
+        auto* root = new TreeNode(nums[x]);
+        root->left = build(lo, x - 1, nums);
+        root->right = build(x + 1, hi, nums);
         return root;
     }
 };
