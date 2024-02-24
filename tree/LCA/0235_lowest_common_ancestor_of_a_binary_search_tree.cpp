@@ -1,4 +1,4 @@
-#include <utility>
+#include <algorithm>
 
 /**
  * Definition for a binary tree node.
@@ -31,19 +31,20 @@ class Solution
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
     {
-        if (!root || !p || !q)
+        // p and q are guaranteed in the tree
+        // and all node.val are unique
+        if (!root)
             return nullptr;
 
-        // if p.val and q.val < root.val, then the LCA is in the left subtree of "root"
-        // if p.val and q.val > root.val, then the LCA is in the right subtree of "root"
-        // otherwise, p and q are in the different subtrees of "root", then "root" is the LCA
-        // #NOTE#, p and q are guaranteed to be in the BST
-        if (std::min(p->val, q->val) > root->val)
-            return lowestCommonAncestor(root->right, p, q);
-
+        // case 1: both p and q are in the left subtree of root
         if (std::max(p->val, q->val) < root->val)
             return lowestCommonAncestor(root->left, p, q);
 
+        // case 2: both p and q are in the right subtree of root
+        if (std::min(p->val, q->val) > root->val)
+            return lowestCommonAncestor(root->right, p, q);
+
+        // case3: p and q are in the different subtrees of root
         return root;
     }
 };
