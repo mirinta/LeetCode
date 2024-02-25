@@ -37,6 +37,7 @@
 - [x] Weekly 384 (3033~3037)
 - [x] Biweekly 124 (3038~3041)
 - [x] Weekly 385 (3042~3045)
+- [ ] Weekly 386 (3046~3049)
 
 TODO:
 
@@ -108,6 +109,7 @@ TODO:
 | [1442][link1442] | `Prefix XOR`, `Hash Map` | :fire:1525 |
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
 | [3045][link3045] | `Trie`, `KMP` | |
+| [2709][link2709] | `Union Find`, `Number Theory` | :fire:2172 |
 
 [link0098]: https://leetcode.com/problems/validate-binary-search-tree/
 [link0450]: https://leetcode.com/problems/delete-node-in-a-bst/description/
@@ -129,3 +131,4 @@ TODO:
 [link1442]: https://leetcode.com/problems/count-triplets-that-can-form-two-arrays-of-equal-xor
 [link2402]: https://leetcode.com/problems/meeting-rooms-iii
 [link3045]: https://leetcode.com/problems/count-prefix-and-suffix-pairs-ii
+[link2709]: https://leetcode.com/problems/greatest-common-divisor-traversal/description/
