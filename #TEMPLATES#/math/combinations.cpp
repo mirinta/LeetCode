@@ -47,10 +47,12 @@ long long combinations(long long m, long long n)
  *
  * Fermat's Little Theorem:
  * If p is a prime number, then for any integer a, a^p ≡ a (% p).
- * If gcd(p, a) = 1, then a^(p-1) ≡ 1 (% p)
+ * If gcd(p, a) = 1, then a^(p-1) ≡ 1 (% p).
  *
- * According to the above theorem, a^(p-1) % p = (a^(p-2) % p) * (a % p) % p = 1,
- * i.e., a^(p-2) is the multiplicative inverse of a.
+ * Therefore:
+ * 1/m! % p = m!^(p-2) % p
+ * 1/(m-1)! % p = (1/m! % p) * (m % p) % p
+ * ...
  */
 long long combinationsMod(long long m, long long n, long long mod = 1e9 + 7)
 {
