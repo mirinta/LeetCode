@@ -12,6 +12,19 @@ public:
 
     int numOfConnectedComponents() const { return count; }
 
+    /**
+     * @note x is 0-indexed.
+     */
+    void reset(int x)
+    {
+        root[x] = x;
+        size[x] = 1;
+        count++;
+    }
+
+    /**
+     * @note x is 0-indexed.
+     */
     int find(int x)
     {
         if (x != root[x]) {
@@ -20,8 +33,14 @@ public:
         return root[x];
     }
 
+    /**
+     * @note p and q are 0-indexed.
+     */
     bool isConnected(int p, int q) { return find(p) == find(q); }
 
+    /**
+     * @note p and q are 0-indexed.
+     */
     void connect(int p, int q)
     {
         const int rootP = find(p);
@@ -37,13 +56,6 @@ public:
             size[rootP] += size[rootQ];
         }
         count--;
-    }
-
-    void reset(int x)
-    {
-        root[x] = x;
-        size[x] = 1;
-        count++;
     }
 
 private:
