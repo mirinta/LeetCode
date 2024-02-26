@@ -4,14 +4,16 @@
 /**
  * @brief Adjacency matrix (0-indexed square matrix).
  *
- * @note graph[i][x] = {j, w} indicates that there is an edge from i to j with weight w.
+ * @note graph[i][x] = {j, w} indicates that there is an directed edge from vertex i to vertex j
+ * with weight w.
  */
 using Graph = std::vector<std::vector<std::pair<int, long long>>>;
 
 using Edges = std::vector<std::tuple<int, int, long long>>; // <from, to, weight>
 
 /**
- * @brief Calculate the shortest paths for all pairs of vertices using the Floyd-Warshall algorithm.
+ * @brief Calculate the weights of shortest paths for all pairs of vertices using the Floyd-Warshall
+ * algorithm.
  *
  * @note Negative edge weights are allowed, but the given graph must not have negative cycles.
  *
@@ -21,32 +23,6 @@ using Edges = std::vector<std::tuple<int, int, long long>>; // <from, to, weight
  *
  * @note Time Complexity = O(V^3), Space Complexity = O(V^2), where V is the number of vertices.
  */
-std::vector<std::vector<long long>> floydWarshall(const Graph& graph);
-
-/**
- * @brief Calculate the shortest path from src to dst using the Dijkstra's algorithm.
- *
- * @note The given graph must not have negative edge weights.
- *
- * @note Return LLONG_MAX if it is not reachable from src to dst.
- *
- * @note Time Complexity = O(V + ElogV), Space Complexity = O(V), where E and V are the number of
- * vertices and edges, respectively.
- */
-long long dijkstra(int src, int dst, const Graph& graph);
-
-/**
- * @brief Calculate the shortest path from src to dst using the Bellman-Ford algorithm.
- *
- * @note Negative edge weights are allowed, but the given graph must not have negative cycles.
- *
- * @note Return LLONG_MAX if it is not reachable from src to dst.
- *
- * @note Time Complexity = O(EV), Space Complexity = O(V), where E and V are the number of vertices
- * and edges, respectively.
- */
-long long bellmanFord(int src, int dsf, const Graph& graph);
-
 std::vector<std::vector<long long>> floydWarshall(const Graph& graph)
 {
     const int n = graph.size();
@@ -73,13 +49,23 @@ std::vector<std::vector<long long>> floydWarshall(const Graph& graph)
     return dist;
 }
 
+/**
+ * @brief Calculate the weight of the shortest path from src to dst using the Dijkstra's algorithm.
+ *
+ * @note The given graph must not have negative edge weights.
+ *
+ * @note Return LLONG_MAX if it is not reachable from src to dst.
+ *
+ * @note Time Complexity = O(V + ElogV), Space Complexity = O(V), where E and V are the number of
+ * vertices and edges, respectively.
+ */
 long long dijkstra(int src, int dst, const Graph& graph)
 {
     const int n = graph.size();
     std::vector<long long> distTo(n, LLONG_MAX);
     distTo[src] = 0;
     using Pair = std::pair<int, long long>; // <vertex v, weights from src to v>
-    auto comparator = [](const auto& p1, const auto& p2) { return p1.second > p2.second; };
+    auto comparator = [](const Pair& p1, const Pair& p2) { return p1.second > p2.second; };
     std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator); // min heap;
     pq.emplace(0, src);
     while (!pq.empty()) {
@@ -98,6 +84,17 @@ long long dijkstra(int src, int dst, const Graph& graph)
     return LLONG_MAX;
 }
 
+/**
+ * @brief Calculate the weight of the shortest path from src to dst using the Bellman-Ford
+ * algorithm.
+ *
+ * @note Negative edge weights are allowed, but the given graph must not have negative cycles.
+ *
+ * @note Return LLONG_MAX if it is not reachable from src to dst.
+ *
+ * @note Time Complexity = O(EV), Space Complexity = O(V), where E and V are the number of vertices
+ * and edges, respectively.
+ */
 long long bellmanFord(int src, int dst, int V, const Edges& edges)
 {
     std::vector<long long> dp(V, LLONG_MAX);
