@@ -31,7 +31,7 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : root(n), rank(n, 1)
+    explicit UnionFind(int n) : root(n), size(n, 1)
     {
         for (int i = 0; i < n; ++i) {
             root[i] = i;
@@ -55,25 +55,24 @@ public:
         if (rootP == rootQ)
             return;
 
-        if (rank[rootP] > rank[rootQ]) {
-            root[rootQ] = rootP;
-        } else if (rank[rootP] < rank[rootQ]) {
+        if (size[rootQ] > size[rootP]) {
             root[rootP] = rootQ;
+            size[rootQ] += size[rootP];
         } else {
             root[rootQ] = rootP;
-            rank[rootP]++;
+            size[rootP] += size[rootQ];
         }
     }
 
     void reset(int x)
     {
         root[x] = x;
-        rank[x] = 0;
+        size[x] = 1;
     }
 
 private:
     std::vector<int> root;
-    std::vector<int> rank;
+    std::vector<int> size;
 };
 
 class Solution
