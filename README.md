@@ -103,8 +103,8 @@ TODO:
 | [1642][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
 | [0962][link0962] | `Monotonic Stack`, `Binary Search`, `Two Pointers` | :fire:1608 |
 | [1915][link1915] | `Prefix Counting`, `Hash Map`, `State Compression` | :fire:2235 |
-| [2949][link2949] | `Prefix Sum`, `Hash Map` | :fire:2445 |
 | [2025][link2025] | `Prefix Sum`, `Hash Map` | :fire:2218 |
+| [2949][link2949] | `Prefix Sum`, `Hash Map` | :fire:2445 |
 | [1124][link1124] | `Prefix Sum`, `Monotonic Stack` | :fire:1908 |
 | [1442][link1442] | `Prefix XOR`, `Hash Map` | :fire:1525 |
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |

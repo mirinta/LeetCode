@@ -41,9 +41,9 @@ private:
         if (!root)
             return 0;
 
-        const int maxDepthOfLeftSubtree = dfs(result, root->left);
-        const int maxDepthOfRightSubtree = dfs(result, root->right);
-        result = std::max(result, maxDepthOfLeftSubtree + maxDepthOfRightSubtree);
-        return 1 + std::max(maxDepthOfLeftSubtree, maxDepthOfRightSubtree);
+        const int leftMaxDepth = dfs(result, root->left);
+        const int rightMaxDepth = dfs(result, root->right);
+        result = std::max(result, leftMaxDepth + rightMaxDepth);
+        return 1 + std::max(leftMaxDepth, rightMaxDepth);
     }
 };

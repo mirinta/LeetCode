@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <numeric>
 #include <vector>
 
 /**
@@ -21,14 +23,9 @@ class Solution
 public:
     int shipWithinDays(std::vector<int>& weights, int days)
     {
-        // minimize the largest sum of k subarrays
-        // search range [max element, total sum]
-        int lo = 0;
-        int hi = 0;
-        for (const auto& w : weights) {
-            lo = std::max(lo, w);
-            hi += w;
-        }
+        // guess the final answer
+        int lo = *std::max_element(weights.begin(), weights.end());
+        int hi = std::accumulate(weights.begin(), weights.end(), 0);
         while (lo < hi) {
             const int mid = lo + (hi - lo) / 2;
             if (isValid(mid, weights, days)) {
@@ -41,17 +38,22 @@ public:
     }
 
 private:
-    bool isValid(int weightsLimit, const std::vector<int>& weights, int daysLimit)
+    bool isValid(int capacity, const std::vector<int>& weights, int days)
     {
+        int time = 1;
         int sum = 0;
-        int days = 1;
         for (const auto& w : weights) {
+            if (w > capacity)
+                return false;
+
             sum += w;
-            if (sum > weightsLimit) {
+            if (sum > capacity) {
+                time++;
                 sum = w;
-                days++;
             }
+            if (time > days)
+                return false;
         }
-        return days <= daysLimit;
+        return true;
     }
 };
