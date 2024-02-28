@@ -16,16 +16,19 @@ class Solution
 public:
     double findMaxAverage(std::vector<int>& nums, int k)
     {
-        double sum = 0;
-        for (int i = 0; i < k; ++i) {
-            sum += nums[i];
+        const int n = nums.size();
+        int sum = 0;
+        int max = INT_MIN;
+        for (int left = 0, right = 0; right < n; ++right) {
+            sum += nums[right];
+            if (right - left + 1 > k) {
+                sum -= nums[left];
+                left++;
+            }
+            if (right - left + 1 == k) {
+                max = std::max(max, sum);
+            }
         }
-        double maxSum = sum;
-        for (int i = k; i < nums.size(); ++i) {
-            sum -= nums[i - k];
-            sum += nums[i];
-            maxSum = std::max(maxSum, sum);
-        }
-        return maxSum / k;
+        return static_cast<double>(max) / k;
     }
 };

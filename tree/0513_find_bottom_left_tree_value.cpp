@@ -23,14 +23,40 @@ struct TreeNode
 class Solution
 {
 public:
-    int findBottomLeftValue(TreeNode* root)
+    int findBottomLeftValue(TreeNode* root) { return approach2(root); }
+
+private:
+    // DFS, TC = O(N), SC = O(N)
+    int approach2(TreeNode* root)
+    {
+        int result = INT_MIN;
+        int maxDepth = INT_MIN;
+        dfs(result, maxDepth, root, 0);
+        return result;
+    }
+
+    void dfs(int& result, int& maxDepth, TreeNode* root, int depth)
+    {
+        if (!root)
+            return;
+
+        if (depth > maxDepth) {
+            maxDepth = depth;
+            result = root->val;
+        }
+        dfs(result, maxDepth, root->left, depth + 1);
+        dfs(result, maxDepth, root->right, depth + 1);
+    }
+
+    // BFS, TC = O(N), SC = O(N)
+    int approach1(TreeNode* root)
     {
         std::queue<TreeNode*> queue;
         queue.push(root);
-        int result = -1;
+        int result = INT_MIN;
         while (!queue.empty()) {
             result = queue.front()->val;
-            for (int i = queue.size(); i > 0; --i) {
+            for (int k = queue.size(); k > 0; --k) {
                 auto* node = queue.front();
                 queue.pop();
                 if (node->left) {

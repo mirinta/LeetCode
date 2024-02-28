@@ -37,7 +37,7 @@
 - [x] Weekly 384 (3033~3037)
 - [x] Biweekly 124 (3038~3041)
 - [x] Weekly 385 (3042~3045)
-- [ ] Weekly 386 (3046~3049)
+- [ ] Weekly 386 (3046~3049): 3049 is NOT DONE!
 
 TODO:
 
@@ -102,11 +102,11 @@ TODO:
 | [2029][link2029] | `Greedy`, `Game Theory` | :fire:2277 |
 | [1642][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
 | [0962][link0962] | `Monotonic Stack`, `Binary Search`, `Two Pointers` | :fire:1608 |
-| [1915][link1915] | `Prefix Counting`, `Hash Map`, `State Compression` | :fire:2235 |
+| [1442][link1442] | `Prefix Sum`, `Hash Map` | :fire:1525 |
 | [2025][link2025] | `Prefix Sum`, `Hash Map` | :fire:2218 |
 | [2949][link2949] | `Prefix Sum`, `Hash Map` | :fire:2445 |
 | [1124][link1124] | `Prefix Sum`, `Monotonic Stack` | :fire:1908 |
-| [1442][link1442] | `Prefix XOR`, `Hash Map` | :fire:1525 |
+| [1915][link1915] | `Prefix Sum`, `Hash Map`, `State Compression` | :fire:2235 |
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
 | [3045][link3045] | `Trie`, `KMP` | |
 | [2709][link2709] | `Union Find`, `Number Theory` | :fire:2172 |
