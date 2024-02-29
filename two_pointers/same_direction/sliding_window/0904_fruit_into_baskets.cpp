@@ -32,17 +32,15 @@ public:
         const int n = fruits.size();
         std::unordered_map<int, int> map;
         int result = 0;
-        for (int left = 0, right = 0, sum = 0; right < n; ++right) {
+        for (int left = 0, right = 0; right < n; ++right) {
             map[fruits[right]]++;
-            sum++;
             while (map.size() > 2) {
-                sum--;
                 if (--map[fruits[left]] == 0) {
                     map.erase(fruits[left]);
                 }
                 left++;
             }
-            result = std::max(result, sum);
+            result = std::max(result, right - left + 1);
         }
         return result;
     }

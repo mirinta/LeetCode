@@ -26,21 +26,24 @@ public:
     int maxConsecutiveAnswers(std::string answerKey, int k) { return approach2(answerKey, k); }
 
 private:
-    int approach2(const std::string& s, int k)
+    // sliding window (one-pass), TC = O(N), SC = O(1)
+    int approach2(const std::string& answerKey, int k)
     {
-        // sliding window, one pass
+        const int n = answerKey.size();
+        int countF = 0;
+        int countT = 0;
         int result = 0;
-        for (int left = 0, right = 0, countF = 0, countT = 0; right < s.size(); ++right) {
-            if (s[right] == 'F') {
-                countF++;
-            } else {
+        for (int left = 0, right = 0; right < n; ++right) {
+            if (answerKey[right] == 'T') {
                 countT++;
+            } else {
+                countF++;
             }
             while (std::min(countT, countF) > k) {
-                if (s[left] == 'F') {
-                    countF--;
-                } else {
+                if (answerKey[left] == 'T') {
                     countT--;
+                } else {
+                    countF--;
                 }
                 left++;
             }
@@ -49,23 +52,25 @@ private:
         return result;
     }
 
-    int approach1(const std::string& s, int k)
+    // sliding window (two-pass), TC = O(N), SC = O(1)
+    int approach1(const std::string& answerKey, int k)
     {
-        // sliding window, two pass
-        return std::max(maxConsecutiveLetter(s, 'F', k), maxConsecutiveLetter(s, 'T', k));
+        return std::max(solve(answerKey, k, 'T'), solve(answerKey, k, 'F'));
     }
 
-    int maxConsecutiveLetter(const std::string& s, char targetLetter, int maxOperations)
+    // return length of the longest substring of s such that
+    // it contains the max num of consecutive x's after
+    // applying at most k times of chaning operations
+    int solve(const std::string& s, int k, char x)
     {
+        const int n = s.size();
+        int opposite = 0;
         int result = 0;
-        for (int left = 0, right = 0, count = 0; right < s.size(); ++right) {
-            if (s[right] == targetLetter) {
-                count++;
-            }
-            while (count > maxOperations) {
-                if (s[left++] == targetLetter) {
-                    count--;
-                }
+        for (int left = 0, right = 0; right < n; ++right) {
+            opposite += s[right] != x;
+            while (opposite > k) {
+                opposite -= s[left] != x;
+                left++;
             }
             result = std::max(result, right - left + 1);
         }

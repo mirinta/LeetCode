@@ -108,7 +108,8 @@ TODO:
 | [1124][link1124] | `Prefix Sum`, `Monotonic Stack` | :fire:1908 |
 | [1915][link1915] | `Prefix Sum`, `Hash Map`, `State Compression` | :fire:2235 |
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
-| [3045][link3045] | `Trie`, `KMP` | |
+| [1438][link1438] | `Sliding Window`, `Monotonic Queue`, `Multiset` | :fire:1672 |
+| [3045][link3045] | `Trie`, `KMP` | :fire:2328 |
 | [2709][link2709] | `Union Find`, `Number Theory` | :fire:2172 |
 
 [link0098]: https://leetcode.com/problems/validate-binary-search-tree/
@@ -132,3 +133,4 @@ TODO:
 [link2402]: https://leetcode.com/problems/meeting-rooms-iii
 [link3045]: https://leetcode.com/problems/count-prefix-and-suffix-pairs-ii
 [link2709]: https://leetcode.com/problems/greatest-common-divisor-traversal/description/
+[link1438]: https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/
