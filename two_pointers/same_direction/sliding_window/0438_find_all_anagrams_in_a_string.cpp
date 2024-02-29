@@ -1,5 +1,5 @@
+#include <array>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 /**
@@ -18,28 +18,22 @@ class Solution
 public:
     std::vector<int> findAnagrams(std::string s, std::string p)
     {
-        if (s.size() < p.size())
-            return {};
-
-        const int n = s.size();
-        std::unordered_map<char, int> map;
+        const int n = p.size();
+        const int m = s.size();
+        std::array<int, 26> target{};
         for (const auto& c : p) {
-            map[c]++;
+            target[c - 'a']++;
         }
+        std::array<int, 26> count{};
         std::vector<int> result;
-        for (int left = 0, right = 0, unique = 0; right < n; ++right) {
-            if (map.count(s[right]) && --map[s[right]] == 0) {
-                unique++;
-            }
-            while (unique == map.size()) {
-                if (right - left + 1 == p.size()) {
-                    result.push_back(left);
-                }
-                if (map.count(s[left])) {
-                    unique += map[s[left]] == 0 ? -1 : 0;
-                    map[s[left]]++;
-                }
+        for (int left = 0, right = 0; right < m; ++right) {
+            count[s[right] - 'a']++;
+            if (right - left + 1 > n) {
+                count[s[left] - 'a']--;
                 left++;
+            }
+            if (right - left + 1 == n && count == target) {
+                result.push_back(left);
             }
         }
         return result;
