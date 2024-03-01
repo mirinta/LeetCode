@@ -18,11 +18,10 @@ public:
         if (n <= 2)
             return n;
 
-        std::unordered_map<char, int> map; // letter to frequency
+        std::unordered_map<char, int> map;
         int result = 0;
         for (int left = 0, right = 0; right < n; ++right) {
             map[s[right]]++;
-            // we want s[left:right] contains at most 2 distinct characters
             while (map.size() > 2) {
                 if (--map[s[left]] == 0) {
                     map.erase(s[left]);

@@ -87,7 +87,7 @@ TODO:
 
 ## Liked Problems
 
-| ID | Tags | Rating |
+| ID | Tags | Difficulty |
 |----|------|------------|
 | [0098][link0098] | `Binary Search Tree` | `Medium` |
 | [0450][link0450] | `Binary Search Tree` | `Medium` |
@@ -96,11 +96,12 @@ TODO:
 | [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
 | [1504][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
 | [2945][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
-| [0787][link0787] | `Graph`, `Shortest Path`, `Priority Queue`, `Dynamic Programming` | :fire:1786 |
+| [0787][link0787] | `Graph`, `Shortest Path` | :fire:1786 |
 | [3022][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
 | [1686][link1686] | `Greedy`, `Game Theory` | :fire:2001 |
 | [2029][link2029] | `Greedy`, `Game Theory` | :fire:2277 |
 | [1642][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
+| [1838][link1838] | `Greedy`, `Sliding Window` | :fire:1876 |
 | [0962][link0962] | `Monotonic Stack`, `Binary Search`, `Two Pointers` | :fire:1608 |
 | [1442][link1442] | `Prefix Sum`, `Hash Map` | :fire:1525 |
 | [2025][link2025] | `Prefix Sum`, `Hash Map` | :fire:2218 |
@@ -108,6 +109,9 @@ TODO:
 | [1124][link1124] | `Prefix Sum`, `Monotonic Stack` | :fire:1908 |
 | [1915][link1915] | `Prefix Sum`, `Hash Map`, `State Compression` | :fire:2235 |
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
+| [0395][link0395] | `Sliding Window` | `Medium` |
+| [2401][link2401] | `Sliding Window`, `Bit Manipulation` | :fire:1750 |
+| [2968][link2968] | `Sliding Window`, `Median Theorem` | :fire:2444 |
 | [1438][link1438] | `Sliding Window`, `Monotonic Queue`, `Multiset` | :fire:1672 |
 | [3045][link3045] | `Trie`, `KMP` | :fire:2328 |
 | [2709][link2709] | `Union Find`, `Number Theory` | :fire:2172 |
@@ -134,3 +138,7 @@ TODO:
 [link3045]: https://leetcode.com/problems/count-prefix-and-suffix-pairs-ii
 [link2709]: https://leetcode.com/problems/greatest-common-divisor-traversal/description/
 [link1438]: https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/
+[link2401]: https://leetcode.com/problems/longest-nice-subarray/description/
+[link1838]: https://leetcode.com/problems/frequency-of-the-most-frequent-element/
+[link0395]: https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/description/
+[link2968]: https://leetcode.com/problems/apply-operations-to-maximize-frequency-score/description/
