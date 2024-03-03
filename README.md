@@ -38,6 +38,8 @@
 - [x] Biweekly 124 (3038~3041)
 - [x] Weekly 385 (3042~3045)
 - [ ] Weekly 386 (3046~3049): 3049 is NOT DONE!
+- [x] Biweekly 125 (3066~3068)
+- [ ] Weekly 387 (3070~3072): 3072 is NOT DONE!
 
 TODO:
 
@@ -96,6 +98,7 @@ TODO:
 | [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
 | [1504][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
 | [2945][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
+| [3068][link3068] | `Dynamic Programming`, `Tree` | |
 | [0787][link0787] | `Graph`, `Shortest Path` | :fire:1786 |
 | [3022][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
 | [1686][link1686] | `Greedy`, `Game Theory` | :fire:2001 |
@@ -142,3 +145,4 @@ TODO:
 [link1838]: https://leetcode.com/problems/frequency-of-the-most-frequent-element/
 [link0395]: https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/description/
 [link2968]: https://leetcode.com/problems/apply-operations-to-maximize-frequency-score/description/
+[link3068]: https://leetcode.com/problems/find-the-maximum-sum-of-node-values/

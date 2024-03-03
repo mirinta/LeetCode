@@ -6,10 +6,10 @@ public:
     explicit PrefixSum2D(const std::vector<std::vector<int>>& mat)
         : presum(mat.size() + 1, std::vector<int>(mat[0].size() + 1, 0))
     {
-        for (int i = 1; i < mat.size(); ++i) {
-            for (int j = 1; j < mat[i].size(); ++j) {
+        for (int i = 1; i <= mat.size(); ++i) {
+            for (int j = 1; j <= mat[0].size(); ++j) {
                 presum[i][j] =
-                    presum[i - 1][j] + presum[i][j - 1] - presum[i - 1][j - 1] + mat[i][j];
+                    presum[i - 1][j] + presum[i][j - 1] - presum[i - 1][j - 1] + mat[i - 1][j - 1];
             }
         }
     }
@@ -25,6 +25,5 @@ public:
     }
 
 private:
-    // presum[i][j] = sum of elements in mat[0:i-1][0:j-1]
-    std::vector<std::vector<int>> presum;
+    std::vector<std::vector<int>> presum; // presum[i][j] = sum of elements in mat[0:i-1][0:j-1]
 };

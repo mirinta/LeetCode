@@ -27,8 +27,8 @@ public:
     {
         ListNode vHead(-1);
         vHead.next = head;
-        auto* prev = getKthNodeFromEnd(&vHead, n + 1);
-        prev->next = prev->next->next;
+        auto* node = getKthNodeFromEnd(&vHead, n + 1);
+        node->next = node->next->next;
         return vHead.next;
     }
 
