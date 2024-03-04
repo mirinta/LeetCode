@@ -56,7 +56,7 @@ private:
         if (std::any_of(last.begin(), last.end(), [](const auto& i) { return i == -1; }))
             return false;
 
-        int count = 0; // num of decreament operations
+        int count = 0; // num of decrement operations
         for (int s = 0; s < maxTime; ++s) {
             const int i = changeIndices[s] - 1;
             if (last[i] != s) {

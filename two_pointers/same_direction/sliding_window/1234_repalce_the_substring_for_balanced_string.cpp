@@ -23,31 +23,23 @@ class Solution
 public:
     int balancedString(std::string s)
     {
+        // if s[j:i] can be replaced to make s balanced,
+        // then the remaining frequencies of Q/W/E/R must be <= n/4
+        const int n = s.size();
         std::unordered_map<char, int> map;
         for (const auto& c : s) {
             map[c]++;
         }
-        const int n = s.size();
-        const int targetCount = n / 4;
-        auto equalToTargetCount = [&targetCount](const auto& pair) {
-            return pair.second == targetCount;
-        };
-        if (std::all_of(map.begin(), map.end(), equalToTargetCount))
+        if (std::all_of(map.begin(), map.end(), [&](const auto& p) { return p.second == n / 4; }))
             return 0;
 
-        // X X X X X X X ...
-        // |<--window->|
-        // if the frequency of each character outside the window <= n/4
-        // then we can make the entire string balanced
-        auto lessThanOrEqualToTargetCount = [&targetCount](const auto& pair) {
-            return pair.second <= targetCount;
-        };
+        auto predicate = [&](const auto& p) { return p.second <= n / 4; };
         int result = INT_MAX;
         for (int left = 0, right = 0; right < n; ++right) {
             map[s[right]]--;
-            while (std::all_of(map.begin(), map.end(), lessThanOrEqualToTargetCount)) {
-                result = std::min(result, right - left + 1);
+            while (std::all_of(map.begin(), map.end(), predicate)) {
                 map[s[left]]++;
+                result = std::min(result, right - left + 1);
                 left++;
             }
         }

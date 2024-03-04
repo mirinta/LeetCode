@@ -19,25 +19,17 @@ class Solution
 public:
     long long countSubarrays(std::vector<int>& nums, int k)
     {
-        // 0 X X i-1 i X X X X X X j
-        //           |<--k times-->|
-        // valid subarrays:
-        // - nums[i:j]
-        // - nums[i-1:j]
-        // - nums[i-2:j]
-        // ...
-        // - nums[0:j]
-        // thus, num of valid subarrays = i + 1
-        const int max = *std::max_element(nums.begin(), nums.end());
         const int n = nums.size();
+        const int max = *std::max_element(nums.begin(), nums.end());
+        int count = 0;
         long long result = 0;
-        for (int i = 0, j = 0, count = 0; j < n; ++j) {
-            count += nums[j] == max ? 1 : 0;
-            while (count == k) {
-                count -= nums[i] == max ? 1 : 0;
-                i++;
+        for (int left = 0, right = 0; right < n; ++right) {
+            count += nums[right] == max;
+            while (count >= k) {
+                count -= nums[left] == max;
+                left++;
             }
-            result += i;
+            result += left;
         }
         return result;
     }

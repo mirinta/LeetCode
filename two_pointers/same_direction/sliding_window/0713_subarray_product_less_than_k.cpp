@@ -14,17 +14,24 @@ class Solution
 public:
     int numSubarrayProductLessThanK(std::vector<int>& nums, int k)
     {
+        // nums[i] are positive integers
+        if (k <= 1)
+            return 0;
+
         const int n = nums.size();
-        int result = 0;
         int product = 1;
+        int result = 0;
         for (int left = 0, right = 0; right < n; ++right) {
             product *= nums[right];
-            while (left <= right && product >= k) {
-                product /= nums[left++];
+            while (product >= k) {
+                product /= nums[left];
+                left++;
             }
-            // [left, right] is a valid window,
             // valid subarrays are:
-            // [left, right], [left+1, right], ... , [right, right]
+            // nums[left:right]
+            // nums[left+1:right]
+            // ...
+            // nums[right:right]
             result += right - left + 1;
         }
         return result;
