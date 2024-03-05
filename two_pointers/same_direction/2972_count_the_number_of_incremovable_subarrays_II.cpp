@@ -23,38 +23,37 @@ class Solution
 public:
     long long incremovableSubarrayCount(std::vector<int>& nums)
     {
-        // similar to LC 1574
-        const int n = nums.size();
+        // similar to LC.1574
+        const long long n = nums.size();
+        // find the largest i such that nums[0:i] is strictly increasing
         int i = 0;
         while (i + 1 < n && nums[i] < nums[i + 1]) {
             i++;
-        } // nums[0:i] is strictly increasing
-        // if i == n - 1,
-        // it means the original array is strictly increasing, we can remove any subarray of it
+        }
+        // if the original nums is already strictly increasing,
+        // then all its subarrays are incremovable
         if (i == n - 1)
-            return (1 + n) * n / 2;
+            return n * (n + 1) / 2;
 
-        // since nums[0:i] is strictly increasing
-        // then we can remove i+2 subarrays based on nums[i+1:n-1]
-        // - nums[i+1:n-1]
-        // - nums[i:n-1]
-        // - nums[i-1:n-1]
+        // since nums[0:i] is strictly increasing,
+        // nums[i+1:n-1] is incremovable
+        // nums[i:n-1] is incremovable
         // ...
-        // - nums[0:n-1]
+        // nums[0:n-1] is incremovable
+        // thus, num of incremovable subarrays = i+2
         long long result = i + 2;
-        // next, we fix nums[j] as the last element of the modified array
-        // then we need to find the largest i such that
-        // nums[0:i] is strictly increasing and nums[j] < nums[j]
-        // then we can remove i+2 subarrays:
-        // - nums[i+1:j-1]
-        // - nums[i:j-1]
-        // - ...
-        // - nums[0:j-1]
-        for (int j = n - 1; j > 0; --j) {
+        // if nums[j:n-1] is strictly increasing and
+        // we can find index i such that nums[i] < nums[j],
+        // nums[i+1:j-1] is incremovable
+        // nums[i:j-1] is incremovable
+        // ...
+        // nums[0:j-1] is incremovable
+        // thus, given nums[j], num of incremovable subarrays = i+2
+        for (int j = n - 1; j >= 0; --j) {
             while (i >= 0 && nums[i] >= nums[j]) {
                 i--;
             }
-            if (j - 1 >= i + 1) {
+            if (i + 1 <= j - 1) {
                 result += i + 2;
             }
             if (nums[j] <= nums[j - 1])

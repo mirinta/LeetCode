@@ -117,6 +117,8 @@ TODO:
 | [2968][link2968] | `Sliding Window`, `Median Theorem` | :fire:2444 |
 | [1438][link1438] | `Sliding Window`, `Monotonic Queue`, `Multiset` | :fire:1672 |
 | [3045][link3045] | `Trie`, `KMP` | :fire:2328 |
+| [1574][link1574] | `Two Pointers` | :fire:1932 |
+| [2972][link2972] | `Two Pointers` | :fire:2153 |
 | [2709][link2709] | `Union Find`, `Number Theory` | :fire:2172 |
 
 [link0098]: https://leetcode.com/problems/validate-binary-search-tree/
@@ -146,3 +148,5 @@ TODO:
 [link0395]: https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/description/
 [link2968]: https://leetcode.com/problems/apply-operations-to-maximize-frequency-score/description/
 [link3068]: https://leetcode.com/problems/find-the-maximum-sum-of-node-values/
+[link1574]: https://leetcode.com/problems/shortest-subarray-to-be-removed-to-make-array-sorted/description/
+[link2972]: https://leetcode.com/problems/count-the-number-of-incremovable-subarrays-ii/description/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china
