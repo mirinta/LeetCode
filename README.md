@@ -114,10 +114,13 @@ TODO:
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
 | [0395][link0395] | `Sliding Window` | `Medium` |
 | [2401][link2401] | `Sliding Window`, `Bit Manipulation` | :fire:1750 |
+| [2106][link2106] | `Sliding Window`, `Binary Search` | :fire:2062 |
 | [2968][link2968] | `Sliding Window`, `Median Theorem` | :fire:2444 |
 | [1438][link1438] | `Sliding Window`, `Monotonic Queue`, `Multiset` | :fire:1672 |
 | [3045][link3045] | `Trie`, `KMP` | :fire:2328 |
 | [1574][link1574] | `Two Pointers` | :fire:1932 |
+| [1712][link1712] | `Two Pointers`, `Prefix Sum`, `Binary Search` | :fire:2079 |
+| [2444][link2444] | `Two Pointers` | :fire:2093 |
 | [2972][link2972] | `Two Pointers` | :fire:2153 |
 | [2709][link2709] | `Union Find`, `Number Theory` | :fire:2172 |
 
@@ -149,4 +152,7 @@ TODO:
 [link2968]: https://leetcode.com/problems/apply-operations-to-maximize-frequency-score/description/
 [link3068]: https://leetcode.com/problems/find-the-maximum-sum-of-node-values/
 [link1574]: https://leetcode.com/problems/shortest-subarray-to-be-removed-to-make-array-sorted/description/
-[link2972]: https://leetcode.com/problems/count-the-number-of-incremovable-subarrays-ii/description/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china
+[link2972]: https://leetcode.com/problems/count-the-number-of-incremovable-subarrays-ii/description/
+[link1712]: https://leetcode.com/problems/ways-to-split-array-into-three-subarrays/description/
+[link2444]: https://leetcode.com/problems/count-subarrays-with-fixed-bounds/description/
+[link2106]: https://leetcode.com/problems/maximum-fruits-harvested-after-at-most-k-steps/description/
