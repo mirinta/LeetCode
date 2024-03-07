@@ -117,6 +117,7 @@ TODO:
 | [2106][link2106] | `Sliding Window`, `Binary Search` | :fire:2062 |
 | [2968][link2968] | `Sliding Window`, `Median Theorem` | :fire:2444 |
 | [1438][link1438] | `Sliding Window`, `Monotonic Queue`, `Multiset` | :fire:1672 |
+| [2781][link2781] | `Sliding Window`, `Trie` | :fire:2204 |
 | [3045][link3045] | `Trie`, `KMP` | :fire:2328 |
 | [1574][link1574] | `Two Pointers` | :fire:1932 |
 | [1712][link1712] | `Two Pointers`, `Prefix Sum`, `Binary Search` | :fire:2079 |
@@ -156,3 +157,4 @@ TODO:
 [link1712]: https://leetcode.com/problems/ways-to-split-array-into-three-subarrays/description/
 [link2444]: https://leetcode.com/problems/count-subarrays-with-fixed-bounds/description/
 [link2106]: https://leetcode.com/problems/maximum-fruits-harvested-after-at-most-k-steps/description/
+[link2781]: https://leetcode.com/problems/length-of-the-longest-valid-substring/description/
