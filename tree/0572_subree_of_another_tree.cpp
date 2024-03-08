@@ -29,7 +29,10 @@ class Solution
 public:
     bool isSubtree(TreeNode* root, TreeNode* subRoot)
     {
-        if (!root)
+        if (!root && !subRoot)
+            return true;
+
+        if (!root || !subRoot)
             return false;
 
         if (dfs(root, subRoot))
@@ -45,10 +48,7 @@ private:
         if (!node1 && !node2)
             return true;
 
-        if (!node1 || !node2)
-            return false;
-
-        if (node1->val != node2->val)
+        if (!node1 || !node2 || node1->val != node2->val)
             return false;
 
         return dfs(node1->left, node2->left) && dfs(node1->right, node2->right);

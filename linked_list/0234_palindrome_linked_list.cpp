@@ -29,7 +29,7 @@ private:
     bool approach2(ListNode* head)
     {
         if (!head)
-            return false;
+            return true;
 
         if (!head->next)
             return true; // only one node
@@ -75,7 +75,7 @@ private:
     bool approach1(ListNode* head)
     {
         if (!head)
-            return false;
+            return true;
 
         if (!head->next)
             return true; // only one node
