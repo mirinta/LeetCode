@@ -39,7 +39,8 @@
 - [x] Weekly 385 (3042~3045)
 - [ ] Weekly 386 (3046~3049): 3049 is NOT DONE!
 - [x] Biweekly 125 (3066~3068)
-- [ ] Weekly 387 (3070~3072): 3072 is NOT DONE!
+- [x] Weekly 387 (3070~3072)
+- [ ] Weekly 388 (3074~3077)
 
 TODO:
 
@@ -112,6 +113,8 @@ TODO:
 | [1124][link1124] | `Prefix Sum`, `Monotonic Stack` | :fire:1908 |
 | [1915][link1915] | `Prefix Sum`, `Hash Map`, `State Compression` | :fire:2235 |
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
+| [0315][link0315] | `Merge Sort`, `Two Pointers`, `Binary Indexed Tree` | `Hard` |
+| [0493][link0493] | `Merge Sort`, `Two Pointers`, `Binary Indexed Tree`, `Binary Search` | `Hard` |
 | [0395][link0395] | `Sliding Window` | `Medium` |
 | [2401][link2401] | `Sliding Window`, `Bit Manipulation` | :fire:1750 |
 | [2106][link2106] | `Sliding Window`, `Binary Search` | :fire:2062 |
@@ -158,3 +161,5 @@ TODO:
 [link2444]: https://leetcode.com/problems/count-subarrays-with-fixed-bounds/description/
 [link2106]: https://leetcode.com/problems/maximum-fruits-harvested-after-at-most-k-steps/description/
 [link2781]: https://leetcode.com/problems/length-of-the-longest-valid-substring/description/
+[link0315]: https://leetcode.com/problems/count-of-smaller-numbers-after-self/description/
+[link0493]: https://leetcode.com/problems/reverse-pairs/description/
