@@ -40,7 +40,7 @@
 - [ ] Weekly 386 (3046~3049): 3049 is NOT DONE!
 - [x] Biweekly 125 (3066~3068)
 - [x] Weekly 387 (3070~3072)
-- [ ] Weekly 388 (3074~3077)
+- [x] Weekly 388 (3074~3077)
 
 TODO:
 
