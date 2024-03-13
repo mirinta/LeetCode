@@ -118,6 +118,7 @@ TODO:
 | [0395][link0395] | `Sliding Window` | `Medium` |
 | [2401][link2401] | `Sliding Window`, `Bit Manipulation` | :fire:1750 |
 | [2106][link2106] | `Sliding Window`, `Binary Search` | :fire:2062 |
+| [1610][link1610] | `Sliding Window`, `Geometry` | :fire:2147 |
 | [2968][link2968] | `Sliding Window`, `Median Theorem` | :fire:2444 |
 | [1438][link1438] | `Sliding Window`, `Monotonic Queue`, `Multiset` | :fire:1672 |
 | [2781][link2781] | `Sliding Window`, `Trie` | :fire:2204 |
@@ -163,3 +164,4 @@ TODO:
 [link2781]: https://leetcode.com/problems/length-of-the-longest-valid-substring/description/
 [link0315]: https://leetcode.com/problems/count-of-smaller-numbers-after-self/description/
 [link0493]: https://leetcode.com/problems/reverse-pairs/description/
+[link1610]: https://leetcode.com/problems/maximum-number-of-visible-points/
