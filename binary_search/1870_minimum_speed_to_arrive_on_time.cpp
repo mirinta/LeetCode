@@ -35,42 +35,39 @@ public:
         if (maxSpeed == -1)
             return -1;
 
-        int lo = 1;
-        int hi = maxSpeed;
-        while (lo < hi) {
-            const int mid = lo + (hi - lo) / 2;
-            if (isValid(mid, dist, hour)) {
-                hi = mid;
+        int min = 1;
+        int max = maxSpeed;
+        while (min < max) {
+            const int speed = min + (max - min) / 2;
+            if (isValid(speed, dist, hour)) {
+                max = speed;
             } else {
-                lo = mid + 1;
+                min = speed + 1;
             }
         }
-        return lo;
+        return min;
     }
 
 private:
-    int getMaxSpeed(const std::vector<int>& dist, double timeLimit)
+    int getMaxSpeed(const std::vector<int>& dist, double hour)
     {
-        if (dist.empty() || dist.size() - 1 >= timeLimit)
+        if (dist.empty() || dist.size() - 1 >= hour)
             return -1;
 
-        int maxSpeed = std::ceil(dist.back() / (timeLimit - dist.size() + 1));
-        for (int i = 0; i < dist.size() - 1; ++i) {
-            maxSpeed = std::max(maxSpeed, dist[i]);
+        int maxSpeed = std::ceil(dist.back() * 1.0 / (hour - dist.size() + 1));
+        for (const auto& val : dist) {
+            maxSpeed = std::max(maxSpeed, val);
         }
         return maxSpeed;
     }
 
-    bool isValid(int speed, std::vector<int>& dist, double timeLimit)
+    bool isValid(int speed, const std::vector<int>& dist, double hour)
     {
-        double time = 0;
+        double total = 0;
         for (int i = 0; i < dist.size(); ++i) {
-            if (i == dist.size() - 1) {
-                time += dist[i] * 1.0 / speed;
-            } else {
-                time += std::ceil(dist[i] * 1.0 / speed);
-            }
-            if (time > timeLimit)
+            const double time = dist[i] * 1.0 / speed;
+            total += i < dist.size() - 1 ? std::ceil(time) : time;
+            if (total > hour)
                 return false;
         }
         return true;

@@ -22,8 +22,9 @@ class Solution
 public:
     int hIndex(std::vector<int>& citations)
     {
-        // find the first nums[i],
-        // s.t. nums[i] >= n - i
+        // find the smallest x such that
+        // citations[x] >= n - x
+        // then h = n - x
         const int n = citations.size();
         int lo = 0;
         int hi = n - 1;
