@@ -112,6 +112,7 @@ TODO:
 | [2949][link2949] | `Prefix Sum`, `Hash Map` | :fire:2445 |
 | [1124][link1124] | `Prefix Sum`, `Monotonic Stack` | :fire:1908 |
 | [1915][link1915] | `Prefix Sum`, `Hash Map`, `State Compression` | :fire:2235 |
+| [0407][link0407] | `Priority Queue`, `BFS` | `Hard` | 
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
 | [0315][link0315] | `Merge Sort`, `Two Pointers`, `Binary Indexed Tree` | `Hard` |
 | [0493][link0493] | `Merge Sort`, `Two Pointers`, `Binary Indexed Tree`, `Binary Search` | `Hard` |
@@ -165,3 +166,4 @@ TODO:
 [link0315]: https://leetcode.com/problems/count-of-smaller-numbers-after-self/description/
 [link0493]: https://leetcode.com/problems/reverse-pairs/description/
 [link1610]: https://leetcode.com/problems/maximum-number-of-visible-points/
+[link0407]: https://leetcode.com/problems/trapping-rain-water-ii/description/

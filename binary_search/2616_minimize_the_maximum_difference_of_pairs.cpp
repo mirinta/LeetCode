@@ -23,7 +23,6 @@ public:
     int minimizeMax(std::vector<int>& nums, int p)
     {
         std::sort(nums.begin(), nums.end());
-        // search the maximum difference among pairs
         int lo = 0;
         int hi = nums.back() - nums.front();
         while (lo < hi) {
@@ -38,17 +37,20 @@ public:
     }
 
 private:
-    // nums is sorted in ascending order
-    // #NOTE# no index appears more than once among the pairs
-    bool isValid(int maxDiff, const std::vector<int>& nums, int minPairs)
+    // check if the max num of pairs >= p where the difference of each pair <= max
+    bool isValid(int max, const std::vector<int>& nums, int p)
     {
+        const int n = nums.size();
         int count = 0;
-        for (int i = 0; i < nums.size() - 1; ++i) {
-            if (nums[i + 1] - nums[i] <= maxDiff) {
+        int i = 0;
+        while (i < n - 1) {
+            if (nums[i + 1] - nums[i] <= max) {
                 count++;
+                i += 2;
+            } else {
                 i++;
             }
         }
-        return count >= minPairs;
+        return count >= p;
     }
 };

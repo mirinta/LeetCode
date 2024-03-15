@@ -19,38 +19,40 @@ public:
     std::vector<int> productExceptSelf(std::vector<int>& nums) { return approach2(nums); }
 
 private:
-    // two-pass, time O(N), space O(n)
     std::vector<int> approach2(const std::vector<int>& nums)
     {
+        // result[n-1] = nums[0]*...*nums[n-2]
+        // result[n-2] = nums[0]*...*nums[n-3]*nums[n-1]
+        // result[n-3] = nums[0]*...*nums[n-4]*nums[n-2]*nums[n-1]
+        // ...
         const int n = nums.size();
         std::vector<int> result(n, 1);
         for (int i = 1; i < n; ++i) {
             result[i] = result[i - 1] * nums[i - 1];
         }
-        for (int i = n - 1, rightProduct = 1; i >= 0; --i) {
-            result[i] *= rightProduct;
-            rightProduct *= nums[i];
+        for (int i = n - 1, base = 1; i >= 0; --i) {
+            result[i] *= base;
+            base *= nums[i];
         }
         return result;
     }
 
-    // three-pass, time O(N), space O(N)
     std::vector<int> approach1(const std::vector<int>& nums)
     {
-        // X X X ... X X A X X X ... X X
-        // |<-product->|   |<-product->|
+        // prefix[i] = nums[0]*...*nums[i-1]
+        // suffix[i] = nums[n-1]*...*nums[i+1]
         const int n = nums.size();
-        std::vector<int> leftProduct(n, 1);
-        std::vector<int> rightProduct(n, 1);
+        std::vector<int> prefix(n, 1);
         for (int i = 1; i < n; ++i) {
-            leftProduct[i] = leftProduct[i - 1] * nums[i - 1];
+            prefix[i] = prefix[i - 1] * nums[i - 1];
         }
+        std::vector<int> suffix(n, 1);
         for (int i = n - 2; i >= 0; --i) {
-            rightProduct[i] = rightProduct[i + 1] * nums[i + 1];
+            suffix[i] = suffix[i + 1] * nums[i + 1];
         }
-        std::vector<int> result(n, 1);
+        std::vector<int> result(n);
         for (int i = 0; i < n; ++i) {
-            result[i] = leftProduct[i] * rightProduct[i];
+            result[i] = prefix[i] * suffix[i];
         }
         return result;
     }

@@ -18,47 +18,44 @@ public:
     {
         const int m = heightMap.size();
         const int n = heightMap[0].size();
-        std::vector<std::vector<int>> visited(m, std::vector<int>(n, false));
-        using Tuple = std::tuple<int, int, int>; // <height, x, y>
+        using Tuple = std::tuple<int, int, int>; // x, y, height
         auto comparator = [](const auto& t1, const auto& t2) {
-            return std::get<0>(t1) > std::get<0>(t2);
+            return std::get<2>(t1) > std::get<2>(t2);
         };
-        std::priority_queue<Tuple, std::vector<Tuple>, decltype(comparator)> pq(
-            comparator); // min heap
+        std::priority_queue<Tuple, std::vector<Tuple>, decltype(comparator)> pq(comparator);
+        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         for (int i = 0; i < m; ++i) {
-            pq.emplace(heightMap[i][0], i, 0);
             visited[i][0] = true;
-            pq.emplace(heightMap[i][n - 1], i, n - 1);
+            pq.emplace(i, 0, heightMap[i][0]);
             visited[i][n - 1] = true;
+            pq.emplace(i, n - 1, heightMap[i][n - 1]);
         }
         for (int j = 1; j < n - 1; ++j) {
-            pq.emplace(heightMap[0][j], 0, j);
             visited[0][j] = true;
-            pq.emplace(heightMap[m - 1][j], m - 1, j);
+            pq.emplace(0, j, heightMap[0][j]);
             visited[m - 1][j] = true;
+            pq.emplace(m - 1, j, heightMap[m - 1][j]);
         }
-        const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         int seaLevel = 0;
         int result = 0;
         while (!pq.empty()) {
-            const auto [h, x, y] = pq.top();
+            const auto [x, y, h] = pq.top();
             pq.pop();
-            if (h > seaLevel) {
-                seaLevel = h;
-            }
+            seaLevel = std::max(seaLevel, h);
             result += seaLevel - h;
             for (const auto& [dx, dy] : kDirections) {
                 const int i = x + dx;
                 const int j = y + dy;
-                if (i < 0 || i >= m || j < 0 || j >= n)
+                if (i < 0 || i >= m || j < 0 || j >= n || visited[i][j])
                     continue;
 
-                if (!visited[i][j]) {
-                    visited[i][j] = true;
-                    pq.emplace(heightMap[i][j], i, j);
-                }
+                visited[i][j] = true;
+                pq.emplace(i, j, heightMap[i][j]);
             }
         }
         return result;
     }
+
+private:
+    const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 };
