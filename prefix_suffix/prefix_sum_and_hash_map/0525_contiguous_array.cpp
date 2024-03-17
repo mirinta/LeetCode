@@ -14,23 +14,25 @@ class Solution
 public:
     int findMaxLength(std::vector<int>& nums)
     {
-        // let sum[i] = sum of nums[0:i], if nums[j] = 0, let sum += -1
-        // if map[sum[i]] = j, then sum[i] - sum[j] = 0
-        // it means sum of nums[j+1:i] = 0, i.e., nums[j+1:i] has equal num of 0 and 1
-        // length of this subarray = i-j
-        // corner case: sum[i] = 0, length of nums[0:i] = i+1
-        // thus, we initialize map[0] = -1
+        // let presum[i] = sum of nums[0:i]
+        // if nums[j+1:i] is a valid subarray, then
+        // 2 * (presum[i] - presum[j]) = i - j
+        // 2 * presum[i] - i = 2 * presum[j] - j
         const int n = nums.size();
+        // base case: nums[0:i+1] is valid
+        // 2 * presum[i] = i + 1
+        // 2 * presum[i] - i = 1;
         std::unordered_map<int, int> map;
-        map[0] = -1;
+        map[1] = -1;
         int sum = 0;
         int result = 0;
         for (int i = 0; i < n; ++i) {
-            sum += nums[i] == 0 ? -1 : 1;
-            if (map.find(sum) == map.end()) {
-                map[sum] = i;
+            sum += nums[i];
+            const int target = 2 * sum - i;
+            if (map.count(target)) {
+                result = std::max(result, i - map[target]);
             } else {
-                result = std::max(result, i - map[sum]);
+                map[target] = i;
             }
         }
         return result;

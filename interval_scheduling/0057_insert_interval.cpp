@@ -27,17 +27,15 @@ public:
     std::vector<std::vector<int>> insert(std::vector<std::vector<int>>& intervals,
                                          std::vector<int>& newInterval)
     {
-        // insert the given interval
         auto iter = std::upper_bound(intervals.begin(), intervals.end(), newInterval[0],
-                                     [](int start, const auto& v) { return start < v[0]; });
+                                     [](int val, const auto& v) { return val < v[0]; });
         intervals.insert(iter, newInterval);
-        // merge intervals, same as LC 56
-        std::vector<std::vector<int>> result{intervals[0]};
-        for (int i = 1; i < intervals.size(); ++i) {
-            if (intervals[i][0] <= result.back()[1]) {
-                result.back()[1] = std::max(result.back()[1], intervals[i][1]);
-            } else {
+        std::vector<std::vector<int>> result;
+        for (int i = 0; i < intervals.size(); ++i) {
+            if (result.empty() || intervals[i][0] > result.back()[1]) {
                 result.push_back(intervals[i]);
+            } else {
+                result.back()[1] = std::max(result.back()[1], intervals[i][1]);
             }
         }
         return result;
