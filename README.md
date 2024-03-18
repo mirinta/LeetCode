@@ -41,7 +41,7 @@
 - [x] Biweekly 125 (3066~3068)
 - [x] Weekly 387 (3070~3072)
 - [x] Weekly 388 (3074~3077)
-- [ ] Biweekly 126 (3079~3080)
+- [ ] Biweekly 126 (3079~3082): 3082 is NOT DONE!
 - [ ] Weekly 389 (3083~3086)
 
 TODO:
@@ -98,11 +98,12 @@ TODO:
 | [0450][link0450] | `Binary Search Tree` | `Medium` |
 | [0701][link0701] | `Binary Search Tree` | `Medium` |
 | [2513][link2513] | `Binary Search`, `Inclusive-Exclusive Principle` | :fire: 2302 |
+| [2528][link2528] | `Binary Search`, `Sliding Window` | :fire:2236 |
 | [0222][link0222] | `Complete Binary Tree` | `Easy+` |
 | [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
 | [1504][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
 | [2945][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
-| [3068][link3068] | `Dynamic Programming`, `Tree` | |
+| [3068][link3068] | `Dynamic Programming`, `Tree` | :fire:2268 |
 | [0787][link0787] | `Graph`, `Shortest Path` | :fire:1786 |
 | [3022][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
 | [1686][link1686] | `Greedy`, `Game Theory` | :fire:2001 |
@@ -171,3 +172,4 @@ TODO:
 [link1610]: https://leetcode.com/problems/maximum-number-of-visible-points/
 [link0407]: https://leetcode.com/problems/trapping-rain-water-ii/description/
 [link2513]: https://leetcode.com/problems/minimize-the-maximum-of-two-arrays/description/
+[link2528]: https://leetcode.com/problems/maximize-the-minimum-powered-city/description/

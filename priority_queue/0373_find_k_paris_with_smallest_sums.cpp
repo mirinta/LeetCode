@@ -21,26 +21,25 @@ public:
     std::vector<std::vector<int>> kSmallestPairs(std::vector<int>& nums1, std::vector<int>& nums2,
                                                  int k)
     {
-        // nums1: i X X ...
-        // nums2: j X X ...
+        const int m = nums1.size();
+        const int n = nums2.size();
         using Pair = std::pair<int, int>; // <index of nums1, index of nums2>
         auto comparator = [&nums1, &nums2](const auto& p1, const auto& p2) {
             return nums1[p1.first] + nums2[p1.second] > nums1[p2.first] + nums2[p2.second];
         };
-        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
-            comparator); // min heap
-        for (int i = 0; i < nums1.size(); ++i) {
+        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator);
+        for (int i = 0; i < m; ++i) {
             pq.emplace(i, 0);
         }
         std::vector<std::vector<int>> result;
         while (!pq.empty() && k > 0) {
+            k--;
             const auto [i, j] = pq.top();
             pq.pop();
             result.push_back({nums1[i], nums2[j]});
-            if (j + 1 < nums2.size()) {
+            if (j + 1 < n) {
                 pq.emplace(i, j + 1);
             }
-            k--;
         }
         return result;
     }
