@@ -23,27 +23,20 @@ public:
         for (const auto& val : nums) {
             map[val]++;
         }
-        std::priority_queue<Pair, std::vector<Pair>, Compare> pq;
-        for (const auto& pair : map) {
-            pq.push(pair);
+        using Pair = std::pair<int, int>; // <val, freq>
+        auto comparator = [](const auto& p1, const auto& p2) { return p1.second > p2.second; };
+        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(comparator);
+        for (const auto& [val, freq] : map) {
+            pq.emplace(val, freq);
             if (pq.size() > k) {
                 pq.pop();
             }
         }
         std::vector<int> result;
-        result.reserve(pq.size());
         while (!pq.empty()) {
-            result.emplace_back(pq.top().first);
+            result.push_back(pq.top().first);
             pq.pop();
         }
         return result;
     }
-
-private:
-    using Pair = std::pair<int, int>; // <val, freq>
-
-    struct Compare
-    {
-        bool operator()(const Pair& p1, const Pair& p2) const { return p1.second > p2.second; }
-    };
 };

@@ -16,11 +16,14 @@ struct TreeNode
 };
 
 /**
- * Given the "root" of a binary tree, return all duplicate subtrees.
+ * Given the root of a binary tree, return all duplicate subtrees.
  *
- * For each kind of duplicate subtrees you only need to return the root node of any one of them.
+ * For each kind of duplicate subtrees, you only need to return the root node of any one of them.
  *
  * Two trees are duplicate if they have the same structure with the same node values.
+ *
+ * ! The number of the nodes in the tree will be in the range [1, 5000]
+ * ! -200 <= Node.val <= 200
  */
 
 class Solution
@@ -28,32 +31,27 @@ class Solution
 public:
     std::vector<TreeNode*> findDuplicateSubtrees(TreeNode* root)
     {
-        if (!root)
-            return {};
-
-        traverse(root);
+        std::unordered_map<std::string, int> keys;
+        std::vector<TreeNode*> result;
+        dfs(result, keys, root);
         return result;
     }
 
 private:
-    static constexpr char k_separator = ',';
-    const std::string k_nullptr = "#";
-    std::unordered_map<std::string, int> freq;
-    std::vector<TreeNode*> result;
-
-    std::string traverse(TreeNode* node)
+    std::string dfs(std::vector<TreeNode*>& result, std::unordered_map<std::string, int>& keys,
+                    TreeNode* root)
     {
-        if (!node)
-            return k_nullptr;
+        if (!root)
+            return "#";
 
-        auto str = std::to_string(node->val);
-        str.push_back(k_separator);
-        str.append(traverse(node->left));
-        str.push_back(k_separator);
-        str.append(traverse(node->right));
-        if (freq[str]++ == 1) {
-            result.push_back(node);
+        auto s = std::to_string(root->val);
+        s.push_back(',');
+        s.append(dfs(result, keys, root->left));
+        s.push_back(',');
+        s.append(dfs(result, keys, root->right));
+        if (keys[s]++ == 1) {
+            result.push_back(root);
         }
-        return str;
+        return s;
     }
 };

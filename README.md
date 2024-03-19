@@ -7,7 +7,7 @@
 - [x] Weekly 352 (2760~2763)
 - [x] Biweekly 108 (2765~2768)
 - [x] Weekly 365 (2873~2876)
-- [ ] Weekly 366 (2894~2897): 2896 and 2897 are NOT DONE!
+- [ ] Weekly 366 (2894~2897): 2897 is NOT DONE!
 - [ ] Biweekly 115 (2899~2902): 2902 is NOT DONE!
 - [x] Weekly 367 (2903~2906)
 - [x] Weekly 368 (2908~2911)
@@ -41,8 +41,8 @@
 - [x] Biweekly 125 (3066~3068)
 - [x] Weekly 387 (3070~3072)
 - [x] Weekly 388 (3074~3077)
-- [ ] Biweekly 126 (3079~3082): 3082 is NOT DONE!
-- [ ] Weekly 389 (3083~3086)
+- [x] Biweekly 126 (3079~3082)
+- [x] Weekly 389 (3083~3086)
 
 TODO:
 

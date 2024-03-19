@@ -24,38 +24,19 @@ class Solution
 public:
     std::vector<std::vector<std::string>> groupStrings(std::vector<std::string>& strings)
     {
-        // shift "acp"
-        // - a to b
-        // - c to d
-        // - q to q
-        // thus, "bdq"
         std::unordered_map<std::string, std::vector<std::string>> map;
         for (const auto& s : strings) {
-            map[encode(s)].push_back(s);
+            std::string key(s);
+            key[0] = 'a';
+            const int shift = key[0] - s[0];
+            for (int i = 1; i < key.size(); ++i) {
+                key[i] = (shift + s[i] + 26) % 26 + 'a';
+            }
+            map[key].push_back(s);
         }
         std::vector<std::vector<std::string>> result;
-        result.reserve(map.size());
         for (const auto& [key, group] : map) {
             result.push_back(group);
-        }
-        return result;
-    }
-
-private:
-    int shiftTimes(const std::string& s)
-    {
-        // how many times to shift s[0] to 'a'
-        // e.g. 25 times to shift 'b' to 'a'
-        return 26 - (s[0] - 'a');
-    }
-
-    std::string encode(const std::string& s)
-    {
-        // shift s such that s[0] = 'a'
-        const int times = shiftTimes(s);
-        std::string result(s);
-        for (auto& c : result) {
-            c = (c - 'a' + times) % 26 + 'a';
         }
         return result;
     }

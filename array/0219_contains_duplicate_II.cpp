@@ -15,8 +15,9 @@ class Solution
 public:
     bool containsNearbyDuplicate(std::vector<int>& nums, int k)
     {
-        std::unordered_map<int, int> map; // value to index
-        for (int i = 0; i < nums.size(); ++i) {
+        const int n = nums.size();
+        std::unordered_map<int, int> map;
+        for (int i = 0; i < n; ++i) {
             if (map.count(nums[i]) && i - map[nums[i]] <= k)
                 return true;
 

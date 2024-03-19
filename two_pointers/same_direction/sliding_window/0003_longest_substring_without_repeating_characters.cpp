@@ -19,7 +19,9 @@ public:
         for (int left = 0, right = 0; right < n; ++right) {
             map[s[right]]++;
             while (map[s[right]] > 1) {
-                map[s[left]]--;
+                if (--map[s[left]] == 0) {
+                    map.erase(s[left]);
+                }
                 left++;
             }
             result = std::max(result, right - left + 1);

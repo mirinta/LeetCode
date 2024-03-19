@@ -21,55 +21,15 @@ class Solution
 public:
     std::vector<std::vector<std::string>> groupAnagrams(std::vector<std::string>& strs)
     {
-        return approach2(strs);
-    }
-
-private:
-    // time O(NK), space O(NK)
-    // - N = strs.size(), K = maximum length of strs[i]
-    std::vector<std::vector<std::string>> approach2(const std::vector<std::string>& strs)
-    {
-        std::vector<std::vector<std::string>> result;
-        std::unordered_map<std::string, std::vector<std::string>> map;
-        for (const auto& s : strs) {
-            map[encode(s)].push_back(s);
-        }
-        for (auto& [key, anagrams] : map) {
-            result.push_back(std::move(anagrams));
-        }
-        return result;
-    }
-
-    std::string encode(const std::string& s)
-    {
-        std::array<int, 26> count{0};
-        for (const auto& c : s) {
-            count[c - 'a']++;
-        }
-        std::string result;
-        for (int i = 0; i < 26; ++i) {
-            if (count[i] > 0) {
-                result.push_back(i + 'a');
-                result.append(std::to_string(count[i]));
-            }
-        }
-        return result;
-    }
-
-    // time O(NKlogK), space O(NK)
-    // - N = strs.size(), K = maximum length of strs[i]
-    std::vector<std::vector<std::string>> approach1(const std::vector<std::string>& strs)
-    {
-        std::vector<std::vector<std::string>> result;
         std::unordered_map<std::string, std::vector<std::string>> map;
         for (const auto& s : strs) {
             std::string key(s);
             std::sort(key.begin(), key.end());
             map[key].push_back(s);
         }
-        result.reserve(map.size());
-        for (auto& [key, anagrams] : map) {
-            result.push_back(std::move(anagrams));
+        std::vector<std::vector<std::string>> result;
+        for (const auto& [key, group] : map) {
+            result.push_back(group);
         }
         return result;
     }

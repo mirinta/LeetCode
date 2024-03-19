@@ -1,5 +1,6 @@
+#include <array>
+#include <cctype>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 /**
@@ -28,39 +29,58 @@ class Solution
 public:
     bool isValidSudoku(std::vector<std::vector<char>>& board)
     {
-        const int n = board.size();
-        std::unordered_set<char> set;
-        // check each row
-        for (int i = 0; i < n; ++i) {
-            set.clear();
-            for (int j = 0; j < n; ++j) {
-                if (board[i][j] == '.')
+        if (!checkRows(board))
+            return false;
+
+        if (!checkColumns(board))
+            return false;
+
+        return checkSubBoxes(board);
+    }
+
+private:
+    bool checkRows(const std::vector<std::vector<char>>& board)
+    {
+        std::array<int, 10> count{};
+        for (const auto& row : board) {
+            std::fill(count.begin(), count.end(), 0);
+            for (const auto& c : row) {
+                if (!std::isdigit(c))
                     continue;
 
-                if (!set.insert(board[i][j]).second)
+                if (++count[c - '0'] > 1)
                     return false;
             }
         }
-        // check each column
-        for (int j = 0; j < n; ++j) {
-            set.clear();
-            for (int i = 0; i < n; ++i) {
-                if (board[i][j] == '.')
+        return true;
+    }
+
+    bool checkColumns(const std::vector<std::vector<char>>& board)
+    {
+        std::array<int, 10> count{};
+        for (int j = 0; j < 9; ++j) {
+            std::fill(count.begin(), count.end(), 0);
+            for (int i = 0; i < 9; ++i) {
+                if (!std::isdigit(board[i][j]))
                     continue;
 
-                if (!set.insert(board[i][j]).second)
+                if (++count[board[i][j] - '0'] > 1)
                     return false;
             }
         }
-        // check each 3x3 grid
-        std::unordered_map<int, std::unordered_set<int>> map;
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (board[i][j] == '.')
+        return true;
+    }
+
+    bool checkSubBoxes(const std::vector<std::vector<char>>& board)
+    {
+        std::unordered_map<int, std::array<int, 10>> map;
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                if (!std::isdigit(board[i][j]))
                     continue;
 
-                const int idx = i / 3 * 3 + j / 3;
-                if (!map[idx].insert(board[i][j]).second)
+                const int subBoxID = i / 3 * 3 + j / 3;
+                if (++map[subBoxID][board[i][j] - '0'] > 1)
                     return false;
             }
         }
