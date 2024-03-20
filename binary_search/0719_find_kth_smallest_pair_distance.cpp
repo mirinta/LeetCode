@@ -23,19 +23,26 @@ public:
         int hi = nums.back() - nums.front();
         while (lo < hi) {
             const int mid = lo + (hi - lo) / 2;
-            int count = 0;
-            for (int left = 0, right = 0; right < nums.size(); ++right) {
-                while (nums[right] - nums[left] > mid) {
-                    left++;
-                }
-                count += right - left;
-            }
-            if (count >= k) {
+            if (countSmallerOrEqual(mid, nums) >= k) {
                 hi = mid;
             } else {
                 lo = mid + 1;
             }
         }
         return lo;
+    }
+
+private:
+    int countSmallerOrEqual(int diff, const std::vector<int>& nums)
+    {
+        const int n = nums.size();
+        int count = 0;
+        for (int i = 0, j = 0; j < n; ++j) {
+            while (nums[j] - nums[i] > diff) {
+                i++;
+            }
+            count += j - i;
+        }
+        return count;
     }
 };
