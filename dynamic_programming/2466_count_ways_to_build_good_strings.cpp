@@ -1,17 +1,17 @@
 #include <vector>
 
 /**
- * Given the integers "zero", "one", "low", and "high", we can construct a string by starting with
- * an empty string, and then at each step perform either of the following:
+ * Given the integers zero, one, low, and high, we can construct a string by starting with an empty
+ * string, and then at each step perform either of the following:
  *
- * - Append the character '0' "zero" times.
+ * - Append the character '0' zero times.
  *
- * - Append the character '1' "one" times.
+ * - Append the character '1' one times.
  *
- * This can be performed by any number of times.
+ * This can be performed any number of times.
  *
- * A good string is a string constructed by the above process having a length between "low" and
- * "high" (inclusive).
+ * A good string is a string constructed by the above process having a length between low and high
+ * (inclusive).
  *
  * Return the number of different good strings that can be constructed satisfying these properties.
  * Since the answer can be large, return it modulo 10^9 + 7.
@@ -26,7 +26,7 @@ public:
     int countGoodStrings(int low, int high, int zero, int one)
     {
         constexpr int kMod = 1e9 + 7;
-        // dp[i] = num of different good strings with length i
+        // dp[i] = num of different good strings of length i
         std::vector<int> dp(1 + high, 0);
         dp[0] = 1;
         int result = 0;

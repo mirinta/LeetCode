@@ -22,44 +22,38 @@ struct ListNode
 class Solution
 {
 public:
-    bool isPalindrome(ListNode* head) { return approach2(head); }
-
-private:
-    // time O(N), space O(1)
-    bool approach2(ListNode* head)
+    bool isPalindrome(ListNode* head)
     {
         if (!head)
-            return true;
+            return false;
 
         if (!head->next)
-            return true; // only one node
+            return true;
 
-        // length is even: X0 -> X1 -> X2 -> X3 ->NULL
-        //                 | part1|    | part2|
-        //  length is odd: X0 -> X1 -> X2 -> X3 -> X4 -> NULL
-        //                 | part1|          | part2|
-        auto* slow = head;
+        // 1->2->2->1->NULL
+        // 1->2->3->2->1->NULL
         auto* fast = head;
+        auto* slow = head;
         while (fast && fast->next) {
             fast = fast->next->next;
             slow = slow->next;
         }
         if (fast) {
-            slow = slow->next; // length is odd
+            slow = slow->next;
         }
-        auto* forward = head;
-        auto* backward = reverseLinkedList(slow);
-        while (backward) {
-            if (forward->val != backward->val)
+        auto* reversedHead = reverse(slow);
+        while (reversedHead) {
+            if (reversedHead->val != head->val)
                 return false;
 
-            forward = forward->next;
-            backward = backward->next;
+            reversedHead = reversedHead->next;
+            head = head->next;
         }
         return true;
     }
 
-    ListNode* reverseLinkedList(ListNode* head)
+private:
+    ListNode* reverse(ListNode* head)
     {
         ListNode* prev = nullptr;
         while (head) {
@@ -69,30 +63,5 @@ private:
             head = next;
         }
         return prev;
-    }
-
-    // time O(N), space O(N)
-    bool approach1(ListNode* head)
-    {
-        if (!head)
-            return true;
-
-        if (!head->next)
-            return true; // only one node
-
-        std::stack<ListNode*> stack;
-        auto* node = head;
-        while (node || !stack.empty()) {
-            while (node) {
-                stack.push(node);
-                node = node->next;
-            }
-            if (head->val != stack.top()->val)
-                return false;
-
-            head = head->next;
-            stack.pop();
-        }
-        return true;
     }
 };

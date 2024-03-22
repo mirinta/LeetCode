@@ -1,3 +1,4 @@
+#include <array>
 #include <vector>
 
 /**
@@ -18,38 +19,26 @@ class Solution
 public:
     int rob(std::vector<int>& nums)
     {
-        // house range is either house[0:n-2] or house[1:n-1]
-        if (nums.empty())
-            return 0;
-
         if (nums.size() == 1)
             return nums[0];
 
-        return std::max(rob(0, nums.size() - 2, nums), rob(1, nums.size() - 1, nums));
+        const int n = nums.size();
+        return std::max(helper(0, n - 2, nums), helper(1, n - 1, nums));
     }
 
 private:
-    // max value of robbing house[start, end], similar to LC 198
-    int rob(int start, int end, const std::vector<int>& nums)
+    // max amount of money to rob nums[lo:hi]
+    int helper(int lo, int hi, const std::vector<int>& nums)
     {
-        if (start < 0 || start >= nums.size())
-            return 0;
-
-        if (end < 0 || end >= nums.size())
-            return 0;
-
-        if (start == end)
-            return nums[start];
-
-        // dp[i] = max value of robbing house[i:end]
-        const auto n = end - start + 1;
-        std::vector<int> dp(n);
-        // base cases:
-        dp[n - 1] = nums[end];
-        dp[n - 2] = std::max(nums[end], nums[end - 1]);
-        for (int i = n - 3; i >= 0; --i) {
-            dp[i] = std::max(nums[i + start] + dp[i + 2], dp[i + 1]);
+        // dp[i][0] = max amount of money to rob nums[lo:i-1] while nums[i-1] is not robbed
+        // dp[i][1] = max amount of money to rob nums[lo:i-1] while nums[i-1] is robbed
+        const int n = hi - lo + 1;
+        std::vector<std::array<int, 2>> dp(n + 1, {0, 0});
+        dp[0][1] = INT_MIN;
+        for (int i = 1; i <= n; ++i) {
+            dp[i][0] = std::max(dp[i - 1][0], dp[i - 1][1]);
+            dp[i][1] = dp[i - 1][0] + nums[lo + i - 1];
         }
-        return dp[0];
+        return std::max(dp[n][0], dp[n][1]);
     }
 };
