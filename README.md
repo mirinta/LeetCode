@@ -103,6 +103,7 @@ TODO:
 | [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
 | [1504][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
 | [2945][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
+| [2597][link2597] | `Dynamic Programming`, `Sorting`, `Backtracking` | :fire:2023 |
 | [3068][link3068] | `Dynamic Programming`, `Tree` | :fire:2268 |
 | [0787][link0787] | `Graph`, `Shortest Path` | :fire:1786 |
 | [3022][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
@@ -173,3 +174,4 @@ TODO:
 [link0407]: https://leetcode.com/problems/trapping-rain-water-ii/description/
 [link2513]: https://leetcode.com/problems/minimize-the-maximum-of-two-arrays/description/
 [link2528]: https://leetcode.com/problems/maximize-the-minimum-powered-city/description/
+[link2597]: https://leetcode.com/problems/the-number-of-beautiful-subsets/
