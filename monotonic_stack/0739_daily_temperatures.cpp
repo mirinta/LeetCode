@@ -15,15 +15,35 @@ class Solution
 public:
     std::vector<int> dailyTemperatures(std::vector<int>& temperatures)
     {
-        // find the next greater element of each temperatures[i]
-        const int n = temperatures.size();
+        return approach2(temperatures);
+    }
+
+private:
+    std::vector<int> approach2(const std::vector<int>& nums)
+    {
+        const int n = nums.size();
         std::stack<int> stack;
         std::vector<int> result(n, 0);
-        for (int i = n - 1; i >= 0; --i) {
-            while (!stack.empty() && temperatures[stack.top()] <= temperatures[i]) {
+        for (int i = 0; i < n; ++i) {
+            while (!stack.empty() && nums[i] > nums[stack.top()]) {
+                result[stack.top()] = i - stack.top();
                 stack.pop();
             }
-            result[i] = stack.empty() ? 0 : stack.top() - i; // compute num of days
+            stack.push(i);
+        }
+        return result;
+    }
+
+    std::vector<int> approach1(const std::vector<int>& nums)
+    {
+        const int n = nums.size();
+        std::stack<int> stack;
+        std::vector<int> result(n);
+        for (int i = n - 1; i >= 0; --i) {
+            while (!stack.empty() && nums[stack.top()] <= nums[i]) {
+                stack.pop();
+            }
+            result[i] = stack.empty() ? 0 : stack.top() - i;
             stack.push(i);
         }
         return result;

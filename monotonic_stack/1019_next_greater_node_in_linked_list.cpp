@@ -30,24 +30,49 @@ struct ListNode
 class Solution
 {
 public:
-    std::vector<int> nextLargerNodes(ListNode* head)
+    std::vector<int> nextLargerNodes(ListNode* head) { return approach2(head); }
+
+private:
+    std::vector<int> approach2(ListNode* head)
+    {
+        if (!head)
+            return {};
+
+        using Pair = std::pair<int, int>; // <index, val>
+        int i = 0;
+        std::stack<Pair> stack;
+        std::vector<int> result;
+        while (head) {
+            result.push_back(0);
+            while (!stack.empty() && head->val > stack.top().second) {
+                result[stack.top().first] = head->val;
+                stack.pop();
+            }
+            stack.emplace(i++, head->val);
+            head = head->next;
+        }
+        return result;
+    }
+
+    std::vector<int> approach1(ListNode* head)
     {
         if (!head)
             return {};
 
         std::vector<int> nums;
-        for (auto* i = head; i; i = i->next) {
-            nums.push_back(i->val);
+        while (head) {
+            nums.push_back(head->val);
+            head = head->next;
         }
         const int n = nums.size();
-        std::vector<int> result(n, 0);
         std::stack<int> stack;
+        std::vector<int> result(n);
         for (int i = n - 1; i >= 0; --i) {
-            while (!stack.empty() && nums[i] >= nums[stack.top()]) {
+            while (!stack.empty() && nums[i] >= stack.top()) {
                 stack.pop();
             }
-            result[i] = stack.empty() ? 0 : nums[stack.top()];
-            stack.push(i);
+            result[i] = stack.empty() ? 0 : stack.top();
+            stack.push(nums[i]);
         }
         return result;
     }

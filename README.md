@@ -73,7 +73,6 @@ TODO:
 - [ ] No.0837 (DP)
 - [ ] No.1547 (DP)
 - [ ] No.2763 (weekly contest 352)
-- [ ] No.0042
 - [ ] No.1024
 - [ ] No.0218 (Sweep line)
 - [ ] No.0929 (DP)
@@ -116,7 +115,7 @@ TODO:
 | [1442][link1442] | `Prefix Sum`, `Hash Map` | :fire:1525 |
 | [2025][link2025] | `Prefix Sum`, `Hash Map` | :fire:2218 |
 | [2949][link2949] | `Prefix Sum`, `Hash Map` | :fire:2445 |
-| [1124][link1124] | `Prefix Sum`, `Monotonic Stack` | :fire:1908 |
+| [0042][link0042] | `Prefix Sum`, `Monotonic Stack`, `Two Pointers` | `Hard` |
 | [1915][link1915] | `Prefix Sum`, `Hash Map`, `State Compression` | :fire:2235 |
 | [0407][link0407] | `Priority Queue`, `BFS` | `Hard` | 
 | [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
@@ -152,7 +151,6 @@ TODO:
 [link1915]: https://leetcode.com/problems/number-of-wonderful-substrings
 [link2949]: https://leetcode.com/problems/count-beautiful-substrings-ii
 [link2025]: https://leetcode.com/problems/maximum-number-of-ways-to-partition-an-array/
-[link1124]: https://leetcode.com/problems/longest-well-performing-interval
 [link1442]: https://leetcode.com/problems/count-triplets-that-can-form-two-arrays-of-equal-xor
 [link2402]: https://leetcode.com/problems/meeting-rooms-iii
 [link3045]: https://leetcode.com/problems/count-prefix-and-suffix-pairs-ii
@@ -176,3 +174,4 @@ TODO:
 [link2513]: https://leetcode.com/problems/minimize-the-maximum-of-two-arrays/description/
 [link2528]: https://leetcode.com/problems/maximize-the-minimum-powered-city/description/
 [link2597]: https://leetcode.com/problems/the-number-of-beautiful-subsets/
+[link0042]: https://leetcode.com/problems/trapping-rain-water/description/

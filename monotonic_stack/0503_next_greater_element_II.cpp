@@ -21,8 +21,8 @@ public:
         const int n = nums.size();
         std::stack<int> stack;
         std::vector<int> result(n);
-        for (int i = 2 * (n - 1); i >= 0; --i) {
-            while (!stack.empty() && stack.top() <= nums[i % n]) {
+        for (int i = 2 * n - 1; i >= 0; --i) {
+            while (!stack.empty() && nums[i % n] >= stack.top()) {
                 stack.pop();
             }
             result[i % n] = stack.empty() ? -1 : stack.top();

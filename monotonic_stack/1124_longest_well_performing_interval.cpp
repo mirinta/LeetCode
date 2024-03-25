@@ -21,27 +21,27 @@ class Solution
 public:
     int longestWPI(std::vector<int>& hours)
     {
-        // let presum[i] = sum of nums[0:i-1]
-        // - if nums[i] > 8, sum += 1
-        // - if nums[i] <= 8, sum -= 1
-        // if nums[j:i] is a valid interval,
-        // then sum of nums[j:i] = presum[i+1] - presum[j] > 0
-        // given presum[i], find the smallest j<i such that presum[i] > presum[j]
-        // subarray length = i-1-j+1 = i-j, since j is the smallest, then length is maximized
+        // +1 flag for nums[i] > 8
+        // -1 flag for nums[i] <= 8
+        // let presum[i] = num of flags of hours[0:i]
+        // if hours[j+1:i] is a valid subarray,
+        // then presum[i] > presum[j]
+        // i.e, given i, we need to find the furthest j
+        // such that j < i and presum[j] < presum[i]
+        // it is similar to LC.962
         const int n = hours.size();
         std::vector<int> presum(n + 1, 0);
         for (int i = 1; i <= n; ++i) {
-            const int val = hours[i - 1] > 8 ? 1 : -1;
-            presum[i] = presum[i - 1] + val;
+            presum[i] = presum[i - 1] + (hours[i - 1] > 8 ? 1 : -1);
         }
-        std::stack<int> stack; // monotonically decreasing (from bottom to top)
-        for (int j = 0; j <= n; ++j) {
-            if (stack.empty() || presum[stack.top()] > presum[j]) {
-                stack.push(j);
+        std::stack<int> stack; // strictly decreasing
+        for (int i = 0; i < presum.size(); ++i) {
+            if (stack.empty() || presum[i] < presum[stack.top()]) {
+                stack.push(i);
             }
         }
         int result = 0;
-        for (int i = n; i >= 0; --i) {
+        for (int i = presum.size() - 1; i >= 0; --i) {
             while (!stack.empty() && presum[i] > presum[stack.top()]) {
                 result = std::max(result, i - stack.top());
                 stack.pop();

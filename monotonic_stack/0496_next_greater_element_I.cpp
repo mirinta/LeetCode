@@ -27,23 +27,32 @@ class Solution
 public:
     std::vector<int> nextGreaterElement(std::vector<int>& nums1, std::vector<int>& nums2)
     {
-        std::unordered_map<int, int>
-            map; // map[i]=j means nums2[j] is the next greater element of nums2[i]
+        const int n = nums2.size();
+        std::unordered_map<int, int> map;
+        for (int i = 0; i < n; ++i) {
+            map[nums2[i]] = i;
+        }
+        const auto nextGreater = getNextGreater(nums2);
+        const int m = nums1.size();
+        std::vector<int> result(m);
+        for (int i = 0; i < m; ++i) {
+            result[i] = nextGreater[map[nums1[i]]];
+        }
+        return result;
+    }
+
+private:
+    std::vector<int> getNextGreater(const std::vector<int>& nums)
+    {
+        const int n = nums.size();
         std::stack<int> stack;
-        for (int i = nums2.size() - 1; i >= 0; --i) {
-            while (!stack.empty() && stack.top() <= nums2[i]) {
+        std::vector<int> result(n);
+        for (int i = n - 1; i >= 0; --i) {
+            while (!stack.empty() && nums[i] >= nums[stack.top()]) {
                 stack.pop();
             }
-            map[nums2[i]] = stack.empty() ? -1 : stack.top();
-            stack.push(nums2[i]);
-        }
-        std::vector<int> result(nums1.size());
-        for (int i = 0; i < nums1.size(); ++i) {
-            if (map.count(nums1[i])) {
-                result[i] = map[nums1[i]];
-            } else {
-                result[i] = -1;
-            }
+            result[i] = stack.empty() ? -1 : nums[stack.top()];
+            stack.push(i);
         }
         return result;
     }
