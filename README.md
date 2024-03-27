@@ -111,6 +111,7 @@ TODO:
 | [2029][link2029] | `Greedy`, `Game Theory` | :fire:2277 |
 | [1642][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
 | [1838][link1838] | `Greedy`, `Sliding Window` | :fire:1876 |
+| [2866][link2866] | `Monotonic Stack` | :fire:2072 |
 | [0962][link0962] | `Monotonic Stack`, `Binary Search`, `Two Pointers` | :fire:1608 |
 | [1442][link1442] | `Prefix Sum`, `Hash Map` | :fire:1525 |
 | [2025][link2025] | `Prefix Sum`, `Hash Map` | :fire:2218 |
@@ -175,3 +176,4 @@ TODO:
 [link2528]: https://leetcode.com/problems/maximize-the-minimum-powered-city/description/
 [link2597]: https://leetcode.com/problems/the-number-of-beautiful-subsets/
 [link0042]: https://leetcode.com/problems/trapping-rain-water/description/
+[link2866]: https://leetcode.com/problems/beautiful-towers-ii/description/
