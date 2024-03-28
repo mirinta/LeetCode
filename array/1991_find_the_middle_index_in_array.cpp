@@ -15,7 +15,7 @@
  * ! 1 <= nums.length <= 100
  * ! -1000 <= nums[i] <= 1000
  *
- * ! This question is the same as LC 724.
+ * ! This question is the same as LC.724.
  */
 
 class Solution

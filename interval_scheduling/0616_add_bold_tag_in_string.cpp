@@ -21,7 +21,7 @@
  * ! s and words[i] consist of English letters and digits.
  * ! All the values of words are unique.
  *
- * ! This question is the same as 758.
+ * ! This question is the same as LC.758.
  */
 
 class Solution

@@ -29,7 +29,7 @@ struct TreeNode
  * ! All the values in the tree are unique.
  * ! root is guaranteed to be a valid binary search tree.
  *
- * ! This question is the same as LC 1038.
+ * ! This question is the same as LC.1038.
  */
 
 class Solution

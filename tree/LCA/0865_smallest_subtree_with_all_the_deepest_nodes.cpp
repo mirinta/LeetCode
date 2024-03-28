@@ -24,7 +24,7 @@ struct TreeNode
  * The subtree of a node is a tree consisting of that node, plus the set of all descendants of that
  * node.
  *
- * ! This question is the same as 1123.
+ * ! This question is the same as LC.1123.
  *
  * ! The number of nodes in the tree will be in the range [1, 500].
  * ! T0 <= Node.val <= 500

@@ -17,7 +17,7 @@ struct TreeNode
  * Given the "root" of a BST, return the minimum absolute difference between the values of two
  * different nodes in the tree.
  *
- * ! This question is the same as 783.
+ * ! This question is the same as LC.783.
  *
  * ! The number of nodes in the tree is in the range [2, 10^4].
  * ! 0 <= Node.val <= 10^5

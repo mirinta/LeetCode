@@ -18,7 +18,7 @@ class Solution
 public:
     int minPatches(std::vector<int>& nums, int n)
     {
-        // same as LC 2952
+        // same as LC.2952
         // nums is already sorted in ascending order
         const int sz = nums.size();
         long long x = 0;

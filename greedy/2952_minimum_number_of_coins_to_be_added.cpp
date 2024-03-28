@@ -24,7 +24,7 @@ class Solution
 public:
     int minimumAddedCoins(std::vector<int>& coins, int target)
     {
-        // same as LC 330
+        // same as LC.330
         // assume we can obtain [0, x] using coins[0:i)
         // adding coins[i] to [0, x] gives us a new range [coins[i], coins[i]+x]
         // |------|  |--------------------|

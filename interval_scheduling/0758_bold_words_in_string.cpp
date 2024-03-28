@@ -14,7 +14,7 @@
  * ! 1 <= words[i].length <= 10
  * ! s and words[i] consist of lowercase English letters.
  *
- * ! This question is the same as 616.
+ * ! This question is the same as LC.616.
  */
 
 class Solution

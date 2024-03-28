@@ -26,7 +26,7 @@ struct TreeNode
  * - The lowest common ancestor of a set S of nodes, is the node A with the largest depth such that
  * every node in S is in the subtree with root A.
  *
- * ! This question is the same as 865.
+ * ! This question is the same as LC.865.
  *
  * ! The number of nodes in the tree will be in the range [1, 1000].
  * ! 0 <= Node.val <= 1000

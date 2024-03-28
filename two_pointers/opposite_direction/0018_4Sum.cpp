@@ -36,7 +36,7 @@ public:
             if ((long long)nums[i] + nums[n - 1] + nums[n - 2] + nums[n - 3] < target)
                 continue; // try larger nums[i]
 
-            // same as the 3Sum problem (LC 15)
+            // same as the 3Sum problem (LC.15)
             for (int j = i + 1; j + 2 < n; ++j) {
                 if (j > i + 1 && nums[j] == nums[j - 1])
                     continue; // skip duplicates

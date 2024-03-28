@@ -28,7 +28,7 @@ struct TreeNode
  * ! 0 <= Node.val <= 100
  * ! All the values in the tree are unique.
  *
- * ! This question is the same as LC 538.
+ * ! This question is the same as LC.538.
  */
 
 class Solution

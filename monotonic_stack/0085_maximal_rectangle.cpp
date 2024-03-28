@@ -18,31 +18,28 @@ public:
     {
         const int m = matrix.size();
         const int n = matrix[0].size();
-        std::vector<int> info(n, 0); // info[j] = num of consecutive ones in the jth column
+        std::vector<int> ones(n, 0);
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (matrix[i][j] == '1') {
-                    info[j] += 1;
-                } else {
-                    info[j] = 0;
-                }
+                ones[j] = matrix[i][j] == '0' ? 0 : (1 + ones[j]);
             }
-            const auto prevSmaller = genPrevSmaller(info);
-            const auto nextSmaller = genNextSmaller(info);
+            const auto prevSmaller = getPrevSmaller(ones);
+            const auto nextSmaller = getNextSmaller(ones);
             for (int j = 0; j < n; ++j) {
-                result = std::max(result, info[j] * (nextSmaller[j] - (prevSmaller[j] + 1)));
+                const int area = (nextSmaller[j] - prevSmaller[j] - 1) * ones[j];
+                result = std::max(result, area);
             }
         }
         return result;
     }
 
 private:
-    std::vector<int> genPrevSmaller(const std::vector<int>& nums)
+    std::vector<int> getPrevSmaller(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        std::vector<int> result(n);
         std::stack<int> stack;
+        std::vector<int> result(n);
         for (int i = 0; i < n; ++i) {
             while (!stack.empty() && nums[i] <= nums[stack.top()]) {
                 stack.pop();
@@ -53,11 +50,11 @@ private:
         return result;
     }
 
-    std::vector<int> genNextSmaller(const std::vector<int>& nums)
+    std::vector<int> getNextSmaller(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        std::vector<int> result(n);
         std::stack<int> stack;
+        std::vector<int> result(n);
         for (int i = n - 1; i >= 0; --i) {
             while (!stack.empty() && nums[i] <= nums[stack.top()]) {
                 stack.pop();

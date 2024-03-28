@@ -14,7 +14,7 @@
  * ! 1 <= nums.length <= 10^4
  * ! -1000 <= nums[i] <= 1000
  *
- * ! This question is the same as LC 1991.
+ * ! This question is the same as LC.1991.
  */
 
 class Solution
