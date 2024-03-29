@@ -101,6 +101,7 @@ TODO:
 | [2528][link2528] | `Binary Search`, `Sliding Window` | :fire:2236 |
 | [0222][link0222] | `Complete Binary Tree` | `Easy+` |
 | [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
+| [0907][link0907] | `Dynamic Programming`, `Monotonic Stack` | :fire:1976 |
 | [1504][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
 | [2945][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
 | [2597][link2597] | `Dynamic Programming`, `Sorting`, `Backtracking` | :fire:2023 |
@@ -177,3 +178,4 @@ TODO:
 [link2597]: https://leetcode.com/problems/the-number-of-beautiful-subsets/
 [link0042]: https://leetcode.com/problems/trapping-rain-water/description/
 [link2866]: https://leetcode.com/problems/beautiful-towers-ii/description/
+[link0907]: https://leetcode.com/problems/sum-of-subarray-minimums/description/
