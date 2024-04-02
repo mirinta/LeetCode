@@ -24,24 +24,19 @@ class Solution
 public:
     int maxSumMinProduct(std::vector<int>& nums)
     {
-        // for each nums[i],
-        // find the longest subarray nums[j:k] such that its min element is nums[i]
-        // j = prevSmaller(nums[i]) + 1, the smallest index such that nums[j] >= nums[i]
-        // k = nextSmaller(nums[i]) - 1, the largest index such that nums[k] >= nums[i]
         constexpr int kMod = 1e9 + 7;
         const int n = nums.size();
-        std::vector<long long> presum(n + 1, 0); // presum[i] = nums[0]+...+nums[i-1]
+        std::vector<long long> presum(n + 1, 0);
         for (int i = 1; i <= n; ++i) {
             presum[i] = presum[i - 1] + nums[i - 1];
         }
         const auto prevSmaller = getPrevSmaller(nums);
         const auto nextSmaller = getNextSmaller(nums);
-        long long result = 0; // all nums[i] are positive integers
+        long long result = 0;
         for (int i = 0; i < n; ++i) {
-            const int j = prevSmaller[i] + 1;
-            const int k = nextSmaller[i] - 1;
-            const auto score = (presum[k + 1] - presum[j]) * nums[i];
-            result = std::max(result, score);
+            const int j = prevSmaller[i];
+            const int k = nextSmaller[i];
+            result = std::max(result, (presum[k] - presum[j + 1]) * nums[i]);
         }
         return result % kMod;
     }
@@ -50,10 +45,10 @@ private:
     std::vector<int> getPrevSmaller(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        std::vector<int> result(n);
         std::stack<int> stack;
+        std::vector<int> result(n);
         for (int i = 0; i < n; ++i) {
-            while (!stack.empty() && nums[stack.top()] >= nums[i]) {
+            while (!stack.empty() && nums[i] <= nums[stack.top()]) {
                 stack.pop();
             }
             result[i] = stack.empty() ? -1 : stack.top();
@@ -65,10 +60,10 @@ private:
     std::vector<int> getNextSmaller(const std::vector<int>& nums)
     {
         const int n = nums.size();
-        std::vector<int> result(n);
         std::stack<int> stack;
+        std::vector<int> result(n);
         for (int i = n - 1; i >= 0; --i) {
-            while (!stack.empty() && nums[stack.top()] >= nums[i]) {
+            while (!stack.empty() && nums[i] <= nums[stack.top()]) {
                 stack.pop();
             }
             result[i] = stack.empty() ? n : stack.top();

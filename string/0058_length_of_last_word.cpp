@@ -15,19 +15,15 @@ class Solution
 public:
     int lengthOfLastWord(const std::string& s)
     {
-        if (s.empty())
-            return 0;
-
-        int result = 0;
-        for (int i = s.size() - 1; i >= 0; --i) {
-            if (s[i] == ' ' && result == 0)
-                continue;
-
-            if (s[i] == ' ' && result > 0)
-                break;
-
-            result++;
+        const int n = s.size();
+        int i = n - 1;
+        while (i >= 0 && s[i] == ' ') {
+            i--;
         }
-        return result;
+        int j = i;
+        while (j >= 0 && std::isalpha(s[j])) {
+            j--;
+        }
+        return i - j;
     }
 };

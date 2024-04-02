@@ -24,19 +24,18 @@ public:
         if (s.size() != t.size())
             return false;
 
+        const int n = s.size();
         std::unordered_map<char, char> map;
         std::unordered_set<char> used;
-        for (int i = 0; i < s.size(); ++i) {
-            if (!map.count(s[i])) {
-                if (used.count(t[i]))
-                    return false;
-
-                map[s[i]] = t[i];
-                used.insert(t[i]);
-                continue;
-            }
-            if (map[s[i]] != t[i])
+        for (int i = 0; i < n; ++i) {
+            if (map.count(t[i]) && map[t[i]] != s[i])
                 return false;
+
+            if (!map.count(t[i]) && used.count(s[i]))
+                return false;
+
+            used.insert(s[i]);
+            map[t[i]] = s[i];
         }
         return true;
     }
