@@ -40,9 +40,7 @@ class Solution
 public:
     std::vector<std::vector<int>> getSkyline(std::vector<std::vector<int>>& buildings)
     {
-        // map[pos] = {<height, flag_up>, <height, flag_down>}
-        // flag_up = 1, flag_down = -1
-        std::map<int, std::vector<std::pair<int, int>>> map;
+        std::map<int, std::vector<std::pair<int, int>>> map; // <pos, {<height, flag>}>
         for (const auto& building : buildings) {
             const auto& left = building[0];
             const auto& right = building[1];
@@ -60,9 +58,9 @@ public:
                     set.erase(set.find(height));
                 }
             }
-            const int maxHeight = set.empty() ? 0 : *set.rbegin();
-            if (result.empty() || result.back()[1] != maxHeight) {
-                result.push_back({pos, maxHeight});
+            const int max = set.empty() ? 0 : *set.rbegin();
+            if (result.empty() || result.back()[1] != max) {
+                result.push_back({pos, max});
             }
         }
         return result;

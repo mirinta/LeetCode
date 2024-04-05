@@ -24,20 +24,13 @@ class Solution
 public:
     int removeDuplicates(std::vector<int>& nums)
     {
-        if (nums.size() < 2)
-            return nums.size();
-
-        // duplicates are adjacent because the input array is sorted
         const int n = nums.size();
-        int i = 0;
-        int j = 0;
-        while (j < n) {
-            nums[i] = nums[j];
-            while (j < n && nums[j] == nums[i]) {
-                j++;
+        int keep = 0;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] != nums[keep]) {
+                nums[++keep] = nums[i];
             }
-            i++;
         }
-        return i;
+        return keep + 1;
     }
 };

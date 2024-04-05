@@ -21,37 +21,30 @@ public:
 private:
     int approach2(std::vector<int>& nums, int k)
     {
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(nums.begin(), nums.end(), g);
         const int n = nums.size();
-        const int rank = n - k; // index of the kth largest element
+        const int rank = n - k;
         int lo = 0;
         int hi = n - 1;
         while (lo < hi) {
-            const auto [lt, gt] = threeWayPartition(nums, lo, hi);
+            const auto [lt, gt] = partition(nums, lo, hi);
+            if (rank >= lt && rank <= gt)
+                break;
+
             if (rank < lt) {
                 hi = lt - 1;
-            } else if (rank > gt) {
-                lo = gt + 1;
             } else {
-                return nums[rank];
+                lo = gt + 1;
             }
         }
         return nums[rank];
     }
 
-    std::pair<int, int> threeWayPartition(std::vector<int>& nums, int lo, int hi)
+    std::pair<int, int> partition(std::vector<int>& nums, int lo, int hi)
     {
-        // lo ... lt-1 lt ... gt gt+1 ... hi
-        // |<-part1->| |<part2>| |<-part3->|
-        // part1, nums[lo:lt-1] < pivot
-        // part2, nums[lt:gt] = pivot
-        // part3, nums[gt+1:hi] > pivot
-        const int pivot = nums[lo];
+        const int pivot = nums[rand() % (hi - lo + 1) + lo];
+        int i = lo;
         int lt = lo;
         int gt = hi;
-        int i = lo;
         while (i <= gt) {
             if (nums[i] < pivot) {
                 std::swap(nums[i++], nums[lt++]);
@@ -61,12 +54,12 @@ private:
                 i++;
             }
         }
-        return {lt, gt};
+        return {lt, gt}; // nums[lo:lt-1] < pivot, nums[lt:gt] = pivot, nums[gt+1:n-1] > pivot
     }
 
     int approach1(const std::vector<int>& nums, int k)
     {
-        std::priority_queue<int, std::vector<int>, std::greater<>> pq; // min heap;
+        std::priority_queue<int, std::vector<int>, std::greater<>> pq;
         for (const auto& val : nums) {
             pq.push(val);
             if (pq.size() > k) {
