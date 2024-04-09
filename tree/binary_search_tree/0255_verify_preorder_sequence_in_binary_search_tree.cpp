@@ -19,9 +19,9 @@ private:
     bool approach2(const std::vector<int>& preorder)
     {
         int min = INT_MIN;
-        std::stack<int> stack; // monotonic decreasing
+        std::stack<int> stack;
         for (const auto& val : preorder) {
-            while (!stack.empty() && stack.top() < val) {
+            while (!stack.empty() && val > stack.top()) {
                 min = stack.top();
                 stack.pop();
             }
@@ -35,29 +35,20 @@ private:
 
     bool approach1(const std::vector<int>& preorder)
     {
-        return dfs(preorder, 0, preorder.size() - 1);
+        int i = 0;
+        return dfs(preorder, i, INT_MIN, INT_MAX);
     }
 
-    bool dfs(const std::vector<int>& preorder, int start, int end)
+    bool dfs(const std::vector<int>& preorder, int& i, int min, int max)
     {
-        if (start >= end)
+        if (i == preorder.size())
             return true;
 
-        // 5 2 1 3 6
-        // - [5] is the root node
-        // - [2 1 3] is the left subtree
-        // - [6] is the right subtree
-        // all values in the left subtree < root->val
-        // all values in the right subtree > root->val
-        const int rootValue = preorder[start];
-        int rightChildIdx = start + 1;
-        while (rightChildIdx <= end && preorder[rightChildIdx] < rootValue) {
-            rightChildIdx++;
-        }
-        for (int i = rightChildIdx; i <= end; ++i) {
-            if (preorder[i] <= rootValue)
-                return false;
-        }
-        return dfs(preorder, start + 1, rightChildIdx - 1) && dfs(preorder, rightChildIdx, end);
+        const int root = preorder[i];
+        if (root <= min || root >= max)
+            return false;
+
+        i++;
+        return dfs(preorder, i, min, root) || dfs(preorder, i, root, max);
     }
 };

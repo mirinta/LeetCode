@@ -96,26 +96,18 @@ private:
 
     void merge(int& result, std::vector<int>& aux, std::vector<int>& nums, int lo, int mid, int hi)
     {
+        for (int i = lo, j = mid + 1; j <= hi; ++j) {
+            while (i <= mid &&
+                   static_cast<long long>(nums[i]) <= 2 * static_cast<long long>(nums[j])) {
+                i++;
+            }
+            result += mid - i + 1;
+        }
         for (int k = lo; k <= hi; ++k) {
             aux[k] = nums[k];
         }
-        for (int i = mid, j = hi; i >= lo; --i) {
-            while (j >= mid + 1 &&
-                   2 * static_cast<long long>(nums[j]) >= static_cast<long long>(nums[i])) {
-                j--;
-            }
-            result += j - mid;
-        }
         for (int i = lo, j = mid + 1, k = lo; k <= hi; ++k) {
-            if (i > mid) {
-                nums[k] = aux[j++];
-                continue;
-            }
-            if (j > hi) {
-                nums[k] = aux[i++];
-                continue;
-            }
-            if (aux[i] > aux[j]) {
+            if (i == mid + 1 || (j <= hi && aux[j] < aux[i])) {
                 nums[k] = aux[j++];
             } else {
                 nums[k] = aux[i++];

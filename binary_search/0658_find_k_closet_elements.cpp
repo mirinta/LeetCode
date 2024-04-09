@@ -21,48 +21,17 @@ class Solution
 public:
     std::vector<int> findClosestElements(std::vector<int>& arr, int k, int x)
     {
-        const int index = binarySearch(arr, x);
-        // X X X X t X X X X
-        //       ^   ^
-        // elements in window (left, right), both exclusive
+        const int n = arr.size();
+        const int index = std::lower_bound(arr.begin(), arr.end(), x) - arr.begin();
         int left = index - 1;
         int right = index;
-        for (int i = 0; i < k; ++i) {
-            if (left < 0) {
-                right++;
-            } else if (right >= arr.size()) {
-                left--;
-            } else if (x - arr[left] <= arr[right] - x) {
+        while (right - left - 1 < k) {
+            if (right == n || (left >= 0 && x - arr[left] <= arr[right] - x)) {
                 left--;
             } else {
                 right++;
             }
         }
-        std::vector<int> result;
-        for (int i = left + 1; i <= right - 1; ++i) {
-            result.push_back(arr[i]);
-        }
-        return result;
-    }
-
-private:
-    // find the first index of target in nums,
-    // if it is not in nums, return its insertion position
-    int binarySearch(const std::vector<int>& nums, int target)
-    {
-        if (nums.empty())
-            return 0;
-
-        int lo = 0;
-        int hi = nums.size() - 1;
-        while (lo <= hi) {
-            const int mid = lo + (hi - lo) / 2;
-            if (nums[mid] >= target) {
-                hi = mid - 1;
-            } else {
-                lo = mid + 1;
-            }
-        }
-        return lo;
+        return {arr.begin() + left + 1, arr.begin() + right};
     }
 };

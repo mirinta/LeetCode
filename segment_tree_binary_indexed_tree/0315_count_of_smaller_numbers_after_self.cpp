@@ -108,15 +108,7 @@ private:
             result[v[i].second] += j - mid;
         }
         for (int i = lo, j = mid + 1, k = lo; k <= hi; ++k) {
-            if (i > mid) {
-                v[k] = aux[j++];
-                continue;
-            }
-            if (j > hi) {
-                v[k] = aux[i++];
-                continue;
-            }
-            if (aux[i].first > aux[j].first) {
+            if (i > mid || (j <= hi && aux[i].first > aux[j].first)) {
                 v[k] = aux[j++];
             } else {
                 v[k] = aux[i++];

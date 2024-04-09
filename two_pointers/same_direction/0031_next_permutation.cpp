@@ -34,39 +34,34 @@ class Solution
 public:
     void nextPermutation(std::vector<int>& nums)
     {
-        // our goal is to find the next greater number
-        // corner case:
-        // if the given sequence is already sorted in non-increasing order,
-        // it is already the largest number, so we just return the smallest number
-        // e.g., given 4 3 2 1, and return 1 2 3 4
-        // normal case:
-        // 4 1 5 3 2
-        //   ^ |<->|
-        // replace 1 with the the smallest number in [5,3,2] that is greater than 1 => 4 2 5 3 1
-        // sort [5 3 1] in non-decreasing order => 4 2 1 3 5, this is the final answer
         if (nums.size() == 1)
             return;
 
-        // X X i-1 i X X X N-1
-        //         |<------->|, non-decreasing from right to left
         const int n = nums.size();
         int i = n - 1;
         while (i >= 1 && nums[i] <= nums[i - 1]) {
             i--;
         }
+        // case 1: nums is the largest permutation
         if (i == 0) {
-            // it is the largest permutation
-            std::sort(nums.begin(), nums.end());
+            std::reverse(nums.begin(), nums.end());
             return;
         }
+        // case 2: nums is the smallest permutation
         if (i == n - 1) {
-            // it is the smallest permutation
             std::swap(nums[n - 1], nums[n - 2]);
             return;
         }
-        const int val = nums[i - 1]; // this is the number we want to replace
-        auto iter = std::upper_bound(nums.rbegin(), std::next(nums.rbegin(), n - i), val);
-        std::swap(nums[i - 1], *iter);
-        std::sort(std::next(nums.begin(), i), nums.end());
+        // case 3: X X X i-1 i X X j X X n-1
+        //                   |<-dereasing->|
+        // find the largest j such that nums[j] > nums[i-1]
+        // swap nums[j] and nums[i-1]
+        // and sort nums[i:n-1] in non-decreasing order
+        int j = n - 1;
+        while (j > i && nums[j] <= nums[i - 1]) {
+            j--;
+        }
+        std::swap(nums[j], nums[i - 1]);
+        std::reverse(nums.begin() + i, nums.end());
     }
 };

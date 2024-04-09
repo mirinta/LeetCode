@@ -23,38 +23,24 @@ class Solution
 public:
     std::vector<int> findRightInterval(std::vector<std::vector<int>>& intervals)
     {
-        if (intervals.empty())
-            return {};
-
-        // interval to original index
-        // since the start points are unique, we can use them as keys
+        const int n = intervals.size();
         std::unordered_map<int, int> map;
-        for (int i = 0; i < intervals.size(); ++i) {
+        for (int i = 0; i < n; ++i) {
             map[intervals[i][0]] = i;
         }
         std::sort(intervals.begin(), intervals.end());
-        std::vector<int> result(intervals.size(), 0);
+        std::vector<int> result(n);
         for (const auto& interval : intervals) {
-            const int index = binarySearch(interval[1], intervals);
-            result[map[interval[0]]] = index < 0 ? -1 : map[intervals[index][0]];
+            const int start = interval[0];
+            const int end = interval[1];
+            auto iter = std::lower_bound(intervals.begin(), intervals.end(), end,
+                                         [](const auto& v, int val) { return v[0] < val; });
+            if (iter == intervals.end()) {
+                result[map[start]] = -1;
+            } else {
+                result[map[start]] = map[(*iter)[0]];
+            }
         }
         return result;
-    }
-
-private:
-    // find the first interval s.t. interval[0] >= endPoint
-    int binarySearch(int endPoint, const std::vector<std::vector<int>>& intervals)
-    {
-        int lo = 0;
-        int hi = intervals.size() - 1;
-        while (lo <= hi) {
-            int mid = lo + (hi - lo) / 2;
-            if (intervals[mid][0] < endPoint) {
-                lo = mid + 1;
-            } else {
-                hi = mid - 1;
-            }
-        } // the loop is terminated when lo = hi + 1
-        return lo == intervals.size() ? -1 : lo;
     }
 };
