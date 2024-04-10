@@ -25,33 +25,34 @@ public:
     bool canCross(std::vector<int>& stones)
     {
         const int n = stones.size();
-        std::unordered_map<int, int> map; // stone position to stone index
+        memo = std::vector<std::vector<int>>(n, std::vector<int>(n, -1));
         for (int i = 0; i < n; ++i) {
             map[stones[i]] = i;
         }
-        // dp[i][j] = whether the frog can reach stones[i] with j jumps last time
-        std::vector<std::vector<bool>> dp(n, std::vector<bool>(n, false));
-        dp[0][0] = true;
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (!dp[i][j])
-                    continue;
+        return dp(0, 0, stones);
+    }
 
-                for (int jumps = j - 1; jumps <= j + 1; ++jumps) {
-                    if (jumps < 0)
-                        continue;
+private:
+    std::unordered_map<int, int> map;
+    std::vector<std::vector<int>> memo;
 
-                    const int pos = jumps + stones[i];
-                    if (map.count(pos)) {
-                        dp[map[pos]][jumps] = true;
-                    }
-                }
-            }
+    bool dp(int i, int k, const std::vector<int>& stones)
+    {
+        const int n = stones.size();
+        if (i == n - 1)
+            return true;
+
+        if (memo[i][k] != -1)
+            return memo[i][k];
+
+        for (int offset = -1; offset <= 1; ++offset) {
+            const int pos = stones[i] + k + offset;
+            if (pos <= stones[i] || !map.count(pos))
+                continue;
+
+            if (dp(map[pos], pos - stones[i], stones))
+                return memo[i][k] = true;
         }
-        for (const auto& canReachLastStone : dp[n - 1]) {
-            if (canReachLastStone)
-                return true;
-        }
-        return false;
+        return memo[i][k] = false;
     }
 };

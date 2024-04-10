@@ -20,7 +20,7 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : root(n), size(n, 1)
+    explicit UnionFind(int n) : root(n), rank(n, 1)
     {
         for (int i = 0; i < n; ++i) {
             root[i] = i;
@@ -29,33 +29,29 @@ public:
 
     int find(int x)
     {
-        if (x != root[x]) {
+        if (root[x] != x) {
             root[x] = find(root[x]);
         }
         return root[x];
     }
 
-    bool isConnected(int p, int q) { return find(p) == find(q); }
-
     void connect(int p, int q)
     {
-        const int rootP = find(p);
-        const int rootQ = find(q);
+        int rootP = find(p);
+        int rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        if (size[rootQ] > size[rootP]) {
-            root[rootP] = rootQ;
-            size[rootQ] += size[rootP];
-        } else {
-            root[rootQ] = rootP;
-            size[rootP] += size[rootQ];
+        if (rank[rootP] < rank[rootQ]) {
+            std::swap(rootP, rootQ);
         }
+        root[rootQ] = rootP;
+        rank[rootP] += rank[rootQ];
     }
 
 private:
     std::vector<int> root;
-    std::vector<int> size;
+    std::vector<int> rank;
 };
 
 class Solution
@@ -63,71 +59,35 @@ class Solution
 public:
     int largestComponentSize(std::vector<int>& nums)
     {
-        /** prime factors:   2   3   5   7
-         *                  / \ / \ / \ /
-         *           nums: 4   6   15  35
-         */
-        const int n = nums.size();
-        const auto primes = getPrimes(*std::max_element(nums.begin(), nums.end()));
-        const int m = primes.size();
-        std::unordered_map<int, int> map;
-        for (int j = 0; j < m; ++j) {
-            map[primes[j]] = j;
-        }
-        UnionFind uf(n + m);
-        for (int i = 0; i < n; ++i) {
-            for (const auto& p : getPrimeFactors(nums[i], primes)) {
-                uf.connect(i, n + map[p]);
+        UnionFind uf(*std::max_element(nums.begin(), nums.end()) + 1);
+        for (const auto& val : nums) {
+            for (const auto& f : getPrimeFactors(val)) {
+                uf.connect(val, f);
             }
         }
-        std::unordered_map<int, int> count;
         int result = 0;
-        for (int i = 0; i < n; ++i) {
-            count[uf.find(i)]++;
-            result = std::max(result, count[uf.find(i)]);
+        std::unordered_map<int, int> count;
+        for (const auto& val : nums) {
+            count[uf.find(val)]++;
+            result = std::max(result, count[uf.find(val)]);
         }
         return result;
     }
 
 private:
-    std::vector<int> getPrimes(int n)
+    std::vector<int> getPrimeFactors(int n)
     {
-        std::vector<int> isPrime(n + 1, true);
-        isPrime[0] = false;
-        isPrime[1] = false;
-        for (long long i = 2; i <= n; ++i) {
-            if (isPrime[i]) {
-                for (long long j = i * i; j <= n; j += i) {
-                    isPrime[j] = false;
-                }
-            }
-        }
         std::vector<int> result;
-        for (int i = 2; i <= n; ++i) {
-            if (isPrime[i]) {
+        for (int i = 2; i * i <= n; ++i) {
+            if (n % i == 0) {
                 result.push_back(i);
-            }
-        }
-        return result;
-    }
-
-    std::vector<int> getPrimeFactors(int n, const std::vector<int>& primesTable)
-    {
-        std::vector<int> result;
-        for (const auto& p : primesTable) {
-            if (p > n)
-                break;
-
-            if (p * p > n) {
-                result.push_back(n);
-                break;
-            }
-            if (n % p == 0) {
-                result.push_back(p);
-                while (n % p == 0) {
-                    n /= p;
+                while (n % i == 0) {
+                    n /= i;
                 }
             }
+        }
+        if (n != 1) {
+            result.push_back(n);
         }
         return result;
     }
