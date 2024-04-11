@@ -21,6 +21,13 @@ struct TreeNode
  * your serialization/deserialization algorithm should work. You just need to ensure that a binary
  * tree can be serialized to a string and this string can be deserialized to the original tree
  * structure.
+ *
+ * Clarification: The input/output format is the same as how LeetCode serializes a binary tree. You
+ * do not necessarily need to follow this format, so please be creative and come up with different
+ * approaches yourself.
+ *
+ * ! The number of nodes in the tree is in the range [0, 10^4].
+ * ! -1000 <= Node.val <= 1000
  */
 
 /**
@@ -44,59 +51,60 @@ public:
         if (!root)
             return {};
 
-        std::string s{};
-        preorderSerialize(root, s);
+        std::string s;
+        _serialize(s, root);
         return s;
     }
 
     // Decodes your encoded data to tree.
-    TreeNode* deserialize(const std::string& data)
+    TreeNode* deserialize(std::string data)
     {
         if (data.empty())
             return nullptr;
 
         std::queue<std::string> preorder;
-        for (size_t i = 0, j = 0; j < data.size(); ++j) {
-            if (data[j] == k_separator) {
+        for (int i = 0, j = 0; j < data.size(); ++j) {
+            if (data[j] == kComma) {
                 preorder.push(data.substr(i, j - i));
                 i = j + 1;
             }
         }
-        return preorderDeserialize(preorder);
+        return _deserialize(preorder);
     }
 
 private:
-    static constexpr char k_separator = ',';
-    const std::string k_nullptr{"null"};
-
-    void preorderSerialize(TreeNode* node, std::string& s)
+    void _serialize(std::string& s, TreeNode* root)
     {
-        if (!node) {
-            s.append(k_nullptr);
-            s.push_back(k_separator); // an extra "," at the end
+        if (!root) {
+            s.push_back(kNull);
+            s.push_back(kComma);
             return;
         }
-        s.append(std::to_string(node->val));
-        s.push_back(k_separator);
-        preorderSerialize(node->left, s);
-        preorderSerialize(node->right, s);
+        s.append(std::to_string(root->val));
+        s.push_back(kComma);
+        _serialize(s, root->left);
+        _serialize(s, root->right);
     }
 
-    TreeNode* preorderDeserialize(std::queue<std::string>& preorder)
+    TreeNode* _deserialize(std::queue<std::string>& preorder)
     {
         if (preorder.empty())
             return nullptr;
 
-        const auto str = preorder.front();
-        preorder.pop();
-        if (str == k_nullptr)
+        if (preorder.front().size() == 1 && preorder.front()[0] == kNull) {
+            preorder.pop();
             return nullptr;
-
-        auto* node = new TreeNode(std::stoi(str));
-        node->left = preorderDeserialize(preorder);
-        node->right = preorderDeserialize(preorder);
-        return node;
+        }
+        TreeNode* root = new TreeNode(std::stoi(preorder.front()));
+        preorder.pop();
+        root->left = _deserialize(preorder);
+        root->right = _deserialize(preorder);
+        return root;
     }
+
+private:
+    static constexpr char kNull = '#';
+    static constexpr char kComma = ',';
 };
 
 // Your Codec object will be instantiated and called as such:

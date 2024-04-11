@@ -19,19 +19,19 @@ public:
     std::vector<int> maxSlidingWindow(std::vector<int>& nums, int k)
     {
         const int n = nums.size();
+        std::deque<int> dq;
         std::vector<int> result;
-        result.reserve(n - k);
-        std::deque<int> dq; // dq.front() is the index of the max element
+        result.reserve(n - k + 1);
         for (int i = 0; i < n; ++i) {
-            if (!dq.empty() && dq.front() == i - k) {
+            while (!dq.empty() && dq.front() < i - k + 1) {
                 dq.pop_front();
             }
-            while (!dq.empty() && nums[dq.back()] <= nums[i]) {
+            while (!dq.empty() && nums[i] > nums[dq.back()]) {
                 dq.pop_back();
             }
             dq.push_back(i);
             if (i >= k - 1) {
-                result.emplace_back(nums[dq.front()]);
+                result.push_back(nums[dq.front()]);
             }
         }
         return result;

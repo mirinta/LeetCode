@@ -32,41 +32,30 @@ public:
         if (!head)
             return nullptr;
 
-        // before: p0->[n1->...->nk]->nk+1
-        //  after: ->[nk->...->n1]->nk+1, n1 becomes p0
-        int n = numOfNodes(head);
-        ListNode vHead(-1);
-        vHead.next = head;
-        auto* p0 = &vHead;
-        ListNode* prev = nullptr;
-        auto* curr = head;
-        while (n >= k) {
-            n -= k;
-            for (int i = 0; i < k; ++i) {
-                auto* next = curr->next;
-                curr->next = prev;
-                prev = curr;
-                curr = next;
-            } // when the loop ends, prev = nk, curr = nk+1
-            auto* next = p0->next;
-            p0->next->next = curr;
-            p0->next = prev;
-            p0 = next;
+        auto* afterTail = head;
+        for (int i = 0; i < k; ++i) {
+            if (!afterTail)
+                return head;
+
+            afterTail = afterTail->next;
         }
-        return vHead.next;
+        auto* newHead = reverse(head, afterTail);
+        head->next = reverseKGroup(afterTail, k);
+        return newHead;
     }
 
 private:
-    int numOfNodes(ListNode* head)
+    // reverse [start,end)
+    ListNode* reverse(ListNode* start, ListNode* end)
     {
-        if (!head)
-            return 0;
-
-        int result = 0;
-        while (head) {
-            result++;
-            head = head->next;
+        ListNode* prev = nullptr;
+        auto* curr = start;
+        while (curr && curr != end) {
+            auto* next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
         }
-        return result;
+        return prev;
     }
 };
