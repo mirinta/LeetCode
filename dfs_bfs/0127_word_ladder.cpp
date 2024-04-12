@@ -34,33 +34,34 @@ public:
         if (!dictionary.count(endWord))
             return 0;
 
+        std::unordered_set<std::string> visited;
+        visited.insert(beginWord);
         std::queue<std::string> queue;
         queue.push(beginWord);
-        int count = 1; // the number of words along the path
+        int result = 1;
         while (!queue.empty()) {
-            const int size = queue.size();
-            for (int k = 0; k < size; ++k) {
-                const auto word = queue.front();
+            for (int k = queue.size(); k > 0; --k) {
+                auto s = queue.front();
                 queue.pop();
-                if (word == endWord)
-                    return count;
+                if (s == endWord)
+                    return result;
 
-                for (int i = 0; i < word.size(); ++i) {
+                for (int i = 0; i < s.size(); ++i) {
+                    const auto backup = s[i];
                     for (char c = 'a'; c <= 'z'; ++c) {
-                        if (c == word[i])
+                        if (backup == c)
                             continue;
 
-                        std::string transformed = word;
-                        transformed[i] = c;
-                        if (!dictionary.count(transformed))
-                            continue;
-
-                        dictionary.erase(transformed);
-                        queue.push(std::move(transformed));
+                        s[i] = c;
+                        if (dictionary.count(s) && !visited.count(s)) {
+                            queue.push(s);
+                            visited.insert(s);
+                        }
+                        s[i] = backup;
                     }
                 }
             }
-            count++;
+            result++;
         }
         return 0;
     }

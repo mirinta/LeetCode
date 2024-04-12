@@ -51,6 +51,8 @@ std::vector<int> getPrimeNumbers(int n)
 /**
  * @brief Return the prime factor decomposition of n.
  *
+ * @note No duplicates.
+ *
  * @note Time Complexity = O(sqrt(n))
  */
 std::vector<int> getPrimeFactors(int n)
