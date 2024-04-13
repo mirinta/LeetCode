@@ -43,7 +43,7 @@ public:
         // - dp[0][0] = true, empty pattern matches empty string
         // - dp[i][0] = false, empty pattern doesn't match any non-empty string
         // - dp[0][j] = what kind of pattern can match empty string?
-        //   p: S * S * [S *] ..., repeat [S *]
+        //   p: S * S * [S *] ..., repeat [S *], S can be any character
         dp[0][0] = true;
         for (int j = 2; j <= n; ++j) {
             dp[0][j] = dp[0][j - 2] && p[j - 1] == '*';

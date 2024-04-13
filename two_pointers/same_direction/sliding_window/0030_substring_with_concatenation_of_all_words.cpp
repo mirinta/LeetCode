@@ -27,35 +27,33 @@ class Solution
 public:
     std::vector<int> findSubstring(std::string s, std::vector<std::string>& words)
     {
+        const int n = s.size();
         const int wordLength = words[0].size();
         const int windowLength = wordLength * words.size();
-        if (s.size() < windowLength)
+        if (n < windowLength)
             return {};
 
-        std::unordered_map<std::string, int> wordCount;
+        std::unordered_map<std::string, int> map;
         for (const auto& word : words) {
-            wordCount[word]++;
+            map[word]++;
         }
-        // [word_1 ... word_n] word_n+1 word_n+2 ...
         std::vector<int> result;
         for (int i = 0; i < wordLength; ++i) {
-            std::unordered_map<std::string, int> map;
-            int count = 0;
-            for (int j = i; j + wordLength <= s.size(); j += wordLength) {
-                if (j - i >= windowLength) {
-                    const std::string out = s.substr(j - windowLength, wordLength);
-                    map[out]--;
-                    if (map[out] < wordCount[out]) {
-                        count--;
+            auto copy = map;
+            int unique = 0;
+            for (int j = i; j + wordLength - 1 < n; j += wordLength) {
+                const auto in = s.substr(j, wordLength);
+                if (copy.count(in) && --copy[in] == 0) {
+                    unique++;
+                }
+                if (j - i + 1 > windowLength) {
+                    const auto out = s.substr(j - windowLength, wordLength);
+                    if (copy.count(out) && copy[out]++ == 0) {
+                        unique--;
                     }
                 }
-                const std::string in = s.substr(j, wordLength);
-                map[in]++;
-                if (map[in] <= wordCount[in]) {
-                    count++;
-                }
-                if (count == words.size()) {
-                    result.push_back(j - (words.size() - 1) * wordLength);
+                if (unique == copy.size()) {
+                    result.push_back(j - windowLength + wordLength);
                 }
             }
         }
