@@ -40,6 +40,9 @@ public:
         while (!pq.empty()) {
             const auto [dist, v] = pq.top();
             pq.pop();
+            if (dist > distTo[v])
+                continue;
+
             for (const auto& [weight, w] : graph[v]) {
                 if (distTo[w] > weight + distTo[v]) {
                     distTo[w] = weight + distTo[v];
