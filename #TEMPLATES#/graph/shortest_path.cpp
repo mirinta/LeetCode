@@ -74,6 +74,9 @@ long long dijkstra(int src, int dst, const Graph& graph)
         if (v == dst)
             return weights;
 
+        if (weights > distTo[v])
+            continue;
+
         for (const auto& [adj, weight] : graph[v]) {
             if (distTo[v] + weight < distTo[adj]) {
                 distTo[adj] = distTo[v] + weight;
