@@ -33,25 +33,23 @@ class Solution
 public:
     int sumNumbers(TreeNode* root)
     {
-        if (!root)
-            return 0;
-
         int result = 0;
-        dfs(result, 0, root);
+        dfs(result, root, 0);
         return result;
     }
 
 private:
-    void dfs(int& result, int num, TreeNode* root)
+    void dfs(int& result, TreeNode* root, int val)
     {
         if (!root)
             return;
 
-        num = num * 10 + root->val;
+        val = 10 * val + root->val;
         if (!root->left && !root->right) {
-            result += num;
+            result += val;
+            return;
         }
-        dfs(result, num, root->left);
-        dfs(result, num, root->right);
+        dfs(result, root->left, val);
+        dfs(result, root->right, val);
     }
 };

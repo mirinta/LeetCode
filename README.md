@@ -48,7 +48,7 @@
 - [x] Weekly 391 (3099~3102)
 - [x] Weekly 392 (3105~3108)
 - [x] Biweekly 128 (3110~3113)
-- [ ] Weekly 393 (3114~3117): 3116 is GREAT!
+- [x] Weekly 393 (3114~3117): 3116 is GREAT!
 
 TODO:
 
@@ -103,6 +103,7 @@ TODO:
 | [0450][link0450] | `Binary Search Tree` | `Medium` |
 | [0701][link0701] | `Binary Search Tree` | `Medium` |
 | [2513][link2513] | `Binary Search`, `Inclusive-Exclusive Principle` | :fire: 2302 |
+| [3116][link3116] | `Binary Search`, `Inclusive-Exclusive Principle`, `Bit Manipulation` | |
 | [2528][link2528] | `Binary Search`, `Sliding Window` | :fire:2236 |
 | [0222][link0222] | `Complete Binary Tree` | `Easy+` |
 | [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
@@ -186,3 +187,4 @@ TODO:
 [link2866]: https://leetcode.com/problems/beautiful-towers-ii/description/
 [link0907]: https://leetcode.com/problems/sum-of-subarray-minimums/description/
 [link0218]: https://leetcode.com/problems/the-skyline-problem/description/
+[link3116]: https://leetcode.com/problems/kth-smallest-amount-with-single-denomination-combination/description/

@@ -38,10 +38,10 @@ class Solution
 public:
     int numDecodings(std::string s)
     {
-        // dp[i] = num of ways to decode s[0:i]
+        // dp[i] = num of ways to decode s[0:i-1]
         constexpr int kMod = 1e9 + 7;
         const int n = s.size();
-        std::vector<long long> dp(n + 1, 0);
+        std::vector<long long> dp(n + 1);
         dp[0] = 1;
         for (int i = 1; i <= n; ++i) {
             const auto& curr = s[i - 1];
@@ -49,6 +49,7 @@ public:
                 dp[i] = dp[i - 1];
             } else if (curr == '*') {
                 dp[i] = dp[i - 1] * 9 % kMod;
+                ;
             } else {
                 dp[i] = 0;
             }
@@ -60,14 +61,19 @@ public:
                 if (prev == '1' || (prev == '2' && curr <= '6')) {
                     dp[i] = (dp[i] + dp[i - 2]) % kMod;
                 } else if (prev == '*') {
+                    // *[0~6], * can be either 1 or 2 => #options = 2
+                    // *[7~9], * must be 1 => #options = 1
                     dp[i] = (dp[i] + dp[i - 2] * (curr <= '6' ? 2 : 1) % kMod) % kMod;
                 }
             } else {
                 if (prev == '1') {
+                    // 1*, * can be 1~9 => #options = 9
                     dp[i] = (dp[i] + dp[i - 2] * 9 % kMod) % kMod;
                 } else if (prev == '2') {
+                    // 2*, * can be 1~6 => #options = 6
                     dp[i] = (dp[i] + dp[i - 2] * 6 % kMod) % kMod;
                 } else if (prev == '*') {
+                    // **, 1[1~9] or 2[1~6] => #options = 15
                     dp[i] = (dp[i] + dp[i - 2] * 15 % kMod) % kMod;
                 }
             }

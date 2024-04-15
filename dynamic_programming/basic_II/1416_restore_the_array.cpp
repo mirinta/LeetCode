@@ -20,29 +20,26 @@ class Solution
 public:
     int numberOfArrays(std::string s, int k)
     {
-        // dp[i] = num of ways to print s[0:i]
-        // 0 ... X X j-1 j X X X X X X X i-1 i
-        // |<--dp[j]-->| |<-valid integer->|
-        // |<------------dp[i]------------>|
-        // constraints: 1 <= k <= 10^9
-        // thus, we only need to consider at most 10 digits
-        // i.e., length of s[j:i-1] <= 10, i-1-j+1 <= 10, i-j <= 10
+        // dp[i] = num of possible arrays that can be printed of s[0:i-1]
+        // 0 ... X j-1 j X X X X X X X i-1 i
+        // |<-dp[j]->| |<-valid integer->|
+        // |<-----------dp[i]----------->|
+        // since k <= 1e9, we only need to consider at most 10 digits, i.e., i-j <= 10
         constexpr int kMod = 1e9 + 7;
         const int n = s.size();
-        std::vector<int> dp(n + 1, 0);
+        std::vector<int> dp(n + 1);
         dp[0] = 1;
         for (int i = 1; i <= n; ++i) {
-            long long curr = 0;
+            long long val = 0;
             long long base = 1;
-            for (int j = i - 1; j >= 0 && i - j <= 10; --j) {
-                curr = curr + (s[j] - '0') * base;
-                if (curr > k)
+            for (int j = i - 1; j >= 0 && i - j <= 10; --j, base *= 10) {
+                val = val + (s[j] - '0') * base;
+                if (val > k)
                     break;
 
-                if (curr >= base) {
+                if (val >= base) {
                     dp[i] = (dp[i] + dp[j]) % kMod;
                 }
-                base *= 10;
             }
         }
         return dp[n];

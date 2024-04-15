@@ -41,25 +41,23 @@ private:
         const int m = grid.size();
         const int n = grid[0].size();
         std::vector<std::vector<int>> dp(n, std::vector<int>(n, INT_MIN));
-        dp[0][n - 1] = grid[0][0] + grid[0][n - 1]; // constraints: cols >= 2
-        std::vector<std::vector<int>> prev(n, std::vector<int>(n, INT_MIN));
-        int result = INT_MIN;
+        dp[0][n - 1] = grid[0][0] + grid[0][n - 1];
+        auto prev = dp;
+        int result = dp[0][n - 1];
         for (int i = 1; i < m; ++i) {
             prev.assign(dp.begin(), dp.end());
             for (int j1 = 0; j1 < n; ++j1) {
                 for (int j2 = 0; j2 < n; ++j2) {
-                    for (int prevJ1 = j1 - 1; prevJ1 <= j1 + 1; ++prevJ1) {
-                        for (int prevJ2 = j2 - 1; prevJ2 <= j2 + 1; ++prevJ2) {
-                            if (prevJ1 < 0 || prevJ1 >= n || prevJ2 < 0 || prevJ2 >= n)
+                    const int gain = j1 == j2 ? grid[i][j1] : grid[i][j1] + grid[i][j2];
+                    for (int prev1 = j1 - 1; prev1 <= j1 + 1; ++prev1) {
+                        if (prev1 < 0 || prev1 >= n)
+                            continue;
+
+                        for (int prev2 = j2 - 1; prev2 <= j2 + 1; ++prev2) {
+                            if (prev2 < 0 || prev2 >= n)
                                 continue;
 
-                            if (j1 != j2) {
-                                dp[j1][j2] = std::max(
-                                    dp[j1][j2], prev[prevJ1][prevJ2] + grid[i][j1] + grid[i][j2]);
-                            } else {
-                                dp[j1][j2] =
-                                    std::max(dp[j1][j2], prev[prevJ1][prevJ2] + grid[i][j1]);
-                            }
+                            dp[j1][j2] = std::max(dp[j1][j2], prev[prev1][prev2] + gain);
                         }
                     }
                     if (i == m - 1) {
@@ -74,36 +72,35 @@ private:
     // DP, TC = O(MN^2), SC = O(MN^2)
     int approach1(const std::vector<std::vector<int>>& grid)
     {
-        // dp[i][j1][j2] = max num of cherries collection from row 0 to row i
-        // while Robot1 is located at grid[i][j1] and Robot2 is located at grid[i][j2]
+        // dp[i][j1][j2] = max collection of two robots moving from row 0 to row i
+        // while robot1 is located at (i,j1) and robot2 is located at (i,j2)
         const int m = grid.size();
         const int n = grid[0].size();
         std::vector<std::vector<std::vector<int>>> dp(
             m, std::vector<std::vector<int>>(n, std::vector<int>(n, INT_MIN)));
-        dp[0][0][n - 1] = grid[0][0] + grid[0][n - 1]; // constraints: cols >= 2
-        int result = INT_MIN;
+        dp[0][0][n - 1] = grid[0][0] + grid[0][n - 1];
         for (int i = 1; i < m; ++i) {
             for (int j1 = 0; j1 < n; ++j1) {
                 for (int j2 = 0; j2 < n; ++j2) {
-                    for (int prevJ1 = j1 - 1; prevJ1 <= j1 + 1; ++prevJ1) {
-                        for (int prevJ2 = j2 - 1; prevJ2 <= j2 + 1; ++prevJ2) {
-                            if (prevJ1 < 0 || prevJ1 >= n || prevJ2 < 0 || prevJ2 >= n)
+                    const int gain = j1 == j2 ? grid[i][j1] : grid[i][j1] + grid[i][j2];
+                    for (int prev1 = j1 - 1; prev1 <= j1 + 1; ++prev1) {
+                        if (prev1 < 0 || prev1 >= n)
+                            continue;
+
+                        for (int prev2 = j2 - 1; prev2 <= j2 + 1; ++prev2) {
+                            if (prev2 < 0 || prev2 >= n)
                                 continue;
 
-                            if (j1 != j2) {
-                                dp[i][j1][j2] =
-                                    std::max(dp[i][j1][j2],
-                                             dp[i - 1][prevJ1][prevJ2] + grid[i][j1] + grid[i][j2]);
-                            } else {
-                                dp[i][j1][j2] = std::max(dp[i][j1][j2],
-                                                         dp[i - 1][prevJ1][prevJ2] + grid[i][j1]);
-                            }
+                            dp[i][j1][j2] = std::max(dp[i][j1][j2], dp[i - 1][prev1][prev2] + gain);
                         }
                     }
-                    if (i == m - 1) {
-                        result = std::max(result, dp[i][j1][j2]);
-                    }
                 }
+            }
+        }
+        int result = 0;
+        for (int j1 = 0; j1 < n; ++j1) {
+            for (int j2 = 0; j2 < n; ++j2) {
+                result = std::max(result, dp[m - 1][j1][j2]);
             }
         }
         return result;

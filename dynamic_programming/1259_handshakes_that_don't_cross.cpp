@@ -17,25 +17,21 @@ class Solution
 public:
     int numberOfWays(int numPeople)
     {
-        constexpr int kMod = 1e9 + 7;
-        // dp[i] = num of ways of handshakes between i people
-        // assume there are i people
-        // - let person 1 shake hands with peron x, then the circle is divided into two parts
-        // - the left part contains person[x+1:i], num of people = x - 2
-        // - the right part contains person[2:x-1], num of people = i - x
-        // - num of ways = dp[x-2] * dp[i-x]
+        // dp[i] = num of ways to shake hands of i people
+        // let person 1 shakes hands with person j,
+        // then the circle is divided into two parts,
+        // right part has j-2 people and left part has i-j people
         //       1
-        //   i   |   2
-        //  ...  |  ...
-        //  x+1  |  x-1
-        //       x
-        std::vector<long long> dp(numPeople + 1, 0);
+        //  i    |    2
+        // ...   |   ...
+        // x+1   |   j+1
+        //       j
+        constexpr int kMod = 1e9 + 7;
+        std::vector<long long> dp(numPeople + 1);
         dp[0] = 1;
-        dp[2] = 1;
-        for (int i = 4; i <= numPeople; i += 2) {
-            // j is the num of people in the right part
-            for (int j = 0; j <= i - 2; j += 2) {
-                dp[i] = (dp[i] + dp[j] * dp[i - j - 2]) % kMod;
+        for (int i = 2; i <= numPeople; i += 2) {
+            for (int j = 2; j <= i; j += 2) {
+                dp[i] = (dp[i] + dp[j - 2] * dp[i - j] % kMod) % kMod;
             }
         }
         return dp[numPeople];
