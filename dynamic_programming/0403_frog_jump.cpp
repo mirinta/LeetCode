@@ -25,34 +25,31 @@ public:
     bool canCross(std::vector<int>& stones)
     {
         const int n = stones.size();
-        memo = std::vector<std::vector<int>>(n, std::vector<int>(n, -1));
+        std::unordered_map<int, int> map;
         for (int i = 0; i < n; ++i) {
             map[stones[i]] = i;
         }
-        return dp(0, 0, stones);
+        std::vector<std::vector<int>> memo(n, std::vector<int>(n, -1));
+        return dp(memo, 0, 0, stones, map);
     }
 
 private:
-    std::unordered_map<int, int> map;
-    std::vector<std::vector<int>> memo;
-
-    bool dp(int i, int k, const std::vector<int>& stones)
+    bool dp(std::vector<std::vector<int>>& memo, int i, int k, const std::vector<int>& stones,
+            const std::unordered_map<int, int>& map)
     {
-        const int n = stones.size();
-        if (i == n - 1)
+        if (i == stones.size() - 1)
             return true;
 
         if (memo[i][k] != -1)
             return memo[i][k];
 
-        for (int offset = -1; offset <= 1; ++offset) {
-            const int pos = stones[i] + k + offset;
-            if (pos <= stones[i] || !map.count(pos))
+        for (int dist = k - 1; dist <= k + 1; ++dist) {
+            if (dist <= 0 || !map.count(stones[i] + dist))
                 continue;
 
-            if (dp(map[pos], pos - stones[i], stones))
-                return memo[i][k] = true;
+            if (dp(memo, map.at(stones[i] + dist), dist, stones, map))
+                return memo[i][k] = 1;
         }
-        return memo[i][k] = false;
+        return memo[i][k] = 0;
     }
 };

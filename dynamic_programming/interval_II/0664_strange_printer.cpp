@@ -20,33 +20,26 @@ class Solution
 public:
     int strangePrinter(std::string s)
     {
-        const int n = s.size();
         // dp[i][j] = min num of turns to print s[i:j]
+        const int n = s.size();
         std::vector<std::vector<int>> dp(n, std::vector<int>(n, INT_MAX / 2));
         for (int i = 0; i < n; ++i) {
             dp[i][i] = 1;
         }
-        for (int i = n - 2; i >= 0; --i) {
-            for (int j = i + 1; j < n; ++j) {
-                // case 1:
-                // i [X X X X X X X j]
-                // print one s[i] in this turn, and print s[i+1:j] in the next turn
-                dp[i][j] = 1 + dp[i + 1][j];
-                // case 2:
-                // [i X X X] k [X X X j]
-                // if s[k] == s[i], i < k < j
-                // s[k] and s[i] can be printed in the same turn
-                for (int k = i + 1; k < j; ++k) {
-                    if (s[k] == s[i]) {
-                        dp[i][j] = std::min(dp[i][j], dp[i][k - 1] + dp[k + 1][j]);
-                    }
-                }
-                // case 3:
-                // [i X X X X X X X] j
-                // if s[i] == s[j],
-                // s[j] and s[i] can be printed in the same turn
+        for (int length = 2; length <= n; ++length) {
+            for (int i = 0; i + length - 1 < n; ++i) {
+                const int j = i + length - 1;
+                // case 1: print single s[i]
+                dp[i][j] = std::min(dp[i][j], 1 + dp[i + 1][j]);
+                // case 2: s[i] = s[j], then s[j] can be printed when processing s[i:j-1]
                 if (s[i] == s[j]) {
                     dp[i][j] = std::min(dp[i][j], dp[i][j - 1]);
+                }
+                // case 3: s[i] = s[k], then s[k] can be printed when processing s[i:k-1]
+                for (int k = i + 1; k < j; ++k) {
+                    if (s[i] == s[k]) {
+                        dp[i][j] = std::min(dp[i][j], dp[i][k - 1] + dp[k + 1][j]);
+                    }
                 }
             }
         }

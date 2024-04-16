@@ -27,17 +27,18 @@ public:
         if (jobDifficulty.size() < d)
             return -1;
 
+        // dp[i][t] = min difficulty of scheduling jobs[0:i-1] within t days
         const int n = jobDifficulty.size();
         std::vector<std::vector<int>> dp(n + 1, std::vector<int>(d + 1, INT_MAX / 2));
         dp[0][0] = 0;
         for (int i = 1; i <= n; ++i) {
-            for (int t = 1; t <= d && i >= t; ++t) {
-                for (int j = i, max = INT_MIN; j >= t; --j) {
-                    max = std::max(max, jobDifficulty[j - 1]);
-                    dp[i][t] = std::min(dp[i][t], dp[j - 1][t - 1] + max);
+            for (int t = 1; t <= std::min(i, d); ++t) {
+                for (int k = i, max = INT_MIN; k >= t; --k) {
+                    max = std::max(max, jobDifficulty[k - 1]);
+                    dp[i][t] = std::min(dp[i][t], dp[k - 1][t - 1] + max);
                 }
             }
         }
-        return dp[n][d];
+        return dp[n][d] == INT_MAX / 2 ? -1 : dp[n][d];
     }
 };

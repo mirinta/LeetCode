@@ -25,31 +25,54 @@
 class Solution
 {
 public:
-    int minCost(int n, std::vector<int>& cuts)
+    int minCost(int n, std::vector<int>& cuts) { return approach2(n, cuts); }
+
+private:
+    int approach2(int n, std::vector<int>& cuts)
     {
-        // dp[i][j] = min cost of cutting stick[I,J], where I = cuts[i] and J = cuts[j]
-        // 0 ... I .......... K .......... J ... n
-        //       |<-dp[i][k]->|<-dp[k][j]->|
-        //       |<--------dp[i][j]------->|
-        // length = J - I
-        // - if length >= 3, we can choose a cutting position K = cuts[k],
-        // where K is in the range [I+1,J-1], then cost = J - I + dp[i][k] + dp[k][j]
-        // - if length = 2, cost = 0, because there's no possible cutting position in stick[I,J]
-        // - if length < 2, cost = INT_MAX, because stick[I,J] is invalid
-        cuts.push_back(0);
-        cuts.push_back(n);
+        // dp[i][j] = min cost to achieve cuts[i:j]
         std::sort(cuts.begin(), cuts.end());
-        std::vector<std::vector<int>> dp(cuts.size(), std::vector<int>(cuts.size(), INT_MAX));
-        for (int i = 0; i < cuts.size() - 1; ++i) {
+        cuts.insert(cuts.begin(), 0);
+        cuts.push_back(n);
+        const int m = cuts.size();
+        std::vector<std::vector<int>> dp(m, std::vector<int>(m, INT_MAX));
+        for (int i = 0; i + 1 < m; ++i) {
             dp[i][i + 1] = 0;
         }
-        for (int i = cuts.size() - 3; i >= 0; --i) {
-            for (int j = i + 2; j < cuts.size(); ++j) {
-                for (int k = i + 1; k <= j - 1; ++k) {
-                    dp[i][j] = std::min(dp[i][j], cuts[j] - cuts[i] + dp[i][k] + dp[k][j]);
+        for (int length = 3; length <= m; ++length) {
+            for (int i = 0; i + length - 1 < m; ++i) {
+                const int j = i + length - 1;
+                for (int k = i + 1; k < j; ++k) {
+                    dp[i][j] = std::min(dp[i][j], dp[i][k] + dp[k][j] + cuts[j] - cuts[i]);
                 }
             }
         }
-        return dp[0][cuts.size() - 1];
+        return dp[0][m - 1];
+    }
+
+    int approach1(int n, std::vector<int>& cuts)
+    {
+        std::sort(cuts.begin(), cuts.end());
+        cuts.insert(cuts.begin(), 0);
+        cuts.push_back(n);
+        std::vector<std::vector<int>> memo(cuts.size(), std::vector<int>(cuts.size(), -1));
+        return dfs(memo, 0, cuts.size() - 1, cuts);
+    }
+
+    int dfs(std::vector<std::vector<int>>& memo, int left, int right, const std::vector<int>& cuts)
+    {
+        if (left + 1 >= right)
+            return 0;
+
+        if (memo[left][right] != -1)
+            return memo[left][right];
+
+        int result = INT_MAX;
+        for (int i = left + 1; i < right; ++i) {
+            const int cost =
+                dfs(memo, left, i, cuts) + dfs(memo, i, right, cuts) + cuts[right] - cuts[left];
+            result = std::min(result, cost);
+        }
+        return memo[left][right] = result;
     }
 };
