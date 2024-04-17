@@ -20,15 +20,15 @@
 class Solution
 {
 public:
-    int countPaths(const std::vector<std::vector<int>>& grid)
+    int countPaths(std::vector<std::vector<int>>& grid)
     {
-        const auto m = grid.size();
-        const auto n = grid[0].size();
+        const int m = grid.size();
+        const int n = grid[0].size();
         std::vector<std::vector<int>> memo(m, std::vector<int>(n, -1));
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                result = (result + dfs(i, j, memo, grid)) % kMod;
+                result = (result + dfs(memo, i, j, grid)) % kMod;
             }
         }
         return result;
@@ -36,28 +36,28 @@ public:
 
 private:
     static constexpr int kMod = 1e9 + 7;
-    const std::vector<std::pair<int, int>> kOffsets{{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+    static const std::vector<std::pair<int, int>> kDirections;
 
-    // num of strictly increasing paths with (x,y) as start point
-    int dfs(int x, int y, std::vector<std::vector<int>>& memo,
+    // num of strictly increasing paths starting from grid[x][y]
+    int dfs(std::vector<std::vector<int>>& memo, int x, int y,
             const std::vector<std::vector<int>>& grid)
     {
-        const auto m = grid.size();
-        const auto n = grid[0].size();
-        if (x < 0 || x >= m || y < 0 || y >= n)
-            return 0;
-
         if (memo[x][y] != -1)
             return memo[x][y];
 
-        memo[x][y] = 1;
-        for (const auto& [dx, dy] : kOffsets) {
-            int newX = x + dx;
-            int newY = y + dy;
-            if (newX >= 0 && newX < m && newY >= 0 && newY < n && grid[newX][newY] > grid[x][y]) {
-                memo[x][y] = (memo[x][y] + dfs(newX, newY, memo, grid)) % kMod;
+        int result = 1;
+        for (const auto& [dx, dy] : kDirections) {
+            const int i = x + dx;
+            const int j = y + dy;
+            if (i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size())
+                continue;
+
+            if (grid[i][j] > grid[x][y]) {
+                result = (result + dfs(memo, i, j, grid)) % kMod;
             }
         }
-        return memo[x][y];
+        return memo[x][y] = result;
     }
 };
+
+const std::vector<std::pair<int, int>> Solution::kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};

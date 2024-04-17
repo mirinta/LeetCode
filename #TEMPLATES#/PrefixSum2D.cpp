@@ -19,7 +19,7 @@ public:
      *
      * @note x1, y1, x2 and y2 are 0-indexed.
      */
-    int query(int x1, int y1, int x2, int y2)
+    int query(int x1, int y1, int x2, int y2) const
     {
         return presum[x2 + 1][y2 + 1] - presum[x2 + 1][y1] - presum[x1][y2 + 1] + presum[x1][y1];
     }

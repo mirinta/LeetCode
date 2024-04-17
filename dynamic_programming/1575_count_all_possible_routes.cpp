@@ -27,28 +27,64 @@ class Solution
 public:
     int countRoutes(std::vector<int>& locations, int start, int finish, int fuel)
     {
-        constexpr int kMod = 1e9 + 7;
-        // dp[f][c] = num of routes when arriving at city c with f remaining fuel
-        int dp[201][101] = {0};
-        dp[fuel][start] = 1;
+        return approach1(locations, start, finish, fuel);
+    }
+
+private:
+    static constexpr int kMod = 1e9 + 7;
+
+    int approach2(const std::vector<int>& locations, int start, int finish, int fuel)
+    {
+        // dp[f][i] = num of routes from start to i
+        // and the remaining fuel is f when arriving at i
         const int n = locations.size();
+        std::vector<std::vector<int>> dp(1 + fuel, std::vector<int>(n, 0));
+        dp[fuel][start] = 1;
         for (int f = fuel; f >= 0; --f) {
-            for (int c = 0; c < n; ++c) {
-                for (int k = 0; k < n; ++k) {
-                    if (k == c)
+            for (int i = 0; i < n; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (j == i)
                         continue;
-                    // amount of consuming fuel from city k to city c
-                    const int cost = std::abs(locations[c] - locations[k]);
-                    if (f + cost <= fuel) {
-                        dp[f][c] = (dp[f][c] + dp[f + cost][k]) % kMod;
-                    }
+
+                    const int cost = std::abs(locations[i] - locations[j]);
+                    if (f + cost > fuel)
+                        continue;
+
+                    dp[f][i] = (dp[f][i] + dp[f + cost][j]) % kMod;
                 }
             }
         }
         int result = 0;
-        for (int f = fuel; f >= 0; --f) {
+        for (int f = 0; f <= fuel; ++f) {
             result = (result + dp[f][finish]) % kMod;
         }
         return result;
+    }
+
+    int approach1(const std::vector<int>& locations, int start, int finish, int fuel)
+    {
+        const int n = locations.size();
+        std::vector<std::vector<int>> memo(n, std::vector<int>(fuel + 1, -1));
+        return dfs(memo, start, finish, fuel, locations);
+    }
+
+    int dfs(std::vector<std::vector<int>>& memo, int i, int finish, int fuel,
+            const std::vector<int>& locations)
+    {
+        if (fuel < 0)
+            return 0;
+
+        if (memo[i][fuel] != -1)
+            return memo[i][fuel];
+
+        int result = i == finish;
+        for (int j = 0; j < locations.size(); ++j) {
+            if (i == j)
+                continue;
+
+            const int cost = std::abs(locations[i] - locations[j]);
+            result = (result + dfs(memo, j, finish, fuel - cost, locations)) % kMod;
+        }
+        return memo[i][fuel] = result;
     }
 };
