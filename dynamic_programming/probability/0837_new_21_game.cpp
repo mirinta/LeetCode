@@ -22,18 +22,18 @@ class Solution
 public:
     double new21Game(int n, int k, int maxPts)
     {
-        // dp[i] = probability of having i points
-        // dp[i] = p * (dp[i-1] + dp[i-2] + ... + dp[i-maxPts])
-        if (k == 0 || n >= k + maxPts)
-            return 1.0;
+        if (k == 0 || k - 1 + maxPts <= n)
+            return 1;
 
-        const double p = 1.0 / maxPts;
+        // dp[i] = probability that Alice has i points
+        // dp[i] = p * (dp[i-1] + ... + dp[i-maxPts]);
         std::vector<double> dp(n + 1, 0);
         dp[0] = 1;
-        double sum = 1;
+        double sum = dp[0];
+        const double p = 1.0 / maxPts;
         double result = 0;
         for (int i = 1; i <= n; ++i) {
-            dp[i] = sum * p;
+            dp[i] = p * sum;
             if (i < k) {
                 sum += dp[i];
             } else {

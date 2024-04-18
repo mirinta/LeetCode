@@ -23,7 +23,7 @@
 class Solution
 {
 public:
-    int bestTeamScore(const std::vector<int>& scores, const std::vector<int>& ages)
+    int bestTeamScore(std::vector<int>& scores, std::vector<int>& ages)
     {
         const int n = scores.size();
         std::vector<std::pair<int, int>> players(n); // <score, age>
@@ -31,20 +31,13 @@ public:
             players[i].first = scores[i];
             players[i].second = ages[i];
         }
+        // dp[i] = max score of the subsequence of players[0:i] ending at players[i]
         std::sort(players.begin(), players.end());
-        // dp[i] = max score of teams ending at players[i]
-        // base case: dp[i] = score[i]
-        std::vector<int> dp(n);
+        std::vector<int> dp(n, 0);
         int result = 0;
         for (int i = 0; i < n; ++i) {
             dp[i] = players[i].first;
-            result = std::max(result, dp[i]);
-        }
-        for (int i = 1; i < n; ++i) {
             for (int j = i - 1; j >= 0; --j) {
-                // X X j X X i
-                // players are sorted by scores in non-decreasing order
-                // players[i].first >= player[j].first is guaranteed
                 if (players[i].second >= players[j].second) {
                     dp[i] = std::max(dp[i], players[i].first + dp[j]);
                 }

@@ -29,17 +29,15 @@ public:
     }
 
 private:
-    static constexpr double kProb = 1.0 / 8;
+    static constexpr double P = 0.125; // 1/8
+    static const std::vector<std::pair<int, int>> kDirections;
 
-    const std::vector<std::pair<int, int>> kDirections{{-1, -2}, {-2, -1}, {-2, 1}, {-1, 2},
-                                                       {1, 2},   {2, 1},   {2, -1}, {1, -2}};
-
-    // DP with space optimization, TC = O(KN^2), SC = O(N^2)
+    // DP with space optimization, TC = (KN^2), SC = O(N^2)
     double approach2(int n, int k, int row, int column)
     {
-        std::vector<std::vector<double>> dp(n, std::vector<double>(n, 0));
-        auto prev = dp;
+        std::vector<std::vector<double>> dp(n, std::vector<double>(n));
         dp[row][column] = 1;
+        auto prev = dp;
         for (int t = 1; t <= k; ++t) {
             prev.assign(dp.begin(), dp.end());
             std::fill(dp.begin(), dp.end(), std::vector<double>(n, 0));
@@ -51,7 +49,7 @@ private:
                         if (x < 0 || x >= n || y < 0 || y >= n)
                             continue;
 
-                        dp[i][j] += prev[x][y] * kProb;
+                        dp[i][j] += prev[x][y] * P;
                     }
                 }
             }
@@ -65,12 +63,12 @@ private:
         return result;
     }
 
-    // DP, TC = O(KN^2), SC = (KN^2)
+    // DP, TC = O(KN^2), SC = O(KN^2)
     double approach1(int n, int k, int row, int column)
     {
-        // dp[t][i][j] = probability of the knight standing at (i,j) after exactly t moves
+        // dp[t][i][j] = probability that the knight is located at (i,j) after exactly t moves
         std::vector<std::vector<std::vector<double>>> dp(
-            k + 1, std::vector<std::vector<double>>(n, std::vector<double>(n, 0)));
+            k + 1, std::vector<std::vector<double>>(n, std::vector<double>(n)));
         dp[0][row][column] = 1;
         for (int t = 1; t <= k; ++t) {
             for (int i = 0; i < n; ++i) {
@@ -81,7 +79,7 @@ private:
                         if (x < 0 || x >= n || y < 0 || y >= n)
                             continue;
 
-                        dp[t][i][j] += dp[t - 1][x][y] * kProb;
+                        dp[t][i][j] += dp[t - 1][x][y] * P;
                     }
                 }
             }
@@ -95,3 +93,6 @@ private:
         return result;
     }
 };
+
+const std::vector<std::pair<int, int>> Solution::kDirections{{-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
+                                                             {2, -1},  {2, 1},  {1, -2},  {1, 2}};

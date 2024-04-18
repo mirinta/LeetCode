@@ -31,34 +31,36 @@ class Solution
 public:
     double soupServings(int n)
     {
-        if (n >= 5000) // magic number by obervation
-            return 1.0;
+        if (n > 4300) // empirical number
+            return 1;
 
+        const int amount = std::ceil(n * 1.0 / 25);
         std::unordered_map<int, std::unordered_map<int, double>> memo;
-        return dp(memo, n, n);
+        return dfs(memo, amount, amount);
     }
 
 private:
-    double dp(std::unordered_map<int, std::unordered_map<int, double>>& memo, int A, int B)
+    static constexpr double P = 0.25;
+
+    double dfs(std::unordered_map<int, std::unordered_map<int, double>>& memo, int i, int j)
     {
-        if (A <= 0 && B <= 0)
+        if (i <= 0 && j > 0)
+            return 1;
+
+        if (i <= 0 && j <= 0)
             return 0.5;
 
-        if (A <= 0 && B > 0)
-            return 1.0;
-
-        if (B <= 0)
+        if (i > 0 && j <= 0)
             return 0;
 
-        if (memo.count(A) && memo[A].count(B))
-            return memo[A][B];
+        if (memo.count(i) && memo[i].count(j))
+            return memo[i][j];
 
-        static const std::vector<std::pair<int, int>> operations{
-            {-100, 0}, {-75, -25}, {-50, -50}, {-25, -75}};
-        memo[A][B] = 0;
-        for (const auto& operation : operations) {
-            memo[A][B] += 0.25 * dp(memo, A + operation.first, B + operation.second);
-        }
-        return memo[A][B];
+        double result = 0;
+        result += dfs(memo, i - 4, j) * P;
+        result += dfs(memo, i - 3, j - 1) * P;
+        result += dfs(memo, i - 2, j - 2) * P;
+        result += dfs(memo, i - 1, j - 3) * P;
+        return memo[i][j] = result;
     }
 };

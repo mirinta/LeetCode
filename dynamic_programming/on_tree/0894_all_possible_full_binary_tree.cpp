@@ -30,42 +30,31 @@ class Solution
 public:
     std::vector<TreeNode*> allPossibleFBT(int n)
     {
-        if (n % 2 == 0)
-            return {};
-
-        memo = std::vector<std::vector<TreeNode*>>(n + 1);
-        return dp(n);
+        std::vector<std::vector<TreeNode*>> memo(n + 1);
+        return dfs(memo, n);
     }
 
 private:
-    std::vector<std::vector<TreeNode*>> memo;
-
-    std::vector<TreeNode*> dp(int n)
+    std::vector<TreeNode*> dfs(std::vector<std::vector<TreeNode*>>& memo, int n)
     {
-        if (n < 0)
-            return {};
+        if (n == 1)
+            return {new TreeNode(0)};
 
         if (!memo[n].empty())
             return memo[n];
 
-        if (n == 1)
-            return {new TreeNode(0)};
-
-        std::vector<TreeNode*> result;
-        for (int leftNodes = 1; leftNodes <= n - 1; leftNodes += 2) {
-            const int rightNodes = n - leftNodes - 1;
-            const auto leftFBTs = dp(leftNodes);
-            const auto rightFBTs = dp(rightNodes);
-            for (auto* const left : leftFBTs) {
-                for (auto* const right : rightFBTs) {
+        for (int left = 1; left <= n - 1; left += 2) {
+            auto leftSubtrees = dfs(memo, left);
+            auto rightSubtrees = dfs(memo, n - 1 - left);
+            for (auto* const x : leftSubtrees) {
+                for (auto* const y : rightSubtrees) {
                     auto* root = new TreeNode(0);
-                    root->left = left;
-                    root->right = right;
-                    result.push_back(root);
+                    root->left = x;
+                    root->right = y;
+                    memo[n].push_back(root);
                 }
             }
         }
-        memo[n] = std::move(result);
         return memo[n];
-    };
+    }
 };

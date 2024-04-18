@@ -97,52 +97,53 @@ TODO:
 
 ## Liked Problems
 
-| ID | Tags | Difficulty |
+| Problem | Tags | Difficulty |
 |----|------|------------|
-| [0098][link0098] | `Binary Search Tree` | `Medium` |
-| [0450][link0450] | `Binary Search Tree` | `Medium` |
-| [0701][link0701] | `Binary Search Tree` | `Medium` |
-| [2513][link2513] | `Binary Search`, `Inclusive-Exclusive Principle` | :fire: 2302 |
-| [3116][link3116] | `Binary Search`, `Inclusive-Exclusive Principle`, `Bit Manipulation` | |
-| [2528][link2528] | `Binary Search`, `Sliding Window` | :fire:2236 |
-| [0222][link0222] | `Complete Binary Tree` | `Easy+` |
-| [1872][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
-| [0907][link0907] | `Dynamic Programming`, `Monotonic Stack` | :fire:1976 |
-| [1504][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
-| [2945][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
-| [2597][link2597] | `Dynamic Programming`, `Sorting`, `Backtracking` | :fire:2023 |
-| [3068][link3068] | `Dynamic Programming`, `Tree` | :fire:2268 |
-| [0787][link0787] | `Graph`, `Shortest Path` | :fire:1786 |
-| [3022][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
-| [1686][link1686] | `Greedy`, `Game Theory` | :fire:2001 |
-| [2029][link2029] | `Greedy`, `Game Theory` | :fire:2277 |
-| [1642][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
-| [1838][link1838] | `Greedy`, `Sliding Window` | :fire:1876 |
-| [2866][link2866] | `Monotonic Stack` | :fire:2072 |
-| [0962][link0962] | `Monotonic Stack`, `Binary Search`, `Two Pointers` | :fire:1608 |
-| [1442][link1442] | `Prefix Sum`, `Hash Map` | :fire:1525 |
-| [2025][link2025] | `Prefix Sum`, `Hash Map` | :fire:2218 |
-| [2949][link2949] | `Prefix Sum`, `Hash Map` | :fire:2445 |
-| [0042][link0042] | `Prefix Sum`, `Monotonic Stack`, `Two Pointers` | `Hard` |
-| [1915][link1915] | `Prefix Sum`, `Hash Map`, `State Compression` | :fire:2235 |
-| [0407][link0407] | `Priority Queue`, `BFS` | `Hard` | 
-| [2402][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
-| [0218][link0218] | `Line Sweep`, `Ordered Set` | `Hard` |
-| [0315][link0315] | `Merge Sort`, `Two Pointers`, `Binary Indexed Tree` | `Hard` |
-| [0493][link0493] | `Merge Sort`, `Two Pointers`, `Binary Indexed Tree`, `Binary Search` | `Hard` |
-| [0395][link0395] | `Sliding Window` | `Medium` |
-| [2401][link2401] | `Sliding Window`, `Bit Manipulation` | :fire:1750 |
-| [2106][link2106] | `Sliding Window`, `Binary Search` | :fire:2062 |
-| [1610][link1610] | `Sliding Window`, `Geometry` | :fire:2147 |
-| [2968][link2968] | `Sliding Window`, `Median Theorem` | :fire:2444 |
-| [1438][link1438] | `Sliding Window`, `Monotonic Queue`, `Multiset` | :fire:1672 |
-| [2781][link2781] | `Sliding Window`, `Trie` | :fire:2204 |
-| [3045][link3045] | `Trie`, `KMP` | :fire:2328 |
-| [1574][link1574] | `Two Pointers` | :fire:1932 |
-| [1712][link1712] | `Two Pointers`, `Prefix Sum`, `Binary Search` | :fire:2079 |
-| [2444][link2444] | `Two Pointers` | :fire:2093 |
-| [2972][link2972] | `Two Pointers` | :fire:2153 |
-| [2709][link2709] | `Union Find`, `Number Theory` | :fire:2172 |
+| [98. Validate Binary Search Tree][link0098] | `Binary Search Tree` | `Medium` |
+| [450. Delete Node in a BST][link0450] | `Binary Search Tree` | `Medium` |
+| [701. Insert into a Binary Search Tree][link0701] | `Binary Search Tree` | `Medium` |
+| [2513. Minimize the Maximum of Two Arrays][link2513] | `Binary Search`, `Inclusive-Exclusive Principle` | :fire: 2302 |
+| [3116. Kth Smallest Amount With Single Denomination Combination][link3116] | `Binary Search`, `Inclusive-Exclusive Principle`, `Bit Manipulation` | |
+| [2528. Maximize the Minimum Powered City][link2528] | `Binary Search`, `Sliding Window` | :fire:2236 |
+| [222. Count Complete Tree Nodes][link0222] | `Complete Binary Tree` | `Easy+` |
+| [968. Binary Tree Cameras][link0968] | `Dynamic Programming`, `Binary Tree` | :fire:2124 |
+| [1872. Stone Game VIII][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
+| [907. Sum of Subarray Minimums][link0907] | `Dynamic Programming`, `Monotonic Stack` | :fire:1976 |
+| [1504. Count Submatrices With All Ones][link1504] | `Dynamic Programming`, `Monotonic Stack` | :fire:1845 |
+| [2945. Find Maximum Non-decreasing Array Length][link2945] | `Dynamic Programming`, `Prefix Sum`, `Monotonic Queue` | :fire:2943 |
+| [2597. The Number of Beautiful Subsets7][link2597] | `Dynamic Programming`, `Sorting`, `Backtracking` | :fire:2023 |
+| [3068. Find the Maximum Sum of Node Values][link3068] | `Dynamic Programming`, `Tree` | :fire:2268 |
+| [787. Cheapest Flights Within K Stops][link0787] | `Graph`, `Shortest Path` | :fire:1786 |
+| [3022. Minimize OR of Remaining Elements Using Operations][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
+| [1686. Stone Game VI][link1686] | `Greedy`, `Game Theory` | :fire:2001 |
+| [2029. Stone Game IX][link2029] | `Greedy`, `Game Theory` | :fire:2277 |
+| [1642. Furthest Building You Can Reach][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
+| [1838. Frequency of the Most Frequent Element][link1838] | `Greedy`, `Sliding Window` | :fire:1876 |
+| [2866. Beautiful Towers II][link2866] | `Monotonic Stack` | :fire:2072 |
+| [962. Maximum Width Ramp][link0962] | `Monotonic Stack`, `Binary Search`, `Two Pointers` | :fire:1608 |
+| [1442. Count Triplets That Can Form Two Arrays of Equal XOR][link1442] | `Prefix Sum`, `Hash Map` | :fire:1525 |
+| [2025. Maximum Number of Ways to Partition an Array][link2025] | `Prefix Sum`, `Hash Map` | :fire:2218 |
+| [2949. Count Beautiful Substrings II][link2949] | `Prefix Sum`, `Hash Map` | :fire:2445 |
+| [42. Trapping Rain Water][link0042] | `Prefix Sum`, `Monotonic Stack`, `Two Pointers` | `Hard` |
+| [1915. Number of Wonderful Substrings][link1915] | `Prefix Sum`, `Hash Map`, `State Compression` | :fire:2235 |
+| [407. Trapping Rain Water II][link0407] | `Priority Queue`, `BFS` | `Hard` | 
+| [2402. Meeting Rooms III][link2402] | `Priority Queue`, `Simulation` | :fire:2093 |
+| [218. The Skyline Problem][link0218] | `Line Sweep`, `Ordered Set` | `Hard` |
+| [315. Count of Smaller Numbers After Self][link0315] | `Merge Sort`, `Two Pointers`, `Binary Indexed Tree` | `Hard` |
+| [493. Reverse Pairs][link0493] | `Merge Sort`, `Two Pointers`, `Binary Indexed Tree`, `Binary Search` | `Hard` |
+| [395. Longest Substring with At Least K Repeating Characters][link0395] | `Sliding Window` | `Medium` |
+| [2401. Longest Nice Subarray][link2401] | `Sliding Window`, `Bit Manipulation` | :fire:1750 |
+| [2106. Maximum Fruits Harvested After at Most K Steps][link2106] | `Sliding Window`, `Binary Search` | :fire:2062 |
+| [1610. Maximum Number of Visible Points][link1610] | `Sliding Window`, `Geometry` | :fire:2147 |
+| [2968. Apply Operations to Maximize Frequency Score][link2968] | `Sliding Window`, `Median Theorem` | :fire:2444 |
+| [1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit][link1438] | `Sliding Window`, `Monotonic Queue`, `Multiset` | :fire:1672 |
+| [2781. Length of the Longest Valid Substring][link2781] | `Sliding Window`, `Trie` | :fire:2204 |
+| [3045. Count Prefix and Suffix Pairs II][link3045] | `Trie`, `KMP` | :fire:2328 |
+| [1574. Shortest Subarray to be Removed to Make Array Sorted][link1574] | `Two Pointers` | :fire:1932 |
+| [1712. Ways to Split Array Into Three Subarrays][link1712] | `Two Pointers`, `Prefix Sum`, `Binary Search` | :fire:2079 |
+| [2444. Count Subarrays With Fixed Bounds][link2444] | `Two Pointers` | :fire:2093 |
+| [2972. Count the Number of Incremovable Subarrays II][link2972] | `Two Pointers` | :fire:2153 |
+| [2709. Greatest Common Divisor Traversal][link2709] | `Union Find`, `Number Theory` | :fire:2172 |
 
 [link0098]: https://leetcode.com/problems/validate-binary-search-tree/
 [link0450]: https://leetcode.com/problems/delete-node-in-a-bst/description/
@@ -188,3 +189,4 @@ TODO:
 [link0907]: https://leetcode.com/problems/sum-of-subarray-minimums/description/
 [link0218]: https://leetcode.com/problems/the-skyline-problem/description/
 [link3116]: https://leetcode.com/problems/kth-smallest-amount-with-single-denomination-combination/description/
+[link0968]: https://leetcode.com/problems/binary-tree-cameras/description/?envType=study-plan-v2&envId=dynamic-programming-grandmaster

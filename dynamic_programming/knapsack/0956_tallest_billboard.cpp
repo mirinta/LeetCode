@@ -19,27 +19,35 @@
 class Solution
 {
 public:
-    int tallestBillboard(const std::vector<int>& rods)
+    int tallestBillboard(std::vector<int>& rods)
     {
+        // dp[i][j] = max height of the shorter steel support using rods[0:i)
+        // while the absolute difference between the shorter and taller support is j
         const int n = rods.size();
-        // dp[i][j] = max height of the shorter pile we can achieve using rods[0:i) while
-        // the height difference between the shorter and the taller pile is j
-        const int maxDiff = std::accumulate(rods.cbegin(), rods.cend(), 0);
-        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(maxDiff + 1, -1));
+        const int m = std::accumulate(rods.begin(), rods.end(), 0);
+        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(m + 1, INT_MIN));
         dp[0][0] = 0;
         for (int i = 1; i <= n; ++i) {
-            const int h = rods[i - 1]; // current rod
-            for (int j = 0; j <= maxDiff - h; ++j) {
-                if (dp[i - 1][j] < 0)
-                    continue;
-
-                // option 1: not used
+            const int curr = rods[i - 1];
+            for (int j = 0; j <= m; ++j) {
+                // case 1: current rod is not picked
                 dp[i][j] = std::max(dp[i][j], dp[i - 1][j]);
-                // option 2: put it on the taller pile
-                dp[i][j + h] = std::max(dp[i][j + h], dp[i - 1][j]);
-                // option 3: put it on the shorter pile
-                const int diff = std::abs(j - h);
-                dp[i][diff] = std::max(dp[i][diff], dp[i - 1][j] + std::min(h, j));
+                // case 2: add current rod to the taller support
+                if (j + curr <= m) {
+                    dp[i][j + curr] = std::max(dp[i][j + curr], dp[i - 1][j]);
+                }
+                // case 3: add current rod to the shorter support
+                // let x = height of the original shorter support = dp[i-1][j]
+                //     y = height of the original taller support = dp[i-1][j] + j
+                // - if x + curr <= y, then diff = j - curr
+                //   and height of the new shorter support = x + curr
+                //   i.e., dp[i][j-curr] = dp[i-1][j] + curr
+                // - if x + curr > y, then diff = curr - j
+                //   and height of the new shorter support
+                //   i.e., dp[i][curr-j] = dp[i-1][j] + j
+                // - in summary, dp[i][abs(j-curr)] = dp[i-1][j] + min(curr,j)
+                const int diff = std::abs(j - curr);
+                dp[i][diff] = std::max(dp[i][diff], dp[i - 1][j] + std::min(curr, j));
             }
         }
         return dp[n][0];

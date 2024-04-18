@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <functional>
 #include <vector>
 
 /**
@@ -26,81 +28,95 @@ class Solution
 public:
     int maximumRequests(int n, std::vector<std::vector<int>>& requests)
     {
-        return approach2(n, requests);
+        return approach3(n, requests);
     }
 
 private:
-    // bitmask
+    // bit mask using std::next_permutation
+    int approach3(int n, const std::vector<std::vector<int>>& requests)
+    {
+        const int m = requests.size();
+        std::vector<int> mask(m, 0);
+        std::vector<int> netChange(n, 0);
+        auto isValid = [&]() {
+            std::fill(netChange.begin(), netChange.end(), 0);
+            for (int i = 0; i < mask.size(); ++i) {
+                if (mask[i] == 1) {
+                    netChange[requests[i][0]]--;
+                    netChange[requests[i][1]]++;
+                }
+            }
+            return std::all_of(netChange.begin(), netChange.end(),
+                               [](const auto& val) { return val == 0; });
+        };
+        for (int i = m; i >= 1; --i) {
+            std::fill(mask.begin(), mask.end(), 0);
+            std::fill(mask.begin() + m - i, mask.end(), 1);
+            do {
+                if (isValid())
+                    return i;
+
+            } while (std::next_permutation(mask.begin(), mask.end()));
+        }
+        return 0;
+    }
+
+    // bit mask
     int approach2(int n, const std::vector<std::vector<int>>& requests)
     {
+        const int m = requests.size();
+        std::vector<int> netChange(n, 0);
+        auto isValid = [&](int mask) {
+            std::fill(netChange.begin(), netChange.end(), 0);
+            for (int i = 0; i < m; ++i) {
+                if ((mask >> i) & 1) {
+                    netChange[requests[i][0]]--;
+                    netChange[requests[i][1]]++;
+                }
+            }
+            return std::all_of(netChange.begin(), netChange.end(),
+                               [](const auto& val) { return val == 0; });
+        };
         int result = 0;
-        for (int state = (1 << requests.size()) - 1; state > 0; --state) {
-            if (isValid(state, n, requests)) {
-                result = std::max(result, binaryOnes(state));
+        for (int mask = (1 << m) - 1; mask >= 1; --mask) {
+            if (const int ones = numOfBinaryOnes(mask); ones > result && isValid(mask)) {
+                result = std::max(result, ones);
             }
         }
         return result;
     }
 
-    bool isValid(int state, int n, const std::vector<std::vector<int>>& requests)
-    {
-        int netChange[n];
-        std::memset(netChange, 0, sizeof(netChange));
-        int i = 0;
-        while (state) {
-            if (state & 1) {
-                netChange[requests[i][0]]--;
-                netChange[requests[i][1]]++;
-            }
-            state >>= 1;
-            i++;
-        }
-        for (const auto& val : netChange) {
-            if (val != 0)
-                return false;
-        }
-        return true;
-    }
-
-    int binaryOnes(int num)
+    int numOfBinaryOnes(int n)
     {
         int result = 0;
-        while (num) {
-            num &= num - 1;
+        while (n) {
             result++;
+            n &= n - 1;
         }
         return result;
     }
 
-    // backtrack
+    // backtracking
     int approach1(int n, const std::vector<std::vector<int>>& requests)
     {
         std::vector<int> netChange(n, 0);
         int result = 0;
-        backtrack(result, netChange, 0, 0, requests);
-        return result;
-    }
-
-    void backtrack(int& result, std::vector<int>& netChange, int requestID, int count,
-                   const std::vector<std::vector<int>>& requests)
-    {
-        if (requestID == requests.size()) {
-            for (const auto& val : netChange) {
-                if (val != 0)
-                    return;
+        std::function<void(int, int)> backtrack = [&](int i, int count) {
+            if (i == requests.size()) {
+                if (std::all_of(netChange.begin(), netChange.end(),
+                                [](const auto& val) { return val == 0; })) {
+                    result = std::max(result, count);
+                }
+                return;
             }
-            result = std::max(result, count);
-            return;
-        }
-        const auto& from = requests[requestID][0];
-        const auto& to = requests[requestID][1];
-        // case 1: execute this request
-        netChange[from]--;
-        netChange[to]++;
-        backtrack(result, netChange, requestID + 1, count + 1, requests);
-        netChange[from]++; // restore
-        netChange[to]--;   // restore
-        // case 2: ignore this request
-        backtrack(result, netChange, requestID + 1, count, requests);
+            netChange[requests[i][0]]--;
+            netChange[requests[i][1]]++;
+            backtrack(i + 1, count + 1);
+            netChange[requests[i][0]]++;
+            netChange[requests[i][1]]--;
+            backtrack(i + 1, count);
+        };
+        backtrack(0, 0);
+        return result;
     }
 };
