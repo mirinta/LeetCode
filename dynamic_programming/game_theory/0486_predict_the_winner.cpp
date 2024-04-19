@@ -29,14 +29,14 @@ public:
             presum[i] = presum[i - 1] + nums[i - 1];
         }
         std::vector<std::vector<int>> memo(n, std::vector<int>(n, -1));
-        const int player1 = dp(memo, 0, n - 1, presum);
-        const int player2 = presum[n] - player1;
-        return player1 >= player2;
+        const int player1 = dfs(memo, 0, n - 1, nums, presum);
+        return 2 * player1 >= presum.back();
     }
 
 private:
-    // given the game nums[lo:hi], return the max score that the 1st action player finally get
-    int dp(std::vector<std::vector<int>>& memo, int lo, int hi, const std::vector<int>& presum)
+    // max score that the 1st action player can get at the end of the game nums[lo:hi]
+    int dfs(std::vector<std::vector<int>>& memo, int lo, int hi, const std::vector<int>& nums,
+            const std::vector<int>& presum)
     {
         if (lo > hi)
             return 0;
@@ -44,10 +44,9 @@ private:
         if (memo[lo][hi] != -1)
             return memo[lo][hi];
 
-        int case1 = presum[lo + 1] - presum[lo];
-        case1 += presum[hi + 1] - presum[lo + 1] - dp(memo, lo + 1, hi, presum);
-        int case2 = presum[hi + 1] - presum[hi];
-        case2 += presum[hi] - presum[lo] - dp(memo, lo, hi - 1, presum);
+        const int case1 =
+            nums[lo] + presum[hi + 1] - presum[lo + 1] - dfs(memo, lo + 1, hi, nums, presum);
+        const int case2 = nums[hi] + presum[hi] - presum[lo] - dfs(memo, lo, hi - 1, nums, presum);
         return memo[lo][hi] = std::max(case1, case2);
     }
 };

@@ -23,25 +23,19 @@ class Solution
 public:
     int stoneGameII(std::vector<int>& piles)
     {
-        // Given a game piles[lo:hi],
-        // let A = max num of piles the 1st action player finally get
-        // and B = max num of piles the 2nd action player finally get
-        // This is a zero-sum game, then A+B = sum of piles[lo:hi]
         const int n = piles.size();
         std::vector<int> presum(n + 1, 0);
         for (int i = 1; i <= n; ++i) {
             presum[i] = presum[i - 1] + piles[i - 1];
         }
-        // hi is always n-1 and the max value of M is N
         std::vector<std::vector<int>> memo(n, std::vector<int>(n + 1, -1));
-        return dp(memo, 0, n, 1, presum);
+        return dfs(memo, 0, n, 1, presum);
     }
 
 private:
-    // Given a game piles[lo:n-1],
-    // return the max num of piles the 1st action player finally get
-    int dp(std::vector<std::vector<int>>& memo, int lo, int n, int M,
-           const std::vector<int>& presum)
+    // max score that the 1st action player can get at the end of the game piles[lo:n-1]
+    int dfs(std::vector<std::vector<int>>& memo, int lo, int n, int M,
+            const std::vector<int>& presum)
     {
         if (lo >= n)
             return 0;
@@ -49,13 +43,11 @@ private:
         if (memo[lo][M] != -1)
             return memo[lo][M];
 
-        int result = 0;
+        int result = INT_MIN;
         for (int x = 1; x <= std::min(2 * M, n - lo); ++x) {
-            // The 1st action player picks piles[lo:lo+x-1].
-            int score = presum[lo + x] - presum[lo];
-            // He becomes the 2nd action player in the next game, i.e., piles[lo+x:n-1].
-            score += presum[n] - presum[lo + x] - dp(memo, lo + x, n, std::max(M, x), presum);
-            result = std::max(result, score);
+            const int score = presum[lo + x] - presum[lo];
+            result = std::max(result, score + presum[n] - presum[lo + x] -
+                                          dfs(memo, lo + x, n, std::max(M, x), presum));
         }
         return memo[lo][M] = result;
     }

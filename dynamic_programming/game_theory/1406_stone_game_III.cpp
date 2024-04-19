@@ -28,15 +28,14 @@ class Solution
 public:
     std::string stoneGameIII(std::vector<int>& stoneValue)
     {
-        // similar to LC.1140 (Stone Game II)
         const int n = stoneValue.size();
         std::vector<int> presum(n + 1, 0);
         for (int i = 1; i <= n; ++i) {
             presum[i] = presum[i - 1] + stoneValue[i - 1];
         }
-        std::vector<int> memo(n, -1);
-        const int Alice = dp(memo, 0, n, presum);
-        const int Bob = presum[n] - Alice;
+        std::vector<int> memo(n, INT_MIN);
+        const int Alice = dfs(memo, 0, n, presum);
+        const int Bob = presum.back() - Alice;
         if (Alice == Bob)
             return "Tie";
 
@@ -44,20 +43,20 @@ public:
     }
 
 private:
-    // given game piles[lo:n-1], return the max score that the 1st action player finally get
-    int dp(std::vector<int>& memo, int lo, int n, const std::vector<int>& presum)
+    // max score that the 1st action player can get at the end of the game nums[lo:n-1]
+    int dfs(std::vector<int>& memo, int lo, int n, const std::vector<int>& presum)
     {
         if (lo >= n)
             return 0;
 
-        if (memo[lo] != -1)
+        if (memo[lo] != INT_MIN)
             return memo[lo];
 
-        int result = INT_MIN; // #NOTE# piles[i] may be negative value
-        for (int x = 1; x <= std::min(n - lo, 3); ++x) {
-            int score = presum[lo + x] - presum[lo];
-            score += presum[n] - presum[lo + x] - dp(memo, lo + x, n, presum);
-            result = std::max(result, score);
+        int result = INT_MIN;
+        for (int take = 1; take <= std::min(3, n - lo); ++take) {
+            const int score = presum[lo + take] - presum[lo];
+            result = std::max(
+                result, score + presum[n] - presum[lo + take] - dfs(memo, lo + take, n, presum));
         }
         return memo[lo] = result;
     }

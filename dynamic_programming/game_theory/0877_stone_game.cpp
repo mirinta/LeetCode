@@ -23,81 +23,35 @@
 class Solution
 {
 public:
-    bool stoneGame(std::vector<int>& piles) { return approach3(piles); }
+    bool stoneGame(std::vector<int>& piles)
+    {
+        const int n = piles.size();
+        std::vector<int> presum(n + 1, 0);
+        for (int i = 1; i <= n; ++i) {
+            presum[i] = presum[i - 1] + piles[i - 1];
+        }
+        std::vector<std::vector<int>> memo(n, std::vector<int>(n, -1));
+        const int Alice = dfs(memo, 0, n - 1, piles, presum);
+        return Alice > presum.back() / 2;
+    }
 
 private:
-    using Matrix = std::vector<std::vector<std::array<int, 2>>>;
-
-    // Math, TC = O(1), SC = O(1)
-    bool approach3(const std::vector<int>& piles)
-    {
-        // The num of piles is an even number.
-        // piles: 0, 1, ..., n-1, n-1 is an odd number
-        // The 1st action player can always pick the piles he want.
-        return true;
-    }
-
-    // Bottom-up DP, TC = O(N^2), SC = O(N^2)
-    bool approach2(const std::vector<int>& piles)
-    {
-        // dp[i][j][0] = max num of piles the 1st action player can pick
-        // dp[i][j][1] = max num of piles the 2nd action player can pick
-        const int n = piles.size();
-        Matrix dp(n, std::vector<std::array<int, 2>>(n, {0, 0}));
-        for (int i = n - 1; i >= 0; --i) {
-            for (int j = 0; j < n; ++j) {
-                if (i > j)
-                    continue;
-
-                if (i == j) {
-                    dp[i][j] = {piles[i], 0};
-                    continue;
-                }
-                const auto [first1, second1] = dp[i + 1][j];
-                const auto [first2, second2] = dp[i][j - 1];
-                const int case1 = piles[i] + second1; // pick the left most pile
-                const int case2 = piles[j] + second2; // pick the rightmost pile
-                if (case1 > case2) {
-                    dp[i][j] = {case1, first1};
-                } else {
-                    dp[i][j] = {case2, first2};
-                }
-            }
-        }
-        return dp[0][n - 1][0] > dp[0][n - 1][1];
-    }
-
-    // Top-down DP, TC = O(N^2), SC = O(N^2)
-    bool approach1(const std::vector<int>& piles)
-    {
-        const int n = piles.size();
-        Matrix memo(n, std::vector<std::array<int, 2>>(n, {-1, -1}));
-        const auto [Alice, Bob] = dp(memo, 0, n - 1, piles);
-        return Alice > Bob;
-    }
-
-    // The game starts with piles[lo:hi].
-    // return[0] = max num of piles the 1st action player can pick at the end of the game
-    // return[1] = max num of piles the 2nd action player can pick at the end of the game
-    std::array<int, 2> dp(Matrix& memo, int lo, int hi, const std::vector<int>& piles)
+    // max score that the 1st action player can get at the end of the game piles[lo:hi]
+    int dfs(std::vector<std::vector<int>>& memo, int lo, int hi, const std::vector<int>& piles,
+            const std::vector<int>& presum)
     {
         if (lo > hi)
-            return {0, 0};
+            return 0;
 
-        if (memo[lo][hi][0] != -1 && memo[lo][hi][1] != -1)
+        if (memo[lo][hi] != -1)
             return memo[lo][hi];
 
-        // case 1: the 1st action player picks the leftmost pile
-        // then he becomes the 2nd action player in the next round
-        const auto [first1, second1] = dp(memo, lo + 1, hi, piles);
-        const int case1 = piles[lo] + second1;
-        // case 2: the 1st action player picks the rightmost pile
-        // then he becomes the 2nd action player in the next round
-        const auto [first2, second2] = dp(memo, lo, hi - 1, piles);
-        const int case2 = piles[hi] + second2;
-        if (case1 > case2)
-            return memo[lo][hi] = {case1, first1};
-
-        return memo[lo][hi] = {case2, first2};
+        // case 1: take piles[lo]
+        const int case1 =
+            piles[lo] + (presum[hi + 1] - presum[lo + 1]) - dfs(memo, lo + 1, hi, piles, presum);
+        // case 2: take piles[hi]
+        const int case2 =
+            piles[hi] + (presum[hi] - presum[lo]) - dfs(memo, lo, hi - 1, piles, presum);
+        return memo[lo][hi] = std::max(case1, case2);
     }
 };

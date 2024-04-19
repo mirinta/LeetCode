@@ -20,24 +20,26 @@ public:
     bool winnerSquareGame(int n)
     {
         std::vector<int> memo(n + 1, -1);
-        return dp(memo, n);
+        return dfs(memo, n);
     }
 
 private:
-    // given the game with n stones, check whether the 1st action player wins
-    bool dp(std::vector<int>& memo, int n)
+    // whether the 1st action player can win the game that has n stones
+    bool dfs(std::vector<int>& memo, int n)
     {
         if (n == 0)
             return false;
 
+        if (n == 1)
+            return true;
+
         if (memo[n] != -1)
             return memo[n];
 
-        for (int x = 1; x * x <= n; ++x) {
-            // current player wins if his opponent can't win in the next game
-            if (!dp(memo, n - x * x))
-                return memo[n] = 1;
+        for (int remove = 1; remove * remove <= n; ++remove) {
+            if (!dfs(memo, n - remove * remove))
+                return memo[n] = true;
         }
-        return memo[n] = 0;
+        return memo[n] = false;
     }
 };
