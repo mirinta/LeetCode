@@ -36,41 +36,38 @@ public:
                                             std::vector<std::vector<std::string>>& people)
     {
         const int n = req_skills.size();
-        const int requiredSkills = 1 << n;
-        std::unordered_map<std::string, int> map; // skill string to integer
-        // e.g. skill1 = 0x1, skill2 = 0x10, skill3=0x100
+        std::unordered_map<std::string, int> map;
         for (int i = 0; i < n; ++i) {
             map[req_skills[i]] = 1 << i;
         }
-        std::vector<int> personalSkills(people.size(), 0);
-        // e.g. people1 = {skill1, skill2}, skills = 0x11
-        for (int i = 0; i < people.size(); ++i) {
-            int skills = 0;
-            for (const auto& str : people[i]) {
-                if (!map.count(str))
-                    continue;
-
-                skills |= map[str];
-            }
-            personalSkills[i] = skills;
-        }
-        // 0-1 knapsack
-        // dp[i] = min team size that satisfies required skills i
-        std::vector<int> dp(requiredSkills, INT_MAX / 2);
-        dp[0] = 0;
-        std::vector<std::vector<int>> result(requiredSkills);
-        for (int i = 0; i < people.size(); ++i) {
-            auto copy = dp;
-            for (int skills = 0; skills < (1 << n); ++skills) {
-                const int newSkills = skills | personalSkills[i];
-                if (copy[newSkills] > copy[skills] + 1) {
-                    copy[newSkills] = copy[skills] + 1;
-                    result[newSkills] = result[skills];
-                    result[newSkills].push_back(i);
+        const int m = people.size();
+        std::vector<int> v(m, 0);
+        for (int i = 0; i < m; ++i) {
+            for (const auto& s : people[i]) {
+                if (map.count(s)) {
+                    v[i] |= map[s];
                 }
             }
-            dp = copy;
         }
-        return result[(1 << n) - 1];
+        // dp[i][j] = min team size that satisfies requirement j using people[0:i-1]
+        std::vector<std::vector<int>> dp(m + 1, std::vector<int>(1 << n, INT_MAX / 2));
+        for (int i = 0; i <= m; ++i) {
+            dp[i][0] = 0;
+        }
+        std::vector<std::vector<int>> result(1 << n);
+        for (int i = 1; i <= m; ++i) {
+            const int skills = v[i - 1];
+            for (int j = 0; j < (1 << n); ++j) {
+                dp[i][j] = std::min(dp[i][j], dp[i - 1][j]);
+                const int next = j | skills;
+                dp[i][next] = std::min(dp[i][next], dp[i - 1][next]);
+                if (dp[i][next] > dp[i - 1][j] + 1) {
+                    dp[i][next] = dp[i - 1][j] + 1;
+                    result[next] = result[j];
+                    result[next].push_back(i - 1);
+                }
+            }
+        }
+        return result.back();
     }
 };

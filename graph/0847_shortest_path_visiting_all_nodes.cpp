@@ -23,20 +23,17 @@ public:
     int shortestPathLength(std::vector<std::vector<int>>& graph)
     {
         const int n = graph.size();
-        std::queue<std::pair<int, int>> queue;           // <vertex, state>
-        std::vector<std::unordered_set<int>> visited(n); // vertex to states
-        int target = 0;                                  // visit all the nodes
+        const int target = (1 << n) - 1;
+        std::vector<std::unordered_set<int>> visited(n);
+        std::queue<std::pair<int, int>> queue;
         for (int i = 0; i < n; ++i) {
-            const int state = 1 << i;
-            target |= state;
-            queue.emplace(i, state);
-            visited[i].insert(state);
+            queue.emplace(i, 1 << i);
+            visited[i].insert(1 << i);
         }
         int result = -1;
         while (!queue.empty()) {
             result++;
-            const int size = queue.size();
-            for (int k = 0; k < size; ++k) {
+            for (int k = queue.size(); k > 0; --k) {
                 const auto [v, state] = queue.front();
                 queue.pop();
                 if (state == target)
@@ -44,10 +41,11 @@ public:
 
                 for (const auto& adj : graph[v]) {
                     const int newState = state | (1 << adj);
-                    if (!visited[adj].count(newState)) {
-                        visited[adj].insert(newState);
-                        queue.emplace(adj, newState);
-                    }
+                    if (visited[adj].count(newState))
+                        continue;
+
+                    visited[adj].insert(newState);
+                    queue.emplace(adj, newState);
                 }
             }
         }

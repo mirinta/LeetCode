@@ -35,8 +35,9 @@ private:
             v.push_back(pair.second);
         }
         // dp[i] = min num of transactions to settle the debt of group i
-        // given group i and debt[i] = 0,
-        // find a subgroup j such that debt[j] = 0,
+        // if group i can be settled and group i has N people,
+        // then debt[i] = 0 and we need at most N-1 transactions
+        // if j is a subgroup of i and debt[j] = 0,
         // then dp[i] = min(dp[i], dp[j] + dp[i^j])
         const int n = v.size(); // num of people
         const int m = 1 << n;   // num of groups
@@ -54,7 +55,6 @@ private:
             if (debt[i] != 0)
                 continue;
 
-            // at most x-1 transactions to settle the debt of a group with x people
             dp[i] = numOfBinaryOnes(i) - 1;
             for (int sub = (i - 1) & i; sub > 0; sub = (sub - 1) & i) {
                 if (debt[sub] == 0) {
@@ -82,30 +82,30 @@ private:
             map[trans[0]] -= trans[2];
             map[trans[1]] += trans[2];
         }
-        std::vector<int> debts;
+        std::vector<int> debt;
         for (const auto& pair : map) {
             if (pair.second != 0) {
-                debts.push_back(pair.second);
+                debt.push_back(pair.second);
             }
         }
-        return backtrack(debts, 0);
+        return backtrack(debt, 0);
     }
 
-    // min num of transactions to settle debts[i:n-1]
-    int backtrack(std::vector<int>& debts, int i)
+    // min num of transactions to settle debt[i:n-1]
+    int backtrack(std::vector<int>& debt, int i)
     {
-        while (i < debts.size() && debts[i] == 0) {
+        while (i < debt.size() && debt[i] == 0) {
             i++;
         }
-        if (i == debts.size())
+        if (i == debt.size())
             return 0;
 
         int result = INT_MAX / 2;
-        for (int j = i + 1; j < debts.size(); ++j) {
-            if ((debts[i] ^ debts[j]) < 0) {
-                debts[j] += debts[i];
-                result = std::min(result, 1 + backtrack(debts, i + 1));
-                debts[j] -= debts[i];
+        for (int j = i + 1; j < debt.size(); ++j) {
+            if ((debt[i] ^ debt[j]) < 0) {
+                debt[j] += debt[i];
+                result = std::min(result, 1 + backtrack(debt, i + 1));
+                debt[j] -= debt[i];
             }
         }
         return result;
