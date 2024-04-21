@@ -24,46 +24,27 @@ class Solution
 public:
     int maxValue(std::vector<std::vector<int>>& events, int k)
     {
-        // sort events by endDay
-        std::sort(events.begin(), events.end(),
-                  [](const auto& e1, const auto& e2) { return e1[1] < e2[1]; });
-        // dp[i][j] = max value within the first i events with at most k chosen events
-        // base case: dp[i][0] = 0, for all i
+        // dp[i][j] = max score of attending at most j events of events[0:i-1]
         const int n = events.size();
-        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(k + 1, -1));
+        std::sort(events.begin(), events.end(),
+                  [](const auto& v1, const auto& v2) { return v1[1] < v2[1]; });
+        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(k + 1, INT_MIN));
         for (int i = 0; i <= n; ++i) {
             dp[i][0] = 0;
         }
+        auto compare = [](const auto& v, int val) { return v[1] < val; };
+        int result = INT_MIN;
         for (int i = 1; i <= n; ++i) {
-            // [START...pth...END]
-            //                   [START...ith...END]
-            // find the last event p (0-indexed) s.t. end_p < start_i
-            const int p = find(events[i - 1][0], events);
-            for (int j = 1; j <= k; ++j) {
-                // case1: choose the ith event
-                // - dp[i][j] = dp[i - 1][k];
-                // case2: choose the ith event
-                // - dp[i][j] = dp[p + 1][k - 1] + value_i
-                // - #NOTE# p is 0-indexed
-                dp[i][j] = std::max(dp[i - 1][j], dp[p + 1][j - 1] + events[i - 1][2]);
+            const int start = events[i - 1][0];
+            const int score = events[i - 1][2];
+            for (int j = 1; j <= std::min(i, k); ++j) {
+                auto iter = std::lower_bound(events.begin(), events.end(), start, compare);
+                dp[i][j] = std::max(dp[i - 1][j], score + dp[iter - events.begin()][j - 1]);
+                if (i == n) {
+                    result = std::max(result, dp[i][j]);
+                }
             }
         }
-        return *std::max_element(dp[n].begin(), dp[n].end());
-    }
-
-private:
-    int find(int startDay, const std::vector<std::vector<int>>& events)
-    {
-        int lo = 0;
-        int hi = events.size() - 1;
-        while (lo <= hi) {
-            const int mid = lo + (hi - lo) / 2;
-            if (events[mid][1] >= startDay) {
-                hi = mid - 1;
-            } else {
-                lo = mid + 1;
-            }
-        } // the loop is terminated when lo = hi + 1
-        return hi;
+        return result;
     }
 };

@@ -23,28 +23,24 @@ public:
     int jobScheduling(std::vector<int>& startTime, std::vector<int>& endTime,
                       std::vector<int>& profit)
     {
+        // dp[i] = max profit of the valid subsequence of jobs[0:i-1] ending at jobs[i-1]
         const int n = profit.size();
-        std::vector<std::array<int, 3>> jobs(n); // <start, end, profit>
+        std::vector<std::array<int, 3>> jobs(n);
         for (int i = 0; i < n; ++i) {
             jobs[i][0] = startTime[i];
             jobs[i][1] = endTime[i];
             jobs[i][2] = profit[i];
         }
-        // sort jobs by ending time
         std::sort(jobs.begin(), jobs.end(),
-                  [](const auto& job1, const auto& job2) { return job1[1] < job2[1]; });
-        // dp[i] = max profit of scheduling jobs[0:i]
-        std::vector<int> dp(n, INT_MIN);
-        int result = INT_MIN;
-        for (int i = 0; i < n; ++i) {
-            const auto& [start, end, gain] = jobs[i];
-            dp[i] = i > 0 ? std::max(dp[i - 1], gain) : gain;
-            // find the largest j such that jobs[j].end <= jobs[i].start
+                  [](const auto& t1, const auto& t2) { return t1[1] < t2[1]; });
+        std::vector<int> dp(n + 1, 0);
+        int result = 0;
+        for (int i = 1; i <= n; ++i) {
+            const int start = jobs[i - 1][0];
+            const int score = jobs[i - 1][2];
             auto iter = std::upper_bound(jobs.begin(), jobs.end(), start,
-                                         [](int time, const auto& job) { return job[1] > time; });
-            if (iter != jobs.begin()) {
-                dp[i] = std::max(dp[i], dp[std::prev(iter) - jobs.begin()] + gain);
-            }
+                                         [](int val, const auto& v) { return v[1] > val; });
+            dp[i] = std::max(dp[i - 1], dp[iter - jobs.begin()] + score);
             result = std::max(result, dp[i]);
         }
         return result;

@@ -49,6 +49,7 @@
 - [x] Weekly 392 (3105~3108)
 - [x] Biweekly 128 (3110~3113)
 - [x] Weekly 393 (3114~3117): 3116 is GREAT!
+- [x] Weekly 394 (3120~3123)
 
 TODO:
 

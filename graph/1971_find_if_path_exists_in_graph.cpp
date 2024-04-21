@@ -25,48 +25,40 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
+    explicit UnionFind(int n) : root(n), rank(n, 1)
     {
         for (int i = 0; i < n; ++i) {
-            _root[i] = i;
-            _rank[i] = 1;
+            root[i] = i;
         }
     }
-
-    int count() const { return _count; }
 
     int find(int x)
     {
-        if (x != _root[x]) {
-            _root[x] = find(_root[x]);
+        if (root[x] != x) {
+            root[x] = find(root[x]);
         }
-        return _root[x];
+        return root[x];
     }
 
-    int isConnected(int p, int q) { return find(p) == find(q); }
+    bool isConnected(int p, int q) { return find(p) == find(q); }
 
     void connect(int p, int q)
     {
-        const int rootP = find(p);
-        const int rootQ = find(q);
+        int rootP = find(p);
+        int rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        if (_rank[rootP] > _rank[rootQ]) {
-            _root[rootQ] = rootP;
-        } else if (_rank[rootP] < _rank[rootQ]) {
-            _root[rootP] = rootQ;
-        } else {
-            _root[rootQ] = rootP;
-            _rank[rootP] += 1;
+        if (rank[rootQ] > rank[rootP]) {
+            std::swap(rootP, rootQ);
         }
-        _count -= 1;
+        root[rootQ] = rootP;
+        rank[rootP] += rank[rootQ];
     }
 
 private:
-    std::vector<int> _root;
-    std::vector<int> _rank;
-    int _count;
+    std::vector<int> root;
+    std::vector<int> rank;
 };
 
 class Solution
@@ -78,7 +70,7 @@ public:
     }
 
 private:
-    bool approach1(int n, std::vector<std::vector<int>>& edges, int source, int destination)
+    bool approach2(int n, const std::vector<std::vector<int>>& edges, int source, int destination)
     {
         UnionFind uf(n);
         for (const auto& edge : edges) {
@@ -87,9 +79,9 @@ private:
         return uf.isConnected(source, destination);
     }
 
-    bool approach2(int n, std::vector<std::vector<int>>& edges, int source, int destination)
+    bool approach1(int n, const std::vector<std::vector<int>>& edges, int source, int destination)
     {
-        std::vector<std::vector<int>> graph(n, std::vector<int>{});
+        std::vector<std::vector<int>> graph(n);
         for (const auto& edge : edges) {
             graph[edge[0]].push_back(edge[1]);
             graph[edge[1]].push_back(edge[0]);
@@ -98,18 +90,15 @@ private:
         return dfs(visited, source, destination, graph);
     }
 
-    bool dfs(std::vector<bool>& visited, int source, int destination,
+    bool dfs(std::vector<bool>& visited, int i, int destination,
              const std::vector<std::vector<int>>& graph)
     {
-        if (source == destination)
+        if (i == destination)
             return true;
 
-        visited[source] = true;
-        for (const auto& adj : graph[source]) {
-            if (visited[adj])
-                continue;
-
-            if (dfs(visited, adj, destination, graph))
+        visited[i] = true;
+        for (const auto& adj : graph[i]) {
+            if (!visited[adj] && dfs(visited, adj, destination, graph))
                 return true;
         }
         return false;
