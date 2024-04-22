@@ -26,19 +26,18 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : count(n), root(n), rank(n)
+    explicit UnionFind(int n) : n(n), root(n), rank(n, 1)
     {
         for (int i = 0; i < n; ++i) {
             root[i] = i;
-            rank[i] = 1;
         }
     }
 
-    int numOfConnectedComponents() const { return count; }
+    int count() { return n; }
 
     int find(int x)
     {
-        if (x != root[x]) {
+        if (root[x] != x) {
             root[x] = find(root[x]);
         }
         return root[x];
@@ -46,24 +45,21 @@ public:
 
     void connect(int p, int q)
     {
-        const int rootP = find(p);
-        const int rootQ = find(q);
+        int rootP = find(p);
+        int rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        if (rank[rootP] > rank[rootQ]) {
-            root[rootQ] = rootP;
-        } else if (rank[rootP] < rank[rootQ]) {
-            root[rootQ] = rootP;
-        } else {
-            root[rootQ] = rootP;
-            rank[rootP]++;
+        if (rank[rootQ] > rank[rootP]) {
+            std::swap(rootP, rootQ);
         }
-        count--;
+        root[rootQ] = rootP;
+        rank[rootP] += rank[rootQ];
+        n--;
     }
 
 private:
-    int count;
+    int n;
     std::vector<int> root;
     std::vector<int> rank;
 };
@@ -73,32 +69,33 @@ class Solution
 public:
     std::vector<int> numIslands2(int m, int n, std::vector<std::vector<int>>& positions)
     {
-        const int totalNumOfCells = m * n;
-        auto encode = [n](int i, int j) { return i * n + j; };
-        std::vector<int> result(positions.size());
+        const int total = m * n;
+        UnionFind uf(total);
         std::unordered_set<int> lands;
-        UnionFind uf(totalNumOfCells);
+        std::vector<int> result(positions.size());
         for (int i = 0; i < positions.size(); ++i) {
             const int x = positions[i][0];
             const int y = positions[i][1];
-            const int encodedXY = encode(x, y);
+            const int pos = encode(x, y, n);
             for (const auto& [dx, dy] : kDirections) {
-                const int p = x + dx;
-                const int q = y + dy;
-                if (p < 0 || p >= m || q < 0 || q >= n)
+                const int newX = x + dx;
+                const int newY = y + dy;
+                if (newX < 0 || newX >= m || newY < 0 || newY >= n)
                     continue;
 
-                if (const int encodedPQ = encode(p, q); lands.count(encodedPQ)) {
-                    uf.connect(encodedXY, encodedPQ);
+                if (const int adj = encode(newX, newY, n); lands.count(adj)) {
+                    uf.connect(pos, adj);
                 }
             }
-            // #num of water cells = m * n - #num of land cells
-            lands.insert(encodedXY);
-            result[i] = uf.numOfConnectedComponents() - (totalNumOfCells - lands.size());
+            lands.insert(pos);
+            result[i] = uf.count() - (total - lands.size());
         }
         return result;
     }
 
 private:
-    const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    static const std::vector<std::pair<int, int>> kDirections;
+
+    int encode(int x, int y, int n) { return x * n + y; }
 };
+const std::vector<std::pair<int, int>> Solution::kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};

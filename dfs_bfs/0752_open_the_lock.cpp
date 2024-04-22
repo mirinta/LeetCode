@@ -1,6 +1,6 @@
+#include <array>
 #include <queue>
 #include <string>
-#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -29,45 +29,43 @@ class Solution
 public:
     int openLock(std::vector<std::string>& deadends, std::string target)
     {
-        std::unordered_set<std::string> prohibitions(deadends.begin(), deadends.end());
-        std::unordered_set<std::string> visited;
-        visited.insert("0000");
+        const std::string src("0000");
+        std::unordered_set<std::string> visited(deadends.begin(), deadends.end());
+        if (visited.count(src))
+            return -1;
+
+        constexpr std::array<int, 2> directions{1, -1};
+        visited.insert(src);
         std::queue<std::string> queue;
-        queue.emplace("0000");
-        int steps = 0;
+        queue.push(src);
+        int result = -1;
         while (!queue.empty()) {
-            const int size = queue.size();
-            for (int k = 0; k < size; ++k) {
-                const auto current = queue.front();
+            result++;
+            for (int k = queue.size(); k > 0; --k) {
+                const auto curr = queue.front();
                 queue.pop();
-                if (current == target)
-                    return steps;
+                if (curr == target)
+                    return result;
 
-                if (prohibitions.count(current))
-                    continue;
-
-                for (int i = 0; i < 4; ++i) {
-                    for (const auto& direction : {1, -1}) {
-                        auto rotated = rotateIthWheel(i, direction, current);
-                        if (visited.count(rotated))
-                            continue;
-
-                        queue.push(rotated);
-                        visited.insert(std::move(rotated));
+                for (int wheel = 0; wheel < 4; ++wheel) {
+                    for (const auto& d : directions) {
+                        const auto next = rotate(curr, wheel, d);
+                        if (!visited.count(next)) {
+                            visited.insert(next);
+                            queue.push(next);
+                        }
                     }
                 }
             }
-            steps++;
         }
         return -1;
     }
 
 private:
-    // direction = -1 or 1
-    std::string rotateIthWheel(int i, int direction, const std::string& lock)
+    std::string rotate(const std::string& s, int i, int delta)
     {
-        std::string result(lock);
-        result[i] = (result[i] - '0' + direction + 10) % 10 + '0';
+        auto result(s);
+        result[i] = (s[i] - '0' + delta + 10) % 10 + '0';
         return result;
     }
 };
