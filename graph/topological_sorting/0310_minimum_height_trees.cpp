@@ -51,21 +51,18 @@ public:
                 queue.push(i);
             }
         }
-        int count = 0;
-        while (!queue.empty()) {
-            const int size = queue.size();
-            for (int k = 0; k < size; ++k) {
+        int count = n; // num of remaining nodes
+        while (count > 2) {
+            count -= queue.size();
+            for (int k = queue.size(); k > 0; --k) {
                 const int v = queue.front();
                 queue.pop();
-                count++;
                 for (const auto& adj : graph[v]) {
                     if (--degrees[adj] == 1) {
                         queue.push(adj);
                     }
                 }
             }
-            if (count == n - 1 || count == n - 2)
-                break;
         }
         std::vector<int> result;
         while (!queue.empty()) {
