@@ -31,34 +31,33 @@
 class Solution
 {
 public:
-    // Dijkstra, time O(MNlog(MN)), space O(MN)
     int shortestDistance(std::vector<std::vector<int>>& maze, std::vector<int>& start,
                          std::vector<int>& destination)
     {
+        static const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         const int m = maze.size();
         const int n = maze[0].size();
+        std::priority_queue<Tuple, std::vector<Tuple>, Compare> pq;
+        pq.emplace(0, start[0], start[1]);
         std::vector<std::vector<int>> distTo(m, std::vector<int>(n, INT_MAX));
         distTo[start[0]][start[1]] = 0;
-        auto comparator = [](const auto& t1, const auto& t2) {
-            return std::get<0>(t1) > std::get<0>(t2);
-        };
-        std::priority_queue<Tuple, std::vector<Tuple>, decltype(comparator)> pq(
-            comparator); // min heap
-        pq.emplace(0, start[0], start[1]);
         while (!pq.empty()) {
             const auto [dist, x, y] = pq.top();
             pq.pop();
             if (x == destination[0] && y == destination[1])
                 return dist;
 
+            if (dist > distTo[x][y])
+                continue;
+
             for (const auto& [dx, dy] : kDirections) {
-                int count = 0;
                 int i = x + dx;
                 int j = y + dy;
+                int count = 0;
                 while (i >= 0 && i < m && j >= 0 && j < n && maze[i][j] == 0) {
-                    count++;
                     i += dx;
                     j += dy;
+                    count++;
                 }
                 if (count == 0)
                     continue;
@@ -76,6 +75,12 @@ public:
 
 private:
     using Tuple = std::tuple<int, int, int>; // <dist, x, y>
-    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-};
 
+    struct Compare
+    {
+        bool operator()(const Tuple& t1, const Tuple& t2) const
+        {
+            return std::get<0>(t1) > std::get<0>(t2);
+        }
+    };
+};
