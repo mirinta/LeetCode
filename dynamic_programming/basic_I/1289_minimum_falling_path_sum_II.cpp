@@ -16,53 +16,64 @@
 class Solution
 {
 public:
-    int minFallingPathSum(const std::vector<std::vector<int>>& grid)
+    int minFallingPathSum(std::vector<std::vector<int>>& grid) { return approach2(grid); }
+
+private:
+    // DP with time optimization, TC = O(N^2), SC = O(N^2)
+    int approach2(const std::vector<std::vector<int>>& grid)
     {
-        if (grid.empty())
-            return INT_MAX;
-
-        const auto n = grid.size();
-        if (grid[0].size() != n)
-            return INT_MAX;
-
-        if (n == 1)
-            return grid[0][0];
-
-        // dp[i][j] = min falling sum from first row to grid[i][j]
-        std::vector<std::vector<int>> dp(n, std::vector<int>(n, 0));
-        // base case:
-        // - dp[0][...] = grid[0][...], falling from first row to first row
+        const int n = grid.size();
+        std::vector<std::vector<int>> dp(n, std::vector<int>(n));
         for (int j = 0; j < n; ++j) {
             dp[0][j] = grid[0][j];
         }
         for (int i = 1; i < n; ++i) {
-            std::vector<std::pair<int, int>> lastRow;
-            lastRow.reserve(n);
-            for (int k = 0; k < n; ++k) {
-                lastRow.emplace_back(dp[i - 1][k], k);
-            }
-            std::sort(lastRow.begin(), lastRow.end());
+            const auto [minIndex, secondMinIndex] = helper(dp[i - 1]);
             for (int j = 0; j < n; ++j) {
-                // find min value of the last row:
-                // int min = INT_MAX;
-                // for (int k = 0; k < n; ++k) {
-                //     if (j == k)
-                //         continue;
-
-                //     min = std::min(min, dp[i - 1][k]);
-                // }
-                // dp[i][j] = grid[i][j] + min
-                if (lastRow[0].second != j) {
-                    dp[i][j] = grid[i][j] + lastRow[0].first;
+                if (j != minIndex) {
+                    dp[i][j] = grid[i][j] + dp[i - 1][minIndex];
                 } else {
-                    dp[i][j] = grid[i][j] + lastRow[1].first;
+                    dp[i][j] = grid[i][j] + dp[i - 1][secondMinIndex];
                 }
             }
         }
-        int result = INT_MAX;
-        for (const auto& val : dp[n - 1]) {
-            result = std::min(result, val);
+        return *std::min_element(dp[n - 1].begin(), dp[n - 1].end());
+    }
+
+    std::pair<int, int> helper(const std::vector<int>& nums)
+    {
+        int minIndex = 0;
+        int secondMinIndex = nums.size() - 1;
+        for (int i = 1; i < nums.size(); ++i) {
+            if (nums[i] < nums[minIndex]) {
+                std::swap(minIndex, secondMinIndex);
+                minIndex = i;
+            } else if (nums[i] < nums[secondMinIndex]) {
+                secondMinIndex = i;
+            }
         }
-        return result;
+        return {minIndex, secondMinIndex};
+    }
+
+    // DP, TC = O(N^3), SC = O(N^2)
+    int approach1(const std::vector<std::vector<int>>& grid)
+    {
+        // dp[i][j] = min falling sum from the first row to grid[i][j]
+        const int n = grid.size();
+        std::vector<std::vector<int>> dp(n, std::vector<int>(n));
+        for (int j = 0; j < n; ++j) {
+            dp[0][j] = grid[0][j];
+        }
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                for (int k = 0; k < n; ++k) {
+                    if (k == j)
+                        continue;
+
+                    dp[i][j] = std::min(dp[i][j], grid[i][j] + dp[i - 1][k]);
+                }
+            }
+        }
+        return *std::min_element(dp[n - 1].begin(), dp[n - 1].end());
     }
 };
