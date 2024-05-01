@@ -1,3 +1,4 @@
+#include <array>
 #include <vector>
 
 /**
@@ -20,19 +21,50 @@
 class Solution
 {
 public:
-    int minOperations(std::vector<int>& nums, int k)
+    int minOperations(std::vector<int>& nums, int k) { return approach2(nums, k); }
+
+private:
+    int approach2(const std::vector<int>& nums, int k)
     {
+        // let XOR = bitwise XOR of all elements of nums
+        // if k[i] = 1, we need odd num of bits = 1
+        // - if we have even num of bits = 1, then XOR[i] = 0
+        // if k[i] = 0, we need even num of bits = 1
+        // - if we have odd num of bits = 1, then XOR[i] = 1
         int XOR = 0;
         for (const auto& val : nums) {
             XOR ^= val;
         }
+        return numOfBinaryOnes(XOR ^ k);
+    }
+
+    int numOfBinaryOnes(int n)
+    {
         int result = 0;
-        while (XOR != k) {
-            if ((XOR & 1) != (k & 1)) {
-                result++;
+        while (n) {
+            result++;
+            n &= n - 1;
+        }
+        return result;
+    }
+
+    int approach1(const std::vector<int>& nums, int k)
+    {
+        // k[i] = 1, we need odd num of bits = 1
+        // k[i] = 0, we need even num of bits = 1
+        std::array<int, 32> count{};
+        for (const auto& val : nums) {
+            for (int i = 0; i < 32; ++i) {
+                count[i] += (val >> i) & 1;
             }
-            XOR >>= 1;
-            k >>= 1;
+        }
+        int result = 0;
+        for (int i = 0; i < 32; ++i) {
+            if ((k >> i) & 1) {
+                result += count[i] % 2 == 0;
+            } else {
+                result += count[i] % 2 != 0;
+            }
         }
         return result;
     }

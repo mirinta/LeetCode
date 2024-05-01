@@ -18,28 +18,18 @@ public:
         if ((a | b) == c)
             return 0;
 
-        // a, b, and c are >= 1
-        // - right-shift on negative numbers will fill the vacated positions with 1
+        const int OR = a | b;
+        const int XOR = a ^ b;
         int result = 0;
-        while (a > 0 || b > 0 || c > 0) {
-            int lastOfA = a & 1;
-            int lastOfB = b & 1;
-            int lastOfC = c & 1;
-            if ((lastOfA | lastOfB) != lastOfC) {
-                if (lastOfC) {
-                    // lastOfC = 1, both lastOfA and lastOfB are 0, flip one of them
-                    result += 1;
-                } else if (lastOfA && lastOfB) {
-                    // lastOfC = 0, both lastOfA and lastOfB are 1, flip both of them
-                    result += 2;
-                } else {
-                    // lastOfC = 0, either lastOfA or lastOfB is 1, flip the one that is equal to 1
-                    result += 1;
-                }
+        for (int i = 0; i < 32; ++i) {
+            if (((OR >> i) & 1) == ((c >> i) & 1))
+                continue;
+
+            if ((c >> i) & 1) {
+                result++;
+            } else {
+                result += 2 - ((XOR >> i) & 1);
             }
-            a = a >> 1;
-            b = b >> 1;
-            c = c >> 1;
         }
         return result;
     }

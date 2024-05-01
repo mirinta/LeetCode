@@ -1,3 +1,4 @@
+#include <array>
 #include <string>
 #include <vector>
 
@@ -21,18 +22,21 @@ class Solution
 public:
     long long wonderfulSubstrings(std::string word)
     {
+        // prefix[i][c] = frequency of letter c in word[0:i]
+        // if word[j+1:i] is a valid subarray
+        // - case 1, for each c, prefix[i][c]-prefix[j][c] = even number
+        // - case 2, only one c1 that prefix[i][c1]-prefix[j][c1] = odd number
+        // and all the other c satisfies prefix[i][c]-prefix[j][c] = even number
         const int n = word.size();
-        std::vector<long long> count(1 << 10, 0); // count[i] = num of occurrences of state i
+        std::array<int, 1 << 10> count{}; // num of occurrences of state i
         count[0] = 1;
-        int state = 0; // state[x] = whether the xth letter appears an odd num of times
         long long result = 0;
-        for (int i = 0; i < n; ++i) {
+        // state[j] = 0/1 if letter j appears even/odd num of times
+        for (int i = 0, state = 0; i < n; ++i) {
             state ^= 1 << (word[i] - 'a');
-            // case 1: all letters appear an even num of times in word[j+1:i]
             result += count[state];
-            // case 2: only one letter appears an odd num of times in word[j+1:i]
-            for (int k = 0; k < 10; ++k) {
-                result += count[state ^ (1 << k)];
+            for (int j = 0; j < 10; ++j) {
+                result += count[state ^ (1 << j)];
             }
             count[state]++;
         }

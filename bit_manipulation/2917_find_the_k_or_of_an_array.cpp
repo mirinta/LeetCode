@@ -21,15 +21,13 @@ public:
     int findKOr(std::vector<int>& nums, int k)
     {
         int result = 0;
-        for (int i = 0; i <= 31; ++i) {
+        for (int i = 0; i < 32; ++i) {
             int count = 0;
             for (const auto& val : nums) {
-                if ((val >> i) & 1) {
-                    count++;
-                }
+                count += (val >> i) & 1;
             }
             if (count >= k) {
-                result += (1 << i);
+                result |= 1 << i;
             }
         }
         return result;
