@@ -22,13 +22,43 @@
 class Solution
 {
 public:
-    int numberOfStableArrays(int zero, int one, int limit)
+    int numberOfStableArrays(int zero, int one, int limit) { return approach2(zero, one, limit); }
+
+private:
+    static constexpr int kMod = 1e9 + 7;
+
+    // DP with sliding window, TC = O(zero*one), SC = O(zero*one)
+    int approach2(int zero, int one, int limit)
     {
-        constexpr int kMod = 1e9 + 7;
-        // dp[i][j][0] = num of valid arrays that the last element is 0 and each array has i 1's and
-        // j 0's
-        // dp[i][j][1] = num of valid arrays that the last element is 1 and each array has i 1's and
-        // j 0's
+        std::vector<std::vector<std::array<int, 2>>> dp(
+            zero + 1, std::vector<std::array<int, 2>>(one + 1, {0, 0}));
+        dp[0][0] = {1, 1};
+        std::vector<int> sum1(one + 1, 0);  // sum1[j] = dp[i-1][j][1] + ... + dp[i-limit][j][1]
+        std::vector<int> sum0(zero + 1, 0); // sum0[i] = dp[i][j-1][0] + ... + dp[i][j-limit][0]
+        for (int i = 0; i <= zero; ++i) {
+            for (int j = 0; j <= one; ++j) {
+                if (i > limit) {
+                    sum1[j] = (sum1[j] - dp[i - limit - 1][j][1] + kMod) % kMod;
+                }
+                if (j > limit) {
+                    sum0[i] = (sum0[i] - dp[i][j - limit - 1][0] + kMod) % kMod;
+                }
+                dp[i][j][0] = (dp[i][j][0] + sum1[j]) % kMod;
+                dp[i][j][1] = (dp[i][j][1] + sum0[i]) % kMod;
+                sum1[j] = (sum1[j] + dp[i][j][1]) % kMod;
+                sum0[i] = (sum0[i] + dp[i][j][0]) % kMod;
+            }
+        }
+        return (dp[zero][one][0] + dp[zero][one][1]) % kMod;
+    }
+
+    // DP, TC = O(zero*one*max(zero,one)), SC = O(zero*one)
+    int approach1(int zero, int one, int limit)
+    {
+        // dp[i][j][0] = num of valid arrays that each array has i 1's and j 0's, and each array is
+        // ending at 0
+        // dp[i][j][1] = num of valid arrays that each array has i 1's and j 0's, and each array is
+        // ending at 1
         std::vector<std::vector<std::array<int, 2>>> dp(
             zero + 1, std::vector<std::array<int, 2>>(one + 1, {0, 0}));
         dp[0][0] = {1, 1};
