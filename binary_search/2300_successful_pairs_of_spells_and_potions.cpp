@@ -27,37 +27,14 @@ public:
                                      long long success)
     {
         std::sort(potions.begin(), potions.end());
-        const int n = spells.size();
-        std::vector<int> result(n, 0);
-        for (int i = 0; i < n; ++i) {
-            // find the first element >= target
-            // - ceil(a/b) = a/b if a%b=0 else a/b+1
-            const int index =
-                findFirstGreaterOrEqualTo(std::ceil(success * 1.0 / spells[i]), potions);
-            if (index != -1) {
-                result[i] = potions.size() - index;
+        std::vector<int> result(spells.size());
+        for (int i = 0; i < spells.size(); ++i) {
+            const long long target = std::ceil(1.0 * success / spells[i]);
+            auto iter = std::lower_bound(potions.begin(), potions.end(), target);
+            if (iter != potions.end()) {
+                result[i] = potions.end() - iter;
             }
         }
         return result;
-    }
-
-private:
-    // input array is sorted in ascending order
-    int findFirstGreaterOrEqualTo(long long target, const std::vector<int>& nums)
-    {
-        if (nums.empty())
-            return -1;
-
-        int lo = 0;
-        int hi = nums.size() - 1;
-        while (lo <= hi) {
-            const int mid = lo + (hi - lo) / 2;
-            if (nums[mid] >= target) {
-                hi = mid - 1;
-            } else {
-                lo = mid + 1;
-            }
-        }
-        return lo == nums.size() ? -1 : lo;
     }
 };

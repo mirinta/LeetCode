@@ -56,7 +56,7 @@ private:
                 continue;
 
             dp[i] = numOfBinaryOnes(i) - 1;
-            for (int sub = (i - 1) & i; sub > 0; sub = (sub - 1) & i) {
+            for (int sub = i; sub > 0; sub = (sub - 1) & i) {
                 if (debt[sub] == 0) {
                     dp[i] = std::min(dp[i], dp[sub] + dp[i ^ sub]);
                 }
