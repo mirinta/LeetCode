@@ -20,16 +20,17 @@ public:
     int minFallingPathSum(std::vector<std::vector<int>>& matrix) { return approach2(matrix); }
 
 private:
-    // DP with space optimization, TC = O(N^2), SC = O(N)
     int approach2(const std::vector<std::vector<int>>& matrix)
     {
-        const int n = matrix.size();
+        const int m = matrix.size();
+        const int n = matrix[0].size();
         auto dp = matrix[0];
-        for (int i = 1; i < n; ++i) {
-            auto prev = dp;
+        std::vector<int> prev(n);
+        for (int i = 1; i < m; ++i) {
+            prev.assign(dp.begin(), dp.end());
             std::fill(dp.begin(), dp.end(), INT_MAX);
             for (int j = 0; j < n; ++j) {
-                dp[j] = std::min(dp[j], matrix[i][j] + prev[j]);
+                dp[j] = matrix[i][j] + prev[j];
                 if (j - 1 >= 0) {
                     dp[j] = std::min(dp[j], matrix[i][j] + prev[j - 1]);
                 }
@@ -41,16 +42,16 @@ private:
         return *std::min_element(dp.begin(), dp.end());
     }
 
-    // DP, TC = O(N^2), SC = O(N^2)
     int approach1(const std::vector<std::vector<int>>& matrix)
     {
-        // dp[i][j] = min sum of falling path from first row to cell(i,j)
-        const int n = matrix.size();
-        std::vector<std::vector<int>> dp(n, std::vector<int>(n, INT_MAX));
+        // dp[i][j] = min falling sum from the first row to (i,j)
+        const int m = matrix.size();
+        const int n = matrix[0].size();
+        std::vector<std::vector<int>> dp(m, std::vector<int>(n, INT_MAX));
         dp[0] = matrix[0];
-        for (int i = 1; i < n; ++i) {
+        for (int i = 1; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                dp[i][j] = std::min(dp[i][j], matrix[i][j] + dp[i - 1][j]);
+                dp[i][j] = matrix[i][j] + dp[i - 1][j];
                 if (j - 1 >= 0) {
                     dp[i][j] = std::min(dp[i][j], matrix[i][j] + dp[i - 1][j - 1]);
                 }
@@ -59,6 +60,6 @@ private:
                 }
             }
         }
-        return *std::min_element(dp[n - 1].begin(), dp[n - 1].end());
+        return *std::min_element(dp[m - 1].begin(), dp[m - 1].end());
     }
 };

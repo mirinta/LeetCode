@@ -23,13 +23,13 @@ private:
     {
         const int m = grid.size();
         const int n = grid[0].size();
-        std::vector<int> dp(n, INT_MAX);
+        std::vector<int> dp(n);
         dp[0] = grid[0][0];
         for (int j = 1; j < n; ++j) {
-            dp[j] = dp[j - 1] + grid[0][j];
+            dp[j] = grid[0][j] + dp[j - 1];
         }
         for (int i = 1; i < m; ++i) {
-            dp[0] += grid[i][0];
+            dp[0] = dp[0] + grid[i][0];
             for (int j = 1; j < n; ++j) {
                 dp[j] = grid[i][j] + std::min(dp[j], dp[j - 1]);
             }
@@ -40,19 +40,16 @@ private:
     // DP, time O(MN), space O(MN)
     int approach1(const std::vector<std::vector<int>>& grid)
     {
-        // dp[i][j] = min sum along the path from (0,0) to (i,j)
-        // base cases:
-        // - dp[i][0] = sum(grid[0][0]...grid[i][0])
-        // - dp[0][j] = sum(grid[0][0]...grid[0][j])
+        // dp[i][j] = min sum from (0,0) to (i,j)
         const int m = grid.size();
         const int n = grid[0].size();
-        std::vector<std::vector<int>> dp(m, std::vector<int>(n, INT_MAX));
+        std::vector<std::vector<int>> dp(m, std::vector<int>(n));
         dp[0][0] = grid[0][0];
         for (int i = 1; i < m; ++i) {
-            dp[i][0] = dp[i - 1][0] + grid[i][0];
+            dp[i][0] = grid[i][0] + dp[i - 1][0];
         }
         for (int j = 1; j < n; ++j) {
-            dp[0][j] = dp[0][j - 1] + grid[0][j];
+            dp[0][j] = grid[0][j] + dp[0][j - 1];
         }
         for (int i = 1; i < m; ++i) {
             for (int j = 1; j < n; ++j) {

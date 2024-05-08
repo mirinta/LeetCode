@@ -1,3 +1,5 @@
+#include <array>
+#include <numeric>
 #include <vector>
 
 /**
@@ -22,32 +24,26 @@ class Solution
 public:
     int maxSubarraySumCircular(std::vector<int>& nums)
     {
-        // case1: FRONT...[......]...END
-        //                |<---->|
-        //                max subarray
-        //
-        // case2: [FRONT...]......[...END]
-        //                  |<-->|
-        //                  min subarray
-        int totalSum = 0;
-        int currentMaxSum = 0;
-        int maxSubarraySum = INT_MIN;
-        int currentMinSum = 0;
-        int minSubarraySum = INT_MAX;
-        for (const auto& val : nums) {
-            totalSum += val;
-
-            currentMaxSum += val;
-            maxSubarraySum = std::max(maxSubarraySum, currentMaxSum);
-            currentMaxSum = std::max(currentMaxSum, 0);
-
-            currentMinSum += val;
-            minSubarraySum = std::min(minSubarraySum, currentMinSum);
-            currentMinSum = std::min(currentMinSum, 0);
+        // case 1: target subarray = nums[i:j]
+        // - answer1 = normal way to find max subarray sum of nums
+        // case 2: target subarray = nums[0:i] and nums[j:n-1]
+        // - answer2 = total sum - min subarray sum of nums
+        const int n = nums.size();
+        // dp[i][0] = min subarray sum of nums[0:i-1] ending at nums[i-1]
+        // dp[i][1] = max subarray sum of nums[0:i-1] ending at nums[i-1]
+        const int total = std::accumulate(nums.begin(), nums.end(), 0);
+        std::vector<std::array<int, 2>> dp(n + 1, {0, 0});
+        int max = INT_MIN;
+        int min = INT_MAX;
+        for (int i = 1; i <= n; ++i) {
+            dp[i][0] = std::min(nums[i - 1], nums[i - 1] + dp[i - 1][0]);
+            dp[i][1] = std::max(nums[i - 1], nums[i - 1] + dp[i - 1][1]);
+            min = std::min(min, dp[i][0]);
+            max = std::max(max, dp[i][1]);
         }
-        if (totalSum == minSubarraySum)
-            return maxSubarraySum;
+        if (total == min)
+            return max; // empty subarray is not allowed
 
-        return std::max(maxSubarraySum, totalSum - minSubarraySum);
+        return std::max(max, total - min);
     }
 };

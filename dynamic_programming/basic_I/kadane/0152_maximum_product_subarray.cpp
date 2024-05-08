@@ -1,3 +1,4 @@
+#include <array>
 #include <vector>
 
 /**
@@ -17,38 +18,37 @@ public:
     int maxProduct(std::vector<int>& nums) { return approach2(nums); }
 
 private:
-    // DP with space optimization, time O(N), space O(1)
+    // DP with space optimization, TC = O(N), SC = O(1)
     int approach2(const std::vector<int>& nums)
     {
-        int prevMax = nums[0];
-        int prevMin = nums[0];
-        int result = nums[0];
-        for (int i = 1; i < nums.size(); ++i) {
-            const int product1 = prevMax * nums[i];
-            const int product2 = prevMin * nums[i];
-            prevMax = std::max({nums[i], product1, product2});
-            prevMin = std::min({nums[i], product1, product2});
-            result = std::max({result, prevMax, prevMin});
+        const int n = nums.size();
+        int max = 1;
+        int min = 1;
+        int result = INT_MIN;
+        for (int i = 0; i < n; ++i) {
+            const int backup = min;
+            min = std::min({nums[i], nums[i] * min, nums[i] * max});
+            max = std::max({nums[i], nums[i] * backup, nums[i] * max});
+            result = std::max(result, max);
         }
         return result;
     }
 
-    // DP, time O(N), space O(N)
+    // DP, TC = O(N), SC = O(N)
     int approach1(const std::vector<int>& nums)
     {
+        // dp[i][0] = min subarray product of nums[0:i-1] endint at nums[i-1]
+        // dp[i][1] = max subarray product of nums[0:i-1] ending at nums[i-1]
         const int n = nums.size();
-        // dp[i].first = max product of subarrays that end with nums[i]
-        // dp[i].second = min product of subarrays that end with nums[i]
-        std::vector<std::pair<int, int>> dp(n, {INT_MIN, INT_MAX});
-        dp[0] = {nums[0], nums[0]};
-        int result = nums[0];
-        for (int i = 1; i < n; ++i) {
-            const auto& [prevMax, prevMin] = dp[i - 1];
-            const int product1 = prevMax * nums[i];
-            const int product2 = prevMin * nums[i];
-            dp[i].first = std::max({nums[i], product1, product2});
-            dp[i].second = std::min({nums[i], product1, product2});
-            result = std::max({result, dp[i].first, dp[i].second});
+        std::vector<std::array<int, 2>> dp(n + 1);
+        dp[0] = {1, 1};
+        int result = INT_MIN;
+        for (int i = 1; i <= n; ++i) {
+            dp[i][0] =
+                std::min({nums[i - 1], nums[i - 1] * dp[i - 1][0], nums[i - 1] * dp[i - 1][1]});
+            dp[i][1] =
+                std::max({nums[i - 1], nums[i - 1] * dp[i - 1][0], nums[i - 1] * dp[i - 1][1]});
+            result = std::max(result, dp[i][1]);
         }
         return result;
     }

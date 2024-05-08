@@ -50,8 +50,9 @@
 - [x] Biweekly 128 (3110~3113)
 - [x] Weekly 393 (3114~3117): 3116 is GREAT!
 - [x] Weekly 394 (3120~3123)
-- [x] Biweekly 129
-- [x] Weekly 395
+- [x] Biweekly 129 (3127~3130)
+- [x] Weekly 395 (3131~3134)
+- [ ] Weekly 396 (3136~3139): 3139 is NOT DONE!
 
 TODO:
 

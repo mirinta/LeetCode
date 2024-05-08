@@ -28,47 +28,48 @@ public:
     }
 
 private:
-    // 1D-DP, time O(MN), space O(N)
+    // DP with space optimization, TC = O(MN), SC = O(MN)
     int approach2(const std::vector<std::vector<int>>& grid)
     {
         const int m = grid.size();
         const int n = grid[0].size();
-        if (grid[0][0] != 0 || grid[m - 1][n - 1] != 0)
+        if (grid[0][0] == 1 || grid[m - 1][n - 1] == 1)
             return 0;
 
-        std::vector<int> dp(n, 0);
-        std::vector<int> iMinus1(n, 0);
-        iMinus1[0] = 1;
-        for (int i = 0; i < m; ++i) {
-            dp[0] = grid[i][0] == 0 ? iMinus1[0] : 0;
+        std::vector<int> dp(n);
+        dp[0] = 1;
+        for (int j = 1; j < n; ++j) {
+            dp[j] = grid[0][j] == 0 && dp[j - 1];
+        }
+        for (int i = 1; i < m; ++i) {
+            dp[0] = grid[i][0] == 0 && dp[0];
             for (int j = 1; j < n; ++j) {
                 if (grid[i][j] == 1) {
                     dp[j] = 0;
                 } else {
-                    dp[j] = iMinus1[j] + dp[j - 1];
+                    dp[j] = dp[j] + dp[j - 1];
                 }
             }
-            iMinus1 = dp;
         }
         return dp[n - 1];
     }
 
-    // 2D-DP, time O(MN), space (MN)
+    // DP, TC = O(MN), SC = O(MN)
     int approach1(const std::vector<std::vector<int>>& grid)
     {
         const int m = grid.size();
         const int n = grid[0].size();
-        if (grid[0][0] != 0 || grid[m - 1][n - 1] != 0)
+        if (grid[0][0] == 1 || grid[m - 1][n - 1] == 1)
             return 0;
 
-        // dp[i][j] = num of unique paths without obstacles from (0,0) to (i,j)
-        std::vector<std::vector<int>> dp(m, std::vector<int>(n, 0));
+        // dp[i][j] = num of unique paths moving from (0,0) to (i,j)
+        std::vector<std::vector<int>> dp(m, std::vector<int>(n));
         dp[0][0] = 1;
         for (int i = 1; i < m; ++i) {
-            dp[i][0] = grid[i][0] == 0 && dp[i - 1][0] ? 1 : 0;
+            dp[i][0] = grid[i][0] == 0 && dp[i - 1][0];
         }
         for (int j = 1; j < n; ++j) {
-            dp[0][j] = grid[0][j] == 0 && dp[0][j - 1] ? 1 : 0;
+            dp[0][j] = grid[0][j] == 0 && dp[0][j - 1];
         }
         for (int i = 1; i < m; ++i) {
             for (int j = 1; j < n; ++j) {
