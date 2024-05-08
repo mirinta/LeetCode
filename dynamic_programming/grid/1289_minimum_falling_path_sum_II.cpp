@@ -19,55 +19,58 @@ public:
     int minFallingPathSum(std::vector<std::vector<int>>& grid) { return approach2(grid); }
 
 private:
-    // DP with time optimization, TC = O(N^2), SC = O(N^2)
+    // DP with time and optimization, TC = O(N^2), SC = O(N)
     int approach2(const std::vector<std::vector<int>>& grid)
     {
         const int n = grid.size();
-        std::vector<std::vector<int>> dp(n, std::vector<int>(n));
-        for (int j = 0; j < n; ++j) {
-            dp[0][j] = grid[0][j];
-        }
+        auto dp = grid[0];
         for (int i = 1; i < n; ++i) {
-            const auto [minIndex, secondMinIndex] = helper(dp[i - 1]);
+            const auto [minIdx, minVal, secondMinIdx, secondMinVal] = helper(dp);
             for (int j = 0; j < n; ++j) {
-                if (j != minIndex) {
-                    dp[i][j] = grid[i][j] + dp[i - 1][minIndex];
+                if (j == minIdx) {
+                    dp[j] = grid[i][j] + secondMinVal;
                 } else {
-                    dp[i][j] = grid[i][j] + dp[i - 1][secondMinIndex];
+                    dp[j] = grid[i][j] + minVal;
                 }
             }
         }
-        return *std::min_element(dp[n - 1].begin(), dp[n - 1].end());
+        return *std::min_element(dp.begin(), dp.end());
     }
 
-    std::pair<int, int> helper(const std::vector<int>& nums)
+    std::tuple<int, int, int, int> helper(const std::vector<int>& nums)
     {
-        int minIndex = 0;
-        int secondMinIndex = nums.size() - 1;
-        for (int i = 1; i < nums.size(); ++i) {
-            if (nums[i] < nums[minIndex]) {
-                std::swap(minIndex, secondMinIndex);
-                minIndex = i;
-            } else if (nums[i] < nums[secondMinIndex]) {
-                secondMinIndex = i;
+        const int n = nums.size();
+        int minIdx = -1;
+        int minVal = INT_MAX;
+        int secondMinIdx = -1;
+        int secondMinVal = INT_MAX;
+        for (int i = 0; i < n; ++i) {
+            if (nums[i] < minVal) {
+                secondMinIdx = minIdx;
+                secondMinVal = minVal;
+                minVal = nums[i];
+                minIdx = i;
+            } else if (nums[i] < secondMinVal) {
+                secondMinVal = nums[i];
+                secondMinIdx = i;
             }
         }
-        return {minIndex, secondMinIndex};
+        return std::make_tuple(minIdx, minVal, secondMinIdx, secondMinVal);
     }
 
     // DP, TC = O(N^3), SC = O(N^2)
     int approach1(const std::vector<std::vector<int>>& grid)
     {
-        // dp[i][j] = min falling sum from the first row to grid[i][j]
+        // dp[i][j] = min sum of a valid path from the first row to (i,j)
         const int n = grid.size();
-        std::vector<std::vector<int>> dp(n, std::vector<int>(n));
+        std::vector<std::vector<int>> dp(n, std::vector<int>(n, INT_MAX));
         for (int j = 0; j < n; ++j) {
             dp[0][j] = grid[0][j];
         }
         for (int i = 1; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
                 for (int k = 0; k < n; ++k) {
-                    if (k == j)
+                    if (j == k)
                         continue;
 
                     dp[i][j] = std::min(dp[i][j], grid[i][j] + dp[i - 1][k]);
