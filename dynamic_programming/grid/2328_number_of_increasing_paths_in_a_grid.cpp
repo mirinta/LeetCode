@@ -36,12 +36,12 @@ public:
 
 private:
     static constexpr int kMod = 1e9 + 7;
-    static const std::vector<std::pair<int, int>> kDirections;
 
     // num of strictly increasing paths starting from grid[x][y]
     int dfs(std::vector<std::vector<int>>& memo, int x, int y,
             const std::vector<std::vector<int>>& grid)
     {
+        static const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         if (memo[x][y] != -1)
             return memo[x][y];
 
@@ -59,5 +59,3 @@ private:
         return memo[x][y] = result;
     }
 };
-
-const std::vector<std::pair<int, int>> Solution::kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};

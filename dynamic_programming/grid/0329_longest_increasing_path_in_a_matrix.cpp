@@ -30,28 +30,25 @@ public:
     }
 
 private:
-    static const std::vector<std::pair<int, int>> kDirections;
-
-    // length of the longest increasing path starting from matrix[i][j]
-    int dp(std::vector<std::vector<int>>& memo, int x, int y,
+    // length of the longest increasing path starting from (i,j)
+    int dp(std::vector<std::vector<int>>& memo, int i, int j,
            const std::vector<std::vector<int>>& matrix)
     {
-        if (memo[x][y] != -1)
-            return memo[x][y];
+        static const std::vector<std::pair<int, int>> kDirections{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+        if (memo[i][j] != -1)
+            return memo[i][j];
 
-        int result = 1;
+        int result = 1; // matrix[i][j] is taken into account
         for (const auto& [dx, dy] : kDirections) {
-            const int i = x + dx;
-            const int j = y + dy;
-            if (i < 0 || i >= matrix.size() || j < 0 || j >= matrix[0].size())
+            const int x = i + dx;
+            const int y = j + dy;
+            if (x < 0 || x >= matrix.size() || y < 0 || y >= matrix[0].size())
                 continue;
 
-            if (matrix[i][j] > matrix[x][y]) {
-                result = std::max(result, 1 + dp(memo, i, j, matrix));
+            if (matrix[i][j] < matrix[x][y]) {
+                result = std::max(result, 1 + dp(memo, x, y, matrix));
             }
         }
-        return memo[x][y] = result;
+        return memo[i][j] = result;
     }
 };
-
-const std::vector<std::pair<int, int>> Solution::kDirections{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
