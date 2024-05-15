@@ -53,8 +53,8 @@
 - [x] Biweekly 129 (3127~3130)
 - [x] Weekly 395 (3131~3134)
 - [ ] Weekly 396 (3136~3139): 3139 is NOT DONE!
-- [ ] Biweekly 130（3142~3145
-- [ ] Weekly 397 (3146~3149): 3149 is NOT DONE!
+- [ ] Biweekly 130 (3142~3145): 3145 is NOT DONE!
+- [x] Weekly 397 (3146~3149)
 
 TODO:
 
