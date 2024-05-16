@@ -31,7 +31,7 @@
 class Solution
 {
 public:
-    int maximumSafenessFactor(vector<vector<int>>& grid)
+    int maximumSafenessFactor(std::vector<std::vector<int>>& grid)
     {
         const auto minDistToThief = helper(grid);
         int lo = 0;
