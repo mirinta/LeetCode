@@ -20,25 +20,21 @@ public:
     int coinChange(std::vector<int>& coins, int amount) { return approach2(coins, amount); }
 
 private:
-    // DP with space optimization, TC = O(NM), SC = O(M)
     int approach2(const std::vector<int>& coins, int amount)
     {
-        const int n = coins.size();
         std::vector<int> dp(amount + 1, INT_MAX);
         dp[0] = 0;
-        for (int i = 1; i <= n; ++i) {
+        for (const auto& val : coins) {
             for (int j = 1; j <= amount; ++j) {
-                if (coins[i - 1] > j || dp[j - coins[i - 1]] == INT_MAX)
-                    continue;
-
-                dp[j] = std::min(dp[j], dp[j - coins[i - 1]] + 1);
+                if (j - val >= 0 && dp[j - val] != INT_MAX) {
+                    dp[j] = std::min(dp[j], 1 + dp[j - val]);
+                }
             }
         }
         return dp[amount] == INT_MAX ? -1 : dp[amount];
     }
 
-    // DP, TC = O(NM), SC = O(NM)
-    int approach1(const std::vector<int>& coins, int amount)
+    int approahc1(const std::vector<int>& coins, int amount)
     {
         // dp[i][j] = min num of coins to make up j using coins[0:i-1]
         const int n = coins.size();
@@ -48,10 +44,9 @@ private:
         }
         for (int i = 1; i <= n; ++i) {
             for (int j = 1; j <= amount; ++j) {
-                if (coins[i - 1] > j || dp[i][j - coins[i - 1]] == INT_MAX) {
-                    dp[i][j] = dp[i - 1][j];
-                } else {
-                    dp[i][j] = std::min(dp[i - 1][j], dp[i][j - coins[i - 1]] + 1);
+                dp[i][j] = dp[i - 1][j];
+                if (j - coins[i - 1] >= 0 && dp[i][j - coins[i - 1]] != INT_MAX) {
+                    dp[i][j] = std::min(dp[i][j], 1 + dp[i][j - coins[i - 1]]);
                 }
             }
         }

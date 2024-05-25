@@ -25,13 +25,12 @@
 class Solution
 {
 public:
-    bool isInterleave(const std::string& s1, const std::string& s2, const std::string& s3)
+    bool isInterleave(std::string s1, std::string s2, std::string s3)
     {
         return approach2(s1, s2, s3);
     }
 
 private:
-    // DP with space optimization
     bool approach2(const std::string& s1, const std::string& s2, const std::string& s3)
     {
         const int m = s1.size();
@@ -39,43 +38,35 @@ private:
         if (m + n != s3.size())
             return false;
 
-        std::vector<bool> dp(1 + n);
+        std::vector<bool> dp(n + 1, false);
         dp[0] = true;
         for (int j = 1; j <= n; ++j) {
             dp[j] = dp[j - 1] && (s2[j - 1] == s3[j - 1]);
         }
         for (int i = 1; i <= m; ++i) {
-            dp[0] = dp[0] && (s1[i - 1] == s3[i - 1]);
+            auto prev = dp;
+            dp[0] = prev[0] && (s1[i - 1] == s3[i - 1]);
             for (int j = 1; j <= n; ++j) {
                 const auto& c1 = s1[i - 1];
                 const auto& c2 = s2[j - 1];
                 const auto& c3 = s3[i + j - 1];
-                if (c1 == c3 && dp[j]) {
-                    dp[j] = true;
-                } else if (c2 == c3 && dp[j - 1]) {
-                    dp[j] = true;
-                } else {
-                    dp[j] = false;
-                }
+                const bool case1 = c1 == c3 && prev[j];
+                const bool case2 = c2 == c3 && dp[j - 1];
+                dp[j] = case1 || case2;
             }
         }
         return dp[n];
     }
 
-    // DP
     bool approach1(const std::string& s1, const std::string& s2, const std::string& s3)
     {
+        // dp[i][j] = whether s3[0:i+j) can be formed by s1[0:i) and s2[0:j)
         const int m = s1.size();
         const int n = s2.size();
         if (m + n != s3.size())
             return false;
 
-        // dp[i][j] = whether s3[0:i+j) is formed by an interleaving of s1[0:i) and s2[0:j)
-        // base cases:
-        // - dp[0][0] = true
-        // - dp[i>0][0] = true if s1[0:i) == s3[0:i)
-        // - dp[0][j>0] = true if s2[0:j) == s3[0:j)
-        std::vector<std::vector<bool>> dp(1 + m, std::vector<bool>(1 + n, false));
+        std::vector<std::vector<bool>> dp(m + 1, std::vector<bool>(n + 1, false));
         dp[0][0] = true;
         for (int i = 1; i <= m; ++i) {
             dp[i][0] = dp[i - 1][0] && (s1[i - 1] == s3[i - 1]);
@@ -85,19 +76,12 @@ private:
         }
         for (int i = 1; i <= m; ++i) {
             for (int j = 1; j <= n; ++j) {
-                // X X X X c1
-                // X X X c2
-                // X X X X X X X c3
                 const auto& c1 = s1[i - 1];
                 const auto& c2 = s2[j - 1];
                 const auto& c3 = s3[i + j - 1];
-                if (c1 == c3 && dp[i - 1][j]) {
-                    dp[i][j] = true;
-                } else if (c2 == c3 && dp[i][j - 1]) {
-                    dp[i][j] = true;
-                } else {
-                    dp[i][j] = false;
-                }
+                const bool case1 = c1 == c3 && dp[i - 1][j];
+                const bool case2 = c2 == c3 && dp[i][j - 1];
+                dp[i][j] = case1 || case2;
             }
         }
         return dp[m][n];

@@ -19,16 +19,13 @@ class Solution
 public:
     std::vector<int> pondSizes(std::vector<std::vector<int>>& land)
     {
-        if (land.empty() || land[0].empty())
-            return {};
-
-        const auto m = land.size();
-        const auto n = land[0].size();
+        const int m = land.size();
+        const int n = land[0].size();
         std::vector<int> result;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
                 if (land[i][j] == 0) {
-                    result.push_back(dfs(i, j, land));
+                    result.push_back(dfs(land, i, j));
                 }
             }
         }
@@ -37,27 +34,24 @@ public:
     }
 
 private:
-    const std::vector<int> kOffsets{-1, 1, 0};
-    int dfs(int x, int y, std::vector<std::vector<int>>& land)
+    int dfs(std::vector<std::vector<int>>& land, int i, int j)
     {
-        const auto m = land.size();
-        const auto n = land[0].size();
-        if (x < 0 || x >= m || y < 0 || y >= n)
+        if (i < 0 || i >= land.size() || j < 0 || j >= land[0].size())
             return 0;
 
-        if (land[x][y] != 0)
+        if (land[i][j] != 0)
             return 0;
 
-        land[x][y] = -1;
-        int count = 1;
-        for (const auto& dx : kOffsets) {
-            for (const auto& dy : kOffsets) {
-                if (dx == 0 && dy == 0)
-                    continue;
-
-                count += dfs(x + dx, y + dy, land);
-            }
-        }
-        return count;
+        land[i][j] = -1;
+        int result = 1;
+        result += dfs(land, i - 1, j);
+        result += dfs(land, i + 1, j);
+        result += dfs(land, i, j - 1);
+        result += dfs(land, i, j + 1);
+        result += dfs(land, i - 1, j - 1);
+        result += dfs(land, i - 1, j + 1);
+        result += dfs(land, i + 1, j - 1);
+        result += dfs(land, i + 1, j + 1);
+        return result;
     }
 };

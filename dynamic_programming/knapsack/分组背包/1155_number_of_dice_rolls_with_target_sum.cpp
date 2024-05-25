@@ -17,14 +17,13 @@ public:
     int numRollsToTarget(int n, int k, int target)
     {
         constexpr int kMod = 1e9 + 7;
-        // dp[i][t] = num of ways to make up t using exactly i dices and each dice has k faces
-        // - t is in the range of [1*i, min(target,k*i)]
+        // dp[i] = num of ways to make j using i dices
         std::vector<std::vector<int>> dp(n + 1, std::vector<int>(target + 1, 0));
-        dp[0][0] = 1; // base case
+        dp[0][0] = 1;
         for (int i = 1; i <= n; ++i) {
-            for (int t = i; t <= std::min(target, k * i); ++t) {
-                for (int val = 1; val <= std::min(t, k); ++val) {
-                    dp[i][t] = (dp[i][t] + dp[i - 1][t - val]) % kMod;
+            for (int j = 1; j <= target; ++j) {
+                for (int val = 1; val <= k && j >= val; ++val) {
+                    dp[i][j] = (dp[i][j] + dp[i - 1][j - val]) % kMod;
                 }
             }
         }
