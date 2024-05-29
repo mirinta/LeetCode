@@ -25,32 +25,26 @@ class Solution
 public:
     int search(std::vector<int>& nums, int target)
     {
-        if (nums.empty())
-            return -1;
-
-        // nums[i] are unique
-        // if nums is rotated, it becomes
-        // [LEFT...MAX MIN...RIGHT]
+        const int n = nums.size();
         int left = 0;
-        int right = nums.size() - 1;
+        int right = n - 1;
         while (left <= right) {
             const int mid = left + (right - left) / 2;
             if (nums[mid] == target)
                 return mid;
 
+            // no duplicate values
             if (nums[mid] >= nums[left]) {
-                // mid is in the left part
-                // [LEFT...MID-1 MID MID+1...MAX][MIN...RIGHT]
-                //  |<--case1->|     |<--------case2------->|
+                // LEFT ... MID-1 MID MID+1 ... MAX MIN...RIGHT
+                // |<---case1-->|     |<--------case2-------->|
                 if (target >= nums[left] && target < nums[mid]) {
                     right = mid - 1;
                 } else {
                     left = mid + 1;
                 }
             } else {
-                // mid is in the right part
-                // [LEFT...MAX][MIN...MID-1 MID MID+1...RIGHT]
-                //  |<-------case2------->|     |<--case1-->|
+                // LEFT ... MAX MIN ... MID-1 MID MID+1 ... RIGHT
+                // |<---------case1-------->|     |<---case2--->|
                 if (target <= nums[right] && target > nums[mid]) {
                     left = mid + 1;
                 } else {
