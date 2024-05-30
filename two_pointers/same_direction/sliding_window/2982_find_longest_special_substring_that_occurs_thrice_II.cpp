@@ -22,36 +22,32 @@ class Solution
 public:
     int maximumLength(std::string s)
     {
+        // count[i][j] = occurrences of substring equal to (i+'a')*j
         const int n = s.size();
-        // v[i][j] = k, it means there are k special substrings of length j that made up of
-        // character 'a'+i
-        std::array<std::unordered_map<int, int>, 26> v;
-        int result = -1;
+        std::array<std::unordered_map<int, int>, 26> count;
         int i = 0;
+        int result = -1;
         while (i < n) {
             int j = i + 1;
             while (j < n && s[j] == s[i]) {
                 j++;
             }
-            // all characters in s[i:j) are the same,
-            // let L = length of s[i:j), based on s[i:j), we can find:
-            // - case1: 1 special substring of length L
-            // - case2: 2 special substrings of length L-1
-            // - case3: 3 special substrings of length L-2, these substrings satisfy the
-            // requirements
-            // - case4: 4 special substrings of length L-4, these substrings satisfy the
-            // requirements
-            // ...
-            // we only need to consider case1~3, because we want to find the longest length
-            const int length = j - i;
             const int index = s[i] - 'a';
-            if (++v[index][length] >= 3) {
+            const int length = j - i;
+            // case1: 1 valid substring with length L
+            // case2: 2 valid substrings with length L-1
+            // case3: 3 valid substrings with length L-2
+            // case4: 4 valid substrings with length L-3
+            // ...
+            // since we need to find the max length and the num of substrings must be >= 3
+            // then we only need to consider case1/2/3
+            if (++count[index][length] >= 3) {
                 result = std::max(result, length);
             }
-            if (length - 1 > 0 && (v[index][length - 1] += 2) >= 3) {
+            if (length > 1 && (count[index][length - 1] += 2) >= 3) {
                 result = std::max(result, length - 1);
             }
-            if (length - 2 > 0) {
+            if (length > 2) {
                 result = std::max(result, length - 2);
             }
             i = j;

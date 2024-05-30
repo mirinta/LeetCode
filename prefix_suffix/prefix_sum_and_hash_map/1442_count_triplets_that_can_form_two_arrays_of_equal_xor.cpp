@@ -26,27 +26,30 @@ public:
     int countTriplets(std::vector<int>& arr) { return approach2(arr); }
 
 private:
-    // prefix xor + hash map, TC = O(N), SC = O(N)
     int approach2(const std::vector<int>& arr)
     {
-        // XOR[i] = arr[0] ^ ... ^ arr[i]
-        // based on approach1:
-        // let map[XOR[k]] = num of i such that XOR[k] = XOR[i]
-        // valid subarrays are
-        // - arr[i1+1:k], j can be [i1+2:k], num of j = k-i1-1
-        // - arr[i2+1:k], j can be [i2+2:k], num of j = k-i2-1
+        // let XOR[i] = arr[0] ^ ... ^ arr[i]
+        // if i, j, k is a valid triplet, where 0 <= i < j <= k < n
+        // then a = XOR[i-1] ^ XOR[j-1] and b = XOR[j-1] ^ XOR[k]
+        // a = b, i.e., a ^ b = 0 => XOR[i-1] ^ XOR[k] = 0
+
+        // for each k:
+        // let map[XOR[k]] = num of i such that XOR[i] ^ XOR[k] = 0
+        // case 1: i = i1 + 1, j can be [i1+2:k], num of j = k - i1 - 1
+        // case 2: i = i2 + 1, j can be [i2+2:k], num of j = k - i2 - 1
+        // case 3: i = i3 + 1, j can be [i3+2:k], num of j = k - i3 - 1
         // ...
-        // - arr[ix+1:k], j can be [ix+2:k], num of j = k-ix-1
-        // thus, given k, num of triplets = x*(k-1) - (i1+...+ix)
+        // case m: i = im + 1, j can be [im+1:k], num of j = k - im - 1
+        // thus, num of valid triplets = m * (k - 1) - (i1 + i2 + ... + im)
         const int n = arr.size();
-        std::unordered_map<int, std::pair<int, int>> map; // XOR[k] to {x, i1+...+ix}
-        // base case: arr[0:k] is valid
-        // XOR[k] = arr[0] ^ ... ^ arr[j-1] ^ arr[j] ^ ... ^ arr[k] = a ^ b = 0
-        // i = -1, num of triplets = num of j = k = x*(k-1) - (-1), x = 1
+        std::unordered_map<int, std::pair<int, int>> map;
+        // base case:
+        // i = 0, then j is in the range of [1:k], num of j = k
+        // a ^ b = arr[0] ^ ... ^ arr[k] = XOR[k] = 0
+        // m = 1 and i1 + ... + im = -1
         map[0] = {1, -1};
-        int XOR = 0;
         int result = 0;
-        for (int k = 0; k < n; ++k) {
+        for (int k = 0, XOR = 0; k < n; ++k) {
             XOR ^= arr[k];
             if (k > 0 && map.count(XOR)) {
                 result += map[XOR].first * (k - 1) - map[XOR].second;
@@ -57,19 +60,15 @@ private:
         return result;
     }
 
-    // prefix xor, TC = O(N^2), SC = O(N)
     int approach1(const std::vector<int>& arr)
     {
         // let XOR[i] = arr[0] ^ arr[1] ^ ... ^ arr[i-1]
-        // if j > i,
-        // XOR[j] = arr[0] ^ ... ^ arr[i] ^ arr[i+1] ^ ... ^ arr[j-1]
-        // XOR[j+1] ^ XOR[i] = arr[i] ^ ... ^ arr[j]
-        //
-        // given a pair of i and k where 0 <= i < k < n,
-        // a = arr[i] ^ ... ^ arr[j-1] = XOR[j] ^ XOR[i]
-        // b = arr[j] ^ ... ^ arr[k] = XOR[k + 1] ^ XOR[j]
-        // if a == b, then a ^ b = XOR[i] ^ XOR[k + 1] = 0
-        // j can be any value in the range of (i,k], num of j = k-i
+        // if i, j, k is a valid triplet, where i < j <= k
+        // then a = XOR[j] ^ XOR[i] and b = XOR[k+1] ^ XOR[j]
+        // a = b, i.e., a ^ b = 0 => XOR[i] ^ XOR[k+1] = 0
+
+        // given i and k such that XOR[i] = XOR[k+1] and i < k
+        // then j can be i+1,i+2,...,k => num of valid j = k-i
         const int n = arr.size();
         std::vector<int> XOR(n + 1, 0);
         for (int i = 1; i <= n; ++i) {
@@ -78,7 +77,7 @@ private:
         int result = 0;
         for (int i = 0; i < n; ++i) {
             for (int k = i + 1; k < n; ++k) {
-                if ((XOR[i] ^ XOR[k + 1]) == 0) {
+                if (XOR[i] == XOR[k + 1]) {
                     result += k - i;
                 }
             }
