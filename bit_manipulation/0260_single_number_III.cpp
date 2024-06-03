@@ -18,29 +18,27 @@ class Solution
 public:
     std::vector<int> singleNumber(std::vector<int>& nums)
     {
-        // nums = [x,x,y,y,A,B]
-        // - if A=B, it contradicts to the problem
-        unsigned a_xor_b = 0; // prevent overflow
+        long long XOR = 0;
         for (const auto& val : nums) {
-            a_xor_b ^= val;
+            XOR ^= val;
         }
-        // how to split a and b from a^b?
-        // since A!=B, then there are at least 1 bit in A that is different from B
-        // assume the ith bit is different, then the ith bit of A^B is 1
-        unsigned diff = a_xor_b & (-a_xor_b); // remain the last 1 and set all the other bits to 0
-        // for any P in nums, P^diff=0 means the ith bit of P is 0
-        // - the ith bit of P is either the same as A or the same as B
-        // - but it can't be the same as both A and B
-        // thus, we can split A and B
-        int a = 0;
-        int b = 0;
+        // a and b must be different
+        // XOR = a ^ b != 0, XOR has at least one bit of 1
+        // lowbit = XOR & (-XOR), it is the rightmost set bit of XOR
+        // assume lowbit[k] = 1, A[k] = 1 and B[k] = 0
+        // use lowbit to divide nums into two groups
+        // group1 = {A, x1, x1, x2, x2, ...}, where A[k] = xi[k] = 1
+        // group2 = {B, y1, y1, y2, y2, ...}, where B[k] = yi[k] = 0
+        long long lowbit = XOR & (-XOR);
+        long long A = 0;
+        long long B = 0;
         for (const auto& val : nums) {
-            if (diff & val) {
-                a ^= val;
+            if (lowbit & val) {
+                A ^= val;
             } else {
-                b ^= val;
+                B ^= val;
             }
         }
-        return {a, b};
+        return {static_cast<int>(A), static_cast<int>(B)};
     }
 };
