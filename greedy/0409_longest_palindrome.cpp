@@ -20,19 +20,15 @@ public:
         for (const auto& c : s) {
             map[c]++;
         }
-        bool hasOddFreq = false;
+        bool odd = false;
         int result = 0;
         for (const auto& [c, freq] : map) {
+            result += freq / 2 * 2;
             if (freq % 2) {
-                hasOddFreq = true;
-                result += freq - 1;
-            } else {
-                result += freq;
+                odd = true;
             }
         }
-        if (hasOddFreq) {
-            result++;
-        }
+        result += odd;
         return result;
     }
 };

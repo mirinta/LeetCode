@@ -66,7 +66,6 @@ class Solution
 public:
     std::vector<int> resultArray(std::vector<int>& nums)
     {
-        const int n = nums.size();
         std::unordered_set<int> set(nums.begin(), nums.end());
         std::vector<int> unique(set.begin(), set.end());
         std::sort(unique.begin(), unique.end());
@@ -80,7 +79,7 @@ public:
         tree1.add(map[nums[0]] + 1, 1);
         std::vector<int> v2{nums[1]};
         tree2.add(map[nums[1]] + 1, 1);
-        for (int i = 2; i < n; ++i) {
+        for (int i = 2; i < nums.size(); ++i) {
             const int count1 = v1.size() - tree1.query(1, map[nums[i]] + 1);
             const int count2 = v2.size() - tree2.query(1, map[nums[i]] + 1);
             if (count1 < count2 || (count1 == count2 && v2.size() < v1.size())) {

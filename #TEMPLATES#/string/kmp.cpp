@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 
-namespace detail {
 std::vector<int> preprocess(const std::string& s)
 {
     const int n = s.size();
@@ -16,7 +15,6 @@ std::vector<int> preprocess(const std::string& s)
     }
     return next;
 }
-} // namespace detail
 
 /**
  * @brief Return all occurrences of p (pattern string) within s (text string) using the KMP
@@ -28,7 +26,7 @@ std::vector<int> preprocess(const std::string& s)
 std::vector<int> kmp(const std::string& s, const std::string& p)
 {
     const int m = s.size();
-    const auto next = detail::preprocess(p);
+    const auto next = preprocess(p);
     int i = 0;
     int j = 0;
     std::vector<int> result;

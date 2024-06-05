@@ -40,39 +40,37 @@ public:
             graph[edge[0]].emplace_back(edge[1], edge[2]);
             graph[edge[1]].emplace_back(edge[0], edge[2]);
         }
-        std::vector<int> result(n, 0);
-        for (int i = 0; i < n; ++i) {
-            result[i] = solve(i, signalSpeed, graph);
+        std::vector<int> result(n);
+        for (int root = 0; root < n; ++root) {
+            result[root] = solve(root, signalSpeed, graph);
         }
         return result;
     }
 
 private:
-    using Graph = std::vector<std::vector<std::pair<int, long long>>>;
+    using Graph = std::vector<std::vector<std::pair<int, int>>>;
 
     int solve(int root, int signalSpeed, const Graph& graph)
     {
-        int sum = 0;
+        int presum = 0;
         int result = 0;
-        for (const auto& [child, weight] : graph[root]) {
-            int count = 0;
-            dfs(count, child, root, weight, signalSpeed, graph);
-            result += sum * count;
-            sum += count;
+        for (const auto& [v, weight] : graph[root]) {
+            const int count = dfs(v, root, weight, signalSpeed, graph);
+            result += presum * count;
+            presum += count;
         }
         return result;
     }
 
-    void dfs(int& count, int root, int parent, long long sum, int signalSpeed, const Graph& graph)
+    int dfs(int root, int parent, int total, int signalSpeed, const Graph& graph)
     {
-        if (sum % signalSpeed == 0) {
-            count++;
-        }
-        for (const auto& [child, weight] : graph[root]) {
-            if (child == parent)
+        int result = total % signalSpeed == 0;
+        for (const auto& [v, weight] : graph[root]) {
+            if (v == parent)
                 continue;
 
-            dfs(count, child, root, weight + sum, signalSpeed, graph);
+            result += dfs(v, root, total + weight, signalSpeed, graph);
         }
+        return result;
     }
 };
