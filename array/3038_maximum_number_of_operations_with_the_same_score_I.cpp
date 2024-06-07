@@ -22,10 +22,10 @@ public:
     int maxOperations(std::vector<int>& nums)
     {
         const int n = nums.size();
-        int score = nums[0] + nums[1];
+        int sum = nums[0] + nums[1];
         int result = 1;
-        for (int i = 3; i < n; i += 2) {
-            if (nums[i] + nums[i - 1] != score)
+        for (int i = 2; i + 1 < n; i += 2) {
+            if (nums[i] + nums[i + 1] != sum)
                 break;
 
             result++;

@@ -26,74 +26,71 @@
  * ! sentence does not have leading or trailing spaces.
  */
 
-struct TrieNode
-{
-    static constexpr int R = 26;
-    bool isEnd = false;
-    std::array<std::unique_ptr<TrieNode>, R> next;
-};
-
 class Trie
 {
 public:
-    explicit Trie() : root(std::make_unique<TrieNode>()) {}
+    explicit Trie() : root(new TrieNode()) {}
 
-    void insert(const std::string& word)
+    void insert(const std::string& s)
     {
-        auto* node = root.get();
-        for (const auto& c : word) {
+        auto* node = root;
+        for (const auto& c : s) {
             const int index = c - 'a';
             if (!node->next[index]) {
-                node->next[index] = std::make_unique<TrieNode>();
+                node->next[index] = new TrieNode();
             }
-            node = node->next[index].get();
-            ;
+            node = node->next[index];
         }
         node->isEnd = true;
     }
 
-    std::string getShortestPrefix(const std::string& word)
+    std::string shortestPrefix(const std::string& s)
     {
+        auto* node = root;
         std::string result;
-        auto* node = root.get();
-        for (const auto& c : word) {
+        for (const auto& c : s) {
             const int index = c - 'a';
             if (!node->next[index])
                 return {};
 
             result.push_back(c);
-            node = node->next[index].get();
+            node = node->next[index];
             if (node->isEnd)
-                return result;
+                break;
         }
-        return {};
+        return result;
     }
 
 private:
-    std::unique_ptr<TrieNode> root;
+    struct TrieNode
+    {
+        std::array<TrieNode*, 26> next{};
+        bool isEnd{false};
+    };
+
+    TrieNode* root;
 };
 
 class Solution
 {
 public:
-    std::string replaceWords(const std::vector<std::string>& dictionary,
-                             const std::string& sentence)
+    std::string replaceWords(std::vector<std::string>& dictionary, std::string sentence)
     {
         Trie trie;
-        for (const auto& word : dictionary) {
-            trie.insert(word);
+        for (const auto& s : dictionary) {
+            trie.insert(s);
         }
+        const int n = sentence.size();
         std::string result;
-        std::string word;
-        std::istringstream stream(sentence);
-        while (std::getline(stream, word, ' ')) {
-            const auto prefix = trie.getShortestPrefix(word);
-            if (prefix.empty()) {
-                result.append(word);
-            } else {
-                result.append(prefix);
-            }
+        for (int i = 0, last = -1; i <= n; ++i) {
+            if (i < n && sentence[i] != ' ')
+                continue;
+
+            const auto sub = sentence.substr(last + 1, i - last - 1);
+            const auto prefix = trie.shortestPrefix(sub);
+            result.append(prefix.empty() ? sub : prefix);
             result.push_back(' ');
+            last = i;
         }
         result.pop_back();
         return result;
