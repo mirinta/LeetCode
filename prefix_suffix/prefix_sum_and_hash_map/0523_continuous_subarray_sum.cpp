@@ -30,26 +30,24 @@ public:
     bool checkSubarraySum(std::vector<int>& nums, int k)
     {
         // let sum[i] = sum of nums[0:i]
-        // given sum[i] % k = remainder,
-        // if map[remainder] = j, it means sum[j] % k = sum[i] % k
-        // then (sum[i] - sum[j]) % k = 0, the valid subarray is nums[j+1:i]
-        // it must have at least elements, i.e., i-j >= 2
-        // corner case:
-        // sum[i] % k = 0, the valid subarray is nums[0:i], length = i+1
-        // thus, we initialize map[0] = -1
+        // if nums[j+1:i] is a valid subarray
+        // then (sum[i] - sum[j]) % k = 0
+        // then sum[i] % k = sum[j] % k and i-j >= 2
         const int n = nums.size();
-        std::unordered_map<int, int> map; // remainder to index
+        std::unordered_map<int, int> map;
+        // base case: nums[0:i] is a valid subarray
+        // sum[i] % k = 0, num of elements = i-j = i+1
+        // thus, j = -1 => map[0] = -1
         map[0] = -1;
-        int sum = 0;
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0, sum = 0; i < n; ++i) {
             sum += nums[i];
             const int remainder = sum % k;
+            if (map.count(remainder) && i - map[remainder] >= 2)
+                return true;
+
             if (!map.count(remainder)) {
                 map[remainder] = i;
-                continue;
             }
-            if (i - map[remainder] >= 2)
-                return true;
         }
         return false;
     }
