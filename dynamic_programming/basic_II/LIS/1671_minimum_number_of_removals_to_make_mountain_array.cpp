@@ -24,14 +24,14 @@ class Solution
 public:
     int minimumMountainRemovals(std::vector<int>& nums)
     {
-        // Li1 = length of the longest strictly increasing subsequence ending at nums[i]
-        // Li2 = length of the longest strictly decreasing subsequence starting at nums[i]
-        // num of elements to remove to make nums[i] as the peak element = N+1-Li1-Li2
+        // LIS[i] = length of the LIS of nums[0:i] ending at nums[i]
+        // LDS[i] = length of the LDS of nums[0:i] starting at nums[i]
+        // if nums[i] is the peak of a mountain subarray
+        // then num of elements = LIS[i] + LDS[i] - 1
+        // thus, num of removes = n - (LIS[i] + LDS[i] - 1)
         const int n = nums.size();
-        const auto LIS = getLIS(nums);
-        std::reverse(nums.begin(), nums.end());
-        auto LDS = getLIS(nums);
-        std::reverse(LDS.begin(), LDS.end());
+        const auto LIS = helper(nums, false);
+        const auto LDS = helper({nums.rbegin(), nums.rend()}, true);
         int result = INT_MAX;
         for (int i = 0; i < n; ++i) {
             if (LIS[i] >= 2 && LDS[i] >= 2) {
@@ -42,26 +42,21 @@ public:
     }
 
 private:
-    // return[i] = length of LIS ending at nums[i], same as LC.300
-    // time O(NlogN), space O(N)
-    std::vector<int> getLIS(const std::vector<int>& nums)
+    std::vector<int> helper(const std::vector<int>& nums, bool reverse)
     {
+        // dp[i] = length of the LIS of nums[0:i] ending at nums[i]
         const int n = nums.size();
-        std::vector<int> result(n);
-        std::vector<int> vec; // strictly increasing
-        for (int i = 0; i < n; ++i) {
-            if (vec.empty() || vec.back() < nums[i]) {
-                vec.push_back(nums[i]);
-                result[i] = vec.size();
-            } else {
-                // iter != vec.end() is guaranteed
-                // if not, it means all vec[i] < nums[i]
-                // this case is handled in the above branch
-                auto iter = std::lower_bound(vec.begin(), vec.end(), nums[i]);
-                *iter = nums[i];
-                result[i] = std::distance(vec.begin(), iter) + 1;
+        std::vector<int> dp(n, 1);
+        for (int i = 1; i < n; ++i) {
+            for (int j = i - 1; j >= 0; --j) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = std::max(dp[i], 1 + dp[j]);
+                }
             }
         }
-        return result;
+        if (reverse) {
+            std::reverse(dp.begin(), dp.end());
+        }
+        return dp;
     }
 };

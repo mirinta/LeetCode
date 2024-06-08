@@ -1,4 +1,4 @@
-#include <algorithm>
+#include <array>
 #include <vector>
 
 /**
@@ -13,35 +13,31 @@
 class Solution
 {
 public:
-    int findNumberOfLIS(const std::vector<int>& nums)
+    int findNumberOfLIS(std::vector<int>& nums)
     {
+        // dp[i][0] = length of the LIS of nums[0:i] ending at nums[i]
+        // dp[i][1] = num of LIS of nums[0:i] ending at nums[i] with length equal to dp[i][0]
         const int n = nums.size();
-        // dp[i] = length of LIS ending at nums[i]
-        // X X X X X j X i
-        // |<-dp[j]->|
-        // |<---dp[i]--->|, if nums[i] > nums[j], dp[i] = 1 + dp[j]
-        // count[i] = num of LIS ending at nums[i]
-        std::vector<int> dp(n, 1);
-        std::vector<int> count(n, 1);
+        std::vector<std::array<int, 2>> dp(n, {1, 1});
         int lengthOfLIS = 1;
         for (int i = 1; i < n; ++i) {
             for (int j = i - 1; j >= 0; --j) {
                 if (nums[i] <= nums[j])
-                    continue; // {...,nums[j],nums[i]} is not a strictly increasing subsequence
+                    continue;
 
-                if (dp[i] < 1 + dp[j]) {
-                    dp[i] = 1 + dp[j];
-                    count[i] = count[j];
-                } else if (dp[i] == 1 + dp[j]) {
-                    count[i] += count[j];
+                if (1 + dp[j][0] > dp[i][0]) {
+                    dp[i][0] = 1 + dp[j][0];
+                    dp[i][1] = dp[j][1];
+                } else if (1 + dp[j][0] == dp[i][0]) {
+                    dp[i][1] += dp[j][1];
                 }
             }
-            lengthOfLIS = std::max(lengthOfLIS, dp[i]);
+            lengthOfLIS = std::max(lengthOfLIS, dp[i][0]);
         }
         int result = 0;
-        for (int i = 0; i < n; ++i) {
-            if (dp[i] == lengthOfLIS) {
-                result += count[i];
+        for (const auto& [length, count] : dp) {
+            if (length == lengthOfLIS) {
+                result += count;
             }
         }
         return result;
