@@ -1,3 +1,4 @@
+#include <unordered_map>
 #include <vector>
 
 /**
@@ -16,25 +17,21 @@ class Solution
 public:
     int subarraysDivByK(std::vector<int>& nums, int k)
     {
-        // let presum[i] = sum of nums[0:i-1]
-        // sum of nums[j:i] = presum[i+1] - presum[j]
-        // we want (presum[i+1] - presum[j]) % k = 0
-        // thus, presum[i+1] % k = presum[j] % k
+        // let sum[i] = sum of nums[0:i]
+        // if nums[j+1:i] is a valid subarray
+        // then (sum[i] - sum[j]) % k = 0
+        // then sum[i] % k = sum[j] % k
         const int n = nums.size();
-        std::vector<int> presum(n + 1, 0);
-        for (int i = 1; i <= n; ++i) {
-            presum[i] = presum[i - 1] + nums[i - 1];
-        }
-        std::vector<int> freq(k, 0);
-        freq[0] = 1;
+        std::unordered_map<int, int> map;
+        // base case: nums[0:i] is a valid subarray
+        // sum[i] % k = 0
+        map[0] = 1;
         int result = 0;
-        for (int i = 0; i < n; ++i) {
-            int target = presum[i + 1] % k;
-            if (target < 0) {
-                target += k; // prevent negative values
-            }
-            result += freq[target];
-            freq[target]++;
+        for (int i = 0, sum = 0; i < n; ++i) {
+            sum += nums[i];
+            const int target = (sum % k + k) % k; // prevent negative values
+            result += map[target];
+            map[target]++;
         }
         return result;
     }
