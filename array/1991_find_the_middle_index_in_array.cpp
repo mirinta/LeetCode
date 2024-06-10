@@ -1,3 +1,4 @@
+#include <numeric>
 #include <vector>
 
 /**
@@ -21,21 +22,14 @@
 class Solution
 {
 public:
-    int findMiddleIndex(std::vector<int>& nums)
+    int pivotIndex(std::vector<int>& nums)
     {
-        if (nums.size() <= 1)
-            return nums.empty() ? -1 : 0;
-
-        int totalSum = 0;
-        for (const auto& val : nums) {
-            totalSum += val;
-        }
-        int leftSum = 0;
-        for (size_t i = 0; i < nums.size(); ++i) {
-            if (leftSum == totalSum - nums[i] - leftSum)
+        const int total = std::accumulate(nums.begin(), nums.end(), 0);
+        for (int i = 0, sum = 0; i < nums.size(); ++i) {
+            if (sum == total - sum - nums[i])
                 return i;
 
-            leftSum += nums[i];
+            sum += nums[i];
         }
         return -1;
     }

@@ -19,45 +19,40 @@ class Solution
 public:
     std::vector<std::vector<std::string>> solveNQueens(int n)
     {
-        std::vector<std::string> board(n, std::string(n, kEmpty));
-        backtrack(board, 0, n);
+        std::vector<std::string> grid(n, std::string(n, '.'));
+        std::vector<std::vector<std::string>> result;
+        backtrack(result, grid, 0, n);
         return result;
     }
 
 private:
-    static constexpr char kQueen = 'Q';
-    static constexpr char kEmpty = '.';
-    std::vector<std::vector<std::string>> result;
-
-    void backtrack(std::vector<std::string>& board, int row, int n)
+    void backtrack(std::vector<std::vector<std::string>>& result, std::vector<std::string>& grid,
+                   int i, int n)
     {
-        if (row == n) {
-            result.push_back(board);
+        if (i == n) {
+            result.push_back(grid);
             return;
         }
-        for (int col = 0; col < n; ++col) {
-            if (!isValid(row, col, board))
+        for (int j = 0; j < n; ++j) {
+            if (!isValid(i, j, grid))
                 continue;
 
-            board[row][col] = kQueen;
-            backtrack(board, row + 1, n);
-            board[row][col] = kEmpty;
+            grid[i][j] = 'Q';
+            backtrack(result, grid, i + 1, n);
+            grid[i][j] = '.';
         }
     }
 
-    bool isValid(int x, int y, const std::vector<std::string>& board)
+    bool isValid(int row, int col, const std::vector<std::string>& grid)
     {
-        // X   X   X
-        //   X X X
-        //     Q     <= check this row is valid
-        for (int i = x - 1, offset = 1; i >= 0; --i, ++offset) {
-            if (board[i][y] == kQueen)
+        for (int i = row - 1, offset = 1; i >= 0; --i, ++offset) {
+            if (grid[i][col] == 'Q')
                 return false;
 
-            if (y - offset >= 0 && board[i][y - offset] == kQueen)
+            if (col + offset < grid.size() && grid[i][col + offset] == 'Q')
                 return false;
 
-            if (y + offset < board.size() && board[i][y + offset] == kQueen)
+            if (col - offset >= 0 && grid[i][col - offset] == 'Q')
                 return false;
         }
         return true;

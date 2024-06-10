@@ -11,42 +11,18 @@
 class Solution
 {
 public:
-    bool isPalindrome(int x) { return approach2(x); }
-
-private:
-    bool approach2(int x)
+    bool isPalindrome(int x)
     {
-        if (x < 0)
+        if (x < 0 || (x % 10 == 0 && x != 0))
             return false;
 
-        const int orginalX = x;
-        int reverseX = 0;
-        while (x) {
-            if (reverseX > INT_MAX / 10)
-                return false;
-
-            const int digit = x % 10;
-            reverseX = reverseX * 10 + digit;
+        int reverse = 0;
+        while (x > reverse) {
+            reverse = reverse * 10 + x % 10;
             x /= 10;
         }
-        return reverseX == orginalX;
-    }
-
-    bool approach1(int x)
-    {
-        if (x < 0)
-            return false;
-
-        const std::string s = std::to_string(x);
-        int left = 0;
-        int right = s.size() - 1;
-        while (left < right) {
-            if (s[left] != s[right])
-                return false;
-
-            left++;
-            right--;
-        }
-        return true;
+        // x = 12321, after the while loop, x = 12 and reverse = 123
+        // x = 1221, after the while loop, x = 12 and reverse = 12
+        return x == reverse || reverse / 10 == x;
     }
 };

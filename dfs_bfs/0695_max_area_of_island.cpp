@@ -18,17 +18,15 @@
 class Solution
 {
 public:
-    // DFS, time O(MN), space O(MN)
-    int maxAreaOfIsland(const std::vector<std::vector<int>>& grid)
+    int maxAreaOfIsland(std::vector<std::vector<int>>& grid)
     {
         const int m = grid.size();
         const int n = grid[0].size();
-        std::vector<std::vector<bool>> visited(m, std::vector<bool>(n, false));
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == 1 && !visited[i][j]) {
-                    result = std::max(result, dfs(visited, i, j, grid));
+                if (grid[i][j]) {
+                    result = std::max(result, dfs(grid, i, j, m, n));
                 }
             }
         }
@@ -36,26 +34,17 @@ public:
     }
 
 private:
-    static constexpr int kLand = 1;
-    const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
-    int dfs(std::vector<std::vector<bool>>& visited, int x, int y,
-            const std::vector<std::vector<int>>& grid)
+    int dfs(std::vector<std::vector<int>>& grid, int i, int j, int m, int n)
     {
-        const int m = grid.size();
-        const int n = grid[0].size();
-        visited[x][y] = true;
-        int area = 1;
-        for (const auto& [dx, dy] : kDirections) {
-            const int i = x + dx;
-            const int j = y + dy;
-            if (i < 0 || i >= m || j < 0 || j >= n)
-                continue;
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == 0)
+            return 0;
 
-            if (!visited[i][j] && grid[i][j] == kLand) {
-                area += dfs(visited, i, j, grid);
-            }
-        }
+        grid[i][j] = 0;
+        int area = 1;
+        area += dfs(grid, i + 1, j, m, n);
+        area += dfs(grid, i - 1, j, m, n);
+        area += dfs(grid, i, j + 1, m, n);
+        area += dfs(grid, i, j - 1, m, n);
         return area;
     }
 };

@@ -53,7 +53,7 @@ public:
             return;
         }
         // case 3: X X X i-1 i X X j X X n-1
-        //                   |<-dereasing->|
+        //                   |<-decreasing->|
         // find the largest j such that nums[j] > nums[i-1]
         // swap nums[j] and nums[i-1]
         // and sort nums[i:n-1] in non-decreasing order

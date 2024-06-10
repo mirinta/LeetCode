@@ -1,3 +1,4 @@
+#include <numeric>
 #include <vector>
 
 /**
@@ -20,44 +21,14 @@
 class Solution
 {
 public:
-    int pivotIndex(const std::vector<int>& nums)
+    int pivotIndex(std::vector<int>& nums)
     {
-        if (nums.empty())
-            return -1;
-
-        if (nums.size() == 1)
-            return 0;
-
-        int totalSum = 0;
-        for (const auto& val : nums) {
-            totalSum += val;
-        }
-        int leftPartSum = 0;
-        for (int i = 0; i < nums.size(); ++i) {
-            if (leftPartSum == totalSum - nums[i] - leftPartSum)
+        const int total = std::accumulate(nums.begin(), nums.end(), 0);
+        for (int i = 0, sum = 0; i < nums.size(); ++i) {
+            if (sum == total - sum - nums[i])
                 return i;
 
-            leftPartSum += nums[i];
-        }
-        return -1;
-    }
-
-private:
-    int approach1(const std::vector<int>& nums)
-    {
-        if (nums.empty())
-            return -1;
-
-        if (nums.size() == 1)
-            return 0;
-
-        std::vector<int> preSum(nums.size() + 1, 0);
-        for (size_t i = 1; i < preSum.size(); ++i) {
-            preSum[i] = preSum[i - 1] + nums[i - 1];
-        }
-        for (size_t i = 1; i < preSum.size(); ++i) {
-            if (preSum[i - 1] == preSum.back() - preSum[i])
-                return i - 1;
+            sum += nums[i];
         }
         return -1;
     }
