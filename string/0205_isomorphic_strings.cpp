@@ -1,6 +1,6 @@
+#include <array>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 
 /**
  * Given two strings s and t, determine if they are isomorphic.
@@ -21,21 +21,18 @@ class Solution
 public:
     bool isIsomorphic(std::string s, std::string t)
     {
-        if (s.size() != t.size())
-            return false;
-
         const int n = s.size();
+        std::array<bool, 256> used{};
         std::unordered_map<char, char> map;
-        std::unordered_set<char> used;
         for (int i = 0; i < n; ++i) {
-            if (map.count(t[i]) && map[t[i]] != s[i])
+            if (map.count(s[i]) && (map[s[i]] != t[i]))
                 return false;
 
-            if (!map.count(t[i]) && used.count(s[i]))
+            if (!map.count(s[i]) && used[t[i]])
                 return false;
 
-            used.insert(s[i]);
-            map[t[i]] = s[i];
+            map[s[i]] = t[i];
+            used[t[i]] = true;
         }
         return true;
     }

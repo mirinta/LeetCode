@@ -1,3 +1,4 @@
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -33,31 +34,25 @@ class Solution
 public:
     std::string simplifyPath(std::string path)
     {
-        const int n = path.size();
-        std::vector<std::string> words;
-        int i = 0;
-        while (i < n) {
-            while (i < n && path[i] == '/') {
-                i++;
-            }
-            int j = i;
-            while (j < n && path[j] != '/') {
-                j++;
-            }
-            std::string word = path.substr(i, j - i);
-            if (word == "..") {
-                if (!words.empty()) {
-                    words.pop_back();
+        std::istringstream stream(path);
+        std::string s;
+        std::vector<std::string> split;
+        while (std::getline(stream, s, '/')) {
+            if (s.empty() || s == ".")
+                continue;
+
+            if (s == "..") {
+                if (!split.empty()) {
+                    split.pop_back();
                 }
-            } else if (!word.empty() && word != ".") {
-                words.push_back(std::move(word));
+                continue;
             }
-            i = j;
+            split.push_back(s);
         }
-        std::string result("/");
-        for (int k = 0; k < words.size(); ++k) {
-            result.append(words[k]);
-            if (k < words.size() - 1) {
+        std::string result{"/"};
+        for (int i = 0; i < split.size(); ++i) {
+            result.append(split[i]);
+            if (i != split.size() - 1) {
                 result.push_back('/');
             }
         }
