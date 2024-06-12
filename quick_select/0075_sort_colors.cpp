@@ -1,4 +1,3 @@
-#include <utility>
 #include <vector>
 
 /**
@@ -19,17 +18,18 @@ class Solution
 public:
     void sortColors(std::vector<int>& nums)
     {
-        if (nums.size() <= 1)
+        if (nums.size() < 2)
             return;
 
-        // three-way partition, target value = 1
-        int lt = 0;
+        // three-way partition, pivot = 1
+        constexpr int pivot = 1;
         int i = 0;
+        int lt = 0;
         int gt = nums.size() - 1;
         while (i <= gt) {
-            if (nums[i] < 1) {
-                std::swap(nums[i++], nums[lt++]);
-            } else if (nums[i] > 1) {
+            if (nums[i] < pivot) {
+                std::swap(nums[lt++], nums[i++]);
+            } else if (nums[i] > pivot) {
                 std::swap(nums[i], nums[gt--]);
             } else {
                 i++;
