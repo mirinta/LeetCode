@@ -1,3 +1,4 @@
+#include <unordered_map>
 #include <vector>
 
 /**
@@ -7,9 +8,9 @@
  *
  * Return the maximum possible length of a good subsequence of nums.
  *
- * ! 1 <= nums.length <= 500
+ * ! 1 <= nums.length <= 5 * 10^3
  * ! 1 <= nums[i] <= 10^9
- * ! 0 <= k <= min(nums.length, 25)
+ * ! 0 <= k <= min(50, nums.length)
  */
 
 class Solution
@@ -17,26 +18,28 @@ class Solution
 public:
     int maximumLength(std::vector<int>& nums, int k)
     {
-        // dp[i][j] = max length of a valid subsequence of nums[0:i] ending at nums[i]
-        // with at most j indices x such that seq[x] != seq[x+1]
         const int n = nums.size();
         std::vector<std::vector<int>> dp(n, std::vector<int>(k + 1, 0));
         for (int i = 0; i < n; ++i) {
-            dp[i][0] = 1; // a sequence with only one element is valid iff k = 0
+            dp[i][0] = 1;
         }
+        std::vector<int> max(k + 1, 0);
+        std::unordered_map<int, int> map;
         int result = 0;
         for (int i = 0; i < n; ++i) {
-            // i+1 elements have at most i valid indices
             for (int j = 0; j <= std::min(i, k); ++j) {
-                for (int x = i - 1; x >= 0; --x) {
-                    if (nums[x] == nums[i]) {
-                        dp[i][j] = std::max(dp[i][j], 1 + dp[x][j]);
-                    } else if (j > 0) {
-                        dp[i][j] = std::max(dp[i][j], 1 + dp[x][j - 1]);
-                    }
+                if (map.count(nums[i])) {
+                    dp[i][j] = std::max(dp[i][j], 1 + dp[map[nums[i]]][j]);
+                }
+                if (j > 0) {
+                    dp[i][j] = std::max(dp[i][j], 1 + max[j - 1]);
                 }
                 result = std::max(result, dp[i][j]);
             }
+            for (int j = 0; j <= std::min(i, k); ++j) {
+                max[j] = std::max(max[j], dp[i][j]);
+            }
+            map[nums[i]] = i;
         }
         return result;
     }
