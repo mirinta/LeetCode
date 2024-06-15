@@ -31,20 +31,21 @@
 class Solution
 {
 public:
-    // time O(NlogN+KlogN), space O(N), N is the number of projects
     int findMaximizedCapital(int k, int w, std::vector<int>& profits, std::vector<int>& capital)
     {
-        std::vector<std::pair<int, int>> projects(capital.size()); // <capital, profit>
-        for (int i = 0; i < capital.size(); ++i) {
-            projects.emplace_back(capital[i], profits[i]);
+        const int n = profits.size();
+        using Pair = std::pair<int, int>; // <capital, profit>
+        std::vector<Pair> info(n);
+        for (int i = 0; i < n; ++i) {
+            info[i].first = capital[i];
+            info[i].second = profits[i];
         }
-        std::sort(projects.begin(), projects.end(),
+        std::sort(info.begin(), info.end(),
                   [](const auto& p1, const auto& p2) { return p1.first < p2.first; });
-        int i = 0;
-        std::priority_queue<int> pq; // max heap
-        while (k) {
-            while (i < projects.size() && projects[i].first <= w) {
-                pq.push(projects[i].second);
+        std::priority_queue<int> pq; // max heap storing profits of available projects
+        for (int t = 0, i = 0; t < k; ++t) {
+            while (i < n && info[i].first <= w) {
+                pq.push(info[i].second);
                 i++;
             }
             if (pq.empty())
@@ -52,7 +53,6 @@ public:
 
             w += pq.top();
             pq.pop();
-            k--;
         }
         return w;
     }
