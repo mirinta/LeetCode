@@ -61,8 +61,8 @@ long long combinationsMod(long long m, long long n, long long mod = 1e9 + 7)
         factorial[i] = factorial[i - 1] * i % mod;
     }
     std::vector<long long> invFactorial(m + 1);
-    invFactorial[n] = fastPowMod(factorial[n], mod - 2, mod);
-    for (int i = n - 1; i >= 0; --i) {
+    invFactorial[m] = fastPowMod(factorial[m], mod - 2, mod);
+    for (long long i = m - 1; i >= 0; --i) {
         invFactorial[i] = invFactorial[i + 1] * (i + 1) % mod;
     }
     return factorial[m] * invFactorial[n] % mod * invFactorial[m - n] % mod;
