@@ -35,27 +35,22 @@ public:
 
     /**
      * @note p and q are 0-indexed.
+     * @note Return false is p and q are already connected.
      */
-    bool isConnected(int p, int q) { return find(p) == find(q); }
-
-    /**
-     * @note p and q are 0-indexed.
-     */
-    void connect(int p, int q)
+    bool connect(int p, int q)
     {
-        const int rootP = find(p);
-        const int rootQ = find(q);
+        int rootP = find(p);
+        int rootQ = find(q);
         if (rootP == rootQ)
-            return;
+            return false;
 
         if (size[rootQ] > size[rootP]) {
-            root[rootP] = rootQ;
-            size[rootQ] += size[rootP];
-        } else {
-            root[rootQ] = rootP;
-            size[rootP] += size[rootQ];
+            std::swap(rootP, rootQ);
         }
+        root[rootQ] = rootP;
+        size[rootP] += size[rootQ];
         count--;
+        return true;
     }
 
 private:

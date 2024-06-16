@@ -18,18 +18,23 @@ class Solution
 public:
     int minPatches(std::vector<int>& nums, int n)
     {
-        // same as LC.2952
-        // nums is already sorted in ascending order
-        const int sz = nums.size();
+        // same as LC 2952
+        // assume we can obtain [0:x] using nums[0:i-1]
+        // after adding nums[i], we have two ranges:
+        // [0:x] and [nums[i]:nums[i]+x]
+        // if nums[i] = x+1 or nums[i] <= x, then we can obtain [0:nums[i]+x]
+        //
+        // otherwise, we need to add a new integer x+1
+        // then the range becomes [0:2x+1]
         long long x = 0;
         int i = 0;
         int result = 0;
         while (x < n) {
-            if (i < sz && (nums[i] == x + 1 || nums[i] <= x)) {
+            if (i < nums.size() && (nums[i] == x + 1 || nums[i] <= x)) {
                 x += nums[i];
                 i++;
             } else {
-                x = 2 * x + 1; // add an new integer x+1 to nums
+                x = 2 * x + 1;
                 result++;
             }
         }
