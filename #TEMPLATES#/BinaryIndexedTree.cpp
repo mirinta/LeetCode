@@ -1,49 +1,73 @@
+#include <iostream>
 #include <vector>
 
-/**
- * The following BIT is used to query range sums and update elements.
- */
 class BinaryIndexedTree
 {
 public:
-    explicit BinaryIndexedTree(const std::vector<int>& nums) : tree(nums.size() + 1, 0)
-    {
-        for (int i = 1; i <= nums.size(); ++i) {
-            add(i, nums[i - 1]);
-        }
-    }
+    /**
+     * ! @note n is the number of elements, i.e., n = nums.size()
+     */
+    explicit BinaryIndexedTree(int n) : tree(n + 1, 0) {}
 
     /**
-     * @brief Update nums[i] = nums[i] + delta
+     * @brief Increase the ith element by delta.
      *
-     * @note i is 1-indexed.
+     * ! @note i is 1-indexed.
      */
-    void add(int i, int delta)
+    void add(int i, long long delta)
     {
-        for (; i < tree.size(); i += lowbit(i)) {
+        if (!validate(i))
+            return;
+
+        while (i < tree.size()) {
             tree[i] += delta;
+            i += lowbit(i);
         }
     }
 
     /**
      * @brief Return sum of nums[left:right], where left <= right.
      *
-     * @note left and right are 1-indexed.
+     * ! @note left and right are 1-indexed.
      */
-    int query(int left, int right) { return presum(right) - presum(left - 1); }
+    long long query(int left, int right)
+    {
+        if (left > right || !validate(left) || !validate(right))
+            return 0;
+
+        return presum(right) - presum(left - 1);
+    }
 
 private:
-    int presum(int i)
+    int lowbit(int i) { return i & (-i); }
+
+    bool validate(int i) const { return i >= 1 && i < tree.size(); }
+
+    // Return the sum of tree[0:i]
+    long long presum(int i)
     {
-        int sum = 0;
-        for (; i > 0; i -= lowbit(i)) {
+        long long sum = 0;
+        while (i > 0) {
             sum += tree[i];
+            i -= lowbit(i);
         }
         return sum;
     }
 
-    int lowbit(int i) { return i & (-i); }
-
 private:
-    std::vector<int> tree; // 1-indexed
+    std::vector<long long> tree; // ! 1-indexed
 };
+
+int main()
+{
+    // example: query range sum
+    std::vector<int> nums{1, 2, 3, 4};
+    BinaryIndexedTree tree(nums.size());
+    for (int i = 0; i < nums.size(); ++i) {
+        tree.add(i + 1, nums[i]);
+    }
+    std::cout << tree.query(2, 4) << '\n'; // 2+3+4=9
+    tree.add(3, 5);                        // nums = [1,2,8,4]
+    std::cout << tree.query(2, 4) << '\n'; // 2+8+4=14
+    return 0;
+}
