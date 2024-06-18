@@ -2,7 +2,7 @@
 #include <queue>
 #include <vector>
 
-#include "UnionFind.cpp"
+#include "../UnionFind.cpp"
 
 /**
  * @brief Adjacency matrix (0-indexed square matrix).
@@ -29,8 +29,7 @@ long long kruskal(Edges& edges, int V)
               [](const auto& t1, const auto& t2) { return std::get<2>(t1) < std::get<2>(t2); });
     long long result = 0;
     for (const auto& [i, j, weight] : edges) {
-        if (!uf.isConnected(i, j)) {
-            uf.connect(i, j);
+        if (uf.connect(i, j)) {
             result += weight;
         }
     }

@@ -81,6 +81,8 @@ class Solution
 public:
     int maximumSumSubsequence(std::vector<int>& nums, std::vector<std::vector<int>>& queries)
     {
+        // key methodology: house robber + divide conquer
+        //
         // dp00[i][j] = max sum of a subsequence of nums[i:j] while nums[i] and nums[j] are not
         // picked
         //

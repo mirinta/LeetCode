@@ -56,7 +56,7 @@
 - [ ] Biweekly 130 (3142~3145): 3145 is NOT DONE!
 - [x] Weekly 397 (3146~3149)
 - [x] Weekly 398 (3151~3154)
-- [ ] Biweekly 131 (3158~3161): 3161 is NOT DONE!
+- [x] Biweekly 131 (3158~3161)
 - [x] Weekly 399 (3162~3165)
 - [x] Weekly 400 (3168~3171)
 - [x] Biweekly 132 (3174~3177)
