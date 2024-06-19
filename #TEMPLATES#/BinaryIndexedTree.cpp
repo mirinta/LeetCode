@@ -26,7 +26,7 @@ public:
     }
 
     /**
-     * @brief Return sum of nums[left:right], where left <= right.
+     * @brief Return the sum of nums[left:right], where left <= right.
      *
      * ! @note left and right are 1-indexed.
      */

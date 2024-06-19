@@ -26,20 +26,20 @@ public:
     int minDays(std::vector<int>& bloomDay, int m, int k)
     {
         const int n = bloomDay.size();
-        if (m > n / k)
+        if (n / k < m)
             return -1;
 
-        int min = *std::min_element(bloomDay.begin(), bloomDay.end());
-        int max = *std::max_element(bloomDay.begin(), bloomDay.end());
-        while (min < max) {
-            const int days = min + (max - min) / 2;
-            if (isValid(days, bloomDay, m, k)) {
-                max = days;
+        int lo = *std::min_element(bloomDay.begin(), bloomDay.end());
+        int hi = *std::max_element(bloomDay.begin(), bloomDay.end());
+        while (lo < hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (isValid(mid, bloomDay, m, k)) {
+                hi = mid;
             } else {
-                min = days + 1;
+                lo = mid + 1;
             }
         }
-        return min;
+        return lo;
     }
 
 private:
@@ -48,9 +48,8 @@ private:
         const int n = bloomDay.size();
         int i = 0;
         while (i < n) {
-            if (bloomDay[i] > days) {
+            while (i < n && bloomDay[i] > days) {
                 i++;
-                continue;
             }
             int j = i + 1;
             while (j < std::min(n, i + k) && bloomDay[j] <= days) {
