@@ -34,31 +34,44 @@
 class BinaryIndexedTree
 {
 public:
-    explicit BinaryIndexedTree(int n) : tree(n + 1, 0){};
+    explicit BinaryIndexedTree(int n) : tree(n + 1, 0) {}
 
-    void add(int i, int delta)
+    void add(int i, long long delta)
     {
-        for (; i < tree.size(); i += lowbit(i)) {
+        if (!validate(i))
+            return;
+
+        while (i < tree.size()) {
             tree[i] += delta;
+            i += lowbit(i);
         }
     }
 
-    int query(int left, int right) { return presum(right) - presum(left - 1); }
+    long long query(int left, int right)
+    {
+        if (left > right || !validate(left) || !validate(right))
+            return 0;
+
+        return presum(right) - presum(left - 1);
+    }
 
 private:
-    int lowbit(int i) { return i & -i; }
+    int lowbit(int i) { return i & (-i); }
 
-    int presum(int i)
+    bool validate(int i) const { return i >= 1 && i < tree.size(); }
+
+    long long presum(int i)
     {
-        int sum = 0;
-        for (; i > 0; i -= lowbit(i)) {
+        long long sum = 0;
+        while (i > 0) {
             sum += tree[i];
+            i -= lowbit(i);
         }
         return sum;
     }
 
 private:
-    std::vector<int> tree;
+    std::vector<long long> tree;
 };
 
 class Solution
@@ -66,31 +79,32 @@ class Solution
 public:
     std::vector<int> resultArray(std::vector<int>& nums)
     {
-        std::unordered_set<int> set(nums.begin(), nums.end());
-        std::vector<int> unique(set.begin(), set.end());
+        auto unique = nums;
         std::sort(unique.begin(), unique.end());
-        BinaryIndexedTree tree1(unique.size());
-        BinaryIndexedTree tree2(unique.size());
+        auto iter = std::unique(unique.begin(), unique.end());
+        unique.erase(iter, unique.end());
         std::unordered_map<int, int> map;
         for (int i = 0; i < unique.size(); ++i) {
             map[unique[i]] = i;
         }
-        std::vector<int> v1{nums[0]};
+        std::vector<int> nums1{nums[0]};
+        BinaryIndexedTree tree1(unique.size());
         tree1.add(map[nums[0]] + 1, 1);
-        std::vector<int> v2{nums[1]};
+        std::vector<int> nums2{nums[1]};
+        BinaryIndexedTree tree2(unique.size());
         tree2.add(map[nums[1]] + 1, 1);
         for (int i = 2; i < nums.size(); ++i) {
-            const int count1 = v1.size() - tree1.query(1, map[nums[i]] + 1);
-            const int count2 = v2.size() - tree2.query(1, map[nums[i]] + 1);
-            if (count1 < count2 || (count1 == count2 && v2.size() < v1.size())) {
-                v2.push_back(nums[i]);
+            const int count1 = nums1.size() - tree1.query(1, map[nums[i]] + 1);
+            const int count2 = nums2.size() - tree2.query(1, map[nums[i]] + 1);
+            if (count1 < count2 || (count1 == count2 && nums2.size() < nums1.size())) {
+                nums2.push_back(nums[i]);
                 tree2.add(map[nums[i]] + 1, 1);
             } else {
-                v1.push_back(nums[i]);
+                nums1.push_back(nums[i]);
                 tree1.add(map[nums[i]] + 1, 1);
             }
         }
-        v1.insert(v1.end(), v2.begin(), v2.end());
-        return v1;
+        nums1.insert(nums1.end(), nums2.begin(), nums2.end());
+        return nums1;
     }
 };

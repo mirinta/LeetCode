@@ -1,19 +1,22 @@
 #include <iostream>
 #include <vector>
 
+/**
+ * BinaryIndexedTree(int n): n is the num of elements, i.e., n = nums.size()
+ *
+ * add(int i, long long delta): make nums[i] += delta, i is 1-indexed
+ *
+ * query(int left, int right): query the sum of nums[left:right], left and right are 1-indexed
+ *
+ * presum(int i): return the sum of nums[1:i], i is 1-indexed
+ *
+ * std::vector<long long> tree: a 1-indexed array
+ */
 class BinaryIndexedTree
 {
 public:
-    /**
-     * ! @note n is the number of elements, i.e., n = nums.size()
-     */
     explicit BinaryIndexedTree(int n) : tree(n + 1, 0) {}
 
-    /**
-     * @brief Increase the ith element by delta.
-     *
-     * ! @note i is 1-indexed.
-     */
     void add(int i, long long delta)
     {
         if (!validate(i))
@@ -25,11 +28,6 @@ public:
         }
     }
 
-    /**
-     * @brief Return the sum of nums[left:right], where left <= right.
-     *
-     * ! @note left and right are 1-indexed.
-     */
     long long query(int left, int right)
     {
         if (left > right || !validate(left) || !validate(right))
@@ -43,7 +41,6 @@ private:
 
     bool validate(int i) const { return i >= 1 && i < tree.size(); }
 
-    // Return the sum of tree[0:i]
     long long presum(int i)
     {
         long long sum = 0;
@@ -55,7 +52,7 @@ private:
     }
 
 private:
-    std::vector<long long> tree; // ! 1-indexed
+    std::vector<long long> tree;
 };
 
 int main()

@@ -51,6 +51,10 @@ public:
     }
 
 private:
+    int lowbit(int i) { return i & (-i); }
+
+    bool validate(int i) const { return i >= 1 && i < tree.size(); }
+
     long long presum(int i)
     {
         long long sum = 0;
@@ -60,10 +64,6 @@ private:
         }
         return sum;
     }
-
-    int lowbit(int i) { return i & -i; }
-
-    bool validate(int i) { return i >= 1 && i < tree.size(); }
 
 private:
     std::vector<long long> tree;
@@ -82,26 +82,27 @@ public:
             }
         }
         std::vector<int> result;
+        result.reserve(queries.size());
         for (const auto& query : queries) {
             if (query[0] == 1) {
-                // nums[l] and nums[r] are not counted!
-                // query the range sum of [l+1:r-1]
                 const auto& l = query[1];
                 const auto& r = query[2];
+                // nums[l] and nums[r] are not taken into account
+                // thus, we need to query nums[l+1:r-1]
                 result.push_back(tree.query(l + 2, r));
-                continue;
-            }
-            // changing nums[i] may change the status of nums[i-1], nums[i] and nums[i+1]
-            const auto& index = query[1];
-            for (int i = index - 1; i <= index + 1; ++i) {
-                if (isPeak(i, nums)) {
-                    tree.add(i + 1, -1);
+            } else {
+                const auto& index = query[1];
+                // changing nums[i] may change the status of nums[i-1], nums[i] and nums[i+1]
+                for (int i = index - 1; i <= index + 1; ++i) {
+                    if (isPeak(i, nums)) {
+                        tree.add(i + 1, -1);
+                    }
                 }
-            }
-            nums[index] = query[2];
-            for (int i = index - 1; i <= index + 1; ++i) {
-                if (isPeak(i, nums)) {
-                    tree.add(i + 1, 1);
+                nums[index] = query[2];
+                for (int i = index - 1; i <= index + 1; ++i) {
+                    if (isPeak(i, nums)) {
+                        tree.add(i + 1, 1);
+                    }
                 }
             }
         }
@@ -111,6 +112,12 @@ public:
 private:
     bool isPeak(int i, const std::vector<int>& nums)
     {
-        return i - 1 >= 0 && i + 1 < nums.size() && nums[i] > nums[i - 1] && nums[i] > nums[i + 1];
+        if (i < 0 || i >= nums.size())
+            return false;
+
+        if (i - 1 < 0 || i + 1 >= nums.size())
+            return false;
+
+        return nums[i] > nums[i - 1] && nums[i] > nums[i + 1];
     }
 };

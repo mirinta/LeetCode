@@ -28,55 +28,74 @@
 class BinaryIndexedTree
 {
 public:
-    explicit BinaryIndexedTree(const std::vector<int>& nums) : tree(nums.size() + 1, 0)
-    {
-        for (int i = 1; i <= nums.size(); ++i) {
-            add(i, nums[i - 1]);
-        }
-    }
+    explicit BinaryIndexedTree(int n) : tree(n + 1, 0) {}
 
-    void add(int i, int delta)
+    void add(int i, long long delta)
     {
-        for (; i < tree.size(); i += lowbit(i)) {
+        if (!validate(i))
+            return;
+
+        while (i < tree.size()) {
             tree[i] += delta;
+            i += lowbit(i);
         }
     }
 
-    int query(int left, int right) { return presum(right) - presum(left - 1); }
+    long long query(int left, int right)
+    {
+        if (left > right || !validate(left) || !validate(right))
+            return 0;
+
+        return presum(right) - presum(left - 1);
+    }
 
 private:
-    int presum(int i)
+    int lowbit(int i) { return i & (-i); }
+
+    bool validate(int i) const { return i >= 1 && i < tree.size(); }
+
+    long long presum(int i)
     {
-        int sum = 0;
-        for (; i > 0; i -= lowbit(i)) {
+        long long sum = 0;
+        while (i > 0) {
             sum += tree[i];
+            i -= lowbit(i);
         }
         return sum;
     }
 
-    int lowbit(int i) { return i & -i; }
-
 private:
-    std::vector<int> tree;
+    std::vector<long long> tree;
 };
 
 class NumArray
 {
 public:
-    NumArray(std::vector<int>& nums) : nums(nums), tree(nums) {}
+    NumArray(std::vector<int>& nums) : tree(nums.size())
+    {
+        for (int i = 0; i < nums.size(); ++i) {
+            tree.add(i + 1, nums[i]);
+        }
+    }
 
     void update(int index, int val)
     {
-        tree.add(index + 1, val - nums[index]);
-        nums[index] = val;
+        const int oldVal = tree.query(index + 1, index + 1);
+        tree.add(index + 1, val - oldVal);
     }
 
     int sumRange(int left, int right) { return tree.query(left + 1, right + 1); }
 
 private:
-    std::vector<int> nums;
     BinaryIndexedTree tree;
 };
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray* obj = new NumArray(nums);
+ * obj->update(index,val);
+ * int param_2 = obj->sumRange(left,right);
+ */
 
 /**
  * Your NumArray object will be instantiated and called as such:
