@@ -27,29 +27,42 @@ class BinaryIndexedTree
 public:
     explicit BinaryIndexedTree(int n) : tree(n + 1, 0) {}
 
-    void add(int i, int delta)
+    void add(int i, long long delta)
     {
-        for (; i < tree.size(); i += lowbit(i)) {
+        if (!validate(i))
+            return;
+
+        while (i < tree.size()) {
             tree[i] += delta;
+            i += lowbit(i);
         }
     }
 
-    int query(int left, int right) { return presum(right) - presum(left - 1); }
+    long long query(int left, int right)
+    {
+        if (left > right || !validate(left) || !validate(right))
+            return 0;
+
+        return presum(right) - presum(left - 1);
+    }
 
 private:
-    int presum(int i)
+    int lowbit(int i) { return i & (-i); }
+
+    bool validate(int i) const { return i >= 1 && i < tree.size(); }
+
+    long long presum(int i)
     {
-        int sum = 0;
-        for (; i > 0; i -= lowbit(i)) {
+        long long sum = 0;
+        while (i > 0) {
             sum += tree[i];
+            i -= lowbit(i);
         }
         return sum;
     }
 
-    int lowbit(int i) { return i & -i; }
-
 private:
-    std::vector<int> tree;
+    std::vector<long long> tree;
 };
 
 class Solution
@@ -58,21 +71,21 @@ public:
     int createSortedArray(std::vector<int>& instructions)
     {
         constexpr int kMod = 1e9 + 7;
-        const int n = instructions.size();
-        std::unordered_set<int> set(instructions.begin(), instructions.end());
-        std::vector<int> uniques(set.begin(), set.end());
-        std::sort(uniques.begin(), uniques.end());
+        auto unique = instructions;
+        std::sort(unique.begin(), unique.end());
+        unique.erase(std::unique(unique.begin(), unique.end()), unique.end());
         std::unordered_map<int, int> map;
-        for (int i = 0; i < uniques.size(); ++i) {
-            map[uniques[i]] = i;
+        for (int i = 0; i < unique.size(); ++i) {
+            map[unique[i]] = i;
         }
-        BinaryIndexedTree tree(uniques.size());
-        long long result = 0;
-        for (int i = 0; i < n; ++i) {
-            const int cost1 = i - tree.query(map[instructions[i]] + 1, map[uniques.back()] + 1);
-            const int cost2 = i - tree.query(map[uniques.front()] + 1, map[instructions[i]] + 1);
-            result = (result + std::min(cost1, cost2)) % kMod;
-            tree.add(map[instructions[i]] + 1, 1);
+        BinaryIndexedTree tree(unique.size());
+        int result = 0;
+        for (int i = 0; i < instructions.size(); ++i) {
+            const auto& val = instructions[i];
+            const int less = i - tree.query(map[val] + 1, unique.size());
+            const int greater = i - tree.query(1, map[val] + 1);
+            result = (result + std::min(less, greater)) % kMod;
+            tree.add(map[val] + 1, 1);
         }
         return result;
     }

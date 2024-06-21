@@ -31,18 +31,21 @@ public:
         const int n = customers.size();
         int total = 0;
         for (int i = 0; i < n; ++i) {
-            total += customers[i] * (1 - grumpy[i]);
+            if (!grumpy[i]) {
+                total += customers[i];
+            }
         }
-        int extra = 0;
         int result = 0;
-        for (int left = 0, right = 0; right < n; ++right) {
-            extra += customers[right] * grumpy[right];
+        for (int left = 0, right = 0, sum1 = 0, sum2 = 0; right < n; ++right) {
+            sum1 += customers[right];
+            sum2 += customers[right] * (1 - grumpy[right]);
             if (right - left + 1 > minutes) {
-                extra -= customers[left] * grumpy[left];
+                sum1 -= customers[left];
+                sum2 -= customers[left] * (1 - grumpy[left]);
                 left++;
             }
             if (right - left + 1 == minutes) {
-                result = std::max(result, total + extra);
+                result = std::max(result, sum1 + total - sum2);
             }
         }
         return result;
