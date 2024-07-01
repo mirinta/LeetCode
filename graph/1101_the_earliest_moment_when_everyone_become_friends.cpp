@@ -25,46 +25,43 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : _root(n), _rank(n), _count(n)
+    explicit UnionFind(int n) : count(n), root(n), size(n, 1)
     {
         for (int i = 0; i < n; ++i) {
-            _root[i] = i;
-            _rank[i] = 1;
+            root[i] = i;
         }
     }
 
-    int count() const { return _count; }
+    int numOfConnectedComponents() { return count; }
 
     int find(int x)
     {
-        if (x != _root[x]) {
-            _root[x] = find(_root[x]);
+        if (root[x] != x) {
+            root[x] = find(root[x]);
         }
-        return _root[x];
+        return root[x];
     }
 
-    void connect(int p, int q)
+    bool connect(int p, int q)
     {
-        const int rootP = find(p);
-        const int rootQ = find(q);
+        int rootP = find(p);
+        int rootQ = find(q);
         if (rootP == rootQ)
-            return;
+            return false;
 
-        if (_rank[rootP] > _rank[rootQ]) {
-            _root[rootQ] = rootP;
-        } else if (_rank[rootP] < _rank[rootQ]) {
-            _root[rootP] = rootQ;
-        } else {
-            _root[rootQ] = rootP;
-            _rank[rootP] += 1;
+        if (size[rootQ] > size[rootP]) {
+            std::swap(rootP, rootQ);
         }
-        _count -= 1;
+        root[rootQ] = rootP;
+        size[rootP] += size[rootQ];
+        count--;
+        return true;
     }
 
 private:
-    std::vector<int> _root;
-    std::vector<int> _rank;
-    int _count;
+    int count;
+    std::vector<int> root;
+    std::vector<int> size;
 };
 
 class Solution
@@ -72,15 +69,13 @@ class Solution
 public:
     int earliestAcq(std::vector<std::vector<int>>& logs, int n)
     {
-        auto comp = [](const std::vector<int>& log1, const std::vector<int>& log2) -> bool {
-            return log1[0] < log2[0];
-        };
-        std::sort(logs.begin(), logs.end(), comp);
+        std::sort(logs.begin(), logs.end(),
+                  [](const auto& v1, const auto& v2) { return v1[0] < v2[0]; });
         UnionFind uf(n);
-        for (const auto& log : logs) {
-            uf.connect(log[1], log[2]);
-            if (uf.count() == 1)
-                return log[0];
+        for (const auto& v : logs) {
+            uf.connect(v[1], v[2]);
+            if (uf.numOfConnectedComponents() == 1)
+                return v[0];
         }
         return -1;
     }
