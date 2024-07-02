@@ -13,24 +13,18 @@
 class Solution
 {
 public:
-    std::vector<int> intersect(const std::vector<int>& nums1, const std::vector<int>& nums2)
+    std::vector<int> intersect(std::vector<int>& nums1, std::vector<int>& nums2)
     {
-        if (nums1.size() < nums2.size())
-            return intersect(nums2, nums1);
-
         std::unordered_map<int, int> map;
         for (const auto& val : nums1) {
             map[val]++;
         }
         std::vector<int> result;
         for (const auto& val : nums2) {
-            if (!map.count(val))
-                continue;
-
-            if (--map[val] == 0) {
-                map.erase(val);
+            if (map[val] > 0) {
+                map[val]--;
+                result.push_back(val);
             }
-            result.push_back(val);
         }
         return result;
     }
