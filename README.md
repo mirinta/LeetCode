@@ -65,6 +65,8 @@
 - [ ] Biweekly 133 (3190~3193)
 - [ ] Weekly 403 (3194~3197)
 - [ ] Weekly 404 (3200~3203)
+- [ ] Biweekly 134
+- [ ] Weekly 405
 
 TODO:
 
