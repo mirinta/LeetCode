@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <stack>
 #include <string>
 #include <vector>
@@ -37,16 +38,16 @@ public:
     std::vector<int> survivedRobotsHealths(std::vector<int>& positions, std::vector<int>& healths,
                                            std::string directions)
     {
-        if (positions.size() < 2)
-            return healths;
-
-        std::vector<std::pair<int, int>> pairs;
-        for (int i = 0; i < positions.size(); ++i) {
-            pairs.push_back({positions[i], i});
+        const int n = positions.size();
+        std::vector<std::array<int, 2>> robots(n); // <initial position, robot index>
+        for (int i = 0; i < n; ++i) {
+            robots[i][0] = positions[i];
+            robots[i][1] = i;
         }
-        std::sort(pairs.begin(), pairs.end());
+        std::sort(robots.begin(), robots.end(),
+                  [](const auto& p1, const auto& p2) { return p1[0] < p2[0]; });
         std::stack<int> robotsGoRight;
-        for (const auto& [pos, i] : pairs) {
+        for (const auto& [initPos, i] : robots) {
             if (directions[i] == 'R') {
                 robotsGoRight.push(i);
                 continue;
@@ -54,25 +55,24 @@ public:
             while (healths[i] && !robotsGoRight.empty()) {
                 const int j = robotsGoRight.top();
                 robotsGoRight.pop();
-                if (healths[j] == healths[i]) {
-                    healths[i] = 0;
-                    healths[j] = 0;
-                } else if (healths[i] > healths[j]) {
+                if (healths[i] > healths[j]) {
                     healths[i]--;
                     healths[j] = 0;
-                } else {
+                } else if (healths[i] < healths[j]) {
                     healths[i] = 0;
-                    healths[j]--;
-                    if (healths[j] > 0) {
+                    if (--healths[j] > 0) {
                         robotsGoRight.push(j);
                     }
+                } else {
+                    healths[i] = 0;
+                    healths[j] = 0;
                 }
             }
         }
         std::vector<int> result;
-        for (const auto& health : healths) {
-            if (health > 0) {
-                result.push_back(health);
+        for (const auto& val : healths) {
+            if (val > 0) {
+                result.push_back(val);
             }
         }
         return result;
