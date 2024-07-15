@@ -28,38 +28,38 @@ class Solution
 public:
     int findDistance(TreeNode* root, int p, int q)
     {
-        // distance of p and q = depth of p + depth of q - 2 * depth of LCA
-        if (!root)
-            return -1;
-
-        // our dfs function can't handle the case of p == q, so check it first
-        // it is guaranteed that both p and q exist in "root"
+        // dist(p, q) = dist(p, LCA) + dist(q, LCA)
+        // dist(p, LCA) = dist(p, root) - dist(LCA, root)
+        // dist(q, LCA) = dist(q, root) - dist(LCA, root)
+        // thus, dist(p, q) = dist(p, root) + dist(q, root) - 2 * dist(LCA, root)
         if (p == q)
             return 0;
 
-        dfs(root, p, q, 0);
-        return depthLCA == -1 ? -1 : depthP + depthQ - 2 * depthLCA;
+        int distP = -1;
+        int distQ = -1;
+        int distLCA = -1;
+        dfs(distP, distQ, distLCA, root, p, q, 0);
+        return distP + distQ - 2 * distLCA;
     }
 
 private:
-    int depthLCA = -1;
-    int depthP = -1;
-    int depthQ = -1;
-
-    // num of target values exist in "root"
-    // #NOTE# make sure p != q
-    int dfs(TreeNode* root, int p, int q, int depth)
+    int dfs(int& distP, int& distQ, int& distLCA, TreeNode* root, int p, int q, int dist)
     {
         if (!root)
             return 0;
 
-        depthP = root->val == p ? depth : depthP;
-        depthQ = root->val == q ? depth : depthQ;
-        int count = root->val == p || root->val == q ? 1 : 0;
-        count += dfs(root->left, p, q, depth + 1);
-        count += dfs(root->right, p, q, depth + 1);
-        if (count == 2 && depthLCA == -1) {
-            depthLCA = depth;
+        int count = 0;
+        if (root->val == p) {
+            distP = dist;
+            count++;
+        } else if (root->val == q) {
+            distQ = dist;
+            count++;
+        }
+        count += dfs(distP, distQ, distLCA, root->left, p, q, dist + 1);
+        count += dfs(distP, distQ, distLCA, root->right, p, q, dist + 1);
+        if (count == 2 && distLCA == -1) {
+            distLCA = dist;
         }
         return count;
     }
