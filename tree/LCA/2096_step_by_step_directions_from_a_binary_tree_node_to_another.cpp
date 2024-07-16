@@ -46,10 +46,6 @@ public:
         if (!root)
             return {};
 
-        // it is guaranteed that "startValue" and "destValue" exist in the tree
-        // - the LCA of start node and destination node exists
-        // - the path from LCA to start node exists
-        // - the path from LCA to destination node exists
         dfs(root, startValue, destValue);
         std::string result;
         backtrack(result, lca, startValue);
@@ -59,37 +55,36 @@ public:
     }
 
 private:
-    TreeNode* lca = nullptr;
+    TreeNode* lca;
 
-    int dfs(TreeNode* root, int val1, int val2)
+    int dfs(TreeNode* root, int p, int q)
     {
         if (!root)
             return 0;
 
-        int count = root->val == val1 || root->val == val2 ? 1 : 0;
-        count += dfs(root->left, val1, val2);
-        count += dfs(root->right, val1, val2);
+        int count = root->val == p || root->val == q;
+        count += dfs(root->left, p, q);
+        count += dfs(root->right, p, q);
         if (count == 2 && !lca) {
             lca = root;
         }
         return count;
     }
 
-    bool backtrack(std::string& path, TreeNode* root, int targetVal)
+    bool backtrack(std::string& path, TreeNode* root, int target)
     {
         if (!root)
             return false;
 
-        if (root->val == targetVal)
+        if (root->val == target)
             return true;
 
         path.push_back('L');
-        if (backtrack(path, root->left, targetVal))
+        if (backtrack(path, root->left, target))
             return true;
 
-        path.pop_back();
-        path.push_back('R');
-        if (backtrack(path, root->right, targetVal))
+        path.back() = 'R';
+        if (backtrack(path, root->right, target))
             return true;
 
         path.pop_back();
