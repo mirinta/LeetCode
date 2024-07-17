@@ -17,25 +17,35 @@
  * ! 1 <= nums[i] <= 10^7
  */
 
-int maximumLength(std::vector<int>& nums)
+class Solution
 {
-    // case 1: same parity, either {odd, odd, ...} or {even, even, ...}
-    // case 2: alternating parity, either {odd, even, ...} or {even, odd, ...}
-    int odd = 0;
-    int even = 0;
-    int alter = 0;
-    bool prev = 1 - nums[0] % 2;
-    for (const auto& val : nums) {
-        const bool isOdd = val % 2;
-        if (isOdd) {
-            odd++;
-        } else {
-            even++;
+public:
+    int maximumLength(std::vector<int>& nums)
+    {
+        // case 1: same parity, either {odd, odd, ...} or {even, even, ...}
+        // case 2: alternating parity, either {odd, even, ...} or {even, odd, ...}
+        int odd = 0;
+        int even = 0;
+        int alter1 = 0;
+        int alter2 = 0;
+        bool prev1 = 1 - nums[0] % 2;
+        bool prev2 = nums[0] % 2;
+        for (const auto& val : nums) {
+            const bool isOdd = val % 2;
+            if (isOdd) {
+                odd++;
+            } else {
+                even++;
+            }
+            if (isOdd ^ prev1) {
+                alter1++;
+                prev1 = isOdd;
+            }
+            if (isOdd ^ prev2) {
+                alter2++;
+                prev2 = isOdd;
+            }
         }
-        if (isOdd ^ prev) {
-            alter++;
-        }
-        prev = isOdd;
+        return std::max({odd, even, alter1, alter2});
     }
-    return std::max({odd, even, alter});
-}
+};
