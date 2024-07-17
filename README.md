@@ -64,7 +64,7 @@
 - [x] Weekly 402 (3184~3187)
 - [x] Biweekly 133 (3190~3193)
 - [x] Weekly 403 (3194~3197)
-- [ ] Weekly 404 (3200~3203)
+- [x] Weekly 404 (3200~3203)
 - [ ] Biweekly 134
 - [ ] Weekly 405
 - [ ] Weekly 406
