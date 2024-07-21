@@ -68,6 +68,8 @@
 - [ ] Biweekly 134 (3206~3209): 3208 and 3209 are NOT DONE!
 - [ ] Weekly 405
 - [ ] Weekly 406
+- [ ] Biweekly 135
+- [ ] Weekly 407
 
 TODO:
 
