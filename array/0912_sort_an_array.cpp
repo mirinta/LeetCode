@@ -1,11 +1,13 @@
-#include <random>
 #include <vector>
 
 /**
- * Given an array of integers "nums", sort the array in ascending order and return it.
+ * Given an array of integers nums, sort the array in ascending order and return it.
  *
- * You must solve the problem without using any built-in functions in O(nlogn) time complexity and
+ * You must solve the problem without using any built-in functions in O(nlog(n)) time complexity and
  * with the smallest space complexity possible.
+ *
+ * ! 1 <= nums.length <= 5 * 10^4
+ * !-5 * 104 <= nums[i] <= 5 * 10^4
  */
 
 class Solution {
