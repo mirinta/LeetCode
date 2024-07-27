@@ -1,53 +1,85 @@
-#include <array>
+#include <functional>
 #include <string>
-#include <vector>
+#include <unordered_map>
 
-struct TrieNode
+/**
+ * Design a data structure that supports adding new words and finding if a string matches any
+ * previously added string.
+ *
+ * Implement the WordDictionary class:
+ *
+ * - WordDictionary() Initializes the object.
+ *
+ * - void addWord(word) Adds word to the data structure, it can be matched later.
+ *
+ * - bool search(word) Returns true if there is any string in the data structure that matches word
+ * or false otherwise. word may contain dots '.' where dots can be matched with any letter.
+ *
+ * ! 1 <= word.length <= 25
+ * ! word in addWord consists of lowercase English letters.
+ * ! word in search consist of '.' or lowercase English letters.
+ * ! There will be at most 2 dots in word for search queries.
+ * ! At most 10^4 calls will be made to addWord and search.
+ */
+
+class Trie
 {
-    static constexpr int R = 26;
-    std::array<TrieNode*, R> next{nullptr};
-    bool isEnd = false;
+    struct TrieNode
+    {
+        std::unordered_map<char, TrieNode*> next;
+        bool isEnd{false};
+    };
+
+public:
+    explicit Trie() : root(new TrieNode()) {}
+
+    void insert(const std::string& word)
+    {
+        auto* node = root;
+        for (const auto& c : word) {
+            if (!node->next.count(c)) {
+                node->next[c] = new TrieNode();
+            }
+            node = node->next[c];
+        }
+        node->isEnd = true;
+    }
+
+    bool fuzzySearch(const std::string& word)
+    {
+        const int n = word.size();
+        std::vector<std::string> result;
+        std::function<bool(int, TrieNode*)> dfs = [&](int i, TrieNode* node) {
+            if (i == n)
+                return node->isEnd;
+
+            if (word[i] != '.')
+                return node->next.count(word[i]) && dfs(i + 1, node->next[word[i]]);
+
+            for (const auto& [c, child] : node->next) {
+                if (dfs(i + 1, child))
+                    return true;
+            }
+            return false;
+        };
+        return dfs(0, root);
+    }
+
+private:
+    TrieNode* root;
 };
 
 class WordDictionary
 {
 public:
-    WordDictionary() : root(new TrieNode()) {}
+    WordDictionary() {}
 
-    void addWord(const std::string& word)
-    {
-        auto* node = root;
-        for (const auto& c : word) {
-            const int index = c - 'a';
-            if (!node->next[index]) {
-                node->next[index] = new TrieNode();
-            }
-            node = node->next[index];
-        }
-        node->isEnd = true;
-    }
+    void addWord(const std::string& word) { trie.insert(word); }
 
-    bool search(const std::string& word) { return dfs(root, 0, word); }
+    bool search(const std::string& word) { return trie.fuzzySearch(word); }
 
 private:
-    bool dfs(TrieNode* node, int idx, const std::string& word)
-    {
-        if (idx == word.size())
-            return node->isEnd;
-
-        if (word[idx] != '.')
-            return node->next[word[idx] - 'a'] ? dfs(node->next[word[idx] - 'a'], idx + 1, word)
-                                               : false;
-
-        for (auto* nextNode : node->next) {
-            if (nextNode && dfs(nextNode, idx + 1, word))
-                return true;
-        }
-        return false;
-    }
-
-private:
-    TrieNode* root;
+    Trie trie;
 };
 
 /**
