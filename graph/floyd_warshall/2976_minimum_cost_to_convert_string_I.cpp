@@ -31,14 +31,30 @@ public:
     long long minimumCost(std::string source, std::string target, std::vector<char>& original,
                           std::vector<char>& changed, std::vector<int>& cost)
     {
-        if (source.size() != target.size())
-            return -1;
+        const int n = source.size();
+        const auto minDist = floyd(original, changed, cost);
+        long long result = 0;
+        for (int i = 0; i < n; ++i) {
+            const int from = source[i] - 'a';
+            const int to = target[i] - 'a';
+            if (minDist[from][to] == LLONG_MAX)
+                return -1;
 
+            result += minDist[from][to];
+        }
+        return result;
+    }
+
+private:
+    std::vector<std::vector<long long>> floyd(const std::vector<char>& original,
+                                              const std::vector<char>& changed,
+                                              const std::vector<int>& cost)
+    {
         std::vector<std::vector<long long>> minDist(26, std::vector<long long>(26, LLONG_MAX));
         for (int i = 0; i < 26; ++i) {
             minDist[i][i] = 0;
         }
-        for (int i = 0; i < cost.size(); ++i) {
+        for (int i = 0; i < original.size(); ++i) {
             const int from = original[i] - 'a';
             const int to = changed[i] - 'a';
             minDist[from][to] = std::min<long long>(minDist[from][to], cost[i]);
@@ -56,16 +72,6 @@ public:
                 }
             }
         }
-        const int n = source.size();
-        long long result = 0;
-        for (int i = 0; i < n; ++i) {
-            const int from = source[i] - 'a';
-            const int to = target[i] - 'a';
-            if (minDist[from][to] == LLONG_MAX)
-                return -1;
-
-            result += minDist[from][to];
-        }
-        return result;
+        return minDist;
     }
 };
