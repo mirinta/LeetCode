@@ -21,32 +21,34 @@ public:
     }
 
 private:
-    // DP with space optimization, TC = O(NT), SC = O(T)
+    // DP with space optimization, TC = O(N*T), SC = O(T)
     double approach2(const std::vector<double>& prob, int target)
     {
         const int n = prob.size();
-        std::vector<double> dp(target + 1, 0);
+        std::vector<double> dp(target + 1);
         dp[0] = 1;
         for (int i = 1; i <= n; ++i) {
             for (int j = std::min(i, target); j >= 1; --j) {
                 dp[j] = dp[j - 1] * prob[i - 1] + dp[j] * (1 - prob[i - 1]);
             }
-            dp[0] = dp[0] * (1 - prob[i - 1]);
+            dp[0] *= 1 - prob[i - 1];
         }
         return dp[target];
     }
 
-    // DP, TC = O(NT), SC = O(NT)
+    // DP, TC = O(N*T), SC = O(N*T)
     double approach1(const std::vector<double>& prob, int target)
     {
-        // dp[i][j] = probability that there are j coins facing heads tossing coins[0:i-1]
+        // dp[i][j] = prob that there are j coins facing heads after tossing coins[0:i)
         const int n = prob.size();
-        std::vector<std::vector<double>> dp(n + 1, std::vector<double>(target + 1, 0));
+        std::vector<std::vector<double>> dp(n + 1, std::vector<double>(target + 1));
         dp[0][0] = 1;
         for (int i = 1; i <= n; ++i) {
             dp[i][0] = dp[i - 1][0] * (1 - prob[i - 1]);
+        }
+        for (int i = 1; i <= n; ++i) {
             for (int j = 1; j <= std::min(i, target); ++j) {
-                dp[i][j] = dp[i - 1][j - 1] * prob[i - 1] + dp[i - 1][j] * (1 - prob[i - 1]);
+                dp[i][j] = dp[i - 1][j] * (1 - prob[i - 1]) + dp[i - 1][j - 1] * prob[i - 1];
             }
         }
         return dp[n][target];
