@@ -31,28 +31,23 @@ class Solution
 public:
     int minHeightShelves(std::vector<std::vector<int>>& books, int shelfWidth)
     {
+        // dp[i] = min height to place books[0:i-1]
+        // X X X X X j-1 j X X X X X X X i-1 i
+        // |<--dp[j]-->| |<---same shelf-->|
+        // |<------------dp[i]------------>|
         const int n = books.size();
-        // dp[i] = minHeightShelves of the first i books, width of each shelf <= shelfWidth
         std::vector<int> dp(n + 1, INT_MAX);
-        // base case:
         dp[0] = 0;
         for (int i = 1; i <= n; ++i) {
-            // X X j X X X X X X i
-            //     | same shelf  |
-            // the books must be placed in order
-            // for the ith book, suppose we can place
-            // jth, j+1th, ... ith book in the same shelf,
-            // where sum(width(j), width(j+1), ..., width(i)) <= shelfWidth
-            // then, height of this shelf is max(height(j), height(j+1), ..., height(i))
-            int width = 0;
             int maxHeight = 0;
-            for (int j = i; j >= 1; --j) {
-                width += books[j - 1][0];
-                if (width > shelfWidth)
+            int totalWidth = 0;
+            for (int j = i - 1; j >= 0; --j) {
+                totalWidth += books[j][0];
+                maxHeight = std::max(maxHeight, books[j][1]);
+                if (totalWidth > shelfWidth)
                     break;
 
-                maxHeight = std::max(maxHeight, books[j - 1][1]);
-                dp[i] = std::min(dp[i], dp[j - 1] + maxHeight);
+                dp[i] = std::min(dp[i], dp[j] + maxHeight);
             }
         }
         return dp[n];
