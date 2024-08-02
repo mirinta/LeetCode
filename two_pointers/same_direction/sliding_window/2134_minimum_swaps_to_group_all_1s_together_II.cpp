@@ -1,4 +1,4 @@
-#include <algorithm>
+#include <numeric>
 #include <vector>
 
 /**
@@ -19,19 +19,20 @@ class Solution
 public:
     int minSwaps(std::vector<int>& nums)
     {
+        // fixed size sliding window
+        // size = num of ones to be grouped together
+        // #operations = num of zeros inside a sliding window
         const int n = nums.size();
-        const int zeros =
-            std::count_if(nums.begin(), nums.end(), [](const auto& val) { return val == 0; });
-        int ones = 0;
+        const int ones = std::accumulate(nums.begin(), nums.end(), 0);
         int result = INT_MAX;
-        for (int left = 0, right = 0; right < 2 * n; ++right) {
-            ones += nums[right % n];
-            if (right - left + 1 > zeros) {
-                ones -= nums[left % n];
+        for (int left = 0, right = 0, zeros = 0; right < 2 * n; ++right) {
+            zeros += 1 - nums[right % n];
+            while (right - left + 1 > ones) {
+                zeros -= 1 - nums[left % n];
                 left++;
             }
-            if (right - left + 1 == zeros) {
-                result = std::min(result, ones);
+            if (right - left + 1 == ones) {
+                result = std::min(result, zeros);
             }
         }
         return result;
