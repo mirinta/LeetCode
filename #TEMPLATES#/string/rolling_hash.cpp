@@ -10,12 +10,12 @@
 std::vector<long long> rollingHash(long long base, long long mod, long long L, const std::string& s)
 {
     // low level                    high level
-    // -----------------------------> 
+    // ----------------------------->
     // 0 ... n-k-1 n-k ... n-2 n-1
     //             |<---hash1--->|
     //       |<----hash2---->|
     // <----------------------------- traverse
-    // given hash1, calcutate hash2
+    // given hash1, calculate hash2
 
     auto valueOf = [](char c) -> long long { return c - 'a' + 1; };
     const long long n = s.size();
