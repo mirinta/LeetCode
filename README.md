@@ -66,11 +66,13 @@
 - [x] Weekly 403 (3194~3197)
 - [x] Weekly 404 (3200~3203)
 - [x] Biweekly 134 (3206~3209)
-- [ ] Weekly 405 (3210~3213): 3213 is NOT DONE!
+- [x] Weekly 405 (3210~3213)
 - [ ] Weekly 406 (3216~3219): 3219 is NOT DONE!
 - [ ] Biweekly 135 (3222~3225)
 - [ ] Weekly 407 (3226~3229)
 - [ ] Weekly 408 (3232~3235)
+- [ ] Biweekly 136
+- [ ] Weekly 409
 
 TODO:
 
@@ -127,6 +129,7 @@ TODO:
 | [2513. Minimize the Maximum of Two Arrays][link2513] | `Binary Search`, `Inclusive-Exclusive Principle` | :fire: 2302 |
 | [3116. Kth Smallest Amount With Single Denomination Combination][link3116] | `Binary Search`, `Inclusive-Exclusive Principle`, `Bit Manipulation` | |
 | [2528. Maximize the Minimum Powered City][link2528] | `Binary Search`, `Sliding Window` | :fire:2236 |
+| [1508. Range Sum of Sorted Subarray Sums][link1508] | `Binary Search`, `Sliding Window` | :fire:1402 |
 | [222. Count Complete Tree Nodes][link0222] | `Complete Binary Tree` | `Easy+` |
 | [968. Binary Tree Cameras][link0968] | `Dynamic Programming`, `Binary Tree` | :fire:2124 |
 | [1872. Stone Game VIII][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
@@ -212,3 +215,4 @@ TODO:
 [link0218]: https://leetcode.com/problems/the-skyline-problem/description/
 [link3116]: https://leetcode.com/problems/kth-smallest-amount-with-single-denomination-combination/description/
 [link0968]: https://leetcode.com/problems/binary-tree-cameras/description/?envType=study-plan-v2&envId=dynamic-programming-grandmaster
+[link1508]: https://leetcode.com/problems/range-sum-of-sorted-subarray-sums/description/
