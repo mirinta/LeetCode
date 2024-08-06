@@ -20,8 +20,9 @@ public:
     int minSwaps(std::vector<int>& nums)
     {
         // fixed size sliding window
-        // size = num of ones to be grouped together
-        // #operations = num of zeros inside a sliding window
+        // window size = num of ones that need to be grouped together within nums
+        // if a sliding window contains #ones 1's, 
+        // then #operations = #zeros within the sliding window
         const int n = nums.size();
         const int ones = std::accumulate(nums.begin(), nums.end(), 0);
         int result = INT_MAX;
