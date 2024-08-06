@@ -18,20 +18,22 @@ public:
     {
         powMod[0] = 1;
         for (int i = 1; i <= s.size(); ++i) {
-            prefixHash[i] = (prefixHash[i - 1] * kBase % kMod + valueOf(s[i - 1])) % kMod;
+            prefixHash[i] = (prefixHash[i - 1] * kBase % kMod + valueOf(s[i - 1]) % kMod) % kMod;
             powMod[i] = powMod[i - 1] * kBase % kMod;
         }
     }
 
-    // hash[left:right] = s[left]*Base^(L-1) + ... + s[right]*Base^0
+    // let L = right - left + 1
+    // hash[left:right] = s[left] * Base^(L-1) + ... + s[right] * Base^0
     // where left and right are 0-indexed
     LLONG query(int left, int right) const
     {
-        return (prefixHash[right + 1] - prefixHash[left] * powMod[right - left + 1] % kMod + kMod) %
-               kMod;
+        LLONG result = prefixHash[right + 1] - prefixHash[left] * powMod[right - left + 1] % kMod;
+        result = (result + kMod) % kMod; // +kMod to prevent negative value
+        return result;
     }
 
 private:
-    std::vector<LLONG> prefixHash; // prefixHash[i] = s[0]*Base^i + ... + s[i-1]*Base^0
+    std::vector<LLONG> prefixHash; // prefixHash[i] = s[0] * Base^i + ... + s[i-1] * Base^0
     std::vector<LLONG> powMod;     // Base^i
 };
