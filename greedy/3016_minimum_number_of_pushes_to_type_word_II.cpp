@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <array>
 #include <string>
-#include <vector>
 
 /**
  * You are given a string word containing distinct lowercase English letters.
@@ -28,8 +27,8 @@ class Solution
 public:
     int minimumPushes(std::string word)
     {
-        // assign top 1~8 letters to 2~9
-        // assign top 9~16 letters to 2~9
+        // assign the top 1-8 frequent letters to numbers 2-9
+        // assign the top 9~16 frequent letters to numbers 2-9
         // ...
         std::array<int, 26> freq{};
         for (const auto& c : word) {
