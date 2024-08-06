@@ -34,6 +34,6 @@ public:
     }
 
 private:
-    std::vector<LLONG> prefixHash; // prefixHash[i] = s[0] * Base^i + ... + s[i-1] * Base^0
+    std::vector<LLONG> prefixHash; // prefixHash[i] = s[0] * Base^(i-1) + ... + s[i-1] * Base^0
     std::vector<LLONG> powMod;     // Base^i
 };
