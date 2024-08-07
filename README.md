@@ -69,7 +69,7 @@
 - [x] Weekly 405 (3210~3213)
 - [ ] Weekly 406 (3216~3219): 3219 is NOT DONE!
 - [ ] Biweekly 135 (3222~3225)
-- [ ] Weekly 407 (3226~3229)
+- [ ] Weekly 407 (3226~3229): 3229 is NOT DONE!
 - [ ] Weekly 408 (3232~3235)
 - [ ] Biweekly 136
 - [ ] Weekly 409
