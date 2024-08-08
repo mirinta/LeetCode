@@ -10,7 +10,7 @@ public:
         }
     }
 
-    int numOfConnectedComponents() const { return count; }
+    int connectedComponents() const { return count; }
 
     /**
      * @note x is 0-indexed.
@@ -33,16 +33,18 @@ public:
         return root[x];
     }
 
+    bool connected(int p, int q) { return find(p) == find(q); }
+
     /**
      * @note p and q are 0-indexed.
      * @note Return false is p and q are already connected.
      */
-    bool connect(int p, int q)
+    void connect(int p, int q)
     {
         int rootP = find(p);
         int rootQ = find(q);
         if (rootP == rootQ)
-            return false;
+            return;
 
         if (size[rootQ] > size[rootP]) {
             std::swap(rootP, rootQ);
@@ -50,7 +52,6 @@ public:
         root[rootQ] = rootP;
         size[rootP] += size[rootQ];
         count--;
-        return true;
     }
 
 private:
