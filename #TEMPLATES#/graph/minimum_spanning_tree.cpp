@@ -29,11 +29,13 @@ long long kruskal(Edges& edges, int V)
               [](const auto& t1, const auto& t2) { return std::get<2>(t1) < std::get<2>(t2); });
     long long result = 0;
     for (const auto& [i, j, weight] : edges) {
-        if (uf.connect(i, j)) {
-            result += weight;
-        }
+        if (uf.connected(i, j))
+            continue;
+
+        uf.connect(i, j);
+        result += weight;
     }
-    return uf.numOfConnectedComponents() == 1 ? LLONG_MAX : result;
+    return uf.connectedComponents() == 1 ? LLONG_MAX : result;
 }
 
 /**

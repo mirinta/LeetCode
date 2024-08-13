@@ -28,43 +28,39 @@ public:
             graph[edge[0]].push_back(edge[1]);
             graph[edge[1]].push_back(edge[0]);
         }
-        visited.assign(n, false);
-        dfn.assign(n, -1);
-        low.assign(n, -1);
-        std::vector<std::vector<int>> bridges;
+        time = 0;
+        dfn = std::vector<int>(n, -1);
+        low = std::vector<int>(n, -1);
+        result.clear();
         for (int i = 0; i < n; ++i) {
-            if (!visited[i]) {
-                dfs(bridges, i, -1, graph);
+            if (dfn[i] == -1) {
+                dfs(i, -1, graph);
             }
         }
-        return bridges;
+        return result;
     }
 
 private:
     int time;
-    std::vector<bool> visited;
     std::vector<int> dfn;
     std::vector<int> low;
+    std::vector<std::vector<int>> result;
 
-    void dfs(std::vector<std::vector<int>>& bridges, int current, int parent,
-             const std::vector<std::vector<int>>& graph)
+    void dfs(int current, int parent, const std::vector<std::vector<int>>& graph)
     {
-        visited[current] = true;
-        dfn[current] = time;
-        low[current] = time;
-        time++;
-        for (const auto& child : graph[current]) {
-            if (child == parent)
+        dfn[current] = low[current] = ++time;
+        for (const auto& next : graph[current]) {
+            if (next == parent)
                 continue;
 
-            if (!visited[child]) {
-                dfs(bridges, child, current, graph);
-                low[current] = std::min(low[current], low[child]);
-                if (low[child] > dfn[current]) {
-                    bridges.push_back({current, child});
+            if (dfn[next] == -1) {
+                dfs(next, current, graph);
+                if (low[next] > dfn[current]) {
+                    result.push_back({current, next});
                 }
+                low[current] = std::min(low[current], low[next]);
             } else {
-                low[current] = std::min(low[current], dfn[child]);
+                low[current] = std::min(low[current], dfn[next]);
             }
         }
     }

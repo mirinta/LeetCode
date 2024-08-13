@@ -15,16 +15,6 @@ public:
     /**
      * @note x is 0-indexed.
      */
-    void reset(int x)
-    {
-        root[x] = x;
-        size[x] = 1;
-        count++;
-    }
-
-    /**
-     * @note x is 0-indexed.
-     */
     int find(int x)
     {
         if (x != root[x]) {
