@@ -14,38 +14,33 @@
  * ! 1 <= target <= 30
  */
 
-class Solution
-{
+#include <algorithm>
+#include <vector>
+
+class Solution {
 public:
-    std::vector<std::vector<int>> combinationSum2(std::vector<int>& candidates, int target)
-    {
+    std::vector<std::vector<int>> combinationSum2(std::vector<int>& candidates, int target) {
         std::sort(candidates.begin(), candidates.end());
         std::vector<int> path;
-        backtrack(path, 0, target, candidates);
+        std::vector<std::vector<int>> result;
+        std::function<void(int, int)> backtrack = [&](int i, int sum) {
+            if (sum == target) {
+                result.push_back(path);
+                return;
+            }
+            for (int j = i; j < candidates.size(); ++j) {
+                if (j > i && candidates[j] == candidates[j - 1])
+                    continue;
+
+                if (sum + candidates[j] > target)
+                    break;
+
+                path.push_back(candidates[j]);
+                backtrack(j + 1, sum + candidates[j]);
+                path.pop_back();
+            }
+        };
+        backtrack(0, 0);
         return result;
-    }
-
-private:
-    std::vector<std::vector<int>> result;
-
-    void backtrack(std::vector<int>& path, int i, int target, const std::vector<int>& candidates)
-    {
-        if (target == 0) {
-            result.push_back(path);
-            return;
-        }
-        for (int j = i; j < candidates.size(); ++j) {
-            if (j > i && candidates[j] == candidates[j - 1])
-                continue;
-
-            // candidates is sorted in non-decreasing order
-            // if candidates[j] is too large, we can skip the remaining numbers
-            if (target - candidates[j] < 0)
-                break;
-
-            path.push_back(candidates[j]);
-            backtrack(path, j + 1, target - candidates[j], candidates);
-            path.pop_back();
-        }
     }
 };
