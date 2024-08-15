@@ -1,4 +1,3 @@
-#include <cstddef>
 #include <vector>
 
 /**
@@ -11,42 +10,35 @@
  * Given an integer array bills where bills[i] is the bill the ith customer pays, return true if you
  * can provide every customer with the correct change, or false otherwise.
  *
+ * ! 1 <= bills.length <= 10^5
  * ! bills[i] is either 5, 10, or 20.
  */
 
 class Solution
 {
 public:
-    bool lemonadeChange(const std::vector<int>& bills)
+    bool lemonadeChange(std::vector<int>& bills)
     {
-        // change = bill - 5
-        // - bill is either 5, 10, or 20, then change is either 5 or 15
-        // - 15 can be made up of 5+10 or 5+5+5
-        int receivedFive = 0;
-        int receivedTen = 0;
-        for (const auto& bill : bills) {
-            switch (bill) {
-            case 5:
-                receivedFive++;
-                break;
-            case 10:
-                if (receivedFive < 1)
+        int fiveBills = 0;
+        int tenBills = 0;
+        for (const auto& val : bills) {
+            if (val == 5) {
+                fiveBills++;
+            } else if (val == 10) {
+                if (fiveBills < 1)
                     return false;
 
-                receivedFive--;
-                receivedTen++;
-                break;
-            case 20:
-                if (receivedFive > 0 && receivedTen > 0) {
-                    receivedFive--;
-                    receivedTen--;
-                } else if (receivedFive >= 3) {
-                    receivedFive -= 3;
+                fiveBills--;
+                tenBills++;
+            } else if (val == 20) {
+                if (tenBills > 0 && fiveBills > 0) {
+                    tenBills--;
+                    fiveBills--;
+                } else if (fiveBills >= 3) {
+                    fiveBills -= 3;
                 } else {
                     return false;
                 }
-            default:
-                break;
             }
         }
         return true;
