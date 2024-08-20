@@ -24,31 +24,32 @@ public:
     int stoneGameII(std::vector<int>& piles)
     {
         const int n = piles.size();
-        std::vector<int> presum(n + 1, 0);
+        std::vector<int> presum(n + 1);
         for (int i = 1; i <= n; ++i) {
             presum[i] = presum[i - 1] + piles[i - 1];
         }
-        std::vector<std::vector<int>> memo(n, std::vector<int>(n + 1, -1));
-        return dfs(memo, 0, n, 1, presum);
+        std::vector<std::vector<int>> memo(n, std::vector<int>(1 + n, -1));
+        return dfs(memo, 0, 1, n, presum);
     }
 
 private:
-    // max score that the 1st action player can get at the end of the game piles[lo:n-1]
-    int dfs(std::vector<std::vector<int>>& memo, int lo, int n, int M,
+    // max score the first player can get in the game of piles[i:n-1]
+    int dfs(std::vector<std::vector<int>>& memo, int i, int M, int n,
             const std::vector<int>& presum)
     {
-        if (lo >= n)
+        if (i == n)
             return 0;
 
-        if (memo[lo][M] != -1)
-            return memo[lo][M];
+        if (memo[i][M] != -1)
+            return memo[i][M];
 
         int result = INT_MIN;
-        for (int x = 1; x <= std::min(2 * M, n - lo); ++x) {
-            const int score = presum[lo + x] - presum[lo];
-            result = std::max(result, score + presum[n] - presum[lo + x] -
-                                          dfs(memo, lo + x, n, std::max(M, x), presum));
+        for (int X = 1; X <= std::min(n - i, 2 * M); ++X) {
+            const int score = presum[i + X] - presum[i];
+            const int remaining = presum.back() - presum[i + X];
+            result =
+                std::max(result, score + remaining - dfs(memo, i + X, std::max(M, X), n, presum));
         }
-        return memo[lo][M] = result;
+        return memo[i][M] = result;
     }
 };
