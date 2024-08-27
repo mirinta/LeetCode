@@ -29,101 +29,65 @@ public:
     double maxProbability(int n, std::vector<std::vector<int>>& edges,
                           std::vector<double>& succProb, int start_node, int end_node)
     {
-        return approach3(n, edges, succProb, start_node, end_node);
+        return approach2(n, edges, succProb, start_node, end_node);
     }
 
 private:
-    // Bellman-Ford (DP with space optimization), time O(EV), space O(V)
-    double approach3(int n, const std::vector<std::vector<int>>& edges,
-                     const std::vector<double>& succProb, int src, int dst)
+    // Bellman-Ford
+    double approach2(int n, const std::vector<std::vector<int>>& edges,
+                     const std::vector<double>& succProb, int start_node, int end_node)
     {
         std::vector<double> dp(n, 0);
-        std::vector<double> iMinus1(n, 0);
-        iMinus1[src] = 1.0;
+        dp[start_node] = 1;
         for (int i = 1; i < n; ++i) {
             bool update = false;
             for (int j = 0; j < edges.size(); ++j) {
-                const auto& from = edges[j][0];
-                const auto& to = edges[j][1];
                 const auto& prob = succProb[j];
-                if (iMinus1[from] * prob > dp[to]) {
-                    dp[to] = iMinus1[from] * prob;
+                const auto& a = edges[j][0];
+                const auto& b = edges[j][1];
+                if (dp[a] * prob > dp[b]) {
+                    dp[b] = dp[a] * prob;
                     update = true;
                 }
-                if (iMinus1[to] * prob > dp[from]) {
-                    dp[from] = iMinus1[to] * prob;
+                if (dp[b] * prob > dp[a]) {
+                    dp[a] = dp[b] * prob;
                     update = true;
                 }
             }
             if (!update)
                 break;
-
-            iMinus1 = dp;
         }
-        return dp[dst];
+        return dp[end_node];
     }
 
-    // DP, !!! Memory Limit Exceeded !!!, time O(EV), space O(V^2)
-    double approach2(int n, const std::vector<std::vector<int>>& edges,
-                     const std::vector<double>& succProb, int src, int dst)
-    {
-        // dp[i][j] = max prob from src to j with at most i edges
-        // - the optimal path from src to dst contains at most n-1 edges
-        std::vector<std::vector<double>> dp(n, std::vector<double>(n, 0));
-        dp[0][src] = 1.0;
-        double result = 0;
-        for (int i = 1; i < n; ++i) {
-            bool update = false;
-            for (int j = 0; j < edges.size(); ++j) {
-                const auto& from = edges[j][0];
-                const auto& to = edges[j][1];
-                const auto& prob = succProb[j];
-                if (dp[i - 1][from] * prob > dp[i][to]) {
-                    dp[i][to] = dp[i - 1][from] * prob;
-                    update = true;
-                }
-                if (dp[i - 1][to] * prob > dp[i][from]) {
-                    dp[i][from] = dp[i - 1][to] * prob;
-                    update = true;
-                }
-            }
-            if (!update)
-                break;
-
-            result = std::max(result, dp[i][dst]);
-        }
-        return result;
-    }
-
-    // Dijkstra's algorithm, time O(E+ElogV), space O(E+V)
+    // Dijkstra
     double approach1(int n, const std::vector<std::vector<int>>& edges,
-                     const std::vector<double>& succProb, int src, int dst)
+                     const std::vector<double>& succProb, int start_node, int end_node)
     {
-        using Pair = std::pair<double, int>; // <prob, vertex>
-        std::vector<std::vector<Pair>> graph(n);
+        std::vector<std::vector<std::pair<int, double>>> graph(n);
         for (int i = 0; i < edges.size(); ++i) {
-            const auto& from = edges[i][0];
-            const auto& to = edges[i][1];
-            const auto& prob = succProb[i];
-            graph[from].emplace_back(prob, to);
-            graph[to].emplace_back(prob, from);
+            graph[edges[i][0]].emplace_back(edges[i][1], succProb[i]);
+            graph[edges[i][1]].emplace_back(edges[i][0], succProb[i]);
         }
-        auto comparator = [](const auto& p1, const auto& p2) { return p1.first < p2.first; };
-        std::priority_queue<Pair, std::vector<Pair>, decltype(comparator)> pq(
-            comparator); // max heap
-        pq.emplace(1.0, src);
-        std::vector<double> probTo(n, -1);
-        probTo[src] = 1.0;
+        using Pair = std::pair<int, double>;
+        auto compare = [](const auto& p1, const auto& p2) { return p1.second < p2.second; };
+        std::priority_queue<Pair, std::vector<Pair>, decltype(compare)> pq(compare);
+        pq.emplace(start_node, 1);
+        std::vector<double> probTo(n);
+        probTo[start_node] = 1;
         while (!pq.empty()) {
-            const int v = pq.top().second;
+            const auto [node, prob] = pq.top();
             pq.pop();
-            if (v == dst)
-                return probTo[v];
+            if (prob < probTo[node])
+                continue;
 
-            for (const auto& [prob, adj] : graph[v]) {
-                if (probTo[adj] < probTo[v] * prob) {
-                    probTo[adj] = probTo[v] * prob;
-                    pq.emplace(probTo[adj], adj);
+            if (node == end_node)
+                return prob;
+
+            for (const auto& [next, p] : graph[node]) {
+                if (probTo[next] < probTo[node] * p) {
+                    probTo[next] = probTo[node] * p;
+                    pq.emplace(next, probTo[next]);
                 }
             }
         }
