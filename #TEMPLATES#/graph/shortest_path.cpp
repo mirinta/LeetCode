@@ -102,23 +102,16 @@ long long bellmanFord(int src, int dst, int V, const Edges& edges)
 {
     std::vector<long long> dp(V, LLONG_MAX);
     dp[src] = 0;
-    std::vector<long long> prev(V);
     for (int i = 1; i <= V - 1; ++i) {
-        prev.assign(dp.begin(), dp.end());
-        std::fill(dp.begin(), dp.end(), LLONG_MAX);
         bool updated = false;
         for (const auto& [from, to, weight] : edges) {
-            if (prev[from] != LLONG_MAX && prev[from] + weight < dp[to]) {
+            if (dp[from] != LLONG_MAX && dp[from] + weight < dp[to]) {
                 updated = true;
-                dp[to] = prev[from] + weight;
+                dp[to] = dp[from] + weight;
             }
         }
         if (!updated)
             break;
     }
-    long long result = LLONG_MAX;
-    for (int i = 1; i <= V - 1; ++i) {
-        result = std::min(result, dp[dst]);
-    }
-    return result;
+    return dp[dst];
 }
