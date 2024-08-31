@@ -21,31 +21,21 @@ class Solution
 public:
     int countSubIslands(std::vector<std::vector<int>>& grid1, std::vector<std::vector<int>>& grid2)
     {
-        if (grid1.empty() || grid1[0].empty())
-            return 0;
-
-        if (grid1.size() != grid2.size() || grid1[0].size() != grid2[0].size())
-            return 0;
-
         const int m = grid1.size();
         const int n = grid1[0].size();
-        // if grid2(i,j)=1, but grid1(i,j)!=1
-        // all lands in grid2 connected with grid2(i,j) are not sub-islands
-        // thus, flood them with water
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid2[i][j] == kLand && grid1[i][j] != kLand) {
-                    dfs(i, j, grid2);
+                if (grid2[i][j] == 1 && grid1[i][j] == 0) {
+                    dfs(grid2, i, j);
                 }
             }
         }
-        // now, all lands in grid2 are sub-islands
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid2[i][j] == kLand) {
+                if (grid2[i][j] == 1) {
                     result++;
-                    dfs(i, j, grid2);
+                    dfs(grid2, i, j);
                 }
             }
         }
@@ -53,20 +43,18 @@ public:
     }
 
 private:
-    static constexpr int kLand = 1;
-    static constexpr int kWater = 0;
-
-    void dfs(int x, int y, std::vector<std::vector<int>>& grid)
+    void dfs(std::vector<std::vector<int>>& grid, int i, int j)
     {
-        const int m = grid.size();
-        const int n = grid[0].size();
-        if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != kLand)
+        if (i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size())
             return;
 
-        grid[x][y] = kWater;
-        dfs(x + 1, y, grid);
-        dfs(x - 1, y, grid);
-        dfs(x, y + 1, grid);
-        dfs(x, y - 1, grid);
+        if (grid[i][j] == 0)
+            return;
+
+        grid[i][j] = 0;
+        dfs(grid, i + 1, j);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i, j - 1);
     }
 };
