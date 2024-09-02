@@ -1,3 +1,5 @@
+#include <queue>
+#include <unordered_map>
 #include <vector>
 
 /**
@@ -27,29 +29,37 @@ public:
     int pathSum(std::vector<int>& nums)
     {
         /**
-         *       3 index=0
-         *      / \
-         *     5   1
-         * index=0 index=1
+         *   depth i:   1      2   ...
+         *             / \    / \
+         * depth i+1: 1   2  3   4 ...
+         *
+         * node(i, j) = node at index j in depth i
+         *
+         * left child of node(i, j) = node(i + 1, 2 * j - 1)
+         * right child of node(i, j) = node(i + 1, 2 * j)
          */
-        // data[i][j] is the sum along the path from root to node(i,j)
-        constexpr int m = 5; // the depth is in the range [1, 4]
-        constexpr int n = 8;
-        std::vector<std::vector<int>> data(m, std::vector<int>(n, 0));
-        for (const auto& num : nums) {
-            const int depth = num / 100;
-            const int index = (num / 10) % 10 - 1; // 0-indexed
-            const int val = num % 10;
-            data[depth][index] = val + data[depth - 1][index / 2];
+        std::unordered_map<int, int> map;
+        for (const auto& digit : nums) {
+            map[digit / 10] = digit % 10;
         }
+        std::queue<std::pair<int, int>> queue; // <coord, sum to this node>
+        queue.emplace(nums[0] / 10, nums[0] % 10);
         int result = 0;
-        // find all the leaves and sum their values
-        for (int i = 1; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (i == m - 1 ||
-                    (data[i][j] != 0 && data[i + 1][2 * j] == 0 && data[i + 1][2 * j + 1] == 0)) {
-                    result += data[i][j];
-                }
+        while (!queue.empty()) {
+            const auto [coord, sum] = queue.front();
+            queue.pop();
+            const int depth = coord / 10;
+            const int index = coord % 10;
+            const int lChild = (depth + 1) * 10 + 2 * index - 1;
+            const int rChild = lChild + 1;
+            if (!map.count(lChild) && !map.count(rChild)) {
+                result += sum;
+            }
+            if (map.count(lChild)) {
+                queue.emplace(lChild, sum + map[lChild]);
+            }
+            if (map.count(rChild)) {
+                queue.emplace(rChild, sum + map[rChild]);
             }
         }
         return result;
