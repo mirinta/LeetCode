@@ -39,21 +39,21 @@ public:
         if (!head)
             return result;
 
-        int remainingNodes = 0;
+        int numOfNodes = 0;
         for (auto* node = head; node; node = node->next) {
-            remainingNodes++;
+            numOfNodes++;
         }
-        for (int i = 0; remainingNodes && i < result.size(); ++i) {
-            ListNode vHead(-1);
+        for (int i = 0; i < k && numOfNodes > 0; ++i) {
+            ListNode vHead{-1};
             auto* node = &vHead;
-            const int splitSize = std::ceil(remainingNodes * 1.0 / (k - i));
-            for (int j = 0; head && j < splitSize; ++j) {
+            const int size = std::ceil(1.0 * numOfNodes / (k - i));
+            for (int j = 0; j < size && head; ++j) {
                 auto* next = head->next;
                 head->next = nullptr;
                 node->next = head;
                 node = node->next;
                 head = next;
-                remainingNodes--;
+                numOfNodes--;
             }
             result[i] = vHead.next;
         }
