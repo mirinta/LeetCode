@@ -24,14 +24,15 @@ class Solution
 public:
     int longestSubarray(std::vector<int>& nums)
     {
+        // the subarray that has the max bitwise AND: [x, x, x, x, ...]
+        // where x = the max element of nums
         const int n = nums.size();
         const int max = *std::max_element(nums.begin(), nums.end());
         int i = 0;
         int result = 0;
         while (i < n) {
-            if (nums[i] != max) {
+            while (i < n && nums[i] != max) {
                 i++;
-                continue;
             }
             int j = i + 1;
             while (j < n && nums[j] == max) {
