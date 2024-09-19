@@ -1,5 +1,5 @@
+#include <array>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 /**
@@ -16,32 +16,32 @@
 class Solution
 {
 public:
-    std::vector<std::string> letterCombinations(const std::string& digits)
+    std::vector<std::string> letterCombinations(std::string digits)
     {
         if (digits.empty())
             return {};
 
-        std::string path;
-        backtrack(path, 0, digits);
+        std::vector<std::string> result;
+        std::string current;
+        backtrack(result, current, 0, digits);
         return result;
     }
 
 private:
-    std::vector<std::string> result;
+    const std::array<std::string, 10> kLetters{"",    "",    "abc",  "def", "ghi",
+                                               "jkl", "mno", "pqrs", "tuv", "wxyz"};
 
-    void backtrack(std::string& path, int i, const std::string& digits)
+    void backtrack(std::vector<std::string>& result, std::string& current, int i,
+                   const std::string& digits)
     {
         if (i == digits.size()) {
-            result.push_back(path);
+            result.push_back(current);
             return;
         }
-        static const std::unordered_map<char, std::string> map{
-            {'2', "abc"}, {'3', "def"},  {'4', "ghi"}, {'5', "jkl"},
-            {'6', "mno"}, {'7', "pqrs"}, {'8', "tuv"}, {'9', "wxyz"}};
-        for (const auto& c : map.at(digits[i])) {
-            path.push_back(c);
-            backtrack(path, i + 1, digits);
-            path.pop_back();
+        for (const auto& c : kLetters[digits[i] - '0']) {
+            current.push_back(c);
+            backtrack(result, current, i + 1, digits);
+            current.pop_back();
         }
     }
 };
