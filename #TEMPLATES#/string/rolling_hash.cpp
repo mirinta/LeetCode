@@ -2,10 +2,15 @@
 #include <vector>
 
 /**
- * @brief: Assume s contains only lowercase English letters.
+ * @brief: valueOf(a) = 1,
+ *         valueOf(b) = 2,
+ *         ...
+ *         valueOf(z) = 26
  * @param base: let base = 26
  * @param mod: let mod = 1e9 + 7
  * @param L: fixed length of substrings of s
+ * @param s: s contains only lowercase English letters
+ * @return: hash of each fixed length substring of s
  */
 std::vector<long long> rollingHash(long long base, long long mod, long long L, const std::string& s)
 {
