@@ -24,14 +24,14 @@ public:
         const int n = s.size();
         std::unordered_set<std::string> words(dictionary.begin(), dictionary.end());
         // dp[i] = min num of extra characters left over if we break up s[0:i) optimally
-        // - base case dp[0] = 0
         // X X X X X j-1 j X X X i-1 i
         // |<--dp[j]-->| |<--word->|
         // |<--------dp[i]-------->|
-        std::vector<int> dp(n + 1, 0);
+        std::vector<int> dp(n + 1, INT_MAX);
+        dp[0] = 0;
         for (int i = 1; i <= n; ++i) {
-            dp[i] = 1 + dp[i - 1]; // initialize, assume the incoming character is extra
-            for (int j = 0; j < i; ++j) {
+            for (int j = i - 1; j >= 0; --j) {
+                dp[i] = std::min(dp[i], dp[j] + i - j);
                 if (words.count(s.substr(j, i - j))) {
                     dp[i] = std::min(dp[i], dp[j]);
                 }
