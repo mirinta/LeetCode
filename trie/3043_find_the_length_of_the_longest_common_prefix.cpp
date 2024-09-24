@@ -25,25 +25,25 @@
 class Trie
 {
 public:
-    explicit Trie() : root(new TrieNode()){};
+    explicit Trie() : root(new TrieNode) {}
 
-    void insert(const std::string& word)
+    void insert(const std::string& s)
     {
         auto* node = root;
-        for (const auto& c : word) {
+        for (const auto& c : s) {
             const int index = c - '0';
             if (!node->next[index]) {
-                node->next[index] = new TrieNode();
+                node->next[index] = new TrieNode;
             }
             node = node->next[index];
         }
     }
 
-    int lengthOfLongestCommonPrefix(const std::string& word)
+    int lengthOfLongestCommonPrefix(const std::string& s)
     {
         auto* node = root;
         int count = 0;
-        for (const auto& c : word) {
+        for (const auto& c : s) {
             const int index = c - '0';
             if (!node->next[index])
                 break;
@@ -57,7 +57,7 @@ public:
 private:
     struct TrieNode
     {
-        std::array<TrieNode*, 10> next{nullptr};
+        std::array<TrieNode*, 10> next{};
     };
 
     TrieNode* root;
@@ -68,12 +68,6 @@ class Solution
 public:
     int longestCommonPrefix(std::vector<int>& arr1, std::vector<int>& arr2)
     {
-        return approach2(arr1, arr2);
-    }
-
-private:
-    int approach2(const std::vector<int>& arr1, const std::vector<int>& arr2)
-    {
         Trie trie;
         for (const auto& val : arr1) {
             trie.insert(std::to_string(val));
@@ -81,29 +75,6 @@ private:
         int result = 0;
         for (const auto& val : arr2) {
             result = std::max(result, trie.lengthOfLongestCommonPrefix(std::to_string(val)));
-        }
-        return result;
-    }
-
-    int approach1(const std::vector<int>& arr1, const std::vector<int>& arr2)
-    {
-        std::unordered_set<int> set;
-        for (const auto& val : arr1) {
-            int num = val;
-            while (num) {
-                set.insert(num);
-                num /= 10;
-            }
-        }
-        int result = 0;
-        for (const auto& val : arr2) {
-            int num = val;
-            while (num) {
-                if (set.count(num)) {
-                    result = std::max<int>(result, std::to_string(num).size());
-                }
-                num /= 10;
-            }
         }
         return result;
     }
