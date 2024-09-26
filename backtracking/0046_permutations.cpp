@@ -14,30 +14,30 @@ class Solution
 public:
     std::vector<std::vector<int>> permute(std::vector<int>& nums)
     {
-        std::vector<int> path;
         std::vector<bool> used(nums.size(), false);
-        backtrack(path, used, nums);
+        std::vector<int> perm;
+        std::vector<std::vector<int>> result;
+        backtrack(result, perm, used, 0, nums);
         return result;
     }
 
 private:
-    std::vector<std::vector<int>> result;
-
-    void backtrack(std::vector<int>& path, std::vector<bool>& used, const std::vector<int>& nums)
+    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& perm,
+                   std::vector<bool>& used, int i, const std::vector<int>& nums)
     {
-        if (path.size() == nums.size()) {
-            result.push_back(path);
+        if (i == nums.size()) {
+            result.push_back(perm);
             return;
         }
-        for (int i = 0; i < nums.size(); ++i) {
-            if (used[i])
+        for (int j = 0; j < nums.size(); ++j) {
+            if (used[j])
                 continue;
 
-            used[i] = true;
-            path.push_back(nums[i]);
-            backtrack(path, used, nums);
-            used[i] = false;
-            path.pop_back();
+            used[j] = true;
+            perm.push_back(nums[j]);
+            backtrack(result, perm, used, i + 1, nums);
+            used[j] = false;
+            perm.pop_back();
         }
     }
 };
