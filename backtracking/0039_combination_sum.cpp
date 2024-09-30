@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <vector>
 
 /**
@@ -22,30 +23,29 @@ class Solution
 public:
     std::vector<std::vector<int>> combinationSum(std::vector<int>& candidates, int target)
     {
-        std::vector<int> path; // sum of path[i] = target
-        backtrack(path, 0, target, candidates);
+        std::sort(candidates.begin(), candidates.end());
+        std::vector<int> combination;
+        std::vector<std::vector<int>> result;
+        backtrack(result, combination, 0, candidates, target);
         return result;
     }
 
 private:
-    std::vector<std::vector<int>> result;
-
-    // enumerate a new value nums[j] where j is in the range [i,n)
-    void backtrack(std::vector<int>& path, int i, int target, const std::vector<int>& candidates)
+    void backtrack(std::vector<std::vector<int>>& result, std::vector<int>& combination, int i,
+                   std::vector<int>& candidates, int target)
     {
         if (target == 0) {
-            result.push_back(path);
+            result.push_back(combination);
             return;
         }
         for (int j = i; j < candidates.size(); ++j) {
-            if (target - candidates[j] < 0)
-                continue;
+            if (candidates[j] > target)
+                break;
 
-            path.push_back(candidates[j]);
-            // the same number can be chosen unlimited number of times
-            // thus, the range of the next round is still [j,n)
-            backtrack(path, j, target - candidates[j], candidates);
-            path.pop_back();
+            combination.push_back(candidates[j]);
+            // candidates[j] can be used multiple times
+            backtrack(result, combination, j, candidates, target - candidates[j]);
+            combination.pop_back();
         }
     }
 };
