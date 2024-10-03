@@ -19,12 +19,12 @@ class Solution
 public:
     int minSubarray(std::vector<int>& nums, int p)
     {
-        // let sum[i] = sum of nums[0:i]
-        // suppose we remove subarray nums[j:i]
-        // sum of remaining elements = sum[n-1] - (sum[i] - sum[j-1])
-        // the sum is divisible by p:
-        // (sum[i] - sum[n-1]) % p = sum[j-1] % p
-        // (sum[i] % k - sum[n-1] % k) % p = sum[j-1] % p
+        // (total - sum) % p = 0
+        // total % p = sum % p
+        // let presum[i] = sum of nums[0:i]
+        // if nums[j+1:i] is a valid subarray
+        // then (presum[i] - presum[j]) % p = total % p
+        // presum[j] % p = (presum[i] - total) % p
         const int n = nums.size();
         int total = 0;
         for (const auto& val : nums) {
@@ -34,17 +34,16 @@ public:
             return 0;
 
         std::unordered_map<int, int> map;
-        map[0] = -1; // sum[i] % k = 0, length = i+1, j=-1
-        int sum = 0;
-        int result = INT_MAX;
-        for (int i = 0; i < n; ++i) {
-            sum = (sum + nums[i]) % p;
-            const int target = (sum - total + p) % p;
-            if (map.find(target) != map.end()) {
+        map[0] = -1;
+        int result = n;
+        for (int i = 0, presum = 0; i < n; ++i) {
+            presum = (presum + nums[i]) % p;
+            const int target = (presum - total + p) % p;
+            if (map.count(target)) {
                 result = std::min(result, i - map[target]);
             }
-            map[sum] = i;
+            map[presum] = i;
         }
-        return result >= n ? -1 : result;
+        return result == n ? -1 : result;
     }
 };
