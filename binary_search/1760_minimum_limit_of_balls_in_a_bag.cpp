@@ -42,16 +42,16 @@ public:
 private:
     bool isValid(int max, const std::vector<int>& nums, int maxOperations)
     {
-        int count = 0;
+        int operations = 0;
         for (const auto& val : nums) {
             if (val <= max)
                 continue;
 
-            count += val / max;
+            operations += val / max;
             if (val % max == 0) {
-                count--;
+                operations--;
             }
-            if (count > maxOperations)
+            if (operations > maxOperations)
                 return false;
         }
         return true;
