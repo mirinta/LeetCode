@@ -21,13 +21,26 @@ public:
     std::vector<int> finalPrices(std::vector<int>& prices)
     {
         const int n = prices.size();
-        std::stack<int> stack;
+        const auto nextSmallerOrEqual = getNextSmallerOrEqual(prices);
         std::vector<int> result(n);
+        for (int i = 0; i < n; ++i) {
+            const int j = nextSmallerOrEqual[i];
+            result[i] = prices[i] - (j == -1 ? 0 : prices[j]);
+        }
+        return result;
+    }
+
+private:
+    std::vector<int> getNextSmallerOrEqual(std::vector<int>& prices)
+    {
+        const int n = prices.size();
+        std::stack<int> stack;
+        std::vector<int> result(n, -1);
         for (int i = n - 1; i >= 0; --i) {
             while (!stack.empty() && prices[i] < prices[stack.top()]) {
                 stack.pop();
             }
-            result[i] = stack.empty() ? prices[i] : prices[i] - prices[stack.top()];
+            result[i] = stack.empty() ? -1 : stack.top();
             stack.push(i);
         }
         return result;
