@@ -28,42 +28,47 @@ public:
     std::vector<int> leftmostBuildingQueries(std::vector<int>& heights,
                                              std::vector<std::vector<int>>& queries)
     {
-        const int n = heights.size();
-        const auto nextGreater = genNextGreater(heights);
+        std::vector<std::vector<std::pair<int, int>>> newQueries(heights.size());
         std::vector<int> result(queries.size());
+        result.reserve(queries.size());
         for (int i = 0; i < queries.size(); ++i) {
-            const int left = std::min(queries[i][0], queries[i][1]);
-            int right = std::max(queries[i][0], queries[i][1]);
-            if (right == left) {
-                result[i] = left;
-            } else if (heights[right] > heights[left]) {
-                result[i] = right;
-            } else if (nextGreater[left] == n) {
-                result[i] = -1;
-            } else {
-                while (nextGreater[right] < n && heights[nextGreater[right]] <= heights[left]) {
-                    right = nextGreater[right];
-                }
-                result[i] = nextGreater[right] == n ? -1 : nextGreater[right];
+            int a = queries[i][0];
+            int b = queries[i][1];
+            if (a > b) {
+                std::swap(a, b);
             }
+            if (a == b || heights[a] < heights[b]) {
+                result[i] = b;
+            } else {
+                newQueries[b].emplace_back(a, i);
+            }
+        }
+        std::vector<int> vec; // heights of vec[0:k] is monotonic decreasing
+        for (int i = heights.size() - 1; i >= 0; --i) {
+            for (const auto& [a, q] : newQueries[i]) {
+                result[q] = binarySearch(a, heights, vec);
+            }
+            while (!vec.empty() && heights[vec.back()] <= heights[i]) {
+                vec.pop_back();
+            }
+            vec.push_back(i);
         }
         return result;
     }
 
 private:
-    std::vector<int> genNextGreater(const std::vector<int>& heights)
+    int binarySearch(int a, const std::vector<int>& heights, const std::vector<int>& vec)
     {
-        // nextGreater[i] = j means heights[j] is the next greater element of heights[i]
-        const int n = heights.size();
-        std::vector<int> nextGreater(n);
-        std::stack<int> stack;
-        for (int i = n - 1; i >= 0; --i) {
-            while (!stack.empty() && heights[i] >= heights[stack.top()]) {
-                stack.pop();
+        int lo = 0;
+        int hi = vec.size() - 1;
+        while (lo <= hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (heights[vec[mid]] > heights[a]) {
+                lo = mid + 1;
+            } else {
+                hi = mid - 1;
             }
-            nextGreater[i] = stack.empty() ? n : stack.top();
-            stack.push(i);
         }
-        return nextGreater;
+        return hi == -1 ? -1 : vec[hi];
     }
 };
