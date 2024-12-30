@@ -25,9 +25,9 @@ class Solution
 public:
     int countGoodStrings(int low, int high, int zero, int one)
     {
-        constexpr int kMod = 1e9 + 7;
-        // dp[i] = num of different good strings of length i
-        std::vector<int> dp(1 + high, 0);
+        static constexpr int kMod = 1e9 + 7;
+        // dp[i] = num of good strings of length i
+        std::vector<int> dp(high + 1, 0);
         dp[0] = 1;
         int result = 0;
         for (int i = 1; i <= high; ++i) {
