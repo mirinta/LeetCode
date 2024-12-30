@@ -1,3 +1,5 @@
+#include <vector>
+
 /**
  * The knows API is defined as follows.
  */
@@ -31,24 +33,52 @@ bool knows(int a, int b);
 class Solution
 {
 public:
-    int findCelebrity(int n)
-    {
-        if (n < 2)
-            return -1;
+    int findCelebrity(int n) { return approach2(n); }
 
-        int celebrity = 0;
+private:
+    int approach2(int n)
+    {
+        int result = 0;
         for (int i = 1; i < n; ++i) {
-            if (knows(celebrity, i)) {
-                celebrity = i;
+            if (knows(result, i)) {
+                result = i;
             }
         }
         for (int i = 0; i < n; ++i) {
-            if (i == celebrity)
+            if (i == result)
                 continue;
 
-            if (!knows(i, celebrity) || knows(celebrity, i))
+            if (knows(result, i) || !knows(i, result))
                 return -1;
         }
-        return celebrity;
+        return result;
+    }
+
+    int approach1(int n)
+    {
+        std::vector<int> degrees(n, 0); // in - out
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                if (knows(i, j)) {
+                    degrees[i]--;
+                    degrees[j]++;
+                }
+                if (knows(j, i)) {
+                    degrees[j]--;
+                    degrees[i]++;
+                }
+            }
+        }
+        int result = -1;
+        for (int i = 0; i < n; ++i) {
+            if (degrees[i] != n - 1)
+                continue;
+
+            if (result != -1)
+                return -1;
+
+            result = i;
+        }
+        return result;
     }
 };
