@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <string>
 
 /**
@@ -16,16 +17,12 @@ class Solution
 public:
     int maxScore(std::string s)
     {
-        int totalOnes = 0;
-        for (const auto& c : s) {
-            if (c == '1') {
-                totalOnes++;
-            }
-        }
+        const int totalOnes =
+            std::count_if(s.begin(), s.end(), [](const auto& c) { return c == '1'; });
         int result = 0;
         for (int i = 0, zeros = 0; i < s.size() - 1; ++i) {
-            zeros += s[i] == '0' ? 1 : 0;
-            result = std::max(result, zeros + totalOnes - (i + 1 - zeros));
+            zeros += s[i] == '0';
+            result = std::max(result, zeros + totalOnes - i - 1 + zeros);
         }
         return result;
     }
