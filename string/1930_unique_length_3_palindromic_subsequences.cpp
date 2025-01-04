@@ -1,6 +1,6 @@
+#include <array>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
+#include <vector>
 
 /**
  * Given a string s, return the number of unique palindromes of length three that are a subsequence
@@ -25,26 +25,29 @@ class Solution
 public:
     int countPalindromicSubsequence(std::string s)
     {
-        // A x x x x x x x x x x A
-        // ^ |<--count unique->| ^
-        // first seen            last seen
         const int n = s.size();
-        std::unordered_map<char, std::pair<int, int>> map;
-        for (int i = 0; i < s.size(); ++i) {
-            if (!map.count(s[i])) {
-                map[s[i]] = {i, -1};
+        std::array<std::pair<int, int>, 26> seen{}; // <first, last>
+        seen.fill({-1, -1});
+        std::vector<std::array<int, 26>> count(n + 1);
+        for (int i = 0; i < n; ++i) {
+            if (seen[s[i] - 'a'].first == -1) {
+                seen[s[i] - 'a'] = {i, i};
             } else {
-                map[s[i]].second = i;
+                seen[s[i] - 'a'].second = i;
             }
+            count[i + 1] = count[i];
+            count[i + 1][s[i] - 'a']++;
         }
         int result = 0;
-        for (const auto& info : map) {
-            const auto& [firstSeen, lastSeen] = info.second;
-            if (lastSeen - firstSeen - 1 <= 0)
+        for (const auto& [first, last] : seen) {
+            if (first < 0 || last < 0 || first == last)
                 continue;
 
-            std::unordered_set<char> set{s.begin() + firstSeen + 1, s.begin() + lastSeen};
-            result += set.size();
+            int unique = 0;
+            for (int i = 0; i < 26; ++i) {
+                unique += count[last][i] - count[first + 1][i] > 0;
+            }
+            result += unique;
         }
         return result;
     }
