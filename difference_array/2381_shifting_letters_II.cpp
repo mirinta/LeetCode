@@ -23,31 +23,27 @@
 class Solution
 {
 public:
-    std::string shiftingLetters(std::string s, std::vector<std::vector<int>>& shifts)
+    std::string shiftingLetters(const std::string& s, const std::vector<std::vector<int>>& shifts)
     {
         const int n = s.size();
-        std::vector<int> diff(n); // diff[i] = shift[i]-shift[i-1]
+        // diff[i] = total shift of s[i:n-1]
+        std::vector<int> diff(n, 0);
         for (const auto& shift : shifts) {
             const auto& start = shift[0];
             const auto& end = shift[1];
-            const auto delta = shift[2] == 0 ? -1 : 1;
-            diff[start] += delta;
+            const int offset = shift[2] == 0 ? -1 : 1;
+            diff[start] = (diff[start] + offset + 26) % 26;
             if (end + 1 < n) {
-                diff[end + 1] -= delta;
+                diff[end + 1] = (diff[end + 1] - offset + 26) % 26;
             }
         }
         std::string result;
-        result.reserve(n);
+        result.reserve(s.size());
         for (int i = 0; i < n; ++i) {
             if (i > 0) {
-                diff[i] += diff[i - 1];
+                diff[i] = (diff[i] + diff[i - 1]) % 26;
             }
-            const int delta = diff[i] + s[i] - 'a';
-            if (delta >= 0 || delta % 26 == 0) {
-                result.push_back(delta % 26 + 'a');
-            } else {
-                result.push_back(delta % 26 + 26 + 'a');
-            }
+            result.push_back((s[i] - 'a' + diff[i]) % 26 + 'a');
         }
         return result;
     }
