@@ -25,11 +25,10 @@ class Solution
 public:
     int countPrefixSuffixPairs(std::vector<std::string>& words)
     {
-        const int n = words.size();
         int result = 0;
-        for (int i = 0; i < n; ++i) {
-            for (int j = i + 1; j < n; ++j) {
-                if (isPrefixAndSuffix(words[i], words[j])) {
+        for (int i = 0; i < words.size(); ++i) {
+            for (int j = i + 1; j < words.size(); ++j) {
+                if (isValid(words[i], words[j])) {
                     result++;
                 }
             }
@@ -38,13 +37,13 @@ public:
     }
 
 private:
-    bool isPrefixAndSuffix(const std::string& s1, const std::string& s2)
+    bool isValid(const std::string& s1, const std::string& s2)
     {
         if (s1.size() > s2.size())
             return false;
 
-        for (int i = 0, j = s2.size() - s1.size(); i < s1.size(); ++i, ++j) {
-            if (s1[i] != s2[i] || s1[i] != s2[j])
+        for (int i = 0; i < s1.size(); ++i) {
+            if ((s1[i] != s2[i]) || (s1[i] != s2[s2.size() - s1.size() + i]))
                 return false;
         }
         return true;
