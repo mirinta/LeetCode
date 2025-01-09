@@ -4,12 +4,14 @@
 class RangeHash
 {
     using LLONG = long long;
-
     static constexpr LLONG kMod = 1e9 + 7;
     static constexpr LLONG kBase = 13; // prime number
 
 public:
-    static LLONG valueOf(char c) { return c - 'a' + 1; } // Assume s contains only lowercase English letters.
+    static LLONG valueOf(char c)
+    {
+        return c - 'a' + 1; // Assume s contains only lowercase English letters.
+    }
 
     explicit RangeHash(const std::string& s) : prefixHash(s.size() + 1), powMod(s.size() + 1)
     {
@@ -31,6 +33,7 @@ public:
     }
 
 private:
+    // 1-indexed vectors:
     std::vector<LLONG> prefixHash; // prefixHash[i] = s[0] * Base^(i-1) + ... + s[i-1] * Base^0
     std::vector<LLONG> powMod;     // Base^i
 };
