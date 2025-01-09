@@ -1,9 +1,6 @@
 #include <string>
 #include <vector>
 
-/**
- * @brief Assume s contains only lowercase English letters.
- */
 class RangeHash
 {
     using LLONG = long long;
@@ -12,7 +9,7 @@ class RangeHash
     static constexpr LLONG kBase = 13; // prime number
 
 public:
-    static LLONG valueOf(char c) { return c - 'a' + 1; }
+    static LLONG valueOf(char c) { return c - 'a' + 1; } // Assume s contains only lowercase English letters.
 
     explicit RangeHash(const std::string& s) : prefixHash(s.size() + 1), powMod(s.size() + 1)
     {
