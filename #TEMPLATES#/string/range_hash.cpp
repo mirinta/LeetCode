@@ -9,7 +9,7 @@ class RangeHash
     using LLONG = long long;
 
     static constexpr LLONG kMod = 1e9 + 7;
-    static constexpr LLONG kBase = 3001; // prime number
+    static constexpr LLONG kBase = 13; // prime number
 
 public:
     static LLONG valueOf(char c) { return c - 'a' + 1; }
