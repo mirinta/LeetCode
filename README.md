@@ -135,6 +135,7 @@ TODO:
 | [2528. Maximize the Minimum Powered City][link2528] | `Binary Search`, `Sliding Window` | :fire:2236 |
 | [1508. Range Sum of Sorted Subarray Sums][link1508] | `Binary Search`, `Sliding Window` | :fire:1402 |
 | [222. Count Complete Tree Nodes][link0222] | `Complete Binary Tree` | `Easy+` |
+| [3428. Maximum and Minimum Sums of at Most Size K Subsequences][link3428] | `Combinatorics`, `Dynamic Programming` | `Medium+` |
 | [968. Binary Tree Cameras][link0968] | `Dynamic Programming`, `Binary Tree` | :fire:2124 |
 | [1872. Stone Game VIII][link1872] | `Dynamic Programming`, `Game Theory` | :fire:2440 |
 | [907. Sum of Subarray Minimums][link0907] | `Dynamic Programming`, `Monotonic Stack` | :fire:1976 |
@@ -220,3 +221,5 @@ TODO:
 [link3116]: https://leetcode.com/problems/kth-smallest-amount-with-single-denomination-combination/description/
 [link0968]: https://leetcode.com/problems/binary-tree-cameras/description/?envType=study-plan-v2&envId=dynamic-programming-grandmaster
 [link1508]: https://leetcode.com/problems/range-sum-of-sorted-subarray-sums/description/
+[link3428]: https://leetcode.com/problems/maximum-and-minimum-sums-of-at-most-size-k-subsequences/description/
+
