@@ -42,7 +42,7 @@ private:
 
         // if nums[X] is the root node of a balanced BST, then
         // nums[lo:X) < nums[X], nums(X:hi] > nums[X]
-        // and |(X-lo) - (hi-root)| = |2*root - (hi+lo)| <= 1
+        // and |(X-lo) - (hi-X)| = |2*X - (hi+lo)| <= 1
         const int x = lo + (hi - lo) / 2;
         auto* root = new TreeNode(nums[x]);
         root->left = build(lo, x - 1, nums);
