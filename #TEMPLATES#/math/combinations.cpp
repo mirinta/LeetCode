@@ -1,5 +1,3 @@
-#include <array>
-#include <mutex>
 #include <vector>
 
 #include "fast_modular_exponentiation.cpp"
@@ -8,29 +6,24 @@
  * @brief Return C(m, n) from a preprocessed table, which is calculated using the formula "C(m, n) =
  * C(m - 1, n) + C(m - 1, n - 1)".
  *
- * @note n <= m <= 1000
+ * @note n <= m
  *
  * @note Time Complexity = O(mn), Space Complexity = O(mn)
  */
-long long combinations(long long m, long long n)
+long long combModV1(long long m, long long n, long long mod = 1e9 + 7)
 {
-    static constexpr int D = 1001;
-    using Memo = std::array<std::array<long long, D>, D>;
-    static Memo memo;
-    static std::once_flag flag;
-    std::call_once(
-        flag,
-        [](Memo& memo) {
-            for (int i = 0; i < memo.size(); ++i) {
-                memo[i][i] = 1;
-                memo[i][0] = 1;
-                for (int j = 1; i > 0 && j < memo.size(); ++j) {
-                    memo[i][j] = memo[i - 1][j] + memo[i - 1][j - 1];
-                }
-            }
-        },
-        memo);
-
+    std::vector<std::vector<long long>> memo(m + 1, std::vector<long long>(n + 1));
+    for (int i = 0; i <= m; ++i) {
+        memo[i][0] = 1;
+    }
+    for (int i = 0; i <= n; ++i) {
+        memo[i][i] = 1;
+    }
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            memo[i][j] = (memo[i][j - 1] + memo[i - 1][j - 1]) % mod;
+        }
+    }
     return memo[m][n];
 }
 
@@ -54,7 +47,7 @@ long long combinations(long long m, long long n)
  * 1/(m-1)! % p = (1/m! % p) * (m % p) % p
  * ...
  */
-long long combinationsMod(long long m, long long n, long long mod = 1e9 + 7)
+long long combModV2(long long m, long long n, long long mod = 1e9 + 7)
 {
     std::vector<long long> factorial(m + 1, 1);
     for (long long i = 1; i <= m; ++i) {
