@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <queue>
+#include <set>
 #include <unordered_map>
 #include <vector>
 
@@ -25,17 +25,16 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : root(n), rank(n)
+    explicit UnionFind(int n) : root(n), size(n, 1)
     {
         for (int i = 0; i < n; ++i) {
             root[i] = i;
-            rank[i] = 1;
         }
     }
 
     int find(int x)
     {
-        if (root[x] != x) {
+        if (x != root[x]) {
             root[x] = find(root[x]);
         }
         return root[x];
@@ -43,24 +42,21 @@ public:
 
     void connect(int p, int q)
     {
-        const int rootP = find(p);
-        const int rootQ = find(q);
+        int rootP = find(p);
+        int rootQ = find(q);
         if (rootP == rootQ)
             return;
 
-        if (rank[rootP] > rank[rootQ]) {
-            root[rootQ] = rootP;
-        } else if (rank[rootP] < rank[rootQ]) {
-            root[rootP] = rootQ;
-        } else {
-            root[rootQ] = rootP;
-            rank[rootP]++;
+        if (size[rootQ] > size[rootP]) {
+            std::swap(rootP, rootQ);
         }
+        root[rootQ] = rootP;
+        size[rootP] += size[rootQ];
     }
 
 private:
     std::vector<int> root;
-    std::vector<int> rank;
+    std::vector<int> size;
 };
 
 class Solution
@@ -71,8 +67,7 @@ public:
         const int n = nums.size();
         std::vector<std::pair<int, int>> pairs(n);
         for (int i = 0; i < n; ++i) {
-            pairs[i].first = nums[i];
-            pairs[i].second = i;
+            pairs[i] = {nums[i], i};
         }
         std::sort(pairs.begin(), pairs.end(),
                   [](const auto& p1, const auto& p2) { return p1.first < p2.first; });
@@ -82,14 +77,14 @@ public:
                 uf.connect(pairs[i].second, pairs[i - 1].second);
             }
         }
-        std::unordered_map<int, std::priority_queue<int, std::vector<int>, std::greater<>>> map;
+        std::unordered_map<int, std::multiset<int>> map;
         for (int i = 0; i < n; ++i) {
-            map[uf.find(i)].push(nums[i]);
+            map[uf.find(i)].insert(nums[i]);
         }
         std::vector<int> result(n);
         for (int i = 0; i < n; ++i) {
-            result[i] = map[uf.find(i)].top();
-            map[uf.find(i)].pop();
+            result[i] = *map[uf.find(i)].begin();
+            map[uf.find(i)].erase(map[uf.find(i)].begin());
         }
         return result;
     }
