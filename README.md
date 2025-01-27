@@ -147,6 +147,7 @@ TODO:
 | [3022. Minimize OR of Remaining Elements Using Operations][link3022] | `Greedy`, `Bitmask` | :fire:2918 |
 | [1686. Stone Game VI][link1686] | `Greedy`, `Game Theory` | :fire:2001 |
 | [2029. Stone Game IX][link2029] | `Greedy`, `Game Theory` | :fire:2277 |
+| [630. Course Schedule III][link630] | `Greedy`, `Priority Queue` | `Hard` |
 | [1642. Furthest Building You Can Reach][link1642] | `Greedy`, `Priority Queue` | :fire:1962 |
 | [1838. Frequency of the Most Frequent Element][link1838] | `Greedy`, `Sliding Window` | :fire:1876 |
 | [2866. Beautiful Towers II][link2866] | `Monotonic Stack` | :fire:2072 |
@@ -222,4 +223,4 @@ TODO:
 [link0968]: https://leetcode.com/problems/binary-tree-cameras/description/?envType=study-plan-v2&envId=dynamic-programming-grandmaster
 [link1508]: https://leetcode.com/problems/range-sum-of-sorted-subarray-sums/description/
 [link3428]: https://leetcode.com/problems/maximum-and-minimum-sums-of-at-most-size-k-subsequences/description/
-
+[link630]: https://leetcode.com/problems/course-schedule-iii/description/
