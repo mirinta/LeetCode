@@ -1,3 +1,4 @@
+#include <functional>
 #include <vector>
 
 /**
@@ -33,27 +34,29 @@ public:
     {
         const int m = grid.size();
         const int n = grid[0].size();
+        std::function<int(int, int)> dfs = [&](int i, int j) {
+            if (i < 0 || i >= m || j < 0 || j >= n)
+                return 0;
+
+            if (grid[i][j] == 0)
+                return 0;
+
+            int sum = grid[i][j];
+            grid[i][j] = 0;
+            sum += dfs(i + 1, j);
+            sum += dfs(i - 1, j);
+            sum += dfs(i, j + 1);
+            sum += dfs(i, j - 1);
+            return sum;
+        };
         int result = 0;
         for (int i = 0; i < m; ++i) {
             for (int j = 0; j < n; ++j) {
-                result = std::max(result, dfs(grid, i, j, m, n));
+                if (grid[i][j] > 0) {
+                    result = std::max(result, dfs(i, j));
+                }
             }
         }
-        return result;
-    }
-
-private:
-    int dfs(std::vector<std::vector<int>>& grid, int i, int j, int m, int n)
-    {
-        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == 0)
-            return 0;
-
-        int result = grid[i][j];
-        grid[i][j] = 0;
-        result += dfs(grid, i + 1, j, m, n);
-        result += dfs(grid, i - 1, j, m, n);
-        result += dfs(grid, i, j + 1, m, n);
-        result += dfs(grid, i, j - 1, m, n);
         return result;
     }
 };
