@@ -19,64 +19,54 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : count(n), root(n), rank(n)
+    explicit UnionFind(int n) : root(n), size(n, 1), count(n)
     {
         for (int i = 0; i < n; ++i) {
             root[i] = i;
-            rank[i] = 1;
         }
     }
 
-    int numOfConnectedComponents() const { return count; };
+    int numOfConnectedComponents() const { return count; }
 
     int find(int x)
     {
-        if (root[x] != x) {
+        if (x != root[x]) {
             root[x] = find(root[x]);
         }
         return root[x];
     }
 
-    bool isConnected(int p, int q) { return find(p) == find(q); }
-
-    void connect(int p, int q)
+    bool connect(int p, int q)
     {
-        const int rootP = find(p);
-        const int rootQ = find(q);
+        int rootP = find(p);
+        int rootQ = find(q);
         if (rootP == rootQ)
-            return;
+            return false;
 
-        if (rank[rootP] > rank[rootQ]) {
-            root[rootQ] = rootP;
-        } else if (rank[rootP] < rank[rootQ]) {
-            root[rootP] = rootQ;
-        } else {
-            root[rootQ] = rootP;
-            rank[rootP]++;
+        if (size[rootQ] > size[rootP]) {
+            std::swap(rootP, rootQ);
         }
+        root[rootQ] = rootP;
+        size[rootP] += size[rootQ];
         count--;
+        return true;
     }
 
 private:
-    int count;
     std::vector<int> root;
-    std::vector<int> rank;
+    std::vector<int> size;
+    int count;
 };
 
 class Solution
 {
 public:
-    // time O(E*a(N)), space O(N)
     bool validTree(int n, std::vector<std::vector<int>>& edges)
     {
         UnionFind uf(n);
         for (const auto& edge : edges) {
-            const auto& p = edge[0];
-            const auto& q = edge[1];
-            if (uf.isConnected(p, q))
+            if (!uf.connect(edge[0], edge[1]))
                 return false;
-
-            uf.connect(p, q);
         }
         return uf.numOfConnectedComponents() == 1;
     }
