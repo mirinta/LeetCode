@@ -17,7 +17,7 @@
 class UnionFind
 {
 public:
-    explicit UnionFind(int n) : root(n), rank(n, 1)
+    explicit UnionFind(int n) : root(n), size(n, 1)
     {
         for (int i = 0; i < n; ++i) {
             root[i] = i;
@@ -26,7 +26,7 @@ public:
 
     int find(int x)
     {
-        if (root[x] != x) {
+        if (x != root[x]) {
             root[x] = find(root[x]);
         }
         return root[x];
@@ -39,18 +39,18 @@ public:
         if (rootP == rootQ)
             return;
 
-        if (rank[rootQ] > rank[rootP]) {
+        if (size[rootQ] > size[rootP]) {
             std::swap(rootP, rootQ);
         }
         root[rootQ] = rootP;
-        rank[rootP] += rank[rootQ];
+        size[rootP] += size[rootQ];
     }
 
-    int area(int x) { return rank[find(x)]; }
+    int sizeOf(int x) { return size[find(x)]; }
 
 private:
     std::vector<int> root;
-    std::vector<int> rank;
+    std::vector<int> size;
 };
 
 class Solution
@@ -58,43 +58,43 @@ class Solution
 public:
     int largestIsland(std::vector<std::vector<int>>& grid)
     {
-        static const std::vector<std::pair<int, int>> kDirections{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-        const int m = grid.size();
-        const int n = grid[0].size();
-        UnionFind uf(m * n);
-        for (int i = 0; i < m; ++i) {
+        static const std::vector<std::pair<int, int>> kDirections{{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
+        const int n = grid.size();
+        auto encode = [&](int i, int j) { return j + i * n; };
+        UnionFind uf(n * n);
+        for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] != 1)
+                if (!grid[i][j])
                     continue;
 
                 for (const auto& [dx, dy] : kDirections) {
                     const int x = i + dx;
                     const int y = j + dy;
-                    if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != 1)
+                    if (x < 0 || x >= n || y < 0 || y >= n || !grid[x][y])
                         continue;
 
-                    uf.connect(encode(i, j, n), encode(x, y, n));
+                    uf.connect(encode(i, j), encode(x, y));
                 }
             }
         }
+        std::unordered_set<int> set;
         int result = 0;
-        for (int i = 0; i < m; ++i) {
+        for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == 1) {
-                    result = std::max(result, uf.area(encode(i, j, n)));
+                if (grid[i][j]) {
+                    result = std::max(result, uf.sizeOf(encode(i, j)));
                     continue;
                 }
-                std::unordered_set<int> parents;
                 int area = 1;
+                set.clear();
                 for (const auto& [dx, dy] : kDirections) {
                     const int x = i + dx;
                     const int y = j + dy;
-                    if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != 1)
+                    if (x < 0 || x >= n || y < 0 || y >= n || !grid[x][y])
                         continue;
 
-                    const int p = uf.find(encode(x, y, n));
-                    if (parents.insert(p).second) {
-                        area += uf.area(p);
+                    if (set.insert(uf.find(encode(x, y))).second) {
+                        area += uf.sizeOf(encode(x, y));
                     }
                 }
                 result = std::max(result, area);
@@ -102,7 +102,4 @@ public:
         }
         return result;
     }
-
-private:
-    int encode(int i, int j, int n) { return i * n + j; }
 };
