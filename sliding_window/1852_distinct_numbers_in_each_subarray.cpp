@@ -23,14 +23,14 @@ public:
         result.reserve(n - k + 1);
         for (int left = 0, right = 0; right < n; ++right) {
             map[nums[right]]++;
-            if (right - left + 1 > k) {
+            if (right >= k) {
                 if (--map[nums[left]] == 0) {
                     map.erase(nums[left]);
                 }
                 left++;
             }
-            if (right - left + 1 == k) {
-                result.push_back(map.size());
+            if (right >= k - 1) {
+                result.emplace_back(map.size());
             }
         }
         return result;
