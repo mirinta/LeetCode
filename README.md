@@ -77,6 +77,7 @@
 - [ ] Biweekly 137
 - [ ] Weekly 411
 - [ ] Weekly 412
+- [x] Weekly 433 (3427~3430)
 
 TODO:
 
