@@ -13,18 +13,19 @@ class Solution
 public:
     int longestMonotonicSubarray(std::vector<int>& nums)
     {
-        return std::max(helper(nums, true), helper(nums, false));
+        return std::max(helper(nums, std::greater<>()), helper(nums, std::less<>()));
     }
 
 private:
-    int helper(const std::vector<int>& nums, bool isIncreasing)
+    template <typename Compare>
+    int helper(const std::vector<int>& nums, Compare compare)
     {
         const int n = nums.size();
         int i = 0;
-        int result = 1;
-        while (i < n - 1) {
+        int result = 0;
+        while (i < n) {
             int j = i + 1;
-            while (j < n && nums[j] != nums[j - 1] && nums[j] > nums[j - 1] == isIncreasing) {
+            while (j < n && compare(nums[j], nums[j - 1])) {
                 j++;
             }
             result = std::max(result, j - i);
