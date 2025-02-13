@@ -29,17 +29,19 @@ class Solution
 public:
     int minOperations(std::vector<int>& nums, int k)
     {
-        std::priority_queue<long long, std::vector<long long>, std::greater<>> pq(nums.begin(),
-                                                                                  nums.end());
+        std::priority_queue<long long, std::vector<long long>, std::greater<>> pq;
+        for (const auto& val : nums) {
+            pq.emplace(val);
+        }
         int result = 0;
         while (pq.size() >= 2 && pq.top() < k) {
+            const auto x1 = pq.top();
+            pq.pop();
+            const auto x2 = pq.top();
+            pq.pop();
+            pq.emplace(std::min(x1, x2) * 2 + std::max(x1, x2));
             result++;
-            const long long x = pq.top();
-            pq.pop();
-            const long long y = pq.top();
-            pq.pop();
-            pq.push(std::min(x, y) * 2 + std::max(x, y));
         }
-        return result; // an answer always exists
+        return result;
     }
 };
