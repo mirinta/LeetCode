@@ -20,9 +20,8 @@ public:
     {
         int result = 0;
         for (int i = 1; i <= n; ++i) {
-            int sum = 0;
             const int square = i * i;
-            if (backtrack(sum, 0, i, std::to_string(square))) {
+            if (isValid(0, 0, std::to_string(square), i)) {
                 result += square;
             }
         }
@@ -30,24 +29,16 @@ public:
     }
 
 private:
-    // check target*target can be partitioned into contiguous substrings
-    // s.t. that the sum of the integer values of these substrings equals "target"
-    bool backtrack(int& sum, int start, int target, const std::string& s)
+    bool isValid(int i, int sum, const std::string& s, const int target)
     {
-        if (start == s.size())
+        if (i == s.size())
             return sum == target;
 
-        // substring s[start:end]
-        for (int end = start; end < s.size(); ++end) {
-            int val = 0;
-            for (int i = start; i <= end; ++i) {
-                val = val * 10 + (s[i] - '0');
-            }
-            sum += val;
-            if (backtrack(sum, end + 1, target, s))
+        // i X X X j X X X ... X
+        // |<-num->|
+        for (int j = i; j < s.size(); ++j) {
+            if (isValid(j + 1, sum + std::stoi(s.substr(i, j - i + 1)), s, target))
                 return true;
-
-            sum -= val;
         }
         return false;
     }
