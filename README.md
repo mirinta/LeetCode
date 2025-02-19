@@ -128,6 +128,7 @@ TODO:
 
 | Problem | Tags | Difficulty |
 |----|------|------------|
+| [2375. Construct Smallest Number From DI String][link2375] | `Backtracking`, `Greedy` | :fire: 1642 |
 | [98. Validate Binary Search Tree][link0098] | `Binary Search Tree` | `Medium` |
 | [450. Delete Node in a BST][link0450] | `Binary Search Tree` | `Medium` |
 | [701. Insert into a Binary Search Tree][link0701] | `Binary Search Tree` | `Medium` |
@@ -225,3 +226,4 @@ TODO:
 [link1508]: https://leetcode.com/problems/range-sum-of-sorted-subarray-sums/description/
 [link3428]: https://leetcode.com/problems/maximum-and-minimum-sums-of-at-most-size-k-subsequences/description/
 [link630]: https://leetcode.com/problems/course-schedule-iii/description/
+[link2375]: https://leetcode.com/problems/construct-smallest-number-from-di-string/description/
